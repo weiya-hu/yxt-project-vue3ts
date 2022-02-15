@@ -4,4 +4,4 @@
  dmp系统
 
 #### manager-app
-manager-app : 后台管理系统
+ 后台管理系统
