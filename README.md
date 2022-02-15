@@ -1,5 +1,7 @@
 # yxt-project-vue3ts
 
-#### 介绍
-dmp-app : dmp 系统
+#### dmp-app
+ dmp系统
+
+#### manager-app
 manager-app : 后台管理系统
