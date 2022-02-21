@@ -11,3 +11,9 @@ interface res {
   errno?: number
   message?: string
 }
+
+interface Navitem {
+  path:string,
+  name:string,
+  [propName: string]: any
+}

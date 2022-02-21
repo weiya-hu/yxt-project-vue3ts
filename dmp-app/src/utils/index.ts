@@ -14,7 +14,7 @@ export function okMsg(msg: string, time?: number) {
     message: msg,
     grouping: true,
     type: 'success',
-    duration: time,
+    duration: time||3000,
   })
 }
 
@@ -24,6 +24,6 @@ export function errMsg(msg: string, time?: number) {
     message: msg,
     grouping: true,
     type: 'error',
-    duration: time,
+    duration: time||3000,
   })
 }

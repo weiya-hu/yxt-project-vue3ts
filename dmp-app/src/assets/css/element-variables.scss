@@ -1,3 +1,13 @@
+//
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': green,
+    ),
+  ),
+);
+// @import "element-plus/theme-chalk/src/index.scss";
+
 $dfcolor: #2D68EB; //主色调
 $colorsky: #EAF0FD; //辅助色
 $colorred: #E40000; //辅助色

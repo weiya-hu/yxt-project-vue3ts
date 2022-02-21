@@ -9,6 +9,7 @@
 </template>
 
 <script setup lang="ts">
+//测试用
 import emiter from '@/utils/bus'
 import { reactive, inject } from 'vue'
 const props = defineProps({

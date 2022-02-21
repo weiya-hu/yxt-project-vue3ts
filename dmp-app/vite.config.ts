@@ -22,7 +22,8 @@ export default defineConfig({
   css:{
     preprocessorOptions:{ //全局样式文件
       scss:{
-        additionalData:'@import "@/assets/css/main.scss";'
+        additionalData:'@import "@/assets/css/main.scss";',
+        // additionalData: '@use "@/assets/css/element-variables" as *;'
       }
     }
   },
