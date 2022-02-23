@@ -42,22 +42,23 @@
     </div>
     <MyPage :total="1000" v-model="page" @change="changePage"/>
 
-    <el-dialog v-model="addShow" title="新建数据" width="500px" @closed="closeAdd">
-      <el-form class="myform" ref="addFormRef" :model="addForm" :rules="addRules">
+    <el-dialog v-model="addShow" title="新建数据" width="500px" @close="closeAdd" :before-close="beforeCloseAdd">
+      <el-form class="myform" ref="addFormRef" :model="addForm" :rules="addRules" v-loading="upLoading">
         <el-form-item label="行业分类" prop="type">
-          <el-select v-model="addForm.type" placeholder="请选择行业">
-            <el-option label="计算机行业" value="1"></el-option>
-            <el-option label="医药行业" value="2"></el-option>
-          </el-select>
+          <el-cascader
+            v-model="addForm.type"
+            :options="typeList"
+            @change="typeChange"
+            :props="typeProps"
+            placeholder="请选择行业"
+          ></el-cascader>
         </el-form-item>
         <el-form-item label="选择地区" prop="addr">
           <el-cascader
             v-model="addForm.addr"
-            :options="options"
+            :options="addressList"
             @change="addrChange"
-            :props="{
-              expandTrigger: 'hover',
-            }"
+            :props="addrProps"
             placeholder="请选择地区"
           ></el-cascader>
         </el-form-item>
@@ -76,14 +77,20 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="上传附件" prop="file">
+        <el-form-item label="上传附件" prop="file" required>
           <el-upload 
-            action="https://jsonplaceholder.typicode.com/posts/" 
+            :action="hostUrl"
             :auto-upload="false"
             :limit="1"
+            :multiple="false"
+            :show-file-list="false"
+            :data="upData"
             :on-exceed="handleExceed"
             :on-change="upChange"
+            :on-success="upSuccess"
+            :on-error="upError"
             ref="upload"
+            accept=".pdf,.docx,.doc"
           >
             <template #default>
               <div class="upbox">
@@ -110,8 +117,9 @@
         </el-form-item>
         
         <div class="fcs btns">
-          <el-button @click="addShow=false">取消</el-button>
+          <el-button @click="closeAdd">取消</el-button>
           <el-button type="primary" @click="submitAddForm(addFormRef)">提交</el-button>
+          <!-- <el-button type="primary" @click="submit">上传</el-button> -->
         </div>
       </el-form>
     </el-dialog>
@@ -126,10 +134,38 @@ import {useRouter} from 'vue-router'
 import znkf_i from '@/assets/images/znkf.png'
 import { reactive, ref ,computed } from 'vue'
 import { Plus ,Document } from '@element-plus/icons-vue'
-import type { UploadFile } from 'element-plus/es/components/upload/src/upload.type'
+import type { UploadFile,ElUploadProgressEvent } from 'element-plus/es/components/upload/src/upload.type'
 import type { ElForm } from 'element-plus'
 import MyDialog from "@/components/MyDialog.vue";
 import MyPage from "@/components/MyPage.vue";
+import { Gajax } from '@/utils/request'
+import { mainStore } from '@/store/index'
+import { getAliToken_api } from '@/api/findB'
+import { errMsg } from '@/utils/index'
+import { ElMessageBox } from 'element-plus'
+
+const store = mainStore()
+const typeList = ref<any[]>([])
+const addressList = ref<any[]>([])
+store.setTypeList().then((res:any[])=>{
+  typeList.value = res
+})
+store.setAddressList().then((res:any[])=>{
+  addressList.value = res
+})
+const typeProps = {
+  expandTrigger: 'hover',
+  checkStrictly: true,
+  value:'industryId',
+  label:'name',
+}
+const addrProps = {
+  expandTrigger: 'hover',
+  checkStrictly: true,
+  value:'id',
+  label:'name',
+}
+
 const router = useRouter()
 const goDetails = (id:string)=>{
   router.push('/findB/specificDataDetails?id='+id)
@@ -291,6 +327,23 @@ const addForm = ref({
   desc:'',
   file:'',
 })
+const fileErrorType = ref('none')
+const filePass = (rule:any, value:any, callback:any) => {
+  switch (fileErrorType.value) {
+    case 'size':
+      callback(new Error('请添加大小不超过4M的文件'))
+      break;
+    case 'type':
+      callback(new Error('请添加 .doc、.docx、.pdf 格式的文件'))
+      break;
+    case 'none':
+      callback(new Error('请添加文件'))
+      break;
+    default:
+      callback()
+      break;
+  }
+}
 const addRules = reactive({
   type: [{
     required: true,
@@ -313,311 +366,116 @@ const addRules = reactive({
     trigger: 'blur',
   }],
   file:[{
-    required: true,
-    message: '请添加文件',
-    trigger: 'change',
-  }],
+    validator: filePass,
+    trigger: 'change' 
+  }]
 })
 
 const addShow = ref(false)
-const options = [
-  {
-    value: 'guide',
-    label: 'Guide',
-    children: [
-      {
-        value: 'disciplines',
-        label: 'Disciplines',
-        children: [
-          {
-            value: 'consistency',
-            label: 'Consistency',
-          },
-          {
-            value: 'feedback',
-            label: 'Feedback',
-          },
-          {
-            value: 'efficiency',
-            label: 'Efficiency',
-          },
-          {
-            value: 'controllability',
-            label: 'Controllability',
-          },
-        ],
-      },
-      {
-        value: 'navigation',
-        label: 'Navigation',
-        children: [
-          {
-            value: 'side nav',
-            label: 'Side Navigation',
-          },
-          {
-            value: 'top nav',
-            label: 'Top Navigation',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'component',
-    label: 'Component',
-    children: [
-      {
-        value: 'basic',
-        label: 'Basic',
-        children: [
-          {
-            value: 'layout',
-            label: 'Layout',
-          },
-          {
-            value: 'color',
-            label: 'Color',
-          },
-          {
-            value: 'typography',
-            label: 'Typography',
-          },
-          {
-            value: 'icon',
-            label: 'Icon',
-          },
-          {
-            value: 'button',
-            label: 'Button',
-          },
-        ],
-      },
-      {
-        value: 'form',
-        label: 'Form',
-        children: [
-          {
-            value: 'radio',
-            label: 'Radio',
-          },
-          {
-            value: 'checkbox',
-            label: 'Checkbox',
-          },
-          {
-            value: 'input',
-            label: 'Input',
-          },
-          {
-            value: 'input-number',
-            label: 'InputNumber',
-          },
-          {
-            value: 'select',
-            label: 'Select',
-          },
-          {
-            value: 'cascader',
-            label: 'Cascader',
-          },
-          {
-            value: 'switch',
-            label: 'Switch',
-          },
-          {
-            value: 'slider',
-            label: 'Slider',
-          },
-          {
-            value: 'time-picker',
-            label: 'TimePicker',
-          },
-          {
-            value: 'date-picker',
-            label: 'DatePicker',
-          },
-          {
-            value: 'datetime-picker',
-            label: 'DateTimePicker',
-          },
-          {
-            value: 'upload',
-            label: 'Upload',
-          },
-          {
-            value: 'rate',
-            label: 'Rate',
-          },
-          {
-            value: 'form',
-            label: 'Form',
-          },
-        ],
-      },
-      {
-        value: 'data',
-        label: 'Data',
-        children: [
-          {
-            value: 'table',
-            label: 'Table',
-          },
-          {
-            value: 'tag',
-            label: 'Tag',
-          },
-          {
-            value: 'progress',
-            label: 'Progress',
-          },
-          {
-            value: 'tree',
-            label: 'Tree',
-          },
-          {
-            value: 'pagination',
-            label: 'Pagination',
-          },
-          {
-            value: 'badge',
-            label: 'Badge',
-          },
-        ],
-      },
-      {
-        value: 'notice',
-        label: 'Notice',
-        children: [
-          {
-            value: 'alert',
-            label: 'Alert',
-          },
-          {
-            value: 'loading',
-            label: 'Loading',
-          },
-          {
-            value: 'message',
-            label: 'Message',
-          },
-          {
-            value: 'message-box',
-            label: 'MessageBox',
-          },
-          {
-            value: 'notification',
-            label: 'Notification',
-          },
-        ],
-      },
-      {
-        value: 'navigation',
-        label: 'Navigation',
-        children: [
-          {
-            value: 'menu',
-            label: 'Menu',
-          },
-          {
-            value: 'tabs',
-            label: 'Tabs',
-          },
-          {
-            value: 'breadcrumb',
-            label: 'Breadcrumb',
-          },
-          {
-            value: 'dropdown',
-            label: 'Dropdown',
-          },
-          {
-            value: 'steps',
-            label: 'Steps',
-          },
-        ],
-      },
-      {
-        value: 'others',
-        label: 'Others',
-        children: [
-          {
-            value: 'dialog',
-            label: 'Dialog',
-          },
-          {
-            value: 'tooltip',
-            label: 'Tooltip',
-          },
-          {
-            value: 'popover',
-            label: 'Popover',
-          },
-          {
-            value: 'card',
-            label: 'Card',
-          },
-          {
-            value: 'carousel',
-            label: 'Carousel',
-          },
-          {
-            value: 'collapse',
-            label: 'Collapse',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'resource',
-    label: 'Resource',
-    children: [
-      {
-        value: 'axure',
-        label: 'Axure Components',
-      },
-      {
-        value: 'sketch',
-        label: 'Sketch Templates',
-      },
-      {
-        value: 'docs',
-        label: 'Design Documentation',
-      },
-    ],
-  },
-]
+
 const addrChange = (value:any) => {
   console.log(value)
 }
+const typeChange = (value:any) => {
+  console.log(value)
+}
+
+const upload = ref()//上传组件ref
+const upData:any = ref({})//上传参数
+const hostUrl = ref('')//上传地址
+
+const handleExceed = (files:any) => {
+  //覆盖前一个文件
+  upload.value.clearFiles()
+  upload.value.handleStart(files[0])
+}
+const upChange = (file: UploadFile, list: UploadFile[])=>{
+  //添加时验证
+  const tmpcnt = file.name.lastIndexOf(".")
+  const exname = file.name.substring(tmpcnt + 1)
+  const names = ['doc', 'docx', 'pdf',]
+  addFormRef.value!.clearValidate('file')
+  if(names.indexOf(exname)< 0 ){
+    fileErrorType.value = 'type'
+    addForm.value.file = ''
+    addFormRef.value!.validateField('file', () => null)
+  }else if((file.size / 1024 / 1024)>4){
+    fileErrorType.value = 'size'
+    addForm.value.file = ''
+    addFormRef.value!.validateField('file', () => null)
+  }else{
+    fileErrorType.value = ''
+    addFormRef.value!.clearValidate('file')
+    addForm.value.file = file.name
+  }
+}
+const upLoading = ref(false)
 const addFormRef = ref<FormInstance>()
 const submitAddForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
+      //表单效验成功再上传
       console.log('submit!')
-      upload.value.submit()
+      upLoading.value = true
+      getAliToken_api().then((res:res)=>{
+        return new Promise<void>((resolve, reject) => {
+          hostUrl.value = res.body.host
+          upData.value = {
+            key:res.body.dir + res.body.uuid,
+            OSSAccessKeyId: res.body.accessid,
+            success_action_status: 200,
+            policy:res.body.policy,
+            signature:res.body.signature,
+          }
+          resolve()
+        })
+      }).then(()=>{
+        console.log('up');
+        upload.value!.submit()
+      })
     } else {
       console.log('error submit!');
       return false
     }
   })
 }
+const upSuccess = (res: ElUploadProgressEvent, file: UploadFile)=>{
+  //上传成功再提交表单 //阿里oss上传成功返回res为空，失败err为xml
+  console.log('res',res);
+  upLoading.value = false
+}
+const upError = (err:any, file:any, fileList:any)=>{
+  console.log('uperr',err);
+  upLoading.value = false
+  errMsg('上传失败')
+}
 
 const closeAdd = ()=>{
+  addShow.value = false
   upload.value.clearFiles()
   addFormRef.value!.resetFields()
 }
 
-const upload = ref()
-const handleExceed = (files:any) => {
-  upload.value.clearFiles()
-  upload.value.handleStart(files[0])
-}
-const upChange = (file: UploadFile, list: UploadFile[])=>{
-  addForm.value.file = file.name
-  addFormRef.value!.clearValidate('file')
+const beforeCloseAdd = (done:Function)=>{
+  if(upLoading.value){
+    ElMessageBox.confirm(
+      '正在上传中，关闭弹窗可能会导致上传失败，是否继续关闭？',
+      'Warning',
+      {
+        confirmButtonText: '取消',
+        cancelButtonText: '确定',
+        type: 'warning',
+      }
+    )
+    .then(() => {
+    })
+    .catch(() => {
+      done()
+    })
+  }else{
+    done()
+  }
 }
 
 const delId = ref('')
@@ -733,9 +591,6 @@ const kfShow = ref(false)
           margin-top: 8px;
         }
       }
-    }
-    :deep(.el-upload-list ){
-      display: none;
     }
     .el-form-item__content{
       >div{

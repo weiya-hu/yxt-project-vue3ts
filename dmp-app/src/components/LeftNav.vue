@@ -3,29 +3,26 @@
     active-text-color="#2D68EB"
     background-color="#333333"
     text-color="#fff"
-    :default-active="activePath"
+    :default-active="modelValue"
     router
     class="yxtnav"
   >
-    <el-menu-item :index="v.path" v-for="(v) in nav" :key="v.path" v-show="!v.meta.leftHidden">
+    <el-menu-item :index="v.path" v-for="(v) in nav" :key="v.path" v-show="!v.meta.leftHidden" :class="v.path==modelValue?'is-active':''">
       <div class="topafter"></div>
-      <el-icon><fold /></el-icon>
-      <span>{{v.name}}</span>
+      <img :src="v.path==modelValue?v.meta.icon_a:v.meta.icon" alt="" class="left_nav_icon">
+      <span>{{v.meta.title}}</span>
       <div class="botafter"></div>
     </el-menu-item>
   </el-menu>
 </template>
 
 <script setup lang="ts">
-//布局左侧导航
-import { Fold } from '@element-plus/icons-vue'
 
 const props = withDefaults(defineProps<{
+  modelValue:string,
   nav:Navitem[],
-  activePath:string,
 }>(),{
-  nav:()=>([{path:'/',name:'-'}]),  //默认值的设置 须要用函数return
-  activePath:'/'
+  nav:()=>([{path:'/',name:'-',meta:{title:'-'}}]),  //默认值的设置 须要用函数return
 })
 
 </script>
@@ -78,6 +75,11 @@ const props = withDefaults(defineProps<{
         border-radius:0 10px 0 0;
       }
     }
+  }
+  .left_nav_icon{
+    width: 34px;
+    height: 34px;
+    margin-right: 10px;
   }
 }
 </style>

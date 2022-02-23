@@ -27,3 +27,13 @@ export function errMsg(msg: string, time?: number) {
     duration: time||3000,
   })
 }
+
+export function infoMsg(msg: string, time?: number) {
+  ElMessage({
+    showClose: true,
+    message: msg,
+    grouping: true,
+    type: 'info',
+    duration: time||3000,
+  })
+}

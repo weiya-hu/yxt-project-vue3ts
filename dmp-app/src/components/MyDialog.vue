@@ -1,7 +1,7 @@
 <template>
   <div class="my_dialog">
-    <el-dialog v-model="modelValue" :title="title" width="280px" v-if="type=='kf'" @close="close" :show-close="false" custom-class="kf_dialog">
-      <template #title class="hhh">
+    <el-dialog v-model="modelValue" width="280px" v-if="type=='kf'" @close="close" :show-close="false" custom-class="kf_dialog">
+      <template #title>
         <div class="fcc kf_title">联系客服</div>
       </template>
       <template #default>

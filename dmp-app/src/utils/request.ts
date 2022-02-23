@@ -10,14 +10,13 @@ import { ElMessage } from 'element-plus'
 //引入路由用于设置响应拦截器
 import router from '@/router'
 import { reactive, ref } from 'vue'
-import { rejects } from 'assert'
 
 // 设置默认地址
 axios.defaults.baseURL = '/api'
 
 // 请求拦截器
 axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('firstToken')
   if (token) {
     // config.headers.Authorization = token;
     config.headers = {
@@ -31,16 +30,17 @@ axios.interceptors.request.use((config) => {
 // 响应拦截器
 axios.interceptors.response.use(
   (res) => {
-    if (res.data.code !== undefined && res.data.code !== '' && res.data.msg) {
-      const { code, msg, data } = res.data
-      if (code == 999) {
+    if (res.status == 200) {
+      const response = res.data
+      if (response.status==0 && response.errno && response.errno == 10620) {
         // ElMessage({
         //   showClose: true,
         //   message: '登录过期，请重新登录',
         //   type: 'error'
         // })
         // router.push("/login")
-      } else if (code != 1) {
+        console.log(response);
+      } else if (response.status != 0) {
         // ElMessage({
         //   showClose: true,
         //   message: msg,
@@ -62,10 +62,10 @@ export function get(url: string, params?: any, showmsg?: boolean) {
     axios
       .get(url, { params })
       .then((res) => {
-        if (showmsg && res.data && res.data.code == 1) {
+        if (showmsg && res.data && res.data.status == 1) {
           ElMessage({
             showClose: true,
-            message: res.data.msg,
+            message: res.data.message,
             type: 'success',
             grouping: true,
           })
@@ -85,10 +85,10 @@ export function post(url: string, params?: any, showmsg?: boolean) {
     axios
       .post(url, params)
       .then((res) => {
-        if (showmsg && res.data && res.data.code == 1) {
+        if (showmsg && res.data && res.data.status == 1) {
           ElMessage({
             showClose: true,
-            message: res.data.msg,
+            message: res.data.message,
             type: 'success',
             grouping: true,
           })

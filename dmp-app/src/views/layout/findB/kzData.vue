@@ -21,6 +21,8 @@ import { reactive, ref  } from 'vue'
 import TopSearch from '@/components/TopSearch.vue'
 import MyPage from "@/components/MyPage.vue";
 import CompanyTable from "@/components/CompanyTable.vue";
+import { conditionsList_api } from '@/api/findB'
+import { Gajax } from '@/utils/request'
 
 const tableData = ref([
   {

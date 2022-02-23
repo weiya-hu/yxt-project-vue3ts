@@ -62,6 +62,14 @@ body {
   justify-content: flex-start;
   align-items: center;
 }
+.fjend{
+  display: flex;
+  justify-content: flex-end;
+}
+.faend{
+  display: flex;
+  align-items: flex-end;
+}
 .els{
   overflow:hidden;
 	text-overflow:ellipsis;
@@ -114,10 +122,10 @@ img{
 
 .myform{
   .el-form-item--default{
-    .el-form-item__content{
-      // line-height: 36px;
-      // height: 36px;
-    }
+    // .el-form-item__content{
+    //   line-height: 36px;
+    //   height: 36px;
+    // }
     .el-form-item__label{
       padding-right: 20px;
       line-height: 36px;

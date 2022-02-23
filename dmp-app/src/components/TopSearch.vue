@@ -22,39 +22,48 @@
 
       <el-form class="myform" ref="formRef" :model="form">
         <div class="topitems fcs">
-          <el-form-item label="经营范围" prop="range">
-            <el-input v-model="form.range"></el-input>
+          <el-form-item label="经营范围" prop="business_scope">
+            <el-input v-model="form.business_scope" placeholder="请输入经营范围"></el-input>
           </el-form-item>
           <el-form-item label="行业分类" prop="type">
-            <el-select v-model="form.type" placeholder="请选择">
-              <el-option label="计算机行业" value="1"></el-option>
-              <el-option label="医药行业" value="2"></el-option>
-            </el-select>
+            <el-cascader
+              v-model="form.type"
+              :options="typeList"
+              @change="typeChange"
+              :props="typeProps"
+              placeholder="请选择行业分类"
+            ></el-cascader>
           </el-form-item>
           <el-form-item label="省份地区" prop="addr">
-            <el-select v-model="form.addr" placeholder="请选择">
-              <el-option label="重庆市" value="1"></el-option>
-              <el-option label="四川省" value="2"></el-option>
-            </el-select>
+            <el-cascader
+              v-model="form.addr"
+              :options="addressList"
+              @change="addrChange"
+              :props="addrProps"
+              placeholder="请选择地区"
+            ></el-cascader>
           </el-form-item>
         </div>
         <div class="contact_mode fcs">
           <el-form-item label="联系方式" prop="mobile">
-            <el-select v-model="form.mobile" placeholder="请选择">
+            <el-select v-model="form.mobile" placeholder="手机号">
+              <el-option label="手机号（不限）" value="0"></el-option>
               <el-option label="手机号（有）" value="1"></el-option>
-              <el-option label="手机号（无）" value="2"></el-option>
+              <el-option label="手机号（无）" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item prop="phone">
-            <el-select v-model="form.phone" placeholder="请选择">
-              <el-option label="固定电话（有）" value="1"></el-option>
-              <el-option label="固定电话（无）" value="2"></el-option>
+            <el-select v-model="form.phone" placeholder="固定电话">
+              <el-option label="固定电话（不限）" value="0"></el-option>
+              <el-option label="固定电话（有）" value="2"></el-option>
+              <el-option label="固定电话（无）" value="0"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item prop="email">
-             <el-select v-model="form.email" placeholder="请选择">
-              <el-option label="联系邮箱（有）" value="1"></el-option>
-              <el-option label="联系邮箱（无）" value="2"></el-option>
+             <el-select v-model="form.email" placeholder="联系邮箱">
+              <el-option label="联系邮箱（不限）" value="0"></el-option>
+              <el-option label="联系邮箱（有）" value="4"></el-option>
+              <el-option label="联系邮箱（无）" value="0"></el-option>
             </el-select>
           </el-form-item>
         </div>
@@ -65,7 +74,7 @@
         </el-form-item>
         <div class="fcs btns">
           <el-button type="primary" @click="conditionShow=true">查询条件</el-button>
-          <el-button>保存条件</el-button>
+          <el-button @click="addShow = true">保存条件</el-button>
           <el-button @click="resetForm(formRef)">重置条件</el-button>
           <el-dropdown @command="changeDrop">
             <div class="fcs">
@@ -73,10 +82,10 @@
               <el-icon class="right_icon"><arrow-down /></el-icon>
             </div>
             <template #dropdown>
-              <el-dropdown-menu>
+              <el-dropdown-menu v-if="conditionArr.length">
                 <el-dropdown-item :command="v" v-for="(v,i) in conditionArr" :key="v.id">
                   <div class="fsc ditems">
-                    <div class="dname els">{{v.value}}</div>
+                    <div class="dname els">{{v.conditions_name}}</div>
                     <div class="dbtns fcs">
                       <div @click.stop="delCondition(v,i)">删除</div>
                       <div class="dline"></div>
@@ -85,6 +94,7 @@
                   </div>
                 </el-dropdown-item>
               </el-dropdown-menu>
+              <div v-else class="empty_drop">暂无数据</div>
             </template>
           </el-dropdown>
         </div>
@@ -98,6 +108,21 @@
       </div>
 
     </div>
+    
+    <el-dialog v-model="addShow" title="新建筛选" width="500px" @close="closeAdd">
+      <el-form class="myform no_margin" :model="Addform" :rules="addRules" ref="addFormRef">
+        <el-form-item label="经营范围" prop="title">
+          <el-input v-model="Addform.title" placeholder="请输入条件组名称"></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="flex fjend">
+          <el-button @click="closeAdd">取消</el-button>
+          <el-button type="primary" :disabled="!Addform.title" @click="saveCondition">确认</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -106,34 +131,75 @@
 import { Search , CloseBold , ArrowDown} from '@element-plus/icons-vue'
 import { reactive, ref  } from 'vue'
 import type { ElForm } from 'element-plus'
+import { conditionsList_api,subConditions_api } from '@/api/findB'
+import { Gajax } from '@/utils/request'
+import { mainStore } from '@/store/index'
 
 const searchWord = ref('')
 const heightShow = ref(false)
+
+const store = mainStore()
+const typeList = ref<any[]>([])
+const addressList = ref<any[]>([])
+store.setTypeList().then((res:any[])=>{
+  typeList.value = res
+})
+store.setAddressList().then((res:any[])=>{
+  addressList.value = res
+})
+
+const typeProps = {
+  expandTrigger: 'hover',
+  checkStrictly: true,
+  value:'industryId',
+  label:'name',
+}
+const addrProps = {
+  expandTrigger: 'hover',
+  checkStrictly: true,
+  value:'id',
+  label:'name',
+}
 const ctypeArr = ref([
   {id:1,value:'有限责任公司'},
   {id:2,value:'股份有限公司'},
-  {id:3,value:'股份合作公司'},
-  {id:4,value:'国有企业'},
-  {id:5,value:'其它'},
+  {id:4,value:'股份合作公司'},
+  {id:6,value:'国有企业'},
+  {id:8,value:'其它'},
 ])
 const form = reactive({
-  mobile:'',
-  phone:'',
-  type:'',
-  ctype:[],
-  email:'',
-  addr:'',
-  range:'',
-})
+  mobile:'', //手机号 位运算
+  phone:'', //固定电话 位运算
+  email:'', //邮箱 位运算
+  ctype:[], //企业类型 位运算
+  type:[], //行业分类 树状
+  addr:[], //省市区 树状
 
-const conditionArr = ref([
-  {id:1,value:'医疗器械用户'},
-  {id:2,value:'医疗器械用户1'},
-  {id:3,value:'医疗器械用户2'},
-  {id:4,value:'医疗器械用户3'},
-  {id:5,value:'医疗器械用户4'},
-])
-const delCondition = (v:{id:number,value:string},i:number)=>{
+  province:'',//省（区域码）
+  city:'',//市（区域码）
+  district:'',//区（区域码）
+  business_scope:'',//经营范围
+  industry_id:'',//行业分类ID
+  contact:'',//联系方式  位运算
+  company_type:'',//企业类型  位运算
+  conditions_name:'',//	条件组名称
+})
+const addrChange = (value:any) => {
+  console.log(form.addr)
+}
+const typeChange = (value:any) =>{
+  console.log(value)
+}
+
+const conditionArr = ref<any[]>([])
+
+const getConditionArr =async ()=>{
+  const res:res = await conditionsList_api()
+  res.status == 1 && (conditionArr.value = res.body)
+  console.log(conditionArr.value, 'res')
+}
+getConditionArr()
+const delCondition = (v:any,i:number)=>{
   conditionArr.value.splice(i,1)
 }
 
@@ -148,6 +214,39 @@ const formRef = ref<FormInstance>()
 const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return
   formEl.resetFields()
+}
+
+const addShow = ref(false)
+const Addform = reactive({
+  title:'',
+})
+const addFormRef = ref<FormInstance>()
+const addRules = reactive({
+  title:[{
+    required: true,
+    message: '请输入条件组名称',
+    trigger: 'change',
+  }],
+})
+const closeAdd = ()=>{
+  addShow.value = false
+  Addform.title = ''
+  resetForm(addFormRef.value)
+}
+const saveCondition = ()=>{
+  subConditions_api({
+    province:'',
+    city:'',
+    district:'',
+    business_scope:'',
+    industry_id:'',
+    contact:'',
+    company_type:'',
+    conditions_name:Addform.title,
+  }).then((res:res)=>{
+    addShow.value = false
+    console.log(res);
+  })
 }
 </script>
 
@@ -244,6 +343,10 @@ const resetForm = (formEl: FormInstance | undefined) => {
       .el-select--default{
         width: 270px;
       }
+      
+      :deep(.el-cascader){
+        width: 270px;
+      }
     }
     .contact_mode{
       .el-select--default{
@@ -294,5 +397,15 @@ const resetForm = (formEl: FormInstance | undefined) => {
   .dbtns{
     color: $dfcolor;
   }
+}
+.no_margin{
+  .el-form-item{
+    margin-bottom: 0;
+  }
+}
+.empty_drop{
+  padding:10px 20px;
+  font-size: 12px;
+  color: $color999;
 }
 </style>

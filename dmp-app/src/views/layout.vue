@@ -5,7 +5,7 @@
         <img :src="logo_i" alt=""/>
       </el-col>
       <el-col class="navbox fsc">
-        <TopNav :nav="topNav" :activePath="activePath" @change="changeNav"/>
+        <TopNav :nav="topNav" v-model="activePath" ref="topNavRef"/>
         <div class="user fcs">
           <el-button color="#2D68EB" plain>完善资料</el-button>
           <div class="sline"></div>
@@ -32,7 +32,7 @@
     </el-row>
     <el-row class="layout_container">
       <el-col class="layout_nav" v-if="activePath!='/index'">
-        <LeftNav :nav="leftNav" :activePath="nowPath"/>
+        <LeftNav v-model="nowPath" :nav="leftNav"/>
       </el-col>
       <el-col :class="activePath=='/index'?'':'layout_content'">
         <router-view></router-view>
@@ -47,40 +47,46 @@ import znkf_i from '@/assets/images/znkf.png'
 import {reactive, ref  } from 'vue'
 import LeftNav from '@/components/LeftNav.vue'
 import TopNav from '@/components/TopNav.vue'
-import {useRouter, useRoute} from 'vue-router'
+import {useRouter, useRoute,onBeforeRouteUpdate} from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
+
 const route = useRoute()
 const router = useRouter()
-
-const nowPath = ref(route.path)
-if(nowPath.value.indexOf('specificData')>-1) nowPath.value = '/findB/specificData' //解决在详情页刷新导致左侧导航激活失效 有点蠢
-
-let s = nowPath.value.split('/')
-const activePath = ref('')
-if((s.length-1)>1){
-  // 有两个'/' 则是子页面 取父页面路由为顶部导航激活路由
-  activePath.value = '/' + s[1]
-}else{
-  activePath.value = nowPath.value
-}
 
 const routers = router.getRoutes()
 const leftNav:any = ref([])
 const topNav:any = ref([])
-const geNavs = (first:boolean = false)=>{
+const activePath = ref('')
+const nowPath = ref('')
+const topNavRef = ref()
+
+const getPath = (path:string)=>{
+  let s = path.split('/')
+  activePath.value = (s.length-1)>1?'/' + s[1]:path // 有两个'/' 则是子页面 取父页面路由为顶部导航激活路由
+
+  nowPath.value = path.indexOf('specificData')>-1?activePath.value+'/specificData':path //解决在详情页刷新导致左侧导航激活失效 有点蠢
+}
+getPath(route.path)
+
+const getNavs = (first:boolean = false)=>{
   //从路由获取顶部和左侧导航
   routers.forEach(v=>{
-    if(v.path === activePath.value && v.children) leftNav.value = v.children
     if(first && v.name === 'Layout') topNav.value = reactive(v.children)
+    if(v.path === activePath.value && v.children.length) leftNav.value = v.children
   })
 }
-geNavs(true)
-const changeNav = (path:string)=>{
-  //顶部导航改变时 改变左侧导航及左侧激活路由
-  activePath.value = path
-  geNavs()
-  if(leftNav.value.length) nowPath.value = leftNav.value[0].path
-}
+getNavs(true)
+
+onBeforeRouteUpdate((to,from)=>{
+  getPath(to.path)
+  let tos = to.path.split('/')[1]
+  let froms = from.path.split('/')[1]
+  if(tos != froms){
+    //判断是否需要改变左侧导航
+    getNavs()
+    topNavRef.value.changeLeft()
+  }
+})
 </script>
 
 <style lang="scss" scoped>

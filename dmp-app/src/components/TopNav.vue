@@ -1,6 +1,6 @@
 <template>
   <div class="topnav fcs">
-    <div class="item fcc" @click="changeNav(v.path)" v-for="v in nav" :key="v.path" :class="activeRouter == v.path?'active':''">
+    <div class="item fcc" @click="changeNav(v.path)" v-for="v in nav" :key="v.path" :class="modelValue == v.path?'active':''">
       <span>{{v.name}}</span>
     </div>
     <div class="line" :style="{left:left+'px'}" ref="line"></div>
@@ -9,25 +9,23 @@
 
 <script setup lang="ts">
 //布局的顶部导航
-import { ref ,onMounted,nextTick } from 'vue'
+import { ref ,onMounted,nextTick,watch } from 'vue'
 import {useRouter} from 'vue-router'
 
 const props = withDefaults(defineProps<{
+  modelValue:string,
   nav:Navitem[],
-  activePath:string,
 }>(),{
   nav:()=>([{path:'/',name:'-'}]),
   activePath:'/'
 })
-const vemits = defineEmits(['change'])
+const emits = defineEmits(['update:modelValue'])
 
 const router = useRouter()
-const activeRouter = ref(props.activePath)
 const changeNav = (path:string)=>{
-  if(path === activeRouter.value) return
-  activeRouter.value = path
-  changeLeft()
-  vemits('change',activeRouter.value)
+  if(path === props.modelValue) return
+  emits('update:modelValue',path) //有点多余
+  // changeLeft()
   router.push(path)
 }
 
@@ -43,10 +41,18 @@ onMounted (() => {
 const changeLeft = ()=>{
   //改变顶部导航线条位置
   nextTick(()=>{
-    let activeDom : HTMLElement = document.querySelector('.active') as HTMLElement;
-    left.value = activeDom.offsetLeft + activeDom.offsetWidth/2
+    let activeDom =ref( document.querySelector('.active') as HTMLElement)
+    left.value = activeDom.value.offsetLeft +  activeDom.value.offsetWidth/2
   })
 }
+
+// watch(()=>props.modelValue, (newValue, oldValue) => {
+//   //onUpdated会触发两次 所以用了watch ,也可以用onBeforeRouteUpdate  改为在父组件调用了 性能可能会好一点
+//   changeLeft()
+// })
+defineExpose({
+  changeLeft
+})
 </script>
 
 <style scoped lang="scss">

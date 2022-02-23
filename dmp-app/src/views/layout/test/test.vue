@@ -17,8 +17,6 @@ import { reactive, computed, watch, ref, provide } from 'vue'
 import { mainStore } from '@/store/index'
 
 console.log(mainStore().state) //全局store
-mainStore().setName('哈哈哈')
-console.log(mainStore().state)
 
 const msg = 'user'
 const val = reactive({ a: 0 })
