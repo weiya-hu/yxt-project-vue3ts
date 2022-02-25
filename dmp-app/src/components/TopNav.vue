@@ -24,13 +24,14 @@ const emits = defineEmits(['update:modelValue'])
 const router = useRouter()
 const changeNav = (path:string)=>{
   if(path === props.modelValue) return
-  emits('update:modelValue',path) //有点多余
-  // changeLeft()
+  // emits('update:modelValue',path) //有点多余
+  // changeLeft() //再这里调用当用浏览器后退时不会有效果
   router.push(path)
 }
 
 let left = ref(0)
 let line = ref()
+let activeDom
 onMounted (() => {
   //解决刷新时顶部导航线条会从开始跳到激活位置
   setTimeout(() => {
@@ -41,8 +42,8 @@ onMounted (() => {
 const changeLeft = ()=>{
   //改变顶部导航线条位置
   nextTick(()=>{
-    let activeDom =ref( document.querySelector('.active') as HTMLElement)
-    left.value = activeDom.value.offsetLeft +  activeDom.value.offsetWidth/2
+    activeDom = document.querySelector('.active') as HTMLElement
+    left.value = activeDom.offsetLeft +  activeDom.offsetWidth/2
   })
 }
 

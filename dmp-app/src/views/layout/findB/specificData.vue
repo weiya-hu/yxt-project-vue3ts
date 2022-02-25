@@ -15,16 +15,28 @@
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="ID" width="165"/>
-        <el-table-column property="type" label="行业分类" width="150"/>
-        <el-table-column property="addr" label="地区" width="100"/>
-        <el-table-column property="people" label="人群名称"/>
-        <el-table-column property="desc" label="人群描述"/>
-        <el-table-column property="time" label="发起时间" width="155"/>
-        <el-table-column property="state" label="状态" width="100">
+        <el-table-column property="type" label="行业分类" width="150">
+          <template #default="scope">
+            <div>{{getHashStr(scope.row.industry_id,typeHash)}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column property="addr" label="地区" width="180">
+          <template #default="scope">
+            <div>{{getHashStr(strToArr(scope.row.province,scope.row.city,scope.row.district),addressHash)}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column property="group_name" label="人群名称"/>
+        <el-table-column property="group_desc" label="人群描述"/>
+        <el-table-column property="create_time" label="发起时间" width="155">
+          <template #default="scope">
+            <div>{{formatDate(new Date(scope.row.create_time),'yyyy-MM-dd')}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column property="status" label="状态" width="100">
           <template #default="scope">
             <div class="fcs">
-              <div class="dot" :class="getState(scope.row.state).class"></div>
-              <div>{{getState(scope.row.state).text}}</div>
+              <div class="dot" :class="getState(scope.row.status).class"></div>
+              <div>{{getState(scope.row.status).text}}</div>
             </div>
           </template>
         </el-table-column>
@@ -40,7 +52,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <MyPage :total="1000" v-model="page" @change="changePage"/>
+    <MyPage :total="total" v-model="page" @change="changePage"/>
 
     <el-dialog v-model="addShow" title="新建数据" width="500px" @close="closeAdd" :before-close="beforeCloseAdd">
       <el-form class="myform" ref="addFormRef" :model="addForm" :rules="addRules" v-loading="upLoading">
@@ -141,17 +153,23 @@ import MyPage from "@/components/MyPage.vue";
 import { Gajax } from '@/utils/request'
 import { mainStore } from '@/store/index'
 import { getAliToken_api } from '@/api/findB'
-import { errMsg } from '@/utils/index'
+import { errMsg,getHash,getHashStr,strToArr} from '@/utils/index'
 import { ElMessageBox } from 'element-plus'
+import { addDemand_api ,demandList_api,delDemand_api } from '@/api/findB'
+import { formatDate } from '@/utils/date'
 
 const store = mainStore()
 const typeList = ref<any[]>([])
+const typeHash = ref({})
 const addressList = ref<any[]>([])
+const addressHash = ref({})
 store.setTypeList().then((res:any[])=>{
   typeList.value = res
+  typeHash.value = getHash(typeList.value,'industryId')
 })
 store.setAddressList().then((res:any[])=>{
   addressList.value = res
+  addressHash.value = getHash(addressList.value,'id')
 })
 const typeProps = {
   expandTrigger: 'hover',
@@ -171,148 +189,61 @@ const goDetails = (id:string)=>{
   router.push('/findB/specificDataDetails?id='+id)
 }
 interface SData {
-  id: string,
-  type:string,
+  id: number|string,
+  industry_id:string,
   addr:string,
-  people:string,
-  desc:string,
-  time:string,
-  state:string,
+  group_name:string,
+  group_desc:string,
+  create_time:string,
+  status:string,
   remarks:string,
 }
-const tableData :SData[] = [
-  {
-    id: 'XQ20190324010001',
-    type: '医疗器械',
-    addr: '重庆市',
-    people:'查找重庆市医疗器械用户',
-    desc: '寻找全市从事XX医疗器械渠道服务商',
-    time: '2021-04-01 17:27',
-    state: '1',
-    remarks: '人群描述不清楚',
-  },
-  {
-    id: 'XQ20190324010002',
-    type: '医疗器械',
-    addr: '重庆市',
-    people:'查找重庆市医疗器械用户',
-    desc: '寻找全市从事XX医疗器械渠道服务商',
-    time: '2021-04-01 17:27',
-    state: '2',
-    remarks: '人群描述不清楚',
-  },
-  {
-    id: 'XQ20190324010003',
-    type: '医疗器械',
-    addr: '重庆市',
-    people:'查找重庆市医疗器械用户',
-    desc: '寻找全市从事XX医疗器械渠道服务商',
-    time: '2021-04-01 17:27',
-    state: '3',
-    remarks: '人群描述不清楚',
-  },
-  {
-    id: 'XQ20190324010004',
-    type: '医疗器械',
-    addr: '重庆市',
-    people:'查找重庆市医疗器械用户',
-    desc: '寻找全市从事XX医疗器械渠道服务商',
-    time: '2021-04-01 17:27',
-    state: '1',
-    remarks: '人群描述不清楚',
-  },
-  {
-    id: 'XQ20190324010005',
-    type: '医疗器械',
-    addr: '重庆市',
-    people:'查找重庆市医疗器械用户',
-    desc: '寻找全市从事XX医疗器械渠道服务商',
-    time: '2021-04-01 17:27',
-    state: '1',
-    remarks: '人群描述不清楚',
-  },
-  {
-    id: 'XQ20190324010006',
-    type: '医疗器械',
-    addr: '重庆市',
-    people:'查找重庆市医疗器械用户',
-    desc: '寻找全市从事XX医疗器械渠道服务商',
-    time: '2021-04-01 17:27',
-    state: '1',
-    remarks: '人群描述不清楚',
-  },
-  {
-    id: 'XQ20190324010007',
-    type: '医疗器械',
-    addr: '重庆市',
-    people:'查找重庆市医疗器械用户',
-    desc: '寻找全市从事XX医疗器械渠道服务商',
-    time: '2021-04-01 17:27',
-    state: '1',
-    remarks: '人群描述不清楚',
-  },
-  {
-    id: 'XQ20190324010008',
-    type: '医疗器械',
-    addr: '重庆市',
-    people:'查找重庆市医疗器械用户',
-    desc: '寻找全市从事XX医疗器械渠道服务商',
-    time: '2021-04-01 17:27',
-    state: '1',
-    remarks: '人群描述不清楚',
-  },
-  {
-    id: 'XQ20190324010009',
-    type: '医疗器械',
-    addr: '重庆市',
-    people:'查找重庆市医疗器械用户',
-    desc: '寻找全市从事XX医疗器械渠道服务商',
-    time: '2021-04-01 17:27',
-    state: '1',
-    remarks: '人群描述不清楚',
-  },{
-    id: 'XQ20190324010010',
-    type: '医疗器械',
-    addr: '重庆市',
-    people:'查找重庆市医疗器械用户',
-    desc: '寻找全市从事XX医疗器械渠道服务商',
-    time: '2021-04-01 17:27',
-    state: '1',
-    remarks: '人群描述不清楚',
-  },
-]
-const multipleSelection = ref<SData[]>([])
-const handleSelectionChange = (val:SData[]) => {
-  multipleSelection.value = val
-}
+const tableData = ref<SData[]>([])
 const page = ref(1)
+const total = ref(0)
+const getDemandList = ()=>{
+  demandList_api({
+    current:page.value,
+    size:10,
+  }).then((res:res)=>{
+    tableData.value = res.body
+    total.value = res.status
+  })
+}
+getDemandList()
 const changePage =()=>{
   console.log(page.value);
 }
-const getState = (state:string)=>{
+const multipleSelection = ref<SData[]>([])
+const handleSelectionChange = (val:SData[]) => {
+  //表格选择
+  multipleSelection.value = val
+}
+const getState = (state:string|number)=>{
+  //返回需求状态及颜色类名
   const obj = ref({
     class:'',
     text:'-'
   })
-  switch (state) {
-    case '1':
+  switch (Number(state)) {
+    case 0:
+      obj.value = {
+        class:'bgc_yellow',
+        text:'审核中'
+      }
+      break;
+    case 1:
       obj.value = {
         class:'bgc_df',
         text:'已完结'
       }
       break;
-    case '2':
-      obj.value = {
-        class:'bgc_yellow',
-        text:'待处理'
-      }
-      break;
-    case '3':
+    case 2:
       obj.value = {
         class:'bgc_red',
-        text:'被退回'
+        text:'被拒绝'
       }
-      break
+      break;
     default:
       break;
   }
@@ -321,14 +252,15 @@ const getState = (state:string)=>{
 
 type FormInstance = InstanceType<typeof ElForm>
 const addForm = ref({
-  type:'',
+  type:[],
   addr:[],
   people:'',
   desc:'',
   file:'',
 })
-const fileErrorType = ref('none')
+const fileErrorType = ref('none')//上传文件错误类型
 const filePass = (rule:any, value:any, callback:any) => {
+  //上传文件错误提示
   switch (fileErrorType.value) {
     case 'size':
       callback(new Error('请添加大小不超过4M的文件'))
@@ -383,14 +315,14 @@ const typeChange = (value:any) => {
 const upload = ref()//上传组件ref
 const upData:any = ref({})//上传参数
 const hostUrl = ref('')//上传地址
-
+const file_exname = ref('')
 const handleExceed = (files:any) => {
   //覆盖前一个文件
   upload.value.clearFiles()
   upload.value.handleStart(files[0])
 }
 const upChange = (file: UploadFile, list: UploadFile[])=>{
-  //添加时验证
+  //上传组件状态改变时 添加时效验文件格式大小
   const tmpcnt = file.name.lastIndexOf(".")
   const exname = file.name.substring(tmpcnt + 1)
   const names = ['doc', 'docx', 'pdf',]
@@ -407,11 +339,14 @@ const upChange = (file: UploadFile, list: UploadFile[])=>{
     fileErrorType.value = ''
     addFormRef.value!.clearValidate('file')
     addForm.value.file = file.name
+    file_exname.value = '.' + exname
   }
 }
 const upLoading = ref(false)
+const filePath = ref('')
 const addFormRef = ref<FormInstance>()
 const submitAddForm = (formEl: FormInstance | undefined) => {
+  //提交添加需求表单
   if (!formEl) return
   formEl.validate((valid) => {
     if (valid) {
@@ -419,20 +354,27 @@ const submitAddForm = (formEl: FormInstance | undefined) => {
       console.log('submit!')
       upLoading.value = true
       getAliToken_api().then((res:res)=>{
-        return new Promise<void>((resolve, reject) => {
-          hostUrl.value = res.body.host
-          upData.value = {
-            key:res.body.dir + res.body.uuid,
-            OSSAccessKeyId: res.body.accessid,
-            success_action_status: 200,
-            policy:res.body.policy,
-            signature:res.body.signature,
+        return new Promise<string>((resolve, reject) => {
+          if(res.status == 1){
+            hostUrl.value = res.body.host
+            upData.value = {
+              key:res.body.dir + res.body.uuid + file_exname.value,
+              OSSAccessKeyId: res.body.accessid,
+              success_action_status: 200,
+              policy:res.body.policy,
+              signature:res.body.signature,
+            }
+            resolve(res.body.host + '/' + res.body.dir + res.body.uuid + file_exname.value)
+          }else{
+            reject()
           }
-          resolve()
         })
-      }).then(()=>{
-        console.log('up');
+      }).then((path)=>{
+        filePath.value = path
         upload.value!.submit()
+      }).catch((error)=>{
+        upLoading.value = false
+        errMsg('上传失败')
       })
     } else {
       console.log('error submit!');
@@ -443,21 +385,46 @@ const submitAddForm = (formEl: FormInstance | undefined) => {
 const upSuccess = (res: ElUploadProgressEvent, file: UploadFile)=>{
   //上传成功再提交表单 //阿里oss上传成功返回res为空，失败err为xml
   console.log('res',res);
-  upLoading.value = false
+  addDemand_api({
+    "attachment": filePath.value,//附件地址
+    "province": Number(addForm.value.addr[0])||'',//省（区域码）
+    "city": Number(addForm.value.addr[1])||'',//市（区域码）
+    "district": Number(addForm.value.addr[2])||'',//区（区域码）
+    "group_desc": addForm.value.desc,//人群描述
+    "group_name": addForm.value.people,//人群名称
+    "industry_id": addForm.value.type,//行业ID
+  }).then((res1:res)=>{
+    if(res1.status == 1){
+      closeAdd()
+    }else{
+      addForm.value.file = ''
+      fileErrorType.value = 'none'
+      upload.value.clearFiles()
+      upLoading.value = false
+    }
+  })
 }
 const upError = (err:any, file:any, fileList:any)=>{
+  //上传失败时
   console.log('uperr',err);
+  addForm.value.file = ''
+  fileErrorType.value = 'none'
+  upload.value.clearFiles()
   upLoading.value = false
   errMsg('上传失败')
 }
 
 const closeAdd = ()=>{
+  //关闭添加弹窗
   addShow.value = false
+  upLoading.value = false
+  fileErrorType.value = 'none'
   upload.value.clearFiles()
   addFormRef.value!.resetFields()
 }
 
 const beforeCloseAdd = (done:Function)=>{
+  //关闭添加弹窗之前
   if(upLoading.value){
     ElMessageBox.confirm(
       '正在上传中，关闭弹窗可能会导致上传失败，是否继续关闭？',
@@ -481,11 +448,19 @@ const beforeCloseAdd = (done:Function)=>{
 const delId = ref('')
 const delShow = ref(false)
 const goDel = (id:string)=>{
+  //删除需求
   delId.value = id
   delShow.value = true
 }
 const sureDel = ()=>{
+  //确认删除需求
   console.log(delId.value);
+  delDemand_api({id:delId.value}).then((res:res)=>{
+    if(res.status == 1){
+      delShow.value = false
+      getDemandList()
+    }
+  })
 }
 
 const kfShow = ref(false)

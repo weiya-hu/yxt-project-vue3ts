@@ -62,11 +62,11 @@ export function get(url: string, params?: any, showmsg?: boolean) {
     axios
       .get(url, { params })
       .then((res) => {
-        if (showmsg && res.data && res.data.status == 1) {
+        if (showmsg) {
           ElMessage({
             showClose: true,
             message: res.data.message,
-            type: 'success',
+            type: res.data.status == 1?'success':'error',
             grouping: true,
           })
         }
@@ -85,11 +85,11 @@ export function post(url: string, params?: any, showmsg?: boolean) {
     axios
       .post(url, params)
       .then((res) => {
-        if (showmsg && res.data && res.data.status == 1) {
+        if (showmsg) {
           ElMessage({
             showClose: true,
             message: res.data.message,
-            type: 'success',
+            type: res.data.status == 1?'success':'error',
             grouping: true,
           })
         }

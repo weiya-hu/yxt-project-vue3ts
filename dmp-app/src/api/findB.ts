@@ -16,8 +16,8 @@ export const getAddreList_api = (): Promise<any> => {
 }
 
 //条件组列表
-export const conditionsList_api = (): Promise<res> => {
-  return get('/dmp/conditions-list') as Promise<res>
+export const conditionsList_api = (data:any): Promise<res> => {
+  return get('/dmp/conditions-list',data) as Promise<res>
 }
 
 //保存条件组
@@ -25,7 +25,32 @@ export const subConditions_api = (data:any): Promise<any> => {
   return post('/dmp/conditions-save',data,true)
 }
 
+//删除条件组
+export const delConditions_api = (data:any): Promise<any> => {
+  return post('/dmp/conditions-delete',data,true)
+}
+
+//条件组搜索（高级搜索）
+export const searchByConditions_api = (data:any): Promise<any> => {
+  return post('/dmp/conditions-search',data,true)
+}
+
+//个性化需求列表
+export const demandList_api = (data:any): Promise<any> => {
+  return get('/dmp/demand-list',data)
+}
+
 //添加个性化需求
 export const addDemand_api = (data:any): Promise<any> => {
   return post('/dmp/demand-add',data,true)
+}
+
+//删除个性化需求
+export const delDemand_api = (data:any): Promise<any> => {
+  return post('/dmp/demand-delete',data,true)
+}
+
+//个性化需求详情
+export const demandDetail_api = (data:any): Promise<any> => {
+  return get('/dmp/demand-detail',data)
 }

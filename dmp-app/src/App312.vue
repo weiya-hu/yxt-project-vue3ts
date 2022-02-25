@@ -157,9 +157,7 @@ img{
     line-height: 36px;
   }
   .el-checkbox-group{
-    // height: 36px;
-    display: flex;
-    flex-wrap: wrap;
+    height: 36px;
     .el-checkbox{
       height: 36px;
     }
@@ -199,10 +197,5 @@ img{
       transform: rotate(-180deg);
     }
   }
-}
-.mytag{
-  background-color: #EDF5FF!important;
-  border-color: #EDF5FF!important;
-  color: $dfcolor!important;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="kzdata_page">
-    <TopSearch/>
+    <TopSearch @height-search="heightSearch"/>
     <div class="btns fsc">
       <div class="lt">
         为您找到<span>&ensp;2500&ensp;</span>家符合条件的客户（<span>*根据政策与监管法规要求，联系人手机号脱敏展示</span>）
@@ -21,9 +21,32 @@ import { reactive, ref  } from 'vue'
 import TopSearch from '@/components/TopSearch.vue'
 import MyPage from "@/components/MyPage.vue";
 import CompanyTable from "@/components/CompanyTable.vue";
-import { conditionsList_api } from '@/api/findB'
+import { searchByConditions_api } from '@/api/findB'
 import { Gajax } from '@/utils/request'
 
+const searchParams = ref({
+  size:1,
+  current:10,
+  source:1
+})
+const searchType = ref(1) //searchType 1普通搜索 2高级搜索
+const heightSearch = (params:any)=>{
+  searchType.value = 1
+  searchParams.value ={
+    ...searchParams.value,
+    ...params
+  }
+  console.log(searchParams.value);
+  goSearch()
+}
+
+const goSearch = ()=>{
+  searchByConditions_api(searchParams.value).then((res:res)=>{
+    console.log(res);
+  })
+}
+const page = ref(1)
+const total = ref(0)
 const tableData = ref([
   {
     no: '01',
@@ -166,7 +189,6 @@ const tableData = ref([
     source:'康洲数智',
   },
 ])
-const page = ref(1)
 const changePage =()=>{
   console.log(page.value);
 }

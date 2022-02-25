@@ -23,9 +23,6 @@ import { firstToken, getNewsTypeList_api } from '@/api/login'
 import emiter from '@/utils/bus'
 import { Gajax } from '@/utils/request'
 import { formatDate } from '@/utils/date'
-const store = mainStore()
-store.setName('baba')
-console.log(store.state.name)
 
 const udata:any = ref({})
 firstToken().then((data)=>{
