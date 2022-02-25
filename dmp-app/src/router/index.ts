@@ -3,6 +3,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import nav1_i from '@/assets/images/nav1.png'
 import nav1_a_i from '@/assets/images/nav1_a.png'
 
+import myData2b_a from '@/assets/images/myData2b_a.png'
+import myData2c_a from '@/assets/images/myData2c_a.png'
+import myData2b from '@/assets/images/myData2b.png'
+import myData2c from '@/assets/images/myData2c.png'
+
 const routes = [
   {
     path: '/login',
@@ -93,25 +98,25 @@ const routes = [
             path: '/myData/up2b',
             name: '上传2B数据',
             component: () => import('@/views/layout/myData/up2b.vue'),
-            meta: { title: '上传2B数据' },
+            meta: { title: '上传2B数据' ,icon:myData2b ,icon_a:myData2b_a},
           },
           {
-            path: '/findC/up2bDetails',
+            path: '/myData/up2bDetails',
             name: '上传2B数据详情',
             component: () => import('@/views/layout/myData/up2bDetails.vue'),
-            meta: { title: '上传2B数据详情',leftHidden:true  },
+            meta: { title: '上传2B数据详情',leftHidden:true ,icon:myData2b ,icon_a:myData2b_a },
           },
           {
             path: '/myData/up2c',
             name: '上传2c数据',
             component: () => import('@/views/layout/myData/up2c.vue'),
-            meta: { title: '上传2c数据' },
+            meta: { title: '上传2c数据', icon:myData2c ,icon_a:myData2c_a },
           },
           {
-            path: '/findC/up2cDetails',
+            path: '/myData/up2cDetails',
             name: '上传2B数据详情',
             component: () => import('@/views/layout/myData/up2cDetails.vue'),
-            meta: { title: '上传2B数据详情',leftHidden:true  },
+            meta: { title: '上传2B数据详情',leftHidden:true, icon:myData2c ,icon_a:myData2c_a},
           },
         ]
       },

@@ -19,7 +19,7 @@ const emit = defineEmits(['update:modelValue','change'])
 const currentPage = ref(props.modelValue)
 const change = (page:number)=>{
   emit('update:modelValue',page)
-  emit('change')
+  emit('change',page)
 }
 
 </script>

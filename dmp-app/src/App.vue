@@ -57,7 +57,7 @@ body {
   justify-content: space-between;
   align-items: center;
 }
-.fcs{
+.fcs,.flexl{
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -69,6 +69,19 @@ body {
 .faend{
   display: flex;
   align-items: flex-end;
+}
+.flexr{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.fleximg{
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  image{
+    width: 100%;
+  }
 }
 .els{
   overflow:hidden;
@@ -113,7 +126,12 @@ img{
     background-color: rgba(45,104,235,0.10);
   }
 }
-
+.my-data-table-row{
+  height: 60px;
+  font-size: 14px;
+  color: #666666;
+  line-height: 22px;
+}
 .mypage{
   display: flex;
   justify-content: flex-end;
