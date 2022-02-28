@@ -2,7 +2,7 @@
   <el-table-column v-if="type==='text'" :property="prop" :label="lable" :min-width="width">
      <template #default="{row}">
       <div class="flexl">
-        <div >{{row[prop]?row[prop]:'---'}}</div>
+        <div >{{prop && row[prop]?row[prop]:'---'}}</div>
       </div>
     </template>
   </el-table-column>
@@ -10,14 +10,14 @@
   <el-table-column v-if="type==='status'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
       <div class="flexl">
-        <div :class="row[prop] === 1?'calculating':'calculated'"></div>
-        <div >{{row[prop]?'计算完成':'计算中'}}</div>
+        <div :class="row.status === 1?'calculating':'calculated'"></div>
+        <div >{{row.status?'计算完成':'计算中'}}</div>
       </div>
     </template>
   </el-table-column>
   <el-table-column v-if="type==='date'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
-      <div>{{Format('yyyy-MM-dd',new Date(row[prop])) }}</div>
+      <div>{{Format('yyyy-MM-dd',new Date(row.date)) }}</div>
     </template>
   </el-table-column>
   <el-table-column v-if="type==='operateLook'" :label="lable" :min-width="width">
@@ -39,7 +39,7 @@
   })
 
   const emit = defineEmits(['click'])
-  const operate=(index,row)=>{
+  const operate=(index:number,row:any)=>{
     row.status && emit('click',index)
   }
   const {type,lable,prop,width,operatButton} =toRefs(props)
