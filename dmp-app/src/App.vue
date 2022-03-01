@@ -209,5 +209,29 @@ img{
   .el-dialog .el-dialog__header{
     border: none;
   }
+  .el-form-item--default .el-form-item__label{
+    width: 78px;
+  }
+  .el-input__inner{
+    height: 36px;
+  }
+  .input-textarea{
+    textarea{
+      resize: none;
+      height: 130px;
+    }
+  }
 }
+.upload-users{
+  .el-form-item__content{
+    &>div{
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+      flex-wrap: nowrap;
+    }
+    
+  }
+}
+
 </style>
