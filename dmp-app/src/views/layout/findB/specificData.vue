@@ -56,16 +56,16 @@
 
     <el-dialog v-model="addShow" title="新建数据" width="500px" @close="closeAdd" :before-close="beforeCloseAdd">
       <el-form class="myform" ref="addFormRef" :model="addForm" :rules="addRules" v-loading="upLoading">
-        <el-form-item label="行业分类" prop="type">
+        <el-form-item label="行业分类" prop="type" label-width="86px">
           <MyCascader v-model="addForm.type" type="type"/>
         </el-form-item>
-        <el-form-item label="选择地区" prop="addr">
+        <el-form-item label="选择地区" prop="addr" label-width="86px">
           <MyCascader v-model="addForm.addr" type="address"/>
         </el-form-item>
-        <el-form-item label="人群名称" prop="people">
+        <el-form-item label="人群名称" prop="people" label-width="86px">
           <el-input v-model="addForm.people" placeholder="请输入人群名称"></el-input>
         </el-form-item>
-        <el-form-item label="人群描述" prop="desc">
+        <el-form-item label="人群描述" prop="desc" label-width="86px">
           <el-input 
             v-model="addForm.desc" 
             placeholder="可对人群进行简单的描述"
@@ -77,7 +77,7 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="上传附件" prop="file" required>
+        <el-form-item label="上传附件" prop="file" label-width="86px">
           <MyUpload v-model="addForm.file" @change="upChange" @error="upError" @success="upSuccess" ref="upload"/>
         </el-form-item>
         
@@ -199,7 +199,8 @@ const filePass = (rule:any, value:any, callback:any) => {
       callback(new Error('请添加 .doc、.docx、.pdf 格式的文件'))
       break;
     case 'none':
-      callback(new Error('请添加文件'))
+      // callback(new Error('请添加文件'))
+      callback()
       break;
     default:
       callback()
