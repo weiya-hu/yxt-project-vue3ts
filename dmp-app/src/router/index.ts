@@ -177,13 +177,13 @@ const routes = [
           },
           {
             path: '/myData/up2c',
-            name: '上传2c数据',
+            name: '上传2C数据',
             component: () => import('@/views/layout/myData/up2c.vue'),
             meta: { title: '上传2c数据', icon:myData2c ,icon_a:myData2c_a },
           },
           {
             path: '/myData/up2cDetails',
-            name: '上传2B数据详情',
+            name: '上传2C数据详情',
             component: () => import('@/views/layout/myData/up2cDetails.vue'),
             meta: { title: '上传2B数据详情',leftHidden:true, icon:myData2c ,icon_a:myData2c_a},
           },

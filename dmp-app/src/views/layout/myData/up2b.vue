@@ -21,7 +21,7 @@
       <MyPage :total="totle" v-model="page" @change="changePage"/>
     </div>
     <MyDataUpUser v-model="dialogVisible"/>
-    <div>{{dialogVisible}}{{page}}</div>
+    <!-- <div>{{dialogVisible}}{{page}}</div> -->
   </div>
 </template>
 
@@ -30,19 +30,21 @@
   import MyDataTable from '@/components/MyDataTable.vue'
   import MyPage from '@/components/MyPage.vue'
   import MyDataUpUser from '@/components/MyDataUpUser.vue'
+  import {useRouter} from 'vue-router'
 
 
   interface TableTitleProp{
       type:string,
       lable?:string,
       prop:string,
-      width:string,
+      width:number,
       operatButton?:string[]
     }
 
   let totle=ref(1000)
   let page = ref(1)
   let dialogVisible = ref(false)
+  let router = useRouter();
 
 
   let tableList = ref([
@@ -58,17 +60,20 @@
     {id:'gfhjdgf',personsName:'djf实打实  hjs ',personsDes:'技术的开始抠脚大汉空间按时卡',status:1,userNum:'2550',date:1645605329000},
   ])
   let tableTitle = ref(<TableTitleProp[]>[
-    {type:'select',width:'100',prop:'select'},
-    {type:'text',lable:'ID',prop:'id',width:'150'},
-    {type:'text',lable:'人群名称',prop:'personsName',width:'200'},
-    {type:'text',lable:'人群描述',prop:'personsDes',width:'220'},
-    {type:'status',lable:'状态',prop:'status',width:'100'},
-    {type:'text',lable:'用户数',prop:'userNum',width:'100'},
-    {type:'date',lable:'创建日期',prop:'date',width:'100'},
-    {type:'operateLook',lable:'操作',width:'100',prop:'operate',operatButton:['查看']}
+    {type:'select',width:100,prop:'select'},
+    {type:'text',lable:'ID',prop:'id',width:150},
+    {type:'text',lable:'人群名称',prop:'personsName',width:200},
+    {type:'text',lable:'人群描述',prop:'personsDes',width:220},
+    {type:'status',lable:'状态',prop:'status',width:100},
+    {type:'text',lable:'用户数',prop:'userNum',width:100},
+    {type:'date',lable:'创建日期',prop:'date',width:100},
+    {type:'operateLook',lable:'操作',width:100,prop:'operate',operatButton:['查看']}
   ])
   
-  const operate=(val:number)=>{console.log(val)}
+  const operate=(val:number)=>{
+    console.log(val)
+    router.push({path:'/myData/up2bDetails'})
+  }
   const changePage=()=>{}
 </script>
 

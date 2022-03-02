@@ -6,6 +6,11 @@
       </div>
     </template>
   </el-table-column>
+  <el-table-column v-if="type==='link'" :property="prop" :label="lable" :min-width="width">
+     <template #default="{row}">
+        <el-link type="primary" :href="row.website">{{ row.website }}</el-link>
+      </template>
+  </el-table-column>
   <el-table-column v-if="type==='select'" type="selection" :width="width" align="center" />
   <el-table-column v-if="type==='status'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
@@ -28,15 +33,16 @@
 </template>
 
 <script setup lang="ts">
-  import { ref,toRefs} from 'vue'
+  import { toRefs} from 'vue'
   import {Format} from '@/utils/date'
-  const props = defineProps({
-    type:String,
-    lable:String,
-    prop:String,
-    width:String,
-    operatButton:Array
-  })
+  const props = withDefaults(defineProps<{
+    type:string,
+    lable?:string,
+    prop:string,
+    width:number,
+    operatButton?:string[]
+  }>(),{})
+
 
   const emit = defineEmits(['click'])
   const operate=(index:number,row:any)=>{
