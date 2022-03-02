@@ -1,9 +1,7 @@
 <template>
   <div class="specific_data_details_page">
     <div class="btns fsc">
-      <div class="lt">
-        为您找到<span>&ensp;2500&ensp;</span>家符合条件的客户（<span>*根据政策与监管法规要求，联系人手机号脱敏展示</span>）
-      </div>
+      <FindNumber class="lt" :total="total"/>
       <div class="rt fcs">
         <el-button size="large">同步SCRM</el-button>
         <el-button size="large">同步CMS</el-button>
@@ -19,6 +17,7 @@
 import { reactive, ref  } from 'vue'
 import MyPage from "@/components/MyPage.vue";
 import CompanyTable from "@/components/CompanyTable.vue";
+import FindNumber from "@/components/FindNumber.vue";
 import {useRoute} from 'vue-router'
 import { demandDetail_api } from '@/api/findB'
 
@@ -51,13 +50,6 @@ getList()
 .specific_data_details_page{
   .btns{
     padding-bottom: 20px;
-    .lt{
-      font-size: 14px;
-      color: #363636;
-      span{
-        color: #E40000;
-      }
-    }
   }
 }
 </style>

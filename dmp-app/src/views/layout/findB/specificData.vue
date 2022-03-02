@@ -17,7 +17,7 @@
         <el-table-column property="id" label="ID" width="165"/>
         <el-table-column property="type" label="行业分类" width="150">
           <template #default="scope">
-            <div>{{getHashStr(scope.row.industry_id,typeHash)}}</div>
+            <div>{{getHashStr(scope.row.industry_id.split(','),typeHash)}}</div>
           </template>
         </el-table-column>
         <el-table-column property="addr" label="地区" width="180">
@@ -44,9 +44,9 @@
         <el-table-column label="操作" width="150">
           <template #default="scope">
             <div class="fcs">
-              <div class="dfcolor" @click="goDetails(scope.row.id)">详情</div>
+              <el-link type="primary" @click="goDetails(scope.row.id)">详情</el-link>
               <div class="line"></div>
-              <div class="dfcolor" @click="goDel(scope.row.id)">删除</div>
+              <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
             </div>
           </template>
         </el-table-column>
@@ -57,22 +57,10 @@
     <el-dialog v-model="addShow" title="新建数据" width="500px" @close="closeAdd" :before-close="beforeCloseAdd">
       <el-form class="myform" ref="addFormRef" :model="addForm" :rules="addRules" v-loading="upLoading">
         <el-form-item label="行业分类" prop="type">
-          <el-cascader
-            v-model="addForm.type"
-            :options="typeList"
-            @change="typeChange"
-            :props="typeProps"
-            placeholder="请选择行业"
-          ></el-cascader>
+          <MyCascader v-model="addForm.type" type="type"/>
         </el-form-item>
         <el-form-item label="选择地区" prop="addr">
-          <el-cascader
-            v-model="addForm.addr"
-            :options="addressList"
-            @change="addrChange"
-            :props="addrProps"
-            placeholder="请选择地区"
-          ></el-cascader>
+          <MyCascader v-model="addForm.addr" type="address"/>
         </el-form-item>
         <el-form-item label="人群名称" prop="people">
           <el-input v-model="addForm.people" placeholder="请输入人群名称"></el-input>
@@ -90,48 +78,12 @@
         </el-form-item>
 
         <el-form-item label="上传附件" prop="file" required>
-          <el-upload 
-            :action="hostUrl"
-            :auto-upload="false"
-            :limit="1"
-            :multiple="false"
-            :show-file-list="false"
-            :data="upData"
-            :on-exceed="handleExceed"
-            :on-change="upChange"
-            :on-success="upSuccess"
-            :on-error="upError"
-            ref="upload"
-            accept=".pdf,.docx,.doc"
-          >
-            <template #default>
-              <div class="upbox">
-                <div class="fcc up_lt" :class="addForm.file?'hasfile':''">
-                  <div>
-                    <el-icon>
-                      <document v-if="addForm.file"/>
-                      <plus v-else/>
-                    </el-icon>
-                    <div class="file_name">{{addForm.file||'点击上传'}}</div>
-                  </div>
-                </div>
-              </div>
-            </template>
-            <template #tip>
-              <div class="upbox">
-                <div class="up_rt">
-                  <div>可适当描述所处的行业现状，以及公司目前采取的运营、渠道、推广等多种获客方式，以便运营人员进一步了解熟悉您的所处的行业及需求，同时也为您提供更好的客户服务。</div>
-                  <div class="up_tip dfcolor">附件支持.doc.docx.pdf，大小不超过4M</div>
-                </div>
-              </div>
-            </template>
-          </el-upload>
+          <MyUpload v-model="addForm.file" @change="upChange" @error="upError" @success="upSuccess" ref="upload"/>
         </el-form-item>
         
         <div class="fcs btns">
           <el-button @click="closeAdd">取消</el-button>
           <el-button type="primary" @click="submitAddForm(addFormRef)">提交</el-button>
-          <!-- <el-button type="primary" @click="submit">上传</el-button> -->
         </div>
       </el-form>
     </el-dialog>
@@ -145,44 +97,20 @@
 import {useRouter} from 'vue-router'
 import znkf_i from '@/assets/images/znkf.png'
 import { reactive, ref ,computed } from 'vue'
-import { Plus ,Document } from '@element-plus/icons-vue'
-import type { UploadFile,ElUploadProgressEvent } from 'element-plus/es/components/upload/src/upload.type'
 import type { ElForm } from 'element-plus'
 import MyDialog from "@/components/MyDialog.vue";
 import MyPage from "@/components/MyPage.vue";
-import { Gajax } from '@/utils/request'
+import MyUpload from "@/components/MyUpload.vue";
+import MyCascader from "@/components/MyCascader.vue";
 import { mainStore } from '@/store/index'
-import { getAliToken_api } from '@/api/findB'
 import { errMsg,getHash,getHashStr,strToArr} from '@/utils/index'
 import { ElMessageBox } from 'element-plus'
 import { addDemand_api ,demandList_api,delDemand_api } from '@/api/findB'
 import { formatDate } from '@/utils/date'
 
 const store = mainStore()
-const typeList = ref<any[]>([])
-const typeHash = ref({})
-const addressList = ref<any[]>([])
-const addressHash = ref({})
-store.setTypeList().then((res:any[])=>{
-  typeList.value = res
-  typeHash.value = getHash(typeList.value,'industryId')
-})
-store.setAddressList().then((res:any[])=>{
-  addressList.value = res
-  addressHash.value = getHash(addressList.value,'id')
-})
-const typeProps = {
-  expandTrigger: 'hover',
-  checkStrictly: true,
-  value:'industryId',
-  label:'name',
-}
-const addrProps = {
-  expandTrigger: 'hover',
-  checkStrictly: true,
-  value:'id',
-  label:'name',
-}
+const typeHash = computed(() => getHash(store.state.typeList,'industryId'))
+const addressHash = computed(() => getHash(store.state.addressList,'id'))
 
 const router = useRouter()
 const goDetails = (id:string)=>{
@@ -206,8 +134,10 @@ const getDemandList = ()=>{
     current:page.value,
     size:10,
   }).then((res:res)=>{
-    tableData.value = res.body
-    total.value = res.status
+    if(res.status == 1){
+      tableData.value = res.body.records
+      total.value = res.body.total
+    }
   })
 }
 getDemandList()
@@ -305,45 +235,19 @@ const addRules = reactive({
 
 const addShow = ref(false)
 
-const addrChange = (value:any) => {
-  console.log(value)
-}
-const typeChange = (value:any) => {
-  console.log(value)
-}
-
 const upload = ref()//上传组件ref
-const upData:any = ref({})//上传参数
-const hostUrl = ref('')//上传地址
-const file_exname = ref('')
-const handleExceed = (files:any) => {
-  //覆盖前一个文件
-  upload.value.clearFiles()
-  upload.value.handleStart(files[0])
-}
-const upChange = (file: UploadFile, list: UploadFile[])=>{
+const upChange = (errorType:string)=>{
   //上传组件状态改变时 添加时效验文件格式大小
-  const tmpcnt = file.name.lastIndexOf(".")
-  const exname = file.name.substring(tmpcnt + 1)
-  const names = ['doc', 'docx', 'pdf',]
-  addFormRef.value!.clearValidate('file')
-  if(names.indexOf(exname)< 0 ){
-    fileErrorType.value = 'type'
-    addForm.value.file = ''
-    addFormRef.value!.validateField('file', () => null)
-  }else if((file.size / 1024 / 1024)>4){
-    fileErrorType.value = 'size'
+  if(errorType){
+    fileErrorType.value = errorType
     addForm.value.file = ''
     addFormRef.value!.validateField('file', () => null)
   }else{
     fileErrorType.value = ''
     addFormRef.value!.clearValidate('file')
-    addForm.value.file = file.name
-    file_exname.value = '.' + exname
   }
 }
 const upLoading = ref(false)
-const filePath = ref('')
 const addFormRef = ref<FormInstance>()
 const submitAddForm = (formEl: FormInstance | undefined) => {
   //提交添加需求表单
@@ -353,63 +257,44 @@ const submitAddForm = (formEl: FormInstance | undefined) => {
       //表单效验成功再上传
       console.log('submit!')
       upLoading.value = true
-      getAliToken_api().then((res:res)=>{
-        return new Promise<string>((resolve, reject) => {
-          if(res.status == 1){
-            hostUrl.value = res.body.host
-            upData.value = {
-              key:res.body.dir + res.body.uuid + file_exname.value,
-              OSSAccessKeyId: res.body.accessid,
-              success_action_status: 200,
-              policy:res.body.policy,
-              signature:res.body.signature,
-            }
-            resolve(res.body.host + '/' + res.body.dir + res.body.uuid + file_exname.value)
-          }else{
-            reject()
-          }
-        })
-      }).then((path)=>{
-        filePath.value = path
-        upload.value!.submit()
-      }).catch((error)=>{
-        upLoading.value = false
-        errMsg('上传失败')
-      })
+      upload.value.submit()
     } else {
       console.log('error submit!');
       return false
     }
   })
 }
-const upSuccess = (res: ElUploadProgressEvent, file: UploadFile)=>{
-  //上传成功再提交表单 //阿里oss上传成功返回res为空，失败err为xml
-  console.log('res',res);
+
+const upSuccess = (path:string)=>{
+  //上传成功再提交表单
   addDemand_api({
-    "attachment": filePath.value,//附件地址
+    "attachment": path,//附件地址
     "province": Number(addForm.value.addr[0])||'',//省（区域码）
     "city": Number(addForm.value.addr[1])||'',//市（区域码）
     "district": Number(addForm.value.addr[2])||'',//区（区域码）
     "group_desc": addForm.value.desc,//人群描述
     "group_name": addForm.value.people,//人群名称
-    "industry_id": addForm.value.type,//行业ID
+    "industry_id": addForm.value.type.join(','),//行业ID
   }).then((res1:res)=>{
     if(res1.status == 1){
       closeAdd()
+      getDemandList()
     }else{
       addForm.value.file = ''
       fileErrorType.value = 'none'
-      upload.value.clearFiles()
+      upload.value.clear()
       upLoading.value = false
     }
+  }).catch(()=>{
+    upError('')
   })
 }
-const upError = (err:any, file:any, fileList:any)=>{
+const upError = (err:any)=>{
   //上传失败时
   console.log('uperr',err);
   addForm.value.file = ''
   fileErrorType.value = 'none'
-  upload.value.clearFiles()
+  upload.value.clear()
   upLoading.value = false
   errMsg('上传失败')
 }
@@ -419,7 +304,7 @@ const closeAdd = ()=>{
   addShow.value = false
   upLoading.value = false
   fileErrorType.value = 'none'
-  upload.value.clearFiles()
+  upload.value.clear()
   addFormRef.value!.resetFields()
 }
 
@@ -504,9 +389,6 @@ const kfShow = ref(false)
       margin: 0 16px;
       background-color: $coloreee;
     }
-    .dfcolor:hover{
-      cursor: pointer;
-    }
   }
   .myform{
     .el-select{
@@ -518,70 +400,8 @@ const kfShow = ref(false)
     :deep(.el-cascader){
       width: 100%;
     }
-    .upbox{
-      .up_lt{
-        width: 100px;
-        height: 100px;
-        border:1px dashed $colorddd;
-        flex-shrink: 0;
-        position: relative;
-        .file_name{
-          font-size: 12px;
-          line-height: 12px;
-        }
-        .el-icon{
-          font-size: 28px;
-          color: $colorddd;
-        }
-      }
-      .hasfile{
-        &:hover{
-          &::after{
-            opacity: 0.6;
-          }
-        }
-        &::after{
-          content: '重新选择';
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          opacity: 0;
-          position: absolute;
-          width: 100px;
-          height: 100px;
-          background-color: rgba(0, 0, 0, 1);
-          transition: opacity 0.5s;
-          color: #fff;
-        }
-      }
-      .up_rt{
-        padding-left: 12px;
-        div{
-          font-size: 12px;
-        }
-        color: $color999;
-        line-height: 20px;
-        text-align: left;
-        .up_tip{
-          margin-top: 8px;
-        }
-      }
-    }
-    .el-form-item__content{
-      >div{
-        display: flex;
-        align-items: center;
-      }
-    }
     .btns{
       justify-content: flex-end;
-    }
-    .is-error{
-      .upbox{
-        .up_lt{
-          border-color: var(--el-color-danger);
-        }
-      }
     }
   }
 }

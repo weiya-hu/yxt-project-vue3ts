@@ -7,7 +7,6 @@ export const mainStore = defineStore('mainStore', () => {
   const state = reactive({
     typeList:[] as any[],//行业分类
     addressList:[] as any[],//地区列表
-    aliToken:{} as any,//阿里oss上传参数
   })
   const setTypeList = () => {
     return new Promise<any[]>((resolve, reject) => {
@@ -37,24 +36,9 @@ export const mainStore = defineStore('mainStore', () => {
       }
     })
   }
-  const setAliToken = () =>{
-    return new Promise<any>((resolve, reject) => {
-      if(state.aliToken.policy){
-        resolve(state.aliToken)
-      }else{
-        getAliToken_api().then((res:res)=>{
-          state.aliToken = res.body
-          resolve(state.aliToken)
-        }).catch((error:any)=>{
-          reject(error)
-        })
-      }
-    })
-  }
   return {
     state,
     setTypeList,
     setAddressList,
-    setAliToken,
   }
 })

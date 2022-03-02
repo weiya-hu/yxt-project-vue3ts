@@ -70,13 +70,13 @@
           </el-form-item> -->
           <el-form-item label="联系方式" prop="contact">
             <el-checkbox-group v-model="form.contact">
-              <el-checkbox :label="v.id" v-for="v in contactArr" :key="v.id">{{v.value}}</el-checkbox>
+              <el-checkbox :label="v.value" v-for="v in contactArr" :key="v.id">{{v.name}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </div>
         <el-form-item label="企业类型" prop="ctype" style="width: 80%;">
           <el-checkbox-group v-model="form.ctype">
-            <el-checkbox :label="v.id" v-for="v in ctypeArr" :key="v.id">{{v.value}}</el-checkbox>
+            <el-checkbox :label="v.value" v-for="v in ctypeArr" :key="v.id">{{v.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <div class="fcs btns">
@@ -109,11 +109,9 @@
 
       <div class="now_condition fcs" v-show="conditionShow">
         <div>筛选条件：</div>
-        <el-tag closable class="mytag" v-if="showLables.business_scope">经营范围：{{showLables.business_scope}}</el-tag>
-        <el-tag closable class="mytag" v-if="showLables.typeLable">行业分类：{{showLables.typeLable}}</el-tag>
-        <el-tag closable class="mytag" v-if="showLables.addrLable">省份地区：{{showLables.addrLable}}</el-tag>
-        <el-tag closable class="mytag" v-if="showLables.contact">联系方式：{{showLables.contact}}</el-tag>
-        <el-tag closable class="mytag" v-if="showLables.ctype">企业类型：{{showLables.ctype}}</el-tag>
+        <template v-for="(value,key) in showLables">
+          <el-tag :key="key" closable class="mytag" v-if="value" @close="closeTag(key)">{{getTagName[key]}}：{{value}}</el-tag>
+        </template>
       </div>
 
     </div>
@@ -138,9 +136,9 @@
 <script setup lang="ts">
 //布局内容中的头部搜索组件
 import { Search , CloseBold , ArrowDown} from '@element-plus/icons-vue'
-import { reactive, ref  } from 'vue'
+import { reactive, ref , computed } from 'vue'
 import type { ElForm } from 'element-plus'
-import { conditionsList_api,subConditions_api,delConditions_api } from '@/api/findB'
+import { conditionsList_api,subConditions_api,delConditions_api,getCAndC_api } from '@/api/findB'
 import { Gajax } from '@/utils/request'
 import { mainStore } from '@/store/index'
 
@@ -148,14 +146,8 @@ const searchWord = ref('')
 const heightShow = ref(false)
 
 const store = mainStore()
-const typeList = ref<any[]>([])
-const addressList = ref<any[]>([])
-store.setTypeList().then((res:any[])=>{
-  typeList.value = res
-})
-store.setAddressList().then((res:any[])=>{
-  addressList.value = res
-})
+const typeList = computed(() => store.state.typeList)
+const addressList = computed(() => store.state.addressList)
 
 const typeProps = {
   expandTrigger: 'hover',
@@ -169,25 +161,39 @@ const addrProps = {
   value:'id',
   label:'name',
 }
-const ctypeArr = ref([
-  {id:0,value:'有限责任公司'},
-  {id:1<<1,value:'股份有限公司'},
-  {id:1<<2,value:'股份合作公司'},
-  {id:1<<3,value:'国有企业'},
-  {id:16,value:'其它'},
-  {id:32,value:'股份合作公司1'},
-  {id:64,value:'股份合作公司2'},
-  {id:128,value:'股份合作公司3'},
-  {id:256,value:'股份合作公司4'},
-  {id:512,value:'股份合作公司5'},
-  {id:1024,value:'股份合作公司6'},
-  {id:2048,value:'股份合作公司7'},
-])
-const contactArr = ref([
-  {id:1,value:'有手机号'},
-  {id:2,value:'有固定电话'},
-  {id:4,value:'有邮箱'},
-])
+
+interface CAndC {
+  value:number,
+  name:string,
+  id?:number,
+}
+const ctypeArr = ref<CAndC[]>([])
+const contactArr = ref<CAndC[]>([])
+getCAndC_api().then((res:res)=>{
+  if(res.status == 1){
+    ctypeArr.value = res.body.cType
+    contactArr.value = res.body.contact
+  }  
+})
+// const ctypeArr = ref([
+//   {id:0,value:'有限责任公司'},
+//   {id:1<<1,value:'股份有限公司'},
+//   {id:1<<2,value:'股份合作公司'},
+//   {id:1<<3,value:'国有企业'},
+//   {id:16,value:'其它'},
+//   {id:32,value:'股份合作公司1'},
+//   {id:64,value:'股份合作公司2'},
+//   {id:128,value:'股份合作公司3'},
+//   {id:256,value:'股份合作公司4'},
+//   {id:512,value:'股份合作公司5'},
+//   {id:1024,value:'股份合作公司6'},
+//   {id:2048,value:'股份合作公司7'},
+// ])
+// const contactArr = ref([
+//   {id:1,value:'有手机号'},
+//   {id:2,value:'有固定电话'},
+//   {id:4,value:'有邮箱'},
+// ])
 
 const form = reactive<HeightSearchForm>({
   // mobile:'', //手机号 位运算
@@ -247,8 +253,8 @@ const getSearchParams = ()=>{
   form.contact.forEach((v:number|string)=>{
     contact = contact | Number(v)
   })
-  // let industry_id = form.industry_id.join('>')
-  let industry_id = form.industry_id
+  let industry_id = form.industry_id.join(',')
+  // let industry_id = form.industry_id
   searchParams = {
     province:Number(form.addr[0])||'',
     city:Number(form.addr[1])||'',
@@ -277,7 +283,7 @@ const conditionArr = ref<any[]>([])
 const getConditionArr =async ()=>{
   //获取用户保存的条件组
   const res:res = await conditionsList_api({current:1,size:10})
-  res.status == 1 && (conditionArr.value = res.body.records)
+  res.status == 1 && (conditionArr.value = res.body)
 }
 getConditionArr()
 const dropRef = ref()
@@ -304,17 +310,17 @@ const changeDrop = (v:any)=>{
   // form.email = (v.contact & 4) > 0 ? 4 : ''
   // 位运算 & > 0 判断是否选择
   contactArr.value.forEach(value=>{
-    (v.contact & value.id) && form.contact.push(value.id);
+    (v.contact & value.value) && form.contact.push(value.value);
   });
-  const addr = [String(v.province),String(v.city),String(v.district)]
+  const addr = [v.province,v.city,v.district]
   addr.forEach(v=>{
-    (Number(v)!=0) && form.addr.push(v)
+    (Number(v)!=0) && form.addr.push(String(v))
   })
-  form.industry_id = v.industry_id
-  // form.industry_id = v.industry_id.split('>')
+  // form.industry_id = v.industry_id
+  form.industry_id = v.industry_id.split(',')
   form.business_scope = v.business_scope;
-  ctypeArr.value.forEach(value=>{
-    (v.company_type & value.id) && form.ctype.push(value.id);
+  ctypeArr.value.forEach((value:CAndC)=>{
+    (v.company_type & value.value) && form.ctype.push(value.value);
   });
   console.log(form);
 }
@@ -325,10 +331,18 @@ const addrChange = (value:any) => {
 const typeCRef = ref()
 const typeChange = (value:any) =>{
 }
+
+const getTagName = {
+  business_scope:'经营范围',
+  industry_id:'行业分类',
+  addr:'省份地区',
+  contact:'联系方式',
+  ctype:'企业类型',
+}
 const showLables = reactive({
   business_scope:'',
-  addrLable:'',
-  typeLable:'',
+  industry_id:'',
+  addr:'',
   contact:'',
   ctype:'',
 })
@@ -346,10 +360,20 @@ const goSearch = ()=>{
     ctype_str += ctypeArr.value.find(j=>j.id == v)?.value + '，'
   })
   showLables.ctype = ctype_str.substring(0, ctype_str.length - 1);  
-  if(addrCRef.value.getCheckedNodes().length) showLables.addrLable = addrCRef.value.getCheckedNodes()[0].text
-  if(typeCRef.value.getCheckedNodes().length) showLables.typeLable = typeCRef.value.getCheckedNodes()[0].text
+  if(addrCRef.value.getCheckedNodes().length) showLables.addr = addrCRef.value.getCheckedNodes()[0].text
+  if(typeCRef.value.getCheckedNodes().length) showLables.industry_id = typeCRef.value.getCheckedNodes()[0].text
   conditionShow.value = true
   emit('heightSearch',getSearchParams())
+}
+
+const closeTag = (key:string)=>{
+  //关闭筛选条件tag
+  showLables[key as keyof typeof showLables] = ''
+  if(key == 'business_scope'){
+    form.business_scope = ''
+  }else{
+    (form[key as keyof typeof form] as Array<number|string>) = []
+  }
 }
 </script>
 
@@ -430,10 +454,10 @@ const goSearch = ()=>{
   color: $color333;
   .myform{
     padding: 30px;
-    .btns{
+    // .btns{
       // margin-top:40px;
       // padding-top:24px;
-    }
+    // }
     .el-form-item{
       margin-bottom: 16px;
     }

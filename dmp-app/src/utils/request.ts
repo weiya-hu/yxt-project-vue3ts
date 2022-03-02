@@ -58,7 +58,7 @@ axios.interceptors.response.use(
 
 // 封装get请求
 export function get(url: string, params?: any, showmsg?: boolean) {
-  return new Promise((resolve, reject) => {
+  return new Promise<res>((resolve, reject) => {
     axios
       .get(url, { params })
       .then((res) => {
@@ -81,7 +81,7 @@ export function get(url: string, params?: any, showmsg?: boolean) {
 
 // 封装post请求
 export function post(url: string, params?: any, showmsg?: boolean) {
-  return new Promise((resolve, reject) => {
+  return new Promise<res>((resolve, reject) => {
     axios
       .post(url, params)
       .then((res) => {

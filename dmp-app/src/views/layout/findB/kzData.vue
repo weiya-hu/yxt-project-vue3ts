@@ -2,9 +2,7 @@
   <div class="kzdata_page">
     <TopSearch @height-search="heightSearch"/>
     <div class="btns fsc">
-      <div class="lt">
-        为您找到<span>&ensp;2500&ensp;</span>家符合条件的客户（<span>*根据政策与监管法规要求，联系人手机号脱敏展示</span>）
-      </div>
+      <FindNumber class="lt" :total="total"/>
       <div class="rt fcs">
         <el-button size="large">同步SCRM</el-button>
         <el-button size="large">同步CMS</el-button>
@@ -20,6 +18,7 @@
 import { reactive, ref  } from 'vue'
 import TopSearch from '@/components/TopSearch.vue'
 import MyPage from "@/components/MyPage.vue";
+import FindNumber from "@/components/FindNumber.vue";
 import CompanyTable from "@/components/CompanyTable.vue";
 import { searchByConditions_api } from '@/api/findB'
 import { Gajax } from '@/utils/request'
@@ -31,7 +30,7 @@ const searchParams = ref({
 })
 const searchType = ref(1) //searchType 1普通搜索 2高级搜索
 const heightSearch = (params:any)=>{
-  searchType.value = 1
+  searchType.value = 2
   searchParams.value ={
     ...searchParams.value,
     ...params
@@ -198,13 +197,6 @@ const changePage =()=>{
 .kzdata_page{
   .btns{
     padding: 30px 0 20px 0;
-    .lt{
-      font-size: 14px;
-      color: #363636;
-      span{
-        color: #E40000;
-      }
-    }
   }
 }
 </style>

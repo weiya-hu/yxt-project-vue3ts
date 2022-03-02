@@ -7,7 +7,7 @@
       <el-col class="navbox fsc">
         <TopNav :nav="topNav" v-model="activePath" ref="topNavRef"/>
         <div class="user fcs">
-          <el-button color="#2D68EB" plain>完善资料</el-button>
+          <el-button color="#2D68EB" class="l_btn" plain>完善资料</el-button>
           <div class="sline"></div>
           <div class="userbox fcs">
             <el-avatar :size="48" :src="znkf_i"></el-avatar>
@@ -36,11 +36,10 @@
       </el-col>
       <el-col :class="activePath=='/index'?'':'layout_content'">
         <router-view v-slot="{ Component }">
-          <transition name="el-fade-in-linear">
+          <transition name="fade">
             <component :is="Component" />
           </transition>
         </router-view>
-        <!-- <router-view></router-view> -->
       </el-col>
     </el-row>
   </div>
@@ -97,6 +96,15 @@ onBeforeRouteUpdate((to,from)=>{
 <style lang="scss" scoped>
 .layout_page {
   height: 100%;
+  .fade-leave-from{
+    display: none;//解决页面过渡抖动
+  }
+  .fade-enter-active{
+    transition: opacity 0.5s ease;
+  }
+  .fade-enter-from,.fade-leave-to {
+    opacity: 0;
+  }
   .logobox {
     height: 80px;
     background-color: $dfcolor;
@@ -123,6 +131,12 @@ onBeforeRouteUpdate((to,from)=>{
       }
       .username{
         margin-left: 12px;
+      }
+      .l_btn{
+        border-color:rgba(178,202,249,1);
+        &:hover,&:active,&:focus{
+          border-color:$dfcolor;
+        }
       }
     }
   }

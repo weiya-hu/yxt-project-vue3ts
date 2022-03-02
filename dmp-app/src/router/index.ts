@@ -2,6 +2,27 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import nav1_i from '@/assets/images/nav1.png'
 import nav1_a_i from '@/assets/images/nav1_a.png'
+import nav2_i from '@/assets/images/nav2.png'
+import nav2_a_i from '@/assets/images/nav2_a.png'
+import nav3_i from '@/assets/images/nav3.png'
+import nav3_a_i from '@/assets/images/nav3_a.png'
+import nav4_i from '@/assets/images/nav4.png'
+import nav4_a_i from '@/assets/images/nav4_a.png'
+import nav5_i from '@/assets/images/nav5.png'
+import nav5_a_i from '@/assets/images/nav5_a.png'
+import nav6_i from '@/assets/images/nav6.png'
+import nav6_a_i from '@/assets/images/nav6_a.png'
+import nav7_i from '@/assets/images/nav7.png'
+import nav7_a_i from '@/assets/images/nav7_a.png'
+import nav8_i from '@/assets/images/nav8.png'
+import nav8_a_i from '@/assets/images/nav8_a.png'
+import nav9_i from '@/assets/images/nav9.png'
+import nav9_a_i from '@/assets/images/nav9_a.png'
+import nav10_i from '@/assets/images/nav10.png'
+import nav10_a_i from '@/assets/images/nav10_a.png'
+import nav11_i from '@/assets/images/nav11.png'
+import nav11_a_i from '@/assets/images/nav11_a.png'
+
 
 import myData2b_a from '@/assets/images/myData2b_a.png'
 import myData2c_a from '@/assets/images/myData2c_a.png'
@@ -50,13 +71,13 @@ const routes = [
             path: '/findB/otherData',
             name: '第三方数据',
             component: () => import('@/views/layout/findB/otherData.vue'),
-            meta: { title: '第三方数据',icon:nav1_i,icon_a:nav1_a_i },
+            meta: { title: '第三方数据',icon:nav2_i,icon_a:nav2_a_i },
           },
           {
             path: '/findB/specificData',
             name: '个性化数据',
             component: () => import('@/views/layout/findB/specificData.vue'),
-            meta: { title: '个性化数据',icon:nav1_i,icon_a:nav1_a_i },
+            meta: { title: '个性化数据',icon:nav3_i,icon_a:nav3_a_i },
           },
           {
             path: '/findB/specificDataDetails',
@@ -77,13 +98,61 @@ const routes = [
             path: '/findC/kzData',
             name: '康州数据源C',
             component: () => import('@/views/layout/findC/kzData.vue'),
-            meta: { title: '康州数据源' },
+            meta: { title: '康州数据源',icon:nav1_i,icon_a:nav1_a_i  },
           },
           {
             path: '/findC/otherData',
             name: '第三方数据C',
             component: () => import('@/views/layout/findC/otherData.vue'),
-            meta: { title: '第三方数据' },
+            meta: { title: '第三方数据',icon:nav2_i,icon_a:nav2_a_i  },
+          },
+          {
+            path: '/findC/telData',
+            name: '号码段获客C',
+            component: () => import('@/views/layout/findC/telData.vue'),
+            meta: { title: '号码段获客',icon:nav4_i,icon_a:nav4_a_i  },
+          },
+          {
+            path: '/findC/adData',
+            name: '广告投放C',
+            component: () => import('@/views/layout/findC/adData.vue'),
+            meta: { title: '广告投放',icon:nav5_i,icon_a:nav5_a_i  },
+          },
+          {
+            path: '/findC/wxData',
+            name: '微信获客C',
+            component: () => import('@/views/layout/findC/wxData.vue'),
+            meta: { title: '微信获客',icon:nav6_i,icon_a:nav6_a_i  },
+          },
+          {
+            path: '/findC/baiduData',
+            name: '百度关键词获客C',
+            component: () => import('@/views/layout/findC/baiduData.vue'),
+            meta: { title: '百度关键词获客',icon:nav7_i,icon_a:nav7_a_i  },
+          },
+          {
+            path: '/findC/bigData',
+            name: '大数据获客C',
+            component: () => import('@/views/layout/findC/bigData.vue'),
+            meta: { title: '大数据获客',icon:nav8_i,icon_a:nav8_a_i  },
+          },
+          {
+            path: '/findC/fourData',
+            name: '400获客C',
+            component: () => import('@/views/layout/findC/fourData.vue'),
+            meta: { title: '400获客',icon:nav9_i,icon_a:nav9_a_i  },
+          },
+          {
+            path: '/findC/biddingData',
+            name: '竞价获客C',
+            component: () => import('@/views/layout/findC/biddingData.vue'),
+            meta: { title: '竞价获客',icon:nav10_i,icon_a:nav10_a_i  },
+          },
+          {
+            path: '/findC/msgData',
+            name: '短信获客C',
+            component: () => import('@/views/layout/findC/msgData.vue'),
+            meta: { title: '短信获客',icon:nav11_i,icon_a:nav11_a_i  },
           },
         ]
       },

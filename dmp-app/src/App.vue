@@ -1,8 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { mainStore } from '@/store/index'
+const store = mainStore()
+store.setTypeList()
+store.setAddressList()
+</script>
 
 <template>
   <router-view v-slot="{ Component }">
-    <transition name="fade">
+    <transition name="el-fade-in-linear">
       <component :is="Component" />
     </transition>
   </router-view>
