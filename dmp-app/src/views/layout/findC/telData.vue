@@ -1,7 +1,7 @@
 <template>
   <div class="teldata_page_c">
     <div class="btns fsc">
-      <el-button size="large" type="primary">新建人群</el-button>
+      <el-button size="large" type="primary" @click="addShow = true">新建人群</el-button>
       <div class="rt fcs">
         <el-button size="large">同步SCRM</el-button>
         <el-button size="large">同步CMS</el-button>
@@ -51,7 +51,32 @@
     </div>
     <MyPage :total="1000" v-model="page" @change="changePage"/>
 
-    
+    <el-dialog v-model="addShow" title="新建数据" width="500px" @close="closeAdd">
+      <el-form class="myform" ref="addFormRef" :model="addForm" :rules="addRules" v-loading="upLoading">
+        <el-form-item label="人群名称" prop="people">
+          <el-input v-model="addForm.people" placeholder="请输入人群名称"></el-input>
+        </el-form-item>
+        <el-form-item label="选择地区" prop="addr">
+          <MyCascader v-model="addForm.addr" type="address"/>
+        </el-form-item>
+        <el-form-item label="人群描述" prop="desc">
+          <el-input 
+            v-model="addForm.desc" 
+            placeholder="可对人群进行简单的描述"
+            type="textarea"
+            maxlength="150"
+            show-word-limit
+            rows="4"
+            resize="none"
+          ></el-input>
+        </el-form-item>
+        
+        <div class="fcs btns fjend">
+          <el-button @click="closeAdd">取消</el-button>
+          <el-button type="primary" @click="submitAddForm">提交</el-button>
+        </div>
+      </el-form>
+    </el-dialog>
 
   </div>
 </template>
@@ -60,6 +85,7 @@
 import { reactive, ref  } from 'vue'
 import MyPage from "@/components/MyPage.vue";
 import { formatDate } from '@/utils/date'
+import MyCascader from "@/components/MyCascader.vue";
 
 const page = ref(1)
 const total = ref(0)
@@ -127,20 +153,34 @@ const closeAdd = ()=>{
   addShow.value = false
   
 }
-
-const beforeCloseAdd = (done:Function)=>{
-  //关闭添加弹窗之前
-  
-}
-
 const addForm = ref({
-  type:[],
-  addr:[],
   people:'',
   desc:'',
-  file:'',
+  addr:[],
+  
 })
+const addRules = reactive({
+  people:[{
+    required: true,
+    message: '请输入人群名称',
+    trigger: 'blur',
+  }],
+  addr:[{
+    required: true,
+    message: '请选择地区',
+    trigger: 'change',
+  }],
+  desc:[{
+    required: true,
+    message: '请输入人群描述',
+    trigger: 'blur',
+  }],
+  
+})
+const upLoading = ref(false)
+const submitAddForm = ()=>{
 
+}
 </script>
 
 <style scoped lang="scss">

@@ -6,6 +6,7 @@
     :props="typeProps"
     placeholder="请选择行业"
     v-if="type=='type'"
+    class="w100"
   ></el-cascader>
   <el-cascader
     v-model="arr"
@@ -14,6 +15,7 @@
     :props="addrProps"
     placeholder="请选择地区"
     v-else
+    class="w100"
   ></el-cascader>
 </template>
 

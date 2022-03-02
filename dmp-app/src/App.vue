@@ -210,6 +210,9 @@ img{
   border-color: #EDF5FF!important;
   color: $dfcolor!important;
 }
+.w100{
+  width: 100%;
+}
 .up2b{
   .el-dialog .el-dialog__header{
     border: none;

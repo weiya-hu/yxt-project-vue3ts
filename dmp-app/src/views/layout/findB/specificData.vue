@@ -81,7 +81,7 @@
           <MyUpload v-model="addForm.file" @change="upChange" @error="upError" @success="upSuccess" ref="upload"/>
         </el-form-item>
         
-        <div class="fcs btns">
+        <div class="fcs btns fjend">
           <el-button @click="closeAdd">取消</el-button>
           <el-button type="primary" @click="submitAddForm(addFormRef)">提交</el-button>
         </div>
@@ -388,20 +388,6 @@ const kfShow = ref(false)
       width: 1px;
       margin: 0 16px;
       background-color: $coloreee;
-    }
-  }
-  .myform{
-    .el-select{
-      width: 100%;
-      :deep(.el-tooltip__trigger){
-        width: 100%;
-      }
-    }
-    :deep(.el-cascader){
-      width: 100%;
-    }
-    .btns{
-      justify-content: flex-end;
     }
   }
 }

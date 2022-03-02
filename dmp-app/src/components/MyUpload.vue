@@ -31,7 +31,8 @@
       <div class="upbox">
         <div class="up_rt">
           <div>可适当描述所处的行业现状，以及公司目前采取的运营、渠道、推广等多种获客方式，以便运营人员进一步了解熟悉您的所处的行业及需求，同时也为您提供更好的客户服务。</div>
-          <div class="up_tip dfcolor">附件支持.doc.docx.pdf，大小不超过4M</div>
+          <div class="up_tip dfcolor fcs" v-if="!downLink"><el-link type="primary" :href="downLink" @click="handlink">下载模板示例</el-link>（上传附件大小不超过4M）</div>
+          <div class="up_tip dfcolor" v-else>附件支持.doc.docx.pdf，大小不超过4M</div>
         </div>
       </div>
     </template>
@@ -47,8 +48,11 @@ import { getAliToken_api } from '@/api/findB'
 
 const props = withDefaults(defineProps<{
   modelValue:string,
+  exnameList:string[],
+  downLink?:string,
 }>(),{
   modelValue:'',
+  exnameList:()=>['doc', 'docx', 'pdf'],
 })
 
 const emit = defineEmits(['update:modelValue','change','error','success'])
@@ -68,7 +72,8 @@ const upChange = (file: UploadFile, list: UploadFile[])=>{
   //上传组件状态改变时 添加时效验文件格式大小
   const tmpcnt = file.name.lastIndexOf(".")
   const exname = file.name.substring(tmpcnt + 1)
-  const names = ['doc', 'docx', 'pdf',]
+  // const names = ['doc', 'docx', 'pdf']
+  const names = props.exnameList
   if(names.indexOf(exname)< 0 ){
     emit('change','type')
   }else if((file.size / 1024 / 1024)>4){
@@ -118,6 +123,10 @@ const upError = (err:any, file:any, fileList:any)=>{
 const clear = ()=>{
   //清除文件
   upload.value.clearFiles()
+}
+
+const handlink = ()=>{
+  console.log(props.downLink);
 }
 
 defineExpose({
@@ -178,6 +187,9 @@ defineExpose({
         margin-top: 8px;
       }
     }
+  }
+  :deep(.el-link--inner){
+    font-size: 12px;
   }
 }
 .is-error{
