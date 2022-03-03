@@ -179,7 +179,7 @@ const routes = [
             path: '/myData/up2bDetails',
             name: '上传2B数据详情',
             component: () => import('@/views/layout/myData/up2bDetails.vue'),
-            meta: { title: '上传2B数据详情',leftHidden:true ,icon:myData2b ,icon_a:myData2b_a },
+            meta: { title: '上传2B数据详情',leftHidden:true ,father: '/myData/up2b'},
           },
           {
             path: '/myData/up2c',
@@ -191,7 +191,7 @@ const routes = [
             path: '/myData/up2cDetails',
             name: '上传2C数据详情',
             component: () => import('@/views/layout/myData/up2cDetails.vue'),
-            meta: { title: '上传2B数据详情',leftHidden:true, icon:myData2c ,icon_a:myData2c_a},
+            meta: { title: '上传2B数据详情',leftHidden:true, father:'/myData/up2c' },
           },
         ]
       },
