@@ -68,9 +68,9 @@ const getPath = (path:string)=>{
   let s = path.split('/')
   activePath.value = (s.length-1)>1?'/' + s[1]:path // 有两个'/' 则是子页面 取父页面路由为顶部导航激活路由
 
-  nowPath.value = path.indexOf('specificData')>-1?activePath.value+'/specificData':path //解决在详情页刷新导致左侧导航激活失效 有点蠢
+  nowPath.value = path
 }
-getPath(route.path)
+getPath((route.meta.leftHidden && route.meta.father) ? route.meta.father as string:route.path)
 
 const getNavs = (first:boolean = false)=>{
   //从路由获取顶部和左侧导航
@@ -82,7 +82,7 @@ const getNavs = (first:boolean = false)=>{
 getNavs(true)
 
 onBeforeRouteUpdate((to,from)=>{
-  getPath(to.path)
+  getPath((to.meta.leftHidden && to.meta.father)?to.meta.father as string:to.path)
   let tos = to.path.split('/')[1]
   let froms = from.path.split('/')[1]
   if(tos != froms){

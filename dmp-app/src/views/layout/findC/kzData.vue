@@ -1,7 +1,7 @@
 <template>
   <div class="kzdata_page_c">
     <TopSearch @height-search="heightSearch"/>
-    <div class="btns fsc">
+    <div class="topbtns fsc">
       <FindNumber class="lt" :total="total"/>
       <div class="rt fcs">
         <el-button size="large">同步SCRM</el-button>
@@ -30,6 +30,9 @@
             <div class="els2">{{ scope.row.source==1?'康洲数智':'第三方数据' }}</div>
           </template>
         </el-table-column>
+        <template #empty>
+          <MyEmpty/>
+        </template>
       </el-table>
     </div>
     <MyPage :total="1000" v-model="page" @change="changePage"/>
@@ -41,6 +44,7 @@ import { reactive, ref  } from 'vue'
 import TopSearch from '@/components/TopSearch.vue'
 import MyPage from "@/components/MyPage.vue";
 import FindNumber from "@/components/FindNumber.vue";
+import MyEmpty from "@/components/MyEmpty.vue";
 
 const searchParams = ref({
   size:1,
@@ -122,7 +126,7 @@ const changePage =()=>{
 
 <style scoped lang="scss">
 .kzdata_page_c{
-  .btns{
+  .topbtns{
     padding: 30px 0 20px 0;
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="specific_data_details_page">
-    <div class="btns fsc">
+    <div class="topbtns fsc">
       <FindNumber class="lt" :total="total"/>
       <div class="rt fcs">
         <el-button size="large">同步SCRM</el-button>
@@ -48,7 +48,7 @@ getList()
 
 <style scoped lang="scss">
 .specific_data_details_page{
-  .btns{
+  .topbtns{
     padding-bottom: 20px;
   }
 }

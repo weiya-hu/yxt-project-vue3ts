@@ -1,7 +1,7 @@
 <template>
   <div class="kzdata_page">
     <TopSearch @height-search="heightSearch"/>
-    <div class="btns fsc">
+    <div class="topbtns fsc">
       <FindNumber class="lt" :total="total"/>
       <div class="rt fcs">
         <el-button size="large">同步SCRM</el-button>
@@ -195,7 +195,7 @@ const changePage =()=>{
 
 <style scoped lang="scss">
 .kzdata_page{
-  .btns{
+  .topbtns{
     padding: 30px 0 20px 0;
   }
 }

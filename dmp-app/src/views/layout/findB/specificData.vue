@@ -50,22 +50,25 @@
             </div>
           </template>
         </el-table-column>
+        <template #empty>
+          <MyEmpty/>
+        </template>
       </el-table>
     </div>
     <MyPage :total="total" v-model="page" @change="changePage"/>
 
     <el-dialog v-model="addShow" title="新建数据" width="500px" @close="closeAdd" :before-close="beforeCloseAdd">
       <el-form class="myform" ref="addFormRef" :model="addForm" :rules="addRules" v-loading="upLoading">
-        <el-form-item label="行业分类" prop="type" label-width="86px">
+        <el-form-item label="行业分类" prop="type">
           <MyCascader v-model="addForm.type" type="type"/>
         </el-form-item>
-        <el-form-item label="选择地区" prop="addr" label-width="86px">
+        <el-form-item label="选择地区" prop="addr">
           <MyCascader v-model="addForm.addr" type="address"/>
         </el-form-item>
-        <el-form-item label="人群名称" prop="people" label-width="86px">
+        <el-form-item label="人群名称" prop="people">
           <el-input v-model="addForm.people" placeholder="请输入人群名称"></el-input>
         </el-form-item>
-        <el-form-item label="人群描述" prop="desc" label-width="86px">
+        <el-form-item label="人群描述" prop="desc">
           <el-input 
             v-model="addForm.desc" 
             placeholder="可对人群进行简单的描述"
@@ -77,7 +80,7 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="上传附件" prop="file" label-width="86px">
+        <el-form-item label="上传附件" prop="file">
           <MyUpload v-model="addForm.file" @change="upChange" @error="upError" @success="upSuccess" ref="upload"/>
         </el-form-item>
         
@@ -102,6 +105,7 @@ import MyDialog from "@/components/MyDialog.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyUpload from "@/components/MyUpload.vue";
 import MyCascader from "@/components/MyCascader.vue";
+import MyEmpty from "@/components/MyEmpty.vue";
 import { mainStore } from '@/store/index'
 import { errMsg,getHash,getHashStr,strToArr} from '@/utils/index'
 import { ElMessageBox } from 'element-plus'
@@ -355,6 +359,11 @@ const kfShow = ref(false)
 
 <style scoped lang="scss">
 .specific_data_page{
+  .myform{
+    :deep(.el-form-item__label){
+      width: 90px;
+    }
+  }
   .topbtns{
     margin-bottom: 20px;
     font-size: 14px;

@@ -1,6 +1,6 @@
 <template>
   <el-cascader
-    v-model="arr"
+    v-model="modelValue"
     :options="typeList"
     @change="typeChange"
     :props="typeProps"
@@ -9,7 +9,7 @@
     class="w100"
   ></el-cascader>
   <el-cascader
-    v-model="arr"
+    v-model="modelValue"
     :options="addressList"
     @change="addrChange"
     :props="addrProps"
@@ -46,7 +46,6 @@ const addrProps = {
   value:'id',
   label:'name',
 }
-const arr = ref([])
 const addrChange = (value:any) => {
   emit('update:modelValue',value)
 }

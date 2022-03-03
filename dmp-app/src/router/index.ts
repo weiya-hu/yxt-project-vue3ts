@@ -83,7 +83,7 @@ const routes = [
             path: '/findB/specificDataDetails',
             name: '个性化数据详情',
             component: () => import('@/views/layout/findB/specificDataDetails.vue'),
-            meta: { title: '个性化数据详情',leftHidden:true },
+            meta: { title: '个性化数据详情',leftHidden:true,father:'/findB/specificData' },
           },
         ]
       },
@@ -111,6 +111,12 @@ const routes = [
             name: '号码段获客C',
             component: () => import('@/views/layout/findC/telData.vue'),
             meta: { title: '号码段获客',icon:nav4_i,icon_a:nav4_a_i  },
+          },
+          {
+            path: '/findC/telDataDetails',
+            name: '号码段获客C详情',
+            component: () => import('@/views/layout/findC/telDataDetails.vue'),
+            meta: { title: '号码段获客详情',leftHidden:true,father:'/findC/telData' },
           },
           {
             path: '/findC/adData',

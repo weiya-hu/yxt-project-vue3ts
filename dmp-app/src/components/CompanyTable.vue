@@ -1,5 +1,5 @@
 <template>
-  <div class="mytable">
+  <div class="mytable company_table">
     <el-table
       :data="data"
       style="width: 100%"
@@ -30,6 +30,9 @@
           <div class="els2">{{ scope.row.source==1?'康洲数智':'第三方数据' }}</div>
         </template>
       </el-table-column>
+      <template #empty>
+        <MyEmpty/>
+      </template>
     </el-table>
   </div>
 </template>
@@ -37,6 +40,7 @@
 <script setup lang="ts">
 //公司表格
 import { ref } from 'vue'
+import MyEmpty from "@/components/MyEmpty.vue";
 
 const props = defineProps({
   data: Array,
