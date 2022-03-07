@@ -23,12 +23,12 @@ import {ref,onMounted,computed} from 'vue'
 import MyDataTable from '@/components/MyDataTable.vue'
 import MyPage from '@/components/MyPage.vue'
 import {upRecordDetail} from '@/api/myData'
-import {getUrlParam} from '@/utils/index'
+// import {getUrlParam} from '@/utils/index'
 import { mainStore } from '@/store/index'
-import { errMsg,getHash,getHashStr,strToArr} from '@/utils/index'
+// import { errMsg,getHash,getHashStr,strToArr} from '@/utils/index'
 const store = mainStore()
-const typeHash = computed(() => getHash(store.state.typeList,'industryId'))
-const addressHash = computed(() => getHash(store.state.addressList,'id'))
+// const typeHash = computed(() => getHash(store.state.typeList,'industryId'))
+// const addressHash = computed(() => getHash(store.state.addressList,'id'))
 
 
 onMounted(()=>{
@@ -61,16 +61,16 @@ const tableList=ref([
 
 const changePage=()=>{}
 const getDetailList=async()=>{
-  let data={
-    current:page.value,
-    size:10,
-    id:getUrlParam('id')
-  }
-  const {status,body}=await upRecordDetail(data)
-  if(status){
-    total.value=body.total
-    tableList.value=body.records
-  }
+  // let data={
+  //   current:page.value,
+  //   size:10,
+  //   id:getUrlParam('id')
+  // }
+  // const {status,body}=await upRecordDetail(data)
+  // if(status){
+  //   total.value=body.total
+  //   tableList.value=body.records
+  // }
 }
 
 </script>
