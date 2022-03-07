@@ -14,15 +14,26 @@
     >
       <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
     </el-table>
-    <MyPage :total="total" v-model="page" @change="changePage"/>
+    <MyPage :total="total" v-model="page" @change="getDetailList"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import {ref,onMounted,computed} from 'vue'
 import MyDataTable from '@/components/MyDataTable.vue'
 import MyPage from '@/components/MyPage.vue'
+import {upRecordDetail} from '@/api/myData'
+import {getUrlParam} from '@/utils/index'
+import { mainStore } from '@/store/index'
+import { errMsg,getHash,getHashStr,strToArr} from '@/utils/index'
+const store = mainStore()
+const typeHash = computed(() => getHash(store.state.typeList,'industryId'))
+const addressHash = computed(() => getHash(store.state.addressList,'id'))
 
+
+onMounted(()=>{
+  getDetailList()
+})
 
 
 let total=ref(1000)
@@ -32,8 +43,8 @@ const tableTitle=ref([
   {type:'text',lable:'序号',prop:'num',width:50},
   {type:'text',lable:'企业名称',prop:'name',width:130},
   {type:'text',lable:'联系人',prop:'contact',width:74},
-  {type:'text',lable:'联系方式',prop:'phone',width:100},
-  {type:'text',lable:'固定电话',prop:'tel',width:110},
+  {type:'text',lable:'联系方式',prop:'mobiles',width:100},
+  {type:'text',lable:'固定电话',prop:'telephone',width:110},
   {type:'text',lable:'行业分类',prop:'industry',width:102},
   {type:'text',lable:'地区',prop:'region',width:110},
   {type:'text',lable:'详细地址',prop:'address',width:140},
@@ -49,6 +60,18 @@ const tableList=ref([
 
 
 const changePage=()=>{}
+const getDetailList=async()=>{
+  let data={
+    current:page.value,
+    size:10,
+    id:getUrlParam('id')
+  }
+  const {status,body}=await upRecordDetail(data)
+  if(status){
+    total.value=body.total
+    tableList.value=body.records
+  }
+}
 
 </script>
 

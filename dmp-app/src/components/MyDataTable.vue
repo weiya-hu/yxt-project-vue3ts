@@ -8,7 +8,7 @@
   </el-table-column>
   <el-table-column v-if="type==='link'" :property="prop" :label="lable" :min-width="width">
      <template #default="{row}">
-        <el-link type="primary" :href="row.website">{{ row.website }}</el-link>
+        <el-link type="primary" :href="row[prop]">{{ row[prop] }}</el-link>
       </template>
   </el-table-column>
   <el-table-column v-if="type==='select'" type="selection" :width="width" align="center" />
@@ -16,16 +16,16 @@
     <template #default="{row}">
       <div class="flexl">
         <div :class="row.status === 1?'calculating':'calculated'"></div>
-        <div >{{row.status?'计算完成':'计算中'}}</div>
+        <div >{{row.status===2?'计算完成':'计算中'}}</div>
       </div>
     </template>
   </el-table-column>
   <el-table-column v-if="type==='date'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
-      <div>{{Format('yyyy-MM-dd',new Date(row.date)) }}</div>
+      <div>{{Format('yyyy-MM-dd',new Date(row[prop])) }}</div>
     </template>
   </el-table-column>
-  <el-table-column v-if="type==='operateLook'" :label="lable" :min-width="width">
+  <el-table-column v-if="type==='operateLook'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
       <div v-for="(item,index) in operatButton" :key="index" class="operate-button" @click="operate(index,row)">{{row.status?item:'---'}}</div>
     </template>
@@ -46,7 +46,7 @@
 
   const emit = defineEmits(['click'])
   const operate=(index:number,row:any)=>{
-    row.status && emit('click',index)
+    row.status && emit('click',index,row)
   }
   const {type,lable,prop,width,operatButton} =toRefs(props)
 

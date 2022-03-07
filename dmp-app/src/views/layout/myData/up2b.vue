@@ -18,7 +18,7 @@
       </el-table>
     </div>
     <div>
-      <MyPage :total="totle" v-model="page" @change="changePage"/>
+      <MyPage :total="totle" v-model="page" @change="getList"/>
     </div>
     <MyDataUpUser v-model="dialogVisible"/>
     <!-- <div>{{dialogVisible}}{{page}}</div> -->
@@ -26,12 +26,16 @@
 </template>
 
 <script setup lang="ts">
-  import {ref} from 'vue'
+  import {ref,onMounted} from 'vue'
   import MyDataTable from '@/components/MyDataTable.vue'
   import MyPage from '@/components/MyPage.vue'
   import MyDataUpUser from '@/components/MyDataUpUser.vue'
   import {useRouter} from 'vue-router'
+  import {upRecordList} from '@/api/myData'
 
+  onMounted(() => {
+    getList()
+  })
 
   interface TableTitleProp{
       type:string,
@@ -39,42 +43,41 @@
       prop:string,
       width:number,
       operatButton?:string[]
-    }
+  }
 
-  let totle=ref(1000)
+  let totle=ref(0)
   let page = ref(1)
   let dialogVisible = ref(false)
   let router = useRouter();
 
 
-  let tableList = ref([
-    {id:'gfhjdgf',personsName:'',status:0,date:1645605329000},
-    {id:'gfhjdgf',personsName:'djfhjs ',status:1,date:1645605329000},
-    {id:'gfhjdgf',personsName:'djf电风扇hjs ',personsDes:'技术的开始抠脚大汉空间按时卡死',status:1,userNum:'2550',date:1645605329000},
-    {id:'gfhjdgf',personsName:'djfhjs打包发货就是 ',personsDes:'技术的开始抠脚大汉空间按',status:1,userNum:'2550',date:1645605329000},
-    {id:'gfhjdgf',personsName:'djf地方hjs ',personsDes:'技术的开始抠脚大汉空间按时卡死就是',status:1,userNum:'2550',date:1645605329000},
-    {id:'gfhjdgf',personsName:'djf 发达hjs ',personsDes:'技术的开始抠脚大汉空间按时',status:1,userNum:'2550',date:1645605329000},
-    {id:'gfhjdgf',personsName:'djfhjs ',personsDes:'技术的开始抠脚大汉空间按时',status:1,userNum:'2550',date:1645605329000},
-    {id:'gfhjdgf',personsName:'djf 的hjs ',personsDes:'技术的开始抠脚大汉空间按',status:1,userNum:'2550',date:1645605329000},
-    {id:'gfhjdgf',personsName:'djf 阿萨德hjs ',personsDes:'技术的开始抠脚大汉空间按',status:1,userNum:'2550',date:1645605329000},
-    {id:'gfhjdgf',personsName:'djf实打实  hjs ',personsDes:'技术的开始抠脚大汉空间按时卡',status:1,userNum:'2550',date:1645605329000},
-  ])
+  let tableList = ref([])
   let tableTitle = ref(<TableTitleProp[]>[
     {type:'select',width:100,prop:'select'},
     {type:'text',lable:'ID',prop:'id',width:150},
-    {type:'text',lable:'人群名称',prop:'personsName',width:200},
-    {type:'text',lable:'人群描述',prop:'personsDes',width:220},
+    {type:'text',lable:'人群名称',prop:'group_name',width:200},
+    {type:'text',lable:'人群描述',prop:'group_desc',width:220},
     {type:'status',lable:'状态',prop:'status',width:100},
-    {type:'text',lable:'用户数',prop:'userNum',width:100},
-    {type:'date',lable:'创建日期',prop:'date',width:100},
+    {type:'text',lable:'用户数',prop:'count',width:100},
+    {type:'date',lable:'创建日期',prop:'create_time',width:100},
     {type:'operateLook',lable:'操作',width:100,prop:'operate',operatButton:['查看']}
   ])
   
-  const operate=(val:number)=>{
-    console.log(val)
-    router.push({path:'/myData/up2bDetails'})
+  const getList=async()=>{
+    let data={
+      current:page.value,
+      type:1,
+      size:10
+    }
+    const {status,body} = await upRecordList(data)
+    if(status){
+      totle.value=body.total
+      tableList.value = body.records
+    }
   }
-  const changePage=()=>{}
+  const operate=(val:number,row:any)=>{
+    router.push('/myData/up2bDetails?id='+row.id)
+  }
 </script>
 
 <style scoped lang="scss">
