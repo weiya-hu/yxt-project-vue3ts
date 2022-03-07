@@ -7,23 +7,27 @@
     >
       <el-table-column type="selection" width="50" />
       <el-table-column property="id" label="ID" width="150"/>
-      <el-table-column property="name" label="人群名称" width="150"/>
-      <el-table-column property="desc" label="人群描述"/>
-      <el-table-column property="state" label="状态" width="130">
+      <el-table-column property="group_name" label="人群名称" width="150"/>
+      <el-table-column property="group_desc" label="人群描述"/>
+      <el-table-column property="status" label="状态" width="130">
         <template #default="scope">
           <div class="fcs">
-            <div class="dot" :class="scope.row.state == 0?'dot_ing':scope.row.state == 1?'dot_ok':scope.row.state == 2?'dot_err':'dot_close'"></div>
-            <div>{{ scope.row.state == 0?'审核中':scope.row.state == 1?'已通过':scope.row.state == 2?'已拒绝':'已完成' }}</div>
+            <div class="dot" :class="getState(scope.row.status).class"></div>
+            <div>{{ getState(scope.row.status).text }}</div>
           </div>
         </template>
       </el-table-column>
       <el-table-column property="address" label="地区"/>
-      <el-table-column property="num" label="覆盖用户人数" width="140">
+      <el-table-column property="count" label="覆盖用户人数" width="140">
         <template #default="scope">
-          <div>{{ scope.row.state == 1?'---':scope.row.num }}</div>
+          <div>{{ scope.row.status == 1?scope.row.count:'---' }}</div>
         </template>
       </el-table-column>
-      <el-table-column property="money" label="消耗金额 (元)" width="130"/>
+      <el-table-column property="money" label="消耗金额 (元)" width="130">
+        <template #default="scope">
+          <div>{{Number(scope.row.money).toFixed(2)}}</div>
+        </template>
+      </el-table-column>
       <el-table-column property="create_time" label="创建日期" width="130">
         <template #default="scope">
           <div>{{formatDate(new Date(scope.row.create_time),'yyyy-MM-dd')}}</div>
@@ -31,26 +35,26 @@
       </el-table-column>
       <el-table-column property="source" label="来源" width="130">
         <template #default="scope">
-          <div>{{ scope.row.source == 1?'号码段':'---' }}</div>
+          <div>{{ getSource(scope.row.source) }}</div>
         </template>
       </el-table-column>
       <el-table-column property="source" label="操作" width="150">
         <template #default="scope">
-          <div class="fcs" v-if="scope.row.state === 0">
-            <el-link type="primary">删除</el-link>
+          <div class="fcs" v-if="scope.row.status === 0">
+            <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
             <div class="line"></div>
-            <el-link type="primary">下载附件</el-link>
+            <el-link type="primary" :href="scope.row.plan_url">下载附件</el-link>
           </div>
-          <div class="fcs" v-if="scope.row.state === 1">
-            <el-link type="primary">下载方案</el-link>
+          <div class="fcs" v-if="scope.row.status === 1">
+            <el-link type="primary" :href="scope.row.plan_url">下载方案</el-link>
           </div>
-          <div class="fcs" v-if="scope.row.state === 3">
-            <el-link type="primary">查看</el-link>
+          <div class="fcs" v-if="scope.row.status === 3">
+            <el-link type="primary" @click="goDetails(scope.row.id)">查看</el-link>
             <div class="line"></div>
-            <el-link type="primary">下载方案</el-link>
+            <el-link type="primary" :href="scope.row.plan_url">下载方案</el-link>
           </div>
-          <div class="fcs" v-if="scope.row.state === 2">
-            <el-link type="primary">删除</el-link>
+          <div class="fcs" v-if="scope.row.status === 2">
+            <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
             <div class="line"></div>
             <el-link type="primary" @click="errorMsg = scope.row.error;errorShow=true">拒绝原因</el-link>
           </div>
@@ -70,31 +74,40 @@
       </template>
     </el-dialog>
 
+    <MyDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel"/>
+
   </div>
 </template>
 
 <script setup lang="ts">
-//公司表格
+//人群表格
 import { ref } from 'vue'
 import MyEmpty from "@/components/MyEmpty.vue";
 import { formatDate } from '@/utils/date'
+import MyDialog from "@/components/MyDialog.vue";
+import {useRouter} from 'vue-router'
 
 const props = defineProps({
   data: Array,
+  details:String
 })
-const emit = defineEmits(['select'])
-
+const emit = defineEmits(['select','del'])
+// select 选择时触发，返回选择数据；del 确认删除时触发，返回id
 
 interface IData {
   id:number,
-  name:string,//人群名称
-  desc:string,//人群描述
-  state:number,//状态
+  group_name:string,//人群名称
+  group_desc:string,//人群描述
+  status:number,//状态
   address:string,//地区
-  num:number,//覆盖用户人数
+  count:number,//覆盖用户人数
   money:number,//消耗金额 (元)
   create_time:number,//创建日期
+  plan_url:string,//附件地址
   source:number,//来源
+  province:number,//省份
+  city:number,//城市
+  district:number,//区
   error?:string,//拒绝原因
 }
 const handleSelectionChange = (val:IData[]) => {
@@ -102,6 +115,98 @@ const handleSelectionChange = (val:IData[]) => {
 }
 const errorShow = ref(false)
 const errorMsg = ref('')
+
+const delId = ref('')
+const delShow = ref(false)
+const goDel = (id:string)=>{
+  //删除需求
+  delId.value = id
+  delShow.value = true
+}
+const sureDel = ()=>{
+  //确认删除需求
+  emit('del',delId.value)
+  delShow.value = false
+}
+const router = useRouter()
+const goDetails = (id:string)=>{
+  router.push(props.details+'?id='+id)
+}
+
+const getState = (status:string|number)=>{
+  //返回需求状态及颜色类名
+  const obj = ref({
+    class:'',
+    text:'-'
+  })
+  switch (Number(status)) {
+    case 0:
+      obj.value = {
+        class:'bgc_green',
+        text:'审核中'
+      }
+      break;
+    case 1:
+      obj.value = {
+        class:'bgc_df',
+        text:'已通过'
+      }
+      break;
+    case 2:
+      obj.value = {
+        class:'bgc_999',
+        text:'已完成'
+      }
+      break;
+    case 3:
+      obj.value = {
+        class:'bgc_red',
+        text:'已拒绝'
+      }
+      break;
+    default:
+      break;
+  }
+  return obj.value
+}
+
+const getSource = (source:number)=>{
+  switch (source) {
+    case 1:
+      return '康州数智'
+      break;
+    case 2:
+      return '第三方数据'
+      break;
+    case 3:
+      return '号码段获客'
+      break;
+    case 4:
+      return '广告投放'
+      break;
+    case 5:
+      return '微信获客'
+      break;
+    case 6:
+      return '百度关键词获客'
+      break;
+    case 7:
+      return '大数据获客'
+      break;
+    case 8:
+      return '400获客'
+      break;
+    case 9:
+      return '竞价获客'
+      break;
+    case 10:
+      return '短信获客'
+      break;
+    default:
+      return '---'
+      break;
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -109,17 +214,19 @@ const errorMsg = ref('')
   .dot{
     width: 8px;
     height: 8px;
-    border-radius: 50%;
     margin-right: 8px;
-    background-color: #2BD34E;
+    border-radius: 50%;
   }
-  .dot_err{
-    background-color: $colorred;
-  }
-  .dot_ok{
+  .bgc_df{
     background-color: $dfcolor;
   }
-  .dot_close{
+  .bgc_green{
+    background-color: #2BD34E;
+  }
+  .bgc_red{
+    background-color: $colorred;
+  }
+  .bgc_999{
     background-color: $color999;
   }
   .line{

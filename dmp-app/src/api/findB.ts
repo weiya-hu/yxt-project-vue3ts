@@ -20,6 +20,16 @@ export const getCAndC_api = (): Promise<res> => {
   return get('/dmp/contact-ctype')
 }
 
+//关键词搜索
+export const wordSearchList_api = (data:any): Promise<res> => {
+  return post('/dmp/keywords-search',data)
+}
+
+//关键词记录
+export const getSearchWord_api = (): Promise<res> => {
+  return get('/dmp/keywords-record')
+}
+
 //条件组列表
 export const conditionsList_api = (data:any): Promise<res> => {
   return get('/dmp/conditions-list',data)
@@ -37,7 +47,7 @@ export const delConditions_api = (data:any): Promise<res> => {
 
 //条件组搜索（高级搜索）
 export const searchByConditions_api = (data:any): Promise<res> => {
-  return post('/dmp/conditions-search',data,true)
+  return post('/dmp/conditions-search',data)
 }
 
 //个性化需求列表

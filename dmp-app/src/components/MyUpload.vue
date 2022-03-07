@@ -97,6 +97,7 @@ const submit = ()=>{
           success_action_status: 200,
           policy:res.body.policy,
           signature:res.body.signature,
+          'Content-Disposition': 'attachment; filename=' + encodeURIComponent(props.modelValue) //改变下载文件名
         }
         resolve(res.body.host + '/' + res.body.dir + res.body.uuid + file_exname.value)
       }else{

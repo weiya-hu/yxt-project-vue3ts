@@ -10,12 +10,15 @@
             <el-icon class="searchicon"><search /></el-icon>
           </template>
           <template #suffix>
-            <div class="searchbtn">查询一下</div>
+            <div class="searchbtn" @click="wordSearch">查询一下</div>
           </template>
         </el-input>
         <div class="heisearch" @click="heightShow=true">高级查询</div>
       </div>
-      <div class="his_search">历史搜索：紫金矿业集团有限公司   康洲数智   重庆城科</div>
+      <div class="his_search fcs">
+        <div>历史搜索：</div>
+        <span v-for="v in words" :key="v.id" @click="searchWord=v.keyword;wordSearch()">{{v.keyword}}</span>
+      </div>
     </div>
     <div class="height_searchbox" :class="{'height_searchbox_show':heightShow,'height_condition_show':conditionShow}">
       <el-icon @click="heightShow=false;conditionShow=false" class="closebtn rotate" size="18px"><close-bold /></el-icon>
@@ -26,24 +29,10 @@
             <el-input v-model="form.business_scope" placeholder="请输入经营范围"></el-input>
           </el-form-item>
           <el-form-item label="行业分类" prop="industry_id">
-            <el-cascader
-              v-model="form.industry_id"
-              :options="typeList"
-              @change="typeChange"
-              :props="typeProps"
-              placeholder="请选择行业分类"
-              ref="typeCRef"
-            ></el-cascader>
+            <MyCascader v-model="form.industry_id" type="type" ref="typeCRef"/>
           </el-form-item>
           <el-form-item label="省份地区" prop="addr">
-            <el-cascader
-              v-model="form.addr"
-              :options="addressList"
-              @change="addrChange"
-              :props="addrProps"
-              placeholder="请选择地区"
-              ref="addrCRef"
-            ></el-cascader>
+            <MyCascader v-model="form.addr" type="address" ref="addrCRef"/>
           </el-form-item>
         </div>
         <div class="contact_mode fcs">
@@ -108,17 +97,19 @@
       </el-form>
 
       <div class="now_condition fcs" v-show="conditionShow">
-        <div>筛选条件：</div>
-        <template v-for="(value,key) in showLables">
-          <el-tag :key="key" closable class="mytag" v-if="value" @close="closeTag(key)">{{getTagName[key]}}：{{value}}</el-tag>
-        </template>
+        <div class="fs0">筛选条件：</div>
+        <div class="f1 els">
+          <template v-for="(value,key) in showLables">
+            <el-tag :key="key" closable class="mytag" v-if="value" @close="closeTag(key)">{{getTagName[key]}}：{{value}}</el-tag>
+          </template>
+        </div>
       </div>
 
     </div>
     
     <el-dialog v-model="addShow" title="新建筛选" width="500px" @close="closeAdd">
       <el-form class="myform no_margin" :model="Addform" :rules="addRules" ref="addFormRef">
-        <el-form-item label="经营范围" prop="title">
+        <el-form-item label="条件组名称" prop="title">
           <el-input v-model="Addform.title" placeholder="请输入条件组名称"></el-input>
         </el-form-item>
       </el-form>
@@ -138,29 +129,14 @@
 import { Search , CloseBold , ArrowDown} from '@element-plus/icons-vue'
 import { reactive, ref , computed } from 'vue'
 import type { ElForm } from 'element-plus'
-import { conditionsList_api,subConditions_api,delConditions_api,getCAndC_api } from '@/api/findB'
+import { conditionsList_api,subConditions_api,delConditions_api,getCAndC_api, } from '@/api/findB'
 import { Gajax } from '@/utils/request'
-import { mainStore } from '@/store/index'
-
-const searchWord = ref('')
+import MyCascader from "@/components/MyCascader.vue";
+const props = withDefaults(defineProps<{
+  words:{id:number,keyword:string}[]
+}>(),{
+})
 const heightShow = ref(false)
-
-const store = mainStore()
-const typeList = computed(() => store.state.typeList)
-const addressList = computed(() => store.state.addressList)
-
-const typeProps = {
-  expandTrigger: 'hover',
-  checkStrictly: true,
-  value:'industryId',
-  label:'name',
-}
-const addrProps = {
-  expandTrigger: 'hover',
-  checkStrictly: true,
-  value:'id',
-  label:'name',
-}
 
 interface CAndC {
   value:number,
@@ -175,25 +151,6 @@ getCAndC_api().then((res:res)=>{
     contactArr.value = res.body.contact
   }  
 })
-// const ctypeArr = ref([
-//   {id:0,value:'有限责任公司'},
-//   {id:1<<1,value:'股份有限公司'},
-//   {id:1<<2,value:'股份合作公司'},
-//   {id:1<<3,value:'国有企业'},
-//   {id:16,value:'其它'},
-//   {id:32,value:'股份合作公司1'},
-//   {id:64,value:'股份合作公司2'},
-//   {id:128,value:'股份合作公司3'},
-//   {id:256,value:'股份合作公司4'},
-//   {id:512,value:'股份合作公司5'},
-//   {id:1024,value:'股份合作公司6'},
-//   {id:2048,value:'股份合作公司7'},
-// ])
-// const contactArr = ref([
-//   {id:1,value:'有手机号'},
-//   {id:2,value:'有固定电话'},
-//   {id:4,value:'有邮箱'},
-// ])
 
 const form = reactive<HeightSearchForm>({
   // mobile:'', //手机号 位运算
@@ -325,13 +282,6 @@ const changeDrop = (v:any)=>{
   console.log(form);
 }
 
-const addrCRef = ref()
-const addrChange = (value:any) => {
-}
-const typeCRef = ref()
-const typeChange = (value:any) =>{
-}
-
 const getTagName = {
   business_scope:'经营范围',
   industry_id:'行业分类',
@@ -347,21 +297,30 @@ const showLables = reactive({
   ctype:'',
 })
 const emit = defineEmits(['heightSearch','search'])
+const searchWord = ref<string>('')
+const wordSearch = ()=>{
+  //搜索
+  emit('search',searchWord.value)
+}
+
 const conditionShow = ref(false)
+const addrCRef = ref()
+const typeCRef = ref()
 const goSearch = ()=>{
   //高级搜索
   showLables.business_scope = form.business_scope
   let contact_str = '',ctype_str = '';
   form.contact.forEach(v=>{
-    contact_str += contactArr.value.find(j=>j.id == v)?.value + '，'
+    contact_str += contactArr.value.find(j=>j.value == v)?.name + '，'
   })
+  
   showLables.contact = contact_str.substring(0, contact_str.length - 1);  
   form.ctype.forEach(v=>{
-    ctype_str += ctypeArr.value.find(j=>j.id == v)?.value + '，'
+    ctype_str += ctypeArr.value.find(j=>j.value == v)?.name + '，'
   })
   showLables.ctype = ctype_str.substring(0, ctype_str.length - 1);  
-  if(addrCRef.value.getCheckedNodes().length) showLables.addr = addrCRef.value.getCheckedNodes()[0].text
-  if(typeCRef.value.getCheckedNodes().length) showLables.industry_id = typeCRef.value.getCheckedNodes()[0].text
+  showLables.industry_id = typeCRef.value.getText()
+  showLables.addr = addrCRef.value.getText()
   conditionShow.value = true
   emit('heightSearch',getSearchParams())
 }
@@ -436,7 +395,18 @@ const closeTag = (key:string)=>{
     font-size: 14px;
     color: #FFFFFF;
     padding-top: 20px;
-    opacity: 0.6;
+    div{
+      opacity: 0.6;
+    }
+    span{
+      opacity: 0.6;
+      margin-right: 6px;
+    }
+    span:hover{
+      cursor: pointer;
+      opacity: 1;
+      text-decoration:underline 
+    }
   }
 }
 .height_searchbox{
@@ -495,7 +465,7 @@ const closeTag = (key:string)=>{
     padding:20px 30px;
     border-top:1px solid $coloreee;
     font-size: 12px;
-    >div{
+    .fs0{
       line-height: 28px;
       margin-right: 16px;
     }
