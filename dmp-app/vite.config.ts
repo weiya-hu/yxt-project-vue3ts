@@ -35,9 +35,11 @@ export default defineConfig({
     https: false,
     proxy: {
       '/api': {
-          target: 'http://47.108.185.157:9000',
-          changeOrigin: true,
-          rewrite: path => path.replace(/^\/api/, '')
+        target: 'http://47.108.185.157:9000',
+        // target: 'http://10.10.0.93:9000',//杨航
+        // target: 'http://10.10.0.123:9000',//杜飘
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, '')
       }
     },
   },

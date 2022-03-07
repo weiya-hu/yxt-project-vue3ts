@@ -2,10 +2,6 @@
   <div class="specific_data_page">
     <div class="fsc topbtns">
       <el-button type="primary" @click="addShow=true">新建数据</el-button>
-      <div class="fcs" @click="kfShow=true ">
-        <img :src="znkf_i" alt="">
-        <div>客服</div>
-      </div>
     </div>
     <div class="mytable">
       <el-table
@@ -17,7 +13,7 @@
         <el-table-column property="id" label="ID" width="165"/>
         <el-table-column property="type" label="行业分类" width="150">
           <template #default="scope">
-            <div>{{getHashStr(scope.row.industry_id.split(','),typeHash)}}</div>
+            <div>{{getHashStr(scope.row.industry_id.split(','),typeHash,'last')}}</div>
           </template>
         </el-table-column>
         <el-table-column property="addr" label="地区" width="180">
@@ -40,15 +36,34 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column property="remarks" label="备注"/>
+        <!-- <el-table-column property="remarks" label="备注"/> -->
         <el-table-column label="操作" width="150">
-          <template #default="scope">
+          <!-- <template #default="scope">
             <div class="fcs">
               <el-link type="primary" @click="goDetails(scope.row.id)">详情</el-link>
               <div class="line"></div>
               <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
             </div>
+          </template> -->
+
+          <template #default="scope">
+            <div class="fcs" v-if="scope.row.status === 0">
+              <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
+              <div class="line" v-if="scope.row.attachment"></div>
+              <el-link type="primary" v-if="scope.row.attachment" :href="scope.row.attachment">下载附件</el-link>
+            </div>
+            <div class="fcs" v-if="scope.row.status === 1">
+              <el-link type="primary" @click="goDetails(scope.row.id)">详情</el-link>
+              <div class="line"></div>
+              <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
+            </div>
+            <div class="fcs" v-if="scope.row.status === 2">
+              <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
+              <div class="line"></div>
+              <el-link type="primary" @click="errorMsg = scope.row.fail_reason;errorShow=true">拒绝原因</el-link>
+            </div>
           </template>
+
         </el-table-column>
         <template #empty>
           <MyEmpty/>
@@ -91,14 +106,20 @@
       </el-form>
     </el-dialog>
 
+    <el-dialog v-model="errorShow" title="拒绝原因" width="400px">
+      <div class="fcc msg">{{errorMsg}}</div>
+      <template #footer>
+        <div class="fcc">
+          <el-button type="primary" @click="errorShow=false">我知道了</el-button>
+        </div>
+      </template>
+    </el-dialog>
     <MyDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel"/>
-    <MyDialog v-model="kfShow" type="kf"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import {useRouter} from 'vue-router'
-import znkf_i from '@/assets/images/znkf.png'
 import { reactive, ref ,computed } from 'vue'
 import type { ElForm } from 'element-plus'
 import MyDialog from "@/components/MyDialog.vue";
@@ -107,14 +128,14 @@ import MyUpload from "@/components/MyUpload.vue";
 import MyCascader from "@/components/MyCascader.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import { mainStore } from '@/store/index'
-import { errMsg,getHash,getHashStr,strToArr} from '@/utils/index'
+import { errMsg,getHashStr,strToArr} from '@/utils/index'
 import { ElMessageBox } from 'element-plus'
 import { addDemand_api ,demandList_api,delDemand_api } from '@/api/findB'
 import { formatDate } from '@/utils/date'
 
 const store = mainStore()
-const typeHash = computed(() => getHash(store.state.typeList,'industryId'))
-const addressHash = computed(() => getHash(store.state.addressList,'id'))
+const typeHash = computed(() => store.state.typeHash)
+const addressHash = computed(() => store.state.addressHash)
 
 const router = useRouter()
 const goDetails = (id:string)=>{
@@ -128,7 +149,7 @@ interface SData {
   group_desc:string,
   create_time:string,
   status:string,
-  remarks:string,
+  fail_reason:string,
 }
 const tableData = ref<SData[]>([])
 const page = ref(1)
@@ -146,36 +167,36 @@ const getDemandList = ()=>{
 }
 getDemandList()
 const changePage =()=>{
-  console.log(page.value);
+  getDemandList()
 }
 const multipleSelection = ref<SData[]>([])
 const handleSelectionChange = (val:SData[]) => {
   //表格选择
   multipleSelection.value = val
 }
-const getState = (state:string|number)=>{
+const getState = (status:string|number)=>{
   //返回需求状态及颜色类名
   const obj = ref({
     class:'',
     text:'-'
   })
-  switch (Number(state)) {
+  switch (Number(status)) {
     case 0:
       obj.value = {
-        class:'bgc_yellow',
+        class:'bgc_green',
         text:'审核中'
       }
       break;
     case 1:
       obj.value = {
         class:'bgc_df',
-        text:'已完结'
+        text:'已通过'
       }
       break;
     case 2:
       obj.value = {
         class:'bgc_red',
-        text:'被拒绝'
+        text:'已拒绝'
       }
       break;
     default:
@@ -183,6 +204,8 @@ const getState = (state:string|number)=>{
   }
   return obj.value
 }
+const errorShow = ref(false)
+const errorMsg = ref('')
 
 type FormInstance = InstanceType<typeof ElForm>
 const addForm = ref({
@@ -257,12 +280,18 @@ const addFormRef = ref<FormInstance>()
 const submitAddForm = (formEl: FormInstance | undefined) => {
   //提交添加需求表单
   if (!formEl) return
+  fileErrorType.value = 'none' //不是必传文件时，先清空再验证
   formEl.validate((valid) => {
     if (valid) {
-      //表单效验成功再上传
       console.log('submit!')
       upLoading.value = true
-      upload.value.submit()
+      if(addForm.value.file){
+        //表单效验成功再上传
+        upload.value.submit()
+      }else{
+        //没有文件并且不是必传文件时，就直接提交
+        upSuccess('')
+      }
     } else {
       console.log('error submit!');
       return false
@@ -318,7 +347,7 @@ const beforeCloseAdd = (done:Function)=>{
   if(upLoading.value){
     ElMessageBox.confirm(
       '正在上传中，关闭弹窗可能会导致上传失败，是否继续关闭？',
-      'Warning',
+      '温馨提示',
       {
         confirmButtonText: '取消',
         cancelButtonText: '确定',
@@ -353,8 +382,6 @@ const sureDel = ()=>{
   })
 }
 
-const kfShow = ref(false)
-
 </script>
 
 <style scoped lang="scss">
@@ -387,8 +414,8 @@ const kfShow = ref(false)
     .bgc_df{
       background-color: $dfcolor;
     }
-    .bgc_yellow{
-      background-color: $coloryellow;
+    .bgc_green{
+      background-color: #2BD34E;
     }
     .bgc_red{
       background-color: $colorred;

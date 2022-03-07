@@ -69,6 +69,7 @@ export function get_Str(arr:any[],listArr:any[],key:string){
   console.timeEnd('getStr');
   return str.substring(0, str.length - 1);  
 }
+
 /**
  * 带有children的对象数组 转换为 哈希表
  * @arr 要转换的数组
@@ -94,32 +95,92 @@ export function getHash (arr:any[],key:string){
   console.timeEnd('getHash');
   return obj
 }
+
 /**
  * 获取哈希表中字符串，先getHash获取哈希表
  * @arr ['A','2'] 要查找的值组成的数组
  * @hash 哈希表，getHash获取
- * @return 'xx,xx'
+ * @type 返回的数据类型'arr'返回['xx','xx']，其他返回'xx,xx'
+ * @return 'arr'返回['xx','xx']，'last'返回最后一位'xx'，其他返回'xx，xx'
 */
-export function getHashStr(arr:any,hash:any){
+export function getHashStr(arr:string[],hash:any,type?:string){
   //获取哈希表中字符串
-  let str = '';
-  (arr[0]&&hash[arr[0]]) && (str += hash[arr[0]].name + '，');
-  (arr[1]&&hash[arr[0]]) && (str += hash[arr[0]].children[arr[1]].name + '，');
-  (arr[2]&&hash[arr[0]]) && (str += hash[arr[0]].children[arr[1]].children[arr[2]].name + '，');
-  return str.substring(0, str.length - 1);
+  try {
+    let strArr = [];
+    // (arr[0]&&hash[arr[0]]) && (str += hash[arr[0]].name + '，');
+    (arr[0]&&hash[arr[0]]) && (strArr.push(hash[arr[0]].name));
+    (arr[1]&&hash[arr[0]].children[arr[1]]) && (strArr.push(hash[arr[0]].children[arr[1]].name));
+    (arr[2]&&hash[arr[0]].children[arr[1]].children[arr[2]]) && (strArr.push(hash[arr[0]].children[arr[1]].children[arr[2]].name));
+    switch (type) {
+      case 'arr':
+        return strArr
+        break;
+      case 'last':
+        return strArr[strArr.length - 1]
+        break;
+      default:
+        return strArr.join('，')
+        break;
+    }
+  } catch (error) {
+    return error    
+  }
 }
+
 /**
  * 3个以内字符串转为长度3以内的数组，方便getHashStr使用
  * @return [str1,str2?,str3?]
 */
 export function strToArr(str1:string|number,str2?:string|number,str3?:string|number,) {
   //3个以内字符串转为长度3以内的数组
-  let arr = [str1.toString()]
-  if(str2 && !str3){
-    arr.push(str2.toString())
-  }else if(str2 && str3){
-    arr.push(str2.toString())
-    arr.push(str3.toString())
+  try {
+    let arr = [str1.toString()]
+    if(str2 && !str3){
+      arr.push(str2.toString())
+    }else if(str2 && str3){
+      arr.push(str2.toString())
+      arr.push(str3.toString())
+    }
+    return arr
+  } catch (error) {
+    return [str1.toString()]
   }
-  return arr
+}
+
+export function getSource(source:number){
+  switch (source) {
+    case 1:
+      return '康州数智'
+      break;
+    case 2:
+      return '第三方数据'
+      break;
+    case 3:
+      return '号码段获客'
+      break;
+    case 4:
+      return '广告投放'
+      break;
+    case 5:
+      return '微信获客'
+      break;
+    case 6:
+      return '百度关键词获客'
+      break;
+    case 7:
+      return '大数据获客'
+      break;
+    case 8:
+      return '400获客'
+      break;
+    case 9:
+      return '竞价获客'
+      break;
+    case 10:
+      return '短信获客'
+      break;
+    default:
+      return '---'
+      break;
+  }
 }

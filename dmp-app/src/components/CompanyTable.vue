@@ -11,23 +11,50 @@
       <el-table-column property="contact" label="联系人" width="80"/>
       <el-table-column property="mobiles" label="联系方式"  width="110"/>
       <el-table-column property="telephone" label="固定电话" width="120"/>
-      <el-table-column property="industry_id" label="行业分类" width="100"/>
-      <el-table-column property="city" label="地区" width="120"/>
-      <el-table-column property="address" label="详细地址"/>
+      <el-table-column property="industry_id" label="行业分类" width="100">
+        <template #default="scope">
+          <div>{{getHashStr(scope.row.industry_id,typeHash,'last')}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column property="city" label="地区" width="120">
+        <template #default="scope">
+          <el-tooltip effect="dark" placement="top">
+            <template #content>
+              <div style="width:100px">{{getHashStr(strToArr(scope.row.province,scope.row.city,scope.row.district),addressHash)}}</div>
+            </template>
+            <div class="els2">{{getHashStr(strToArr(scope.row.province,scope.row.city,scope.row.district),addressHash)}}</div>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column property="address" label="详细地址">
+        <template #default="scope">
+          <el-tooltip effect="dark" placement="top">
+            <template #content>
+              <div style="width:200px">{{scope.row.address}}</div>
+            </template>
+            <div class="els2">{{ scope.row.address }}</div>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column property="code" label="统一社会信用代码" width="165"/>
       <el-table-column property="url" label="企业官网" >
         <template #default="scope">
-          <el-link type="primary" :href="scope.row.url">{{ scope.row.url }}</el-link>
+          <el-link type="primary" target="_blank" :href="'//'+scope.row.url">{{ scope.row.url }}</el-link>
         </template>
       </el-table-column>
       <el-table-column property="business_scope" label="经营范围" width="200">
         <template #default="scope">
-          <div class="els2">{{ scope.row.business_scope }}</div>
+          <el-tooltip effect="dark" placement="top">
+            <template #content>
+              <div style="width:200px">{{scope.row.business_scope}}</div>
+            </template>
+            <div class="els2">{{ scope.row.business_scope }}</div>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column property="source" label="来源" width="100">
         <template #default="scope">
-          <div class="els2">{{ scope.row.source==1?'康洲数智':'第三方数据' }}</div>
+          <div>{{ scope.row.source==1?'康洲数智':'第三方数据' }}</div>
         </template>
       </el-table-column>
       <template #empty>
@@ -39,26 +66,19 @@
 
 <script setup lang="ts">
 //公司表格
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
+import { mainStore } from '@/store/index'
+import { getHashStr,strToArr} from '@/utils/index'
 import MyEmpty from "@/components/MyEmpty.vue";
-
+const store = mainStore()
+const typeHash = computed(() => store.state.typeHash)
+const addressHash = computed(() => store.state.addressHash)
 const props = defineProps({
   data: Array,
 })
 
 interface IData {
-  no: string,
-  cname:string,
-  uname:string,
-  mobile:string,
-  phone:string,
-  type:string,
-  addr:string,
-  address:string,
-  code:string,
-  url:string,
-  range:string,
-  source:string,
+  [propName: string]: any
 }
 const multipleSelection = ref<IData[]>([])
 const handleSelectionChange = (val:IData[]) => {

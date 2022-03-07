@@ -2,20 +2,22 @@
   <el-cascader
     v-model="modelValue"
     :options="typeList"
-    @change="typeChange"
+    @change="change"
     :props="typeProps"
     placeholder="请选择行业"
     v-if="type=='type'"
     class="w100"
+    ref="cRef"
   ></el-cascader>
   <el-cascader
     v-model="modelValue"
     :options="addressList"
-    @change="addrChange"
+    @change="change"
     :props="addrProps"
     placeholder="请选择地区"
     v-else
     class="w100"
+    ref="cRef"
   ></el-cascader>
 </template>
 
@@ -43,15 +45,25 @@ const typeProps = {
 const addrProps = {
   expandTrigger: 'hover',
   checkStrictly: true,
-  value:'id',
+  value:'code',
   label:'name',
 }
-const addrChange = (value:any) => {
+
+const change = (value:any) => {
   emit('update:modelValue',value)
 }
-const typeChange = (value:any) => {
-  emit('update:modelValue',value)
+
+const cRef = ref()
+const getText = ()=>{
+  if(cRef.value.getCheckedNodes().length){
+    return cRef.value.getCheckedNodes()[0].text
+  }else{
+    return ''
+  }
 }
+defineExpose({
+  getText
+})
 </script>
 
 <style scoped lang="scss">

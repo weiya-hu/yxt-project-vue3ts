@@ -9,7 +9,7 @@
       </div>
     </div>
     <CompanyTable :data="tableData"/>
-    <MyPage :total="1000" v-model="page" @change="changePage"/>
+    <MyPage :total="total" v-model="page" @change="changePage"/>
   </div>
 </template>
 
@@ -28,7 +28,7 @@ const tableData = ref([])
 const page = ref(1)
 const total = ref(0)
 const changePage =()=>{
-  console.log(page.value);
+  getList()
 }
 
 const getList = ()=>{

@@ -71,6 +71,9 @@ body {
   display: flex;
   justify-content: flex-end;
 }
+.fs0{
+  flex-shrink: 0;
+}
 .faend{
   display: flex;
   align-items: flex-end;

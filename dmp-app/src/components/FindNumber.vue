@@ -5,7 +5,6 @@
 </template>
 
 <script setup lang="ts">
-//分页组件
 const props = withDefaults(defineProps<{
   total:number,
 }>(),{

@@ -125,10 +125,22 @@ const routes = [
             meta: { title: '广告投放',icon:nav5_i,icon_a:nav5_a_i  },
           },
           {
+            path: '/findC/adDataDetails',
+            name: '广告投放C详情',
+            component: () => import('@/views/layout/findC/adDataDetails.vue'),
+            meta: { title: '广告投放详情',leftHidden:true,father:'/findC/adData' },
+          },
+          {
             path: '/findC/wxData',
             name: '微信获客C',
             component: () => import('@/views/layout/findC/wxData.vue'),
             meta: { title: '微信获客',icon:nav6_i,icon_a:nav6_a_i  },
+          },
+          {
+            path: '/findC/wxDataDetails',
+            name: '微信获客C详情',
+            component: () => import('@/views/layout/findC/wxDataDetails.vue'),
+            meta: { title: '微信获客详情',leftHidden:true,father:'/findC/wxData' },
           },
           {
             path: '/findC/baiduData',

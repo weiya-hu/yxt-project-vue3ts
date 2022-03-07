@@ -34,3 +34,10 @@ type HeightSearchForm = {
   // company_type:'',//企业类型  位运算
   // conditions_name:'',//	条件组名称 输入
 }
+
+interface PageParams {
+  size:number,
+  current:number,
+  source?:number,
+  [propName: string]: any
+}

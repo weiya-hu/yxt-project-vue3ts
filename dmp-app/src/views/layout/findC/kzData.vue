@@ -1,6 +1,6 @@
 <template>
   <div class="kzdata_page_c">
-    <TopSearch @height-search="heightSearch"/>
+    <TopSearch @height-search="heightSearch" @search="wordSearch" :words="words"/>
     <div class="topbtns fsc">
       <FindNumber class="lt" :total="total"/>
       <div class="rt fcs">
@@ -45,13 +45,38 @@ import TopSearch from '@/components/TopSearch.vue'
 import MyPage from "@/components/MyPage.vue";
 import FindNumber from "@/components/FindNumber.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
+import { getSearchWord_api ,wordSearchList_api } from '@/api/findC'
+
+const words = ref([])
+const getWord = ()=>{
+  getSearchWord_api().then((res:res)=>{
+    words.value = res.body
+  })
+}
+getWord()
 
 const searchParams = ref({
-  size:1,
-  current:10,
+  size:10,
+  current:1,
   source:1
 })
 const searchType = ref(1) //searchType 1普通搜索 2高级搜索
+const word = ref('')
+const wordSearch = (keyWord:string)=>{
+  searchType.value = 1
+  word.value = keyWord
+  searchParams.value.current = 1
+  goSearch()
+}
+const goSearch = ()=>{
+  wordSearchList_api({
+    ...searchParams.value,
+    str:word.value
+  }).then((res:res)=>{
+    console.log(res);
+  })
+}
+
 const heightSearch = (params:any)=>{
   searchType.value = 2
   searchParams.value ={
@@ -59,10 +84,10 @@ const heightSearch = (params:any)=>{
     ...params
   }
   console.log(searchParams.value);
-  goSearch()
+  goheightSearch()
 }
 
-const goSearch = ()=>{
+const goheightSearch = ()=>{
   
 }
 

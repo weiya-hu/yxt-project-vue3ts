@@ -7,7 +7,20 @@
       <el-col class="navbox fsc">
         <TopNav :nav="topNav" v-model="activePath" ref="topNavRef"/>
         <div class="user fcs">
+          <div class="kf_btn fcs" @click="kfShow=true ">
+            <img :src="znkf_i" alt="">
+            <div>客服</div>
+          </div>
           <el-button color="#2D68EB" class="l_btn" plain>完善资料</el-button>
+          <!-- <div class="is_company fcc">
+            <img :src="company_i" alt="">
+            <el-tooltip effect="dark" placement="bottom">
+              <template #content>
+                <div style="width:100px">重庆康洲大数据…</div>
+              </template>
+              <div class="els">重庆康洲大数据…</div>
+            </el-tooltip>
+          </div> -->
           <div class="sline"></div>
           <div class="userbox fcs">
             <el-avatar :size="48" :src="znkf_i"></el-avatar>
@@ -42,17 +55,22 @@
         </router-view>
       </el-col>
     </el-row>
+
+    <MyDialog v-model="kfShow" type="kf"/>
+
   </div>
 </template>
 
 <script setup lang="ts">
 import logo_i from '@/assets/images/logo.png'
 import znkf_i from '@/assets/images/znkf.png'
+import company_i from '@/assets/images/company_tag.png'
 import {reactive, ref  } from 'vue'
 import LeftNav from '@/components/LeftNav.vue'
 import TopNav from '@/components/TopNav.vue'
 import {useRouter, useRoute,onBeforeRouteUpdate} from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
+import MyDialog from "@/components/MyDialog.vue";
 
 const route = useRoute()
 const router = useRouter()
@@ -91,6 +109,9 @@ onBeforeRouteUpdate((to,from)=>{
     topNavRef.value.changeLeft()
   }
 })
+
+const kfShow = ref(false)
+
 </script>
 
 <style lang="scss" scoped>
@@ -118,6 +139,32 @@ onBeforeRouteUpdate((to,from)=>{
   .navbox{
     max-width: 89.6%;
     flex: 0 0 89.6%;
+    .kf_btn{
+      font-size: 14px;
+      color: $dfcolor;
+      margin-right: 20px;
+      img{
+        width: 32px;
+        height: 32px;
+        margin-right: 4px;
+      }
+      &:hover{
+        cursor: pointer;
+      }
+    }
+    .is_company{
+      font-size: 12px;
+      color: $color333;
+      font-weight: 400;
+      img{
+        width: 14px;
+        height: 14px;
+        margin-right: 6px;
+      }
+      >div{
+        width: 96px;
+      }
+    }
     .user{
       padding-right: 50px;
       color:$color333;

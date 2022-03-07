@@ -16,20 +16,24 @@
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="ID" width="150"/>
-        <el-table-column property="name" label="人群名称" width="170"/>
-        <el-table-column property="desc" label="人群描述"/>
-        <el-table-column property="state" label="状态" width="160">
+        <el-table-column property="group_name" label="人群名称" width="170"/>
+        <el-table-column property="group_desc" label="人群描述"/>
+        <el-table-column property="status" label="状态" width="160">
           <template #default="scope">
             <div class="fcs">
-              <div class="dot" :class="scope.row.state == 0?'dot_ing':scope.row.state == 1?'dot_ok':'dot_err'"></div>
-              <div>{{ scope.row.state == 0?'计算中':scope.row.state == 1?'计算完成':'计算失败' }}</div>
+              <div class="dot" :class="scope.row.status == 0?'dot_ing':scope.row.status == 1?'dot_ok':'dot_err'"></div>
+              <div>{{ scope.row.status == 0?'计算中':scope.row.status == 1?'计算完成':'计算失败' }}</div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column property="address" label="地区"/>
-        <el-table-column property="num" label="覆盖用户人数" width="140">
+        <el-table-column label="地区">
           <template #default="scope">
-            <div>{{ scope.row.state == 1?'---':scope.row.num }}</div>
+            <div>{{getHashStr(strToArr(scope.row.province,scope.row.city,scope.row.district),addressHash)}}</div>
+          </template>
+        </el-table-column>
+        <el-table-column property="count" label="覆盖用户人数" width="140">
+          <template #default="scope">
+            <div>{{ scope.row.status == 1?scope.row.count:'---' }}</div>
           </template>
         </el-table-column>
         <el-table-column property="create_time" label="创建日期" width="190">
@@ -39,12 +43,12 @@
         </el-table-column>
         <el-table-column property="source" label="来源" width="140">
           <template #default="scope">
-            <div>{{ scope.row.source == 1?'号码段':'---' }}</div>
+            <div>{{ getSource(scope.row.source) }}</div>
           </template>
         </el-table-column>
         <el-table-column property="source" label="操作" width="150">
           <template #default="scope">
-            <el-link type="primary" @click="goDetails(scope.row.id)">详情</el-link>
+            <el-link type="primary" @click="goDetails(scope.row.id)">查看</el-link>
           </template>
         </el-table-column>
         <template #empty>
@@ -52,7 +56,7 @@
         </template>
       </el-table>
     </div>
-    <MyPage :total="1000" v-model="page" @change="changePage"/>
+    <MyPage :total="total" v-model="page" @change="changePage"/>
 
     <el-dialog v-model="addShow" title="新建数据" width="500px" @close="closeAdd">
       <el-form class="myform" ref="addFormRef" :model="addForm" :rules="addRules" v-loading="upLoading">
@@ -111,11 +115,19 @@
 
 <script setup lang="ts">
 import {useRouter} from 'vue-router'
-import { reactive, ref  } from 'vue'
-import MyPage from "@/components/MyPage.vue";
+import { reactive, ref ,computed  } from 'vue'
+import type { ElForm } from 'element-plus'
 import { formatDate } from '@/utils/date'
+import MyPage from "@/components/MyPage.vue";
 import MyCascader from "@/components/MyCascader.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
+import { addInset_api ,getInsetList_api} from '@/api/findC'
+import { mainStore } from '@/store/index'
+import { getHashStr,strToArr,getSource} from '@/utils/index'
+
+const store = mainStore()
+const typeHash = computed(() => store.state.typeHash)
+const addressHash = computed(() => store.state.addressHash)
 
 const page = ref(1)
 const total = ref(0)
@@ -124,49 +136,31 @@ const goDetails = (id:string)=>{
   router.push('/findC/telDataDetails?id='+id)
 }
 
+const getList = ()=>{
+  getInsetList_api({
+    "current": page.value,
+    "size": 10
+  }).then((res:res)=>{
+    tableData.value = res.body.records
+    total.value = res.body.total
+  })
+}
+getList()
 interface IData {
   id:number,
-  name:string,//人群名称
-  desc:string,//人群描述
-  state:number,//状态
+  group_name:string,//人群名称
+  group_desc:string,//人群描述
+  status:number,//状态
   address:string,//地区
-  num:number,//覆盖用户人数
+  count:number,//覆盖用户人数
   create_time:number,//创建日期
   source:number,//来源
+  province:number,//省份
+  city:number,//城市
+  district:number,//区
 }
 
-const tableData = ref<IData[]>([
-  {
-    id:0,
-    name:'拓客测试',
-    desc:'cccc',
-    state:0,
-    address:'全国',
-    num:321,
-    create_time:1646096359651,
-    source:1,
-  },
-  {
-    id:1,
-    name:'拓客测试',
-    desc:'aaaa',
-    state:2,
-    address:'重庆',
-    num:321,
-    create_time:1646096359651,
-    source:1,
-  },
-  {
-    id:2,
-    name:'拓客测试',
-    desc:'fff',
-    state:1,
-    address:'全国',
-    num:321,
-    create_time:1646096359651,
-    source:2,
-  },
-])
+const tableData = ref<IData[]>([])
 
 const multipleSelection = ref<IData[]>([])
 const handleSelectionChange = (val:IData[]) => {
@@ -174,14 +168,15 @@ const handleSelectionChange = (val:IData[]) => {
 }
 
 const changePage =()=>{
-  console.log(page.value);
+  getList()
 }
 
 const addShow = ref(false)
 const closeAdd = ()=>{
   //关闭添加弹窗
   addShow.value = false
-  
+  upLoading.value = false
+  addFormRef.value!.resetFields()
 }
 const tels = ref([139,128,145,123,321,555,111,333])
 const addForm = ref({
@@ -199,8 +194,30 @@ const addRules = reactive({
   }],
 })
 const upLoading = ref(false)
-const submitAddForm = ()=>{
-
+type FormInstance = InstanceType<typeof ElForm>
+const addFormRef = ref<FormInstance>()
+const submitAddForm = () => {
+  //提交添加需求表单
+  addFormRef.value!.validate((valid) => {
+    if (valid) {
+      console.log('submit!')
+      upLoading.value = true
+      addInset_api({
+        "city": addForm.value.addr[1]||0,
+        "district": addForm.value.addr[2]||0,
+        "group_desc": addForm.value.desc,
+        "group_name": addForm.value.people,
+        "province": addForm.value.addr[0]||0,
+        "segment": addForm.value.tels.join()
+      }).then((res:res)=>{
+        upLoading.value = false
+        closeAdd()
+      })
+    } else {
+      console.log('error submit!');
+      return false
+    }
+  })
 }
 </script>
 
