@@ -73,9 +73,9 @@
       tableList.value = body.records
     }
   }
-  const operate=(val:number)=>{
+  const operate=(val:number,row:any)=>{
     console.log(val)
-    router.push({path:'/myData/up2cDetails'})
+    router.push({path:'/myData/up2cDetails',query:{id:row.id}})
   }
 </script>
 

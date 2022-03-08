@@ -76,7 +76,7 @@
     }
   }
   const operate=(val:number,row:any)=>{
-    router.push('/myData/up2bDetails?id='+row.id)
+    router.push({path:'/myData/up2bDetails',query:{id:row.id}})
   }
 </script>
 

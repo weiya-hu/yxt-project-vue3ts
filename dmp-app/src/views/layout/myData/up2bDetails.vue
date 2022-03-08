@@ -23,12 +23,12 @@ import {ref,onMounted,computed} from 'vue'
 import MyDataTable from '@/components/MyDataTable.vue'
 import MyPage from '@/components/MyPage.vue'
 import {upRecordDetail} from '@/api/myData'
-// import {getUrlParam} from '@/utils/index'
 import { mainStore } from '@/store/index'
-// import { errMsg,getHash,getHashStr,strToArr} from '@/utils/index'
+import {useRoute} from 'vue-router'
+
 const store = mainStore()
-// const typeHash = computed(() => getHash(store.state.typeList,'industryId'))
-// const addressHash = computed(() => getHash(store.state.addressList,'id'))
+const route = useRoute()
+
 
 
 onMounted(()=>{
@@ -36,11 +36,11 @@ onMounted(()=>{
 })
 
 
-let total=ref(1000)
+let total=ref(0)
 let page = ref(1)
 const tableTitle=ref([
   {type:'select',prop:'select',width:30},
-  {type:'text',lable:'序号',prop:'num',width:50},
+  {type:'text',lable:'序号',prop:'num',width:70},
   {type:'text',lable:'企业名称',prop:'name',width:130},
   {type:'text',lable:'联系人',prop:'contact',width:74},
   {type:'text',lable:'联系方式',prop:'mobiles',width:100},
@@ -53,24 +53,22 @@ const tableTitle=ref([
   {type:'link',lable:'企业官网',prop:'website',width:150},
   {type:'text',lable:'经营范围',prop:'range',width:150},
 ])
-const tableList=ref([
-  {num:'01',name:'成华济民城所公司',contact:'王**',phone:'139****1965',tel:'028-98754612',industry:'计算机软件',region:'四川省成都市',address:'四川省成都市金牛区',industryType:'有限责任公司',code:'91500112MA5U3HHH3U',website:'https://fanyi.baidu.com/',range:'研制、开发、销售计算'}
-])
+const tableList=ref([])
 
 
 
 const changePage=()=>{}
 const getDetailList=async()=>{
-  // let data={
-  //   current:page.value,
-  //   size:10,
-  //   id:getUrlParam('id')
-  // }
-  // const {status,body}=await upRecordDetail(data)
-  // if(status){
-  //   total.value=body.total
-  //   tableList.value=body.records
-  // }
+  let data={
+    current:page.value,
+    size:10,
+    id:route.query.id
+  }
+  const {status,body}=await upRecordDetail(data)
+  if(status){
+    total.value=body.total
+    tableList.value=body.records
+  }
 }
 
 </script>
