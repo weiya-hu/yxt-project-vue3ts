@@ -2,7 +2,7 @@
   <div class="wx_data">
 
     <div class="topbtns fsc">
-      <el-button size="large" type="primary" @click="addShow = true">新建数据</el-button>
+      <el-button size="large" type="primary" @click="addShow = true">新增需求</el-button>
       <div class="rt fcs">
         <el-button size="large">同步SCRM</el-button>
         <el-button size="large">同步CMS</el-button>
@@ -17,7 +17,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" />
-        <el-table-column property="acc" label="好友微信号"/>
+        <el-table-column property="wechat_id" label="好友微信号"/>
         <el-table-column property="status" label="处理状态">
           <template #default="scope">
             <div class="fcs">
@@ -26,10 +26,14 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column property="money" label="消耗金额"/>
+        <el-table-column property="money" label="消耗金额">
+          <template #default="scope">
+            <div>{{Number(scope.row.money).toFixed(2) }}</div>
+          </template>
+        </el-table-column>
         <el-table-column property="source" label="来源">
           <template #default="scope">
-            <div>{{scope.row.source == 1?'微信好友':'---'}}</div>
+            <div>{{getSource(scope.row.source)}}</div>
           </template>
         </el-table-column>
         <el-table-column property="create_time" label="来源">
@@ -39,7 +43,7 @@
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
-            <el-link type="primary" @click="goDetails(scope.row.id)">查看</el-link>
+            <el-link type="primary" @click="goDetails(scope.row.wechat_id)">查看</el-link>
           </template>
         </el-table-column>
         
@@ -73,68 +77,39 @@
 
 <script setup lang="ts">
 import { reactive, ref  } from 'vue'
+import type { ElForm } from 'element-plus'
 import { formatDate } from '@/utils/date'
 import MyPage from "@/components/MyPage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import {useRouter} from 'vue-router'
 import warning_i from '@/assets/images/warning.png'
-const addShow = ref(false)
-const Addform = ref({
-  acc:''
-})
-const addFormRef = ref()
-const addRules = reactive({
-  acc:[{
-    required: true,
-    message: '请输入好友微信号',
-    trigger: 'blur',
-  }],
-})
-const closeAdd = ()=>{
-  addFormRef.value.resetFields()
-}
-const goAdd = ()=>{
-
-}
+import { getWxList_api ,addWx_api} from '@/api/findC'
+import {getSource} from '@/utils/index'
 
 interface SData {
-  id: number|string,
-  acc:string,
+  wechat_id:string,
   status:number,
   money:number,
   create_time:number,
   source:number,
 }
-const tableData = ref([
-  {
-    id: 0,
-    acc:'jdc313',
-    status:0,
-    money:0.01,
-    create_time:1646096359651,
-    source:1,
-  },
-  {
-    id: 0,
-    acc:'jdc313',
-    status:1,
-    money:0.01,
-    create_time:1646091359651,
-    source:1,
-  },
-  {
-    id: 0,
-    acc:'jdc313',
-    status:2,
-    money:0.01,
-    create_time:1646096359651,
-    source:1,
-  },
-])
+const tableData = ref([])
 const page = ref(1)
 const total = ref(0)
+const getList = ()=>{
+  getWxList_api({
+    size: 10,
+    current: page.value
+  }).then((res:res)=>{
+    if(res.status == 1){
+      tableData.value = res.body.records
+      total.value = res.body.total
+    }
+  })
+}
+getList()
 const changePage =()=>{
-  console.log(page.value);
+  getList()
 }
 const multipleSelection = ref<SData[]>([])
 const handleSelectionChange = (val:SData[]) => {
@@ -145,6 +120,45 @@ const handleSelectionChange = (val:SData[]) => {
 const router = useRouter()
 const goDetails = (id:string)=>{
   router.push('/findC/wxDataDetails?id='+id)
+}
+
+const addShow = ref(false)
+const upLoading = ref(false)
+const Addform = ref({
+  acc:''
+})
+type FormInstance = InstanceType<typeof ElForm>
+const addFormRef = ref<FormInstance>()
+const addRules = reactive({
+  acc:[{
+    required: true,
+    message: '请输入好友微信号',
+    trigger: 'blur',
+  }],
+})
+const closeAdd = ()=>{
+  upLoading.value = false
+  addShow.value = false
+  addFormRef.value!.resetFields()
+}
+const goAdd = ()=>{
+  //提交添加需求表单
+  addFormRef.value!.validate((valid) => {
+    if (valid) {
+      console.log('submit!')
+      upLoading.value = true
+      addWx_api({wechat_id:Addform.value.acc}).then((res:res)=>{
+        if(res.status == 1){
+          closeAdd()
+          getList()
+        }
+        upLoading.value = false
+      })
+    } else {
+      console.log('error submit!');
+      return false
+    }
+  })
 }
 
 </script>
