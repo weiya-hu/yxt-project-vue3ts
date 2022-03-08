@@ -26,7 +26,7 @@
         </template>
       </el-table>
     </div>
-    <MyPage :total="1000" v-model="page" @change="changePage"/>
+    <MyPage :total="total" v-model="page" @change="changePage"/>
   </div>
 </template>
 

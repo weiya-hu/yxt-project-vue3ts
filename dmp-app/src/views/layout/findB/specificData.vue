@@ -38,13 +38,6 @@
         </el-table-column>
         <!-- <el-table-column property="remarks" label="备注"/> -->
         <el-table-column label="操作" width="150">
-          <!-- <template #default="scope">
-            <div class="fcs">
-              <el-link type="primary" @click="goDetails(scope.row.id)">详情</el-link>
-              <div class="line"></div>
-              <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
-            </div>
-          </template> -->
 
           <template #default="scope">
             <div class="fcs" v-if="scope.row.status === 0">
