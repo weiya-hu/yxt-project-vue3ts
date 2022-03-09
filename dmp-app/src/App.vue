@@ -244,5 +244,17 @@ img{
     
   }
 }
+  
+   .up2b{
+    .el-table .el-table__cell{
+      z-index: unset !important;
+    }
+    .el-overlay{
+      background-color: rgba(0,0,0,.2) !important;
+      .el-dialog{
+        box-shadow: none;
+      }
+    }
+  }
 
 </style>

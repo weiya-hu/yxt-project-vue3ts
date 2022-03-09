@@ -19,14 +19,12 @@
 </template>
 
 <script setup lang="ts">
-import {ref,onMounted,computed} from 'vue'
+import {ref,onMounted} from 'vue'
 import MyDataTable from '@/components/MyDataTable.vue'
 import MyPage from '@/components/MyPage.vue'
 import {upRecordDetail} from '@/api/myData'
-import { mainStore } from '@/store/index'
 import {useRoute} from 'vue-router'
 
-const store = mainStore()
 const route = useRoute()
 
 
@@ -57,7 +55,6 @@ const tableList=ref([])
 
 
 
-const changePage=()=>{}
 const getDetailList=async()=>{
   let data={
     current:page.value,

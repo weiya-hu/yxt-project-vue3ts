@@ -20,7 +20,7 @@
     <div>
       <MyPage :total="totle" v-model="page" @change="getList"/>
     </div>
-    <MyDataUpUser v-model="dialogVisible"/>
+    <MyDataUpUser v-model="dialogVisible" @submitSuccess="submitsuccess"/>
     <!-- <div>{{dialogVisible}}{{page}}</div> -->
   </div>
 </template>
@@ -32,6 +32,7 @@
   import MyDataUpUser from '@/components/MyDataUpUser.vue'
   import {useRouter} from 'vue-router'
   import {upRecordList} from '@/api/myData'
+  import axios from 'axios'
 
   onMounted(() => {
     getList()
@@ -77,6 +78,10 @@
   }
   const operate=(val:number,row:any)=>{
     router.push({path:'/myData/up2bDetails',query:{id:row.id}})
+  }
+  const submitsuccess=()=>{
+    page.value=1
+    getList()
   }
 </script>
 

@@ -20,7 +20,7 @@
     <div>
       <MyPage :total="totle" v-model="page" @change="getList"/>
     </div>
-    <MyDataUpUser v-model="dialogVisible"/>
+    <MyDataUpUser v-model="dialogVisible" @submitSuccess="submitsuccess"/>
   </div>
 </template>
 
@@ -76,6 +76,10 @@
   const operate=(val:number,row:any)=>{
     console.log(val)
     router.push({path:'/myData/up2cDetails',query:{id:row.id}})
+  }
+  const submitsuccess=()=>{
+    page.value=1
+    getList()
   }
 </script>
 

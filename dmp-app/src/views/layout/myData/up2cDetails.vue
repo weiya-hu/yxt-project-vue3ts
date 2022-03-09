@@ -14,18 +14,24 @@
     >
       <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
     </el-table>
-    <MyPage :total="total" v-model="page" @change="changePage"/>
+    <MyPage :total="total" v-model="page" @change="getDetailList"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import {ref,onMounted} from 'vue'
 import MyDataTable from '@/components/MyDataTable.vue'
 import MyPage from '@/components/MyPage.vue'
+import {upRecordDetail} from '@/api/myData'
+import {useRoute} from 'vue-router'
 
+const route = useRoute()
 
+onMounted(()=>{
+  getDetailList()
+})
 
-let total=ref(1000)
+let total=ref(0)
 let page = ref(1)
 const tableTitle=ref([
   {type:'select',prop:'select',width:130},
@@ -36,20 +42,21 @@ const tableTitle=ref([
   {type:'text',lable:'从事行业',prop:'industry',width:130},
   {type:'text',lable:'地区',prop:'region',width:150},
 ])
-const tableList=ref([
-  {name:'张**',sex:'男',phone:'139****1965',email:'1063201840@qq.com',industry:'计算机软件',region:'四川省成都市'},
-  {name:'张**',sex:'男',phone:'139****1965',email:'1063201840@qq.com',industry:'计算机软件',region:'四川省成都市'},
-  {name:'张**',sex:'男',phone:'139****1965',email:'1063201840@qq.com',industry:'计算机软件',region:'四川省成都市'},
-  {name:'张**',sex:'男',phone:'139****1965',email:'1063201840@qq.com',industry:'计算机软件',region:'四川省成都市'},
-  {name:'张**',sex:'男',phone:'139****1965',email:'1063201840@qq.com',industry:'计算机软件',region:'四川省成都市'},
-  {name:'张**',sex:'男',phone:'139****1965',email:'1063201840@qq.com',industry:'计算机软件',region:'四川省成都市'},
-  {name:'张**',sex:'男',phone:'139****1965',email:'1063201840@qq.com',industry:'计算机软件',region:'四川省成都市'},
-  {name:'张**',sex:'男',phone:'139****1965',email:'1063201840@qq.com',industry:'计算机软件',region:'四川省成都市'},
-])
+const tableList=ref([])
 
 
-
-const changePage=()=>{}
+const getDetailList=async()=>{
+  let data={
+    current:page.value,
+    size:10,
+    id:route.query.id
+  }
+  const {status,body}=await upRecordDetail(data)
+  if(status){
+    total.value=body.total
+    tableList.value=body.records
+  }
+}
 
 </script>
 

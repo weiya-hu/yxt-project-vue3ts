@@ -38,11 +38,11 @@
           >
             <MyUpload 
               v-model="formValue.updateFile" 
-              downLink="jkljl"
+              :downLink="downloadUrl"
               @change="upChange" 
               @error="upError" 
               @success="upSuccess" 
-              :exnameList="['doc', 'docx', 'pdf']"
+              :exnameList="['.doc', '.docx', '.pdf','.xls','.xlsx']"
               ref="upload"
             />
           </el-form-item>
@@ -59,22 +59,26 @@
 </template>
 
 <script setup lang="ts">
-import { reactive,ref} from 'vue'
+import { reactive,ref,onMounted} from 'vue'
 import  MyUpload from '@/components/MyUpload.vue'
 import { errMsg} from '@/utils/index'
+import {upRecordAdd} from '@/api/myData'
+import {useRoute} from 'vue-router'
+import axios from 'axios'
 //父组件传的值
 const props = withDefaults(defineProps<{
   modelValue:boolean,
 }>(),{})
 
 //变量
+const route = useRoute()
 const fileVali=(rule:any,value:any,callback:any)=>{
   switch (fileErrorType.value) {
     case 'size':
       callback(new Error('请添加大小不超过4M的文件'))
       break;
     case 'type':
-      callback(new Error('请添加 .doc、.docx、.pdf 格式的文件'))
+      callback(new Error('请添加 .doc、.docx、.pdf、.xls、.xlsx 格式的文件'))
       break;
     case 'none':
       callback(new Error('请添加文件'))
@@ -88,9 +92,17 @@ const upUserRule= reactive({
   personsName:[{
     required: true,
     message: '请输入人群名称',
-    trigger: 'blur',
-  }],
+    trigger: 'change',
+  },{
+    required: true,
+    message: '请输入人群名称',
+    trigger: 'blur',}
+  ],
   personsDesc:[{
+    required: true,
+    message: '请输入人群描述',
+    trigger: 'change',
+  },{
     required: true,
     message: '请输入人群描述',
     trigger: 'blur',
@@ -114,13 +126,29 @@ let formValue=ref({
   updateFile:''
 })
 let loading = ref(false)
+let downloadUrl=ref('')
  
 
 //方法
-const emit = defineEmits(['update:modelValue'])
+onMounted(()=>{
+  console.log(route.path)
+  let url = route.path === '/myData/up2b'?'/dmp/file-download?type=1':'/dmp/file-download?type=2'
+  //下载模板要设置返回类型，不然文件会损坏
+  axios({
+    url:url,
+    method:'get',
+    headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+    }, 
+    responseType: 'blob'
+  }).then((res)=>{
+    downloadUrl.value=URL.createObjectURL(res.data);
+  })
+})
+
+const emit = defineEmits(['update:modelValue','submitSuccess'])
 const close=()=>{
   emit('update:modelValue',false)
-  console.log(props.modelValue)
 }
 const sure=()=>{
   formRef.value.validate((valid:any) => {
@@ -156,30 +184,27 @@ const upError = (err:any)=>{
   errMsg('上传失败')
 }
 const upSuccess = (path:string)=>{
-  console.log(path)
   loading.value = false
   //上传成功再提交表单
-  // addDemand_api({
-  //   "attachment": path,//附件地址
-  //   "province": Number(addForm.value.addr[0])||'',//省（区域码）
-  //   "city": Number(addForm.value.addr[1])||'',//市（区域码）
-  //   "district": Number(addForm.value.addr[2])||'',//区（区域码）
-  //   "group_desc": addForm.value.desc,//人群描述
-  //   "group_name": addForm.value.people,//人群名称
-  //   "industry_id": addForm.value.type.join(','),//行业ID
-  // }).then((res1:res)=>{
-  //   if(res1.status == 1){
-  //     closeAdd()
-  //     getDemandList()
-  //   }else{
-  //     formValue.value.updateFile = ''
-  //     fileErrorType.value = 'none'
-  //     upload.value.clear()
-  //     loading.value = false
-  //   }
-  // }).catch(()=>{
-  //   upError('')
-  // })
+  upRecordAdd({
+    "attachment": path,//附件地址
+    "group_desc": formValue.value.personsDesc,//人群描述
+    "group_name": formValue.value.personsName,//人群名称
+    "type":route.path === '/myData/up2b'?1:2
+  }).then((res)=>{
+    if(res.status){
+      close()
+      formRef.value.resetFields()
+      emit('submitSuccess',1)
+    }else{
+      formValue.value.updateFile = ''
+      fileErrorType.value = 'none'
+      upload.value.clear()
+    }
+    loading.value = false
+  }).catch(()=>{
+    upError('')
+  })
 }
 
 </script>

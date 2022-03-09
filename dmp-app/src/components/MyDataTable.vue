@@ -16,7 +16,7 @@
     <template #default="{row}">
       <div class="flexl">
         <div :class="row.status === 1?'calculating':'calculated'"></div>
-        <div >{{row.status===2?'计算完成':'计算中'}}</div>
+        <div >{{row.status===2?'计算完成':(row.status===0?'处理失败':'计算中')}}</div>
       </div>
     </template>
   </el-table-column>
@@ -27,13 +27,24 @@
   </el-table-column>
   <el-table-column v-if="type==='operateLook'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
-      <div v-for="(item,index) in operatButton" :key="index" class="operate-button" @click="operate(index,row)">{{row.status?item:'---'}}</div>
+      <div v-for="(item,index) in operatButton" :key="index" class="operate-button" @click="operate(index,row)">{{row.status===2?item:row.status===0?'失败原因':'---'}}</div>
+      <!-- <div v-for="(item,index) in operatButton" :key="index" class="operate-button" @click="operate(index,row)">失败原因</div> -->
+      <el-dialog v-model="errorShow" title="失败原因" width="400px">
+        <div class="fcc msg">{{row.fail_reason}}</div>
+        <!-- <div class="fcc msg">row.fail_reason</div> -->
+        <template #footer>
+          <div class="fcc">
+            <el-button type="primary" @click="errorShow=false">我知道了</el-button>
+          </div>
+        </template>
+      </el-dialog>
     </template>
   </el-table-column>
+  
 </template>
 
 <script setup lang="ts">
-  import { toRefs} from 'vue'
+  import { toRefs,ref} from 'vue'
   import {Format} from '@/utils/date'
   const props = withDefaults(defineProps<{
     type:string,
@@ -43,10 +54,16 @@
     operatButton?:string[]
   }>(),{})
 
+  const errorShow = ref(false)
+
 
   const emit = defineEmits(['click'])
   const operate=(index:number,row:any)=>{
-    row.status && emit('click',index,row)
+    (row.status===2) && emit('click',index,row);
+
+    (row.status===0) && (errorShow.value = true)
+    //  errorShow.value = true
+
   }
   const {type,lable,prop,width,operatButton} =toRefs(props)
 
@@ -72,4 +89,12 @@
     color: #2D68EB;
     cursor: pointer;
   }
+  .msg{
+    font-size: 14px;
+    color: #333;
+  }
+  .el-overlay{
+    background-color: rgba(0,0,0,.1) !important;
+  }
+ 
 </style>
