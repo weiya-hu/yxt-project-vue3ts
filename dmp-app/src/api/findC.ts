@@ -32,7 +32,7 @@ export const getInsetList_api = (data:PageParams): Promise<res> => {
 /**
  * @name 查看号码段客户分页列表
 */
-export const getInsetDetailsList_api = (data:PageParams): Promise<res> => {
+export const getInsetUserList_api = (data:PageParams): Promise<res> => {
   return get('/dmp/findC/number-segment-page',data)
 }
 
@@ -48,4 +48,32 @@ export const addAd_api = (data:any): Promise<res> => {
 */
 export const getAdList_api = (data:PageParams): Promise<res> => {
   return get('/dmp/findC/advert-demand-page',data)
+}
+
+/**
+ * @name 查看广告投放客户分页列表
+*/
+export const getAdUserList_api = (data:PageParams): Promise<res> => {
+  return get('/dmp/findC/advert-page',data)
+}
+
+/**
+ * @name 获取微信号分页列表
+*/
+export const getWxList_api = (data:PageParams): Promise<res> => {
+  return get('/dmp/findC/wechat-demand-page',data)
+}
+
+/**
+ * @name 查询微信账号（新增需求）
+*/
+export const addWx_api = (data:any): Promise<res> => {
+  return post('/dmp/findC/insert-wechat-demand',data,true)
+}
+
+/**
+ * @name 查看微信客户
+*/
+export const getWxUser_api = (data:any): Promise<res> => {
+  return get('/dmp/findC/wechat',data)
 }

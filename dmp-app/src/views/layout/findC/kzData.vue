@@ -35,7 +35,7 @@
         </template>
       </el-table>
     </div>
-    <MyPage :total="1000" v-model="page" @change="changePage"/>
+    <MyPage :total="total" v-model="page" @change="changePage"/>
   </div>
 </template>
 
@@ -73,7 +73,9 @@ const goSearch = ()=>{
     ...searchParams.value,
     str:word.value
   }).then((res:res)=>{
-    console.log(res);
+    if(res.status == 1){
+      console.log(res);
+    }
   })
 }
 

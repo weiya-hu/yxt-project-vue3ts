@@ -1,7 +1,7 @@
 <template>
   <div class="addata_page_c">
     <div class="topbtns fsc">
-      <el-button size="large" type="primary" @click="addShow = true">新建数据</el-button>
+      <el-button size="large" type="primary" @click="addShow = true">新建人群</el-button>
       <div class="rt fcs">
         <el-button size="large">同步SCRM</el-button>
         <el-button size="large">同步CMS</el-button>
@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref  } from 'vue'
+import { reactive, ref,Ref  } from 'vue'
 import MyPage from "@/components/MyPage.vue";
 import PeopleTable from "@/components/PeopleTable.vue";
 import AddPeople from "@/components/AddPeople.vue";

@@ -39,6 +39,8 @@
 import { reactive, ref  } from 'vue'
 import { formatDate } from '@/utils/date'
 import MyEmpty from "@/components/MyEmpty.vue";
+import { getWxUser_api } from '@/api/findC'
+import {useRoute} from 'vue-router'
 
 interface IData {
   id:number,
@@ -64,8 +66,15 @@ const tableData = ref<IData[]>([
     create_time:1646096359651,
   },
 ])
-
-
+const total = ref(0)
+const route = useRoute()
+const getList = ()=>{
+  getWxUser_api({wechatId:route.query.id}).then((res:res)=>{
+    if(res.status == 1){
+    }
+  })
+}
+getList()
 const multipleSelection = ref<IData[]>([])
 const handleSelectionChange = (val:IData[]) => {
   multipleSelection.value = val

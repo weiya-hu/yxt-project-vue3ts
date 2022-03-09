@@ -36,7 +36,7 @@ import { formatDate } from '@/utils/date'
 import FindNumber from "@/components/FindNumber.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
-import { getInsetDetailsList_api } from '@/api/findC'
+import { getInsetUserList_api } from '@/api/findC'
 import {useRoute} from 'vue-router'
 
 interface IData {
@@ -52,12 +52,15 @@ const route = useRoute()
 const total = ref(0)
 const page = ref(1)
 const getList = ()=>{
-  getInsetDetailsList_api({
+  getInsetUserList_api({
     size: 10,
     current: page.value,
-    demand_id:route.query.id
+    demandId:route.query.id
   }).then((res:res)=>{
-
+    if(res.status == 1){
+      total.value = res.body.total
+      tableData.value = res.body.records
+    }
   })
 }
 getList()

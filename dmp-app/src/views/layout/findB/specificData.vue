@@ -1,7 +1,7 @@
 <template>
   <div class="specific_data_page">
     <div class="fsc topbtns">
-      <el-button type="primary" @click="addShow=true">新建数据</el-button>
+      <el-button type="primary" @click="addShow=true">新增需求</el-button>
     </div>
     <div class="mytable">
       <el-table

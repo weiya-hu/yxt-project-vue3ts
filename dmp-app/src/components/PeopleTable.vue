@@ -42,18 +42,18 @@
         <template #default="scope">
           <div class="fcs" v-if="scope.row.status === 0">
             <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
-            <div class="line"></div>
-            <el-link type="primary" :href="scope.row.plan_url">下载附件</el-link>
+            <div class="line" v-if="scope.row.plan_url"></div>
+            <el-link type="primary" v-if="scope.row.plan_url" :href="scope.row.plan_url">下载附件</el-link>
           </div>
           <div class="fcs" v-if="scope.row.status === 1">
             <el-link type="primary" :href="scope.row.plan_url">下载方案</el-link>
           </div>
-          <div class="fcs" v-if="scope.row.status === 3">
+          <div class="fcs" v-if="scope.row.status === 2">
             <el-link type="primary" @click="goDetails(scope.row.id)">查看</el-link>
             <div class="line"></div>
             <el-link type="primary" :href="scope.row.plan_url">下载方案</el-link>
           </div>
-          <div class="fcs" v-if="scope.row.status === 2">
+          <div class="fcs" v-if="scope.row.status === 3">
             <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
             <div class="line"></div>
             <el-link type="primary" @click="errorMsg = scope.row.error;errorShow=true">拒绝原因</el-link>
@@ -86,6 +86,7 @@ import MyEmpty from "@/components/MyEmpty.vue";
 import { formatDate } from '@/utils/date'
 import MyDialog from "@/components/MyDialog.vue";
 import {useRouter} from 'vue-router'
+import {getSource} from '@/utils/index'
 
 const props = defineProps({
   data: Array,
@@ -170,43 +171,6 @@ const getState = (status:string|number)=>{
   return obj.value
 }
 
-const getSource = (source:number)=>{
-  switch (source) {
-    case 1:
-      return '康州数智'
-      break;
-    case 2:
-      return '第三方数据'
-      break;
-    case 3:
-      return '号码段获客'
-      break;
-    case 4:
-      return '广告投放'
-      break;
-    case 5:
-      return '微信获客'
-      break;
-    case 6:
-      return '百度关键词获客'
-      break;
-    case 7:
-      return '大数据获客'
-      break;
-    case 8:
-      return '400获客'
-      break;
-    case 9:
-      return '竞价获客'
-      break;
-    case 10:
-      return '短信获客'
-      break;
-    default:
-      return '---'
-      break;
-  }
-}
 </script>
 
 <style scoped lang="scss">

@@ -12,10 +12,18 @@
           <div>{{ scope.row.sex == 1?'男':'女' }}</div>
         </template>
       </el-table-column>
-      <el-table-column property="tel" label="联系方式" />
+      <el-table-column property="mobiles" label="联系方式" />
       <el-table-column property="email" label="邮箱" />
-      <el-table-column property="type" label="从事行业" />
-      <el-table-column property="address" label="地区"/>
+      <el-table-column property="type" label="从事行业">
+        <template #default="scope">
+          <div>{{getHashStr(scope.row.industry_id.split(','),typeHash,'last')}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="地区">
+        <template #default="scope">
+          <div>{{getHashStr(strToArr(scope.row.province,scope.row.city,scope.row.district),addressHash)}}</div>
+        </template>
+      </el-table-column>
       <el-table-column property="source" label="来源" >
         <template #default="scope">
           <div>{{ getSource(scope.row.source) }}</div>
@@ -30,14 +38,16 @@
 
 <script setup lang="ts">
 //客户表格
-import { ref } from 'vue'
+import { ref,computed } from 'vue'
 import MyEmpty from "@/components/MyEmpty.vue";
 import { formatDate } from '@/utils/date'
-import {getSource} from '@/utils/index'
-
+import { mainStore } from '@/store/index'
+import {getHashStr,strToArr,getSource} from '@/utils/index'
+const store = mainStore()
+const typeHash = computed(() => store.state.typeHash)
+const addressHash = computed(() => store.state.addressHash)
 const props = defineProps({
   data: Array,
-  details:String
 })
 const emit = defineEmits(['select'])
 // select 选择时触发，返回选择数据；del 确认删除时触发，返回id

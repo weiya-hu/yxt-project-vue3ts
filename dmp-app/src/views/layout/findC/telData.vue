@@ -126,7 +126,6 @@ import { mainStore } from '@/store/index'
 import { getHashStr,strToArr,getSource} from '@/utils/index'
 
 const store = mainStore()
-const typeHash = computed(() => store.state.typeHash)
 const addressHash = computed(() => store.state.addressHash)
 
 const page = ref(1)
@@ -141,8 +140,10 @@ const getList = ()=>{
     "current": page.value,
     "size": 10
   }).then((res:res)=>{
-    tableData.value = res.body.records
-    total.value = res.body.total
+    if(res.status == 1){
+      tableData.value = res.body.records
+      total.value = res.body.total
+    }
   })
 }
 getList()
@@ -210,8 +211,10 @@ const submitAddForm = () => {
         "province": addForm.value.addr[0]||0,
         "segment": addForm.value.tels.join()
       }).then((res:res)=>{
+        if(res.status == 1){
+          closeAdd()
+        }
         upLoading.value = false
-        closeAdd()
       })
     } else {
       console.log('error submit!');

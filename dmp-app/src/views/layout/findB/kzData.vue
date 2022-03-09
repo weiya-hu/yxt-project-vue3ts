@@ -60,8 +60,10 @@ const goSearch = async ()=>{
     ...searchParams.value,
     keywords:word.value
   }).then((res:res)=>{
-    total.value = res.body.total
-    tableData.value = res.body.records
+    if(res.status == 1){
+      total.value = res.body.total
+      tableData.value = res.body.records
+    }
     loading.value = false
   })
 }
@@ -80,8 +82,10 @@ const goHSearch = ()=>{
     ...searchParams.value,
     ...heightParams.value
   }).then((res:res)=>{
-    total.value = res.body.total
-    tableData.value = res.body.records
+    if(res.status == 1){
+      total.value = res.body.total
+      tableData.value = res.body.records
+    }
     loading.value = false
   })
 }
