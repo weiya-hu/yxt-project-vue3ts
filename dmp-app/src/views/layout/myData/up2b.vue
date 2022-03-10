@@ -13,12 +13,16 @@
         :data="tableList"
         size="large"
         row-class-name="my-data-table-row"
+        v-loading="loading"
       >
         <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop' :operatButton="item.operatButton" @click='operate'/>
+        <template #empty>
+          <MyEmpty/>
+        </template>
       </el-table>
     </div>
     <div>
-      <MyPage :total="totle" v-model="page" @change="getList"/>
+      <MyPage v-if="totle" :total="totle" v-model="page" @change="getList"/>
     </div>
     <MyDataUpUser v-model="dialogVisible" @submitSuccess="submitsuccess"/>
     <!-- <div>{{dialogVisible}}{{page}}</div> -->
@@ -26,17 +30,13 @@
 </template>
 
 <script setup lang="ts">
-  import {ref,onMounted} from 'vue'
+  import {ref} from 'vue'
   import MyDataTable from '@/components/MyDataTable.vue'
   import MyPage from '@/components/MyPage.vue'
   import MyDataUpUser from '@/components/MyDataUpUser.vue'
   import {useRouter} from 'vue-router'
   import {upRecordList} from '@/api/myData'
-  import axios from 'axios'
-
-  onMounted(() => {
-    getList()
-  })
+  import MyEmpty from "@/components/MyEmpty.vue";
 
   interface TableTitleProp{
       type:string,
@@ -50,8 +50,14 @@
   let page = ref(1)
   let dialogVisible = ref(false)
   let router = useRouter();
+  let loading=ref(false)
 
 
+  // let tableList = ref([
+  //   {id:'dhfkjs',group_name:'hdskjhv',group_desc:'kjklfjs',status:0,count:2500,create_time:1646209666231},
+  //   {id:'dhfkjs',group_name:'hdskjhv',group_desc:'kjklfjs',status:1,count:2500,create_time:1646209666231},
+  //   {id:'dhfkjs',group_name:'hdskjhv',group_desc:'kjklfjs',status:2,count:2500,create_time:1646209666231},
+  // ])
   let tableList = ref([])
   let tableTitle = ref(<TableTitleProp[]>[
     {type:'select',width:100,prop:'select'},
@@ -65,17 +71,20 @@
   ])
   
   const getList=async()=>{
+    loading.value=true
     let data={
       current:page.value,
       type:1,
       size:10
     }
     const {status,body} = await upRecordList(data)
+    loading.value=false
     if(status){
       totle.value=body.total
       tableList.value = body.records
     }
   }
+  getList()
   const operate=(val:number,row:any)=>{
     router.push({path:'/myData/up2bDetails',query:{id:row.id}})
   }

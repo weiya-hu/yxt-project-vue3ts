@@ -15,7 +15,7 @@
   <el-table-column v-if="type==='status'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
       <div class="flexl">
-        <div :class="row.status === 1?'calculating':'calculated'"></div>
+        <div :class="row.status === 2?'calculated':row.status === 0?'calculat-false':'calculating'"></div>
         <div >{{row.status===2?'计算完成':(row.status===0?'处理失败':'计算中')}}</div>
       </div>
     </template>
@@ -81,6 +81,13 @@
     width: 8px;
     height: 8px;
     background: #2D68EB;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  .calculat-false{
+    width: 8px;
+    height: 8px;
+    background: #e40000;
     border-radius: 50%;
     margin-right: 8px;
   }

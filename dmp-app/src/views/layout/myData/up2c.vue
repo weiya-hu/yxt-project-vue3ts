@@ -13,28 +13,29 @@
         :data="tableList"
         size="large"
         row-class-name="my-data-table-row"
+        v-loading="loading"
       >
         <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop' :operatButton="item.operatButton" @click='operate'/>
+        <template #empty>
+          <MyEmpty/>
+        </template>
       </el-table>
     </div>
     <div>
-      <MyPage :total="totle" v-model="page" @change="getList"/>
+      <MyPage v-if="totle" :total="totle" v-model="page" @change="getList"/>
     </div>
     <MyDataUpUser v-model="dialogVisible" @submitSuccess="submitsuccess"/>
   </div>
 </template>
 
 <script setup lang="ts">
-  import {ref,onMounted} from 'vue'
+  import {ref} from 'vue'
   import MyDataTable from '@/components/MyDataTable.vue'
   import MyPage from '@/components/MyPage.vue'
   import MyDataUpUser from '@/components/MyDataUpUser.vue'
   import {useRouter} from 'vue-router'
   import {upRecordList} from '@/api/myData'
-
-   onMounted(() => {
-    getList()
-  })
+  import MyEmpty from "@/components/MyEmpty.vue";
 
   interface TableTitleProp{
       type:string,
@@ -48,6 +49,7 @@
   let page = ref(1)
   let dialogVisible = ref(false)
   let router = useRouter();
+  let loading=ref(false)
 
 
   let tableList = ref([])
@@ -62,17 +64,20 @@
     {type:'operateLook',lable:'操作',width:100,prop:'operate',operatButton:['查看']}
   ])
   const getList=async()=>{
+    loading.value=true
     let data={
       current:page.value,
       type:2,
       size:10
     }
     const {status,body} = await upRecordList(data)
+    loading.value=false
     if(status){
       totle.value=body.total
       tableList.value = body.records
     }
   }
+  getList()
   const operate=(val:number,row:any)=>{
     console.log(val)
     router.push({path:'/myData/up2cDetails',query:{id:row.id}})

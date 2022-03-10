@@ -11,31 +11,31 @@
       size="large"
       row-class-name="my-data-table-row"
       class="table"
+      v-loading="loading"
     >
       <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
+      <template #empty>
+        <MyEmpty/>
+      </template>
     </el-table>
-    <MyPage :total="total" v-model="page" @change="getDetailList"/>
+    <MyPage v-if="total" :total="total" v-model="page" @change="getDetailList"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref,onMounted} from 'vue'
+import {ref} from 'vue'
 import MyDataTable from '@/components/MyDataTable.vue'
 import MyPage from '@/components/MyPage.vue'
 import {upRecordDetail} from '@/api/myData'
 import {useRoute} from 'vue-router'
+import MyEmpty from "@/components/MyEmpty.vue";
 
 const route = useRoute()
 
 
-
-onMounted(()=>{
-  getDetailList()
-})
-
-
 let total=ref(0)
 let page = ref(1)
+let loading=ref(false)
 const tableTitle=ref([
   {type:'select',prop:'select',width:30},
   {type:'text',lable:'序号',prop:'num',width:70},
@@ -56,18 +56,20 @@ const tableList=ref([])
 
 
 const getDetailList=async()=>{
+  loading.value=true
   let data={
     current:page.value,
     size:10,
     id:route.query.id
   }
   const {status,body}=await upRecordDetail(data)
+  loading.value=false
   if(status){
     total.value=body.total
     tableList.value=body.records
   }
 }
-
+getDetailList()
 </script>
 
 <style scoped lang="scss">
