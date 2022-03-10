@@ -37,12 +37,12 @@ let page = ref(1)
 let loading=ref(false)
 const tableTitle=ref([
   {type:'select',prop:'select',width:130},
-  {type:'text',lable:'姓名',prop:'name',width:90},
+  {type:'text',lable:'姓名',prop:'contact',width:90},
   {type:'text',lable:'性别',prop:'sex',width:80},
-  {type:'text',lable:'联系方式',prop:'phone',width:100},
+  {type:'text',lable:'联系方式',prop:'mobiles',width:100},
   {type:'text',lable:'邮箱',prop:'email',width:150},
-  {type:'text',lable:'从事行业',prop:'industry',width:130},
-  {type:'text',lable:'地区',prop:'region',width:150},
+  {type:'text',lable:'从事行业',prop:'industry_id',width:130},
+  {type:'city',lable:'地区',prop:'region',width:150},
 ])
 const tableList=ref([])
 

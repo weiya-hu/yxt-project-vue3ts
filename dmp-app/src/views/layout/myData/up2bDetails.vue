@@ -38,18 +38,18 @@ let page = ref(1)
 let loading=ref(false)
 const tableTitle=ref([
   {type:'select',prop:'select',width:30},
-  {type:'text',lable:'序号',prop:'num',width:70},
+  {type:'num',lable:'序号',prop:'num',width:70},
   {type:'text',lable:'企业名称',prop:'name',width:130},
   {type:'text',lable:'联系人',prop:'contact',width:74},
   {type:'text',lable:'联系方式',prop:'mobiles',width:100},
   {type:'text',lable:'固定电话',prop:'telephone',width:110},
-  {type:'text',lable:'行业分类',prop:'industry',width:102},
-  {type:'text',lable:'地区',prop:'region',width:110},
+  {type:'text',lable:'行业分类',prop:'industry_id',width:102},
+  {type:'city',lable:'地区',prop:'region',width:110},
   {type:'text',lable:'详细地址',prop:'address',width:140},
-  {type:'text',lable:'企业类型',prop:'industryType',width:120},
+  {type:'text',lable:'企业类型',prop:'company_type',width:120},
   {type:'text',lable:'统一社会信用代码',prop:'code',width:170},
-  {type:'link',lable:'企业官网',prop:'website',width:150},
-  {type:'text',lable:'经营范围',prop:'range',width:150},
+  {type:'link',lable:'企业官网',prop:'url',width:150},
+  {type:'text',lable:'经营范围',prop:'business_scope',width:150},
 ])
 const tableList=ref([])
 

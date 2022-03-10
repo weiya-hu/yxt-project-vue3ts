@@ -6,6 +6,13 @@
       </div>
     </template>
   </el-table-column>
+  <el-table-column v-if="type==='num'" :property="prop" :label="lable" :min-width="width">
+     <template #default="{row,$index}">
+      <div class="flexl">
+        <div v-if="row">{{$index+1}}</div>
+      </div>
+    </template>
+  </el-table-column>
   <el-table-column v-if="type==='link'" :property="prop" :label="lable" :min-width="width">
      <template #default="{row}">
         <el-link type="primary" :href="row[prop]">{{ row[prop] }}</el-link>
@@ -23,6 +30,11 @@
   <el-table-column v-if="type==='date'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
       <div>{{Format('yyyy-MM-dd',new Date(row[prop])) }}</div>
+    </template>
+  </el-table-column>
+  <el-table-column v-if="type==='city'" :property="prop" :label="lable" :min-width="width">
+    <template #default="{row}">
+      <div>{{row.province}}{{row.city}}{{row.district}}</div>
     </template>
   </el-table-column>
   <el-table-column v-if="type==='operateLook'" :property="prop" :label="lable" :min-width="width">
