@@ -39,7 +39,7 @@ const addressList = computed(() => store.state.addressList)
 const typeProps = {
   expandTrigger: 'hover',
   checkStrictly: true,
-  value:'industryId',
+  value:'industry_id',
   label:'name',
 }
 const addrProps = {

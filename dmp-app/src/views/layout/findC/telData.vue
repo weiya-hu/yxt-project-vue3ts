@@ -48,7 +48,8 @@
         </el-table-column>
         <el-table-column property="source" label="操作" width="150">
           <template #default="scope">
-            <el-link type="primary" @click="goDetails(scope.row.id)">查看</el-link>
+            <el-link type="primary" @click="goDetails(scope.row.id)" v-if="scope.row.status != 0">查看</el-link>
+            <div v-else>---</div>
           </template>
         </el-table-column>
         <template #empty>
@@ -78,11 +79,8 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="运营商" prop="operator">
-          <el-radio-group v-model="addForm.operator">
-            <el-radio :label="0">不限</el-radio>
-            <el-radio :label="1">移动</el-radio>
-            <el-radio :label="2">联通</el-radio>
-            <el-radio :label="3">电信</el-radio>
+          <el-radio-group v-model="addForm.operator" @change="changeOperator">
+            <el-radio :label="item.id" v-for="item in operator" :key="item.id">{{item.name}}</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -92,10 +90,11 @@
             multiple
             placeholder="请选择号码段"
             class="w100"
+            :disabled="tels.length==0"
           >
             <el-option
-              v-for="item in tels"
-              :key="item"
+              v-for="(item,index) in tels"
+              :key="index"
               :label="item"
               :value="item"
             >
@@ -115,26 +114,26 @@
 
 <script setup lang="ts">
 import {useRouter} from 'vue-router'
-import { reactive, ref ,computed  } from 'vue'
+import { reactive, ref ,computed } from 'vue'
 import type { ElForm } from 'element-plus'
 import { formatDate } from '@/utils/date'
 import MyPage from "@/components/MyPage.vue";
 import MyCascader from "@/components/MyCascader.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
-import { addInset_api ,getInsetList_api} from '@/api/findC'
 import { mainStore } from '@/store/index'
 import { getHashStr,strToArr,getSource} from '@/utils/index'
+import { addInset_api ,getInsetList_api,getTelList_api} from '@/api/findC'
 
 const store = mainStore()
 const addressHash = computed(() => store.state.addressHash)
 
-const page = ref(1)
-const total = ref(0)
 const router = useRouter()
 const goDetails = (id:string)=>{
   router.push('/findC/telDataDetails?id='+id)
 }
 
+const page = ref(1)
+const total = ref(0)
 const getList = ()=>{
   getInsetList_api({
     "current": page.value,
@@ -147,6 +146,7 @@ const getList = ()=>{
   })
 }
 getList()
+
 interface IData {
   id:number,
   group_name:string,//人群名称
@@ -172,14 +172,25 @@ const changePage =()=>{
   getList()
 }
 
+const tels = ref([])
+const operator = ref<any>({})
+const getOperator = ()=>{
+  getTelList_api().then((res:res)=>{
+    operator.value = res.body
+  })
+}
+getOperator()
+const changeOperator = (val:any)=>{
+  tels.value = operator.value[val].segments
+}
 const addShow = ref(false)
 const closeAdd = ()=>{
   //关闭添加弹窗
+  tels.value = []
   addShow.value = false
   upLoading.value = false
   addFormRef.value!.resetFields()
 }
-const tels = ref([139,128,145,123,321,555,111,333])
 const addForm = ref({
   people:'',
   desc:'',
@@ -213,6 +224,7 @@ const submitAddForm = () => {
       }).then((res:res)=>{
         if(res.status == 1){
           closeAdd()
+          getList()
         }
         upLoading.value = false
       })
@@ -222,6 +234,10 @@ const submitAddForm = () => {
     }
   })
 }
+</script>
+
+<script lang="ts">
+export default { name:'号码段获客C' }
 </script>
 
 <style scoped lang="scss">

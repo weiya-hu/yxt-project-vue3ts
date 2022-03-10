@@ -19,31 +19,9 @@
 <script setup lang="ts">
 import { mainStore } from '@/store'
 import { reactive, ref } from 'vue'
-import { firstToken, getNewsTypeList_api } from '@/api/login'
 import emiter from '@/utils/bus'
 import { Gajax } from '@/utils/request'
 import { formatDate } from '@/utils/date'
-
-const udata:any = ref({})
-firstToken().then((data)=>{
-  udata.value  = data
-  if(data.state == 1){
-  }
-})
-
-const data1 = Gajax(firstToken)
-data1.getData().then(() => {
-  console.log(data1.data, 'res')
-})
-emiter.on('redo', data1.getData)
-
-const data2 = Gajax(getNewsTypeList_api)
-data2.getData().then(() => {
-  console.log(data2.data, 'res2')
-  data2.data.body[0] = {
-    name: '嘻嘻',
-  }
-})
 
 const user = reactive({
   acc: '',

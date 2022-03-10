@@ -43,7 +43,8 @@
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
-            <el-link type="primary" @click="goDetails(scope.row.wechat_id)">查看</el-link>
+            <el-link type="primary" @click="goDetails(scope.row.wechat_id)" v-if="scope.row.status != 0">查看</el-link>
+            <div v-else>---</div>
           </template>
         </el-table-column>
         
@@ -161,6 +162,10 @@ const goAdd = ()=>{
   })
 }
 
+</script>
+
+<script lang="ts">
+export default { name:'微信获客C' }
 </script>
 
 <style scoped lang="scss">

@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column property="source" label="来源" width="100">
         <template #default="scope">
-          <div>{{ scope.row.source==1?'康洲数智':'第三方数据' }}</div>
+          <div>{{ getSource(scope.row.source) }}</div>
         </template>
       </el-table-column>
       <template #empty>
@@ -68,7 +68,7 @@
 //公司表格
 import { ref,computed } from 'vue'
 import { mainStore } from '@/store/index'
-import { getHashStr,strToArr} from '@/utils/index'
+import { getHashStr,strToArr,getSource} from '@/utils/index'
 import MyEmpty from "@/components/MyEmpty.vue";
 const store = mainStore()
 const typeHash = computed(() => store.state.typeHash)

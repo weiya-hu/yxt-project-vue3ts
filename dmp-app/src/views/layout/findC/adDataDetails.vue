@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref  } from 'vue'
+import { ref  } from 'vue'
 import FindNumber from "@/components/FindNumber.vue";
 import MyPage from "@/components/MyPage.vue";
 import UserTable from "@/components/UserTable.vue";
@@ -32,7 +32,7 @@ const getList = ()=>{
   getAdUserList_api({
     size: 10,
     current: page.value,
-    demandId:route.query.id
+    did:route.query.id
   }).then((res:res)=>{
     if(res.status == 1){
       total.value = res.body.total
@@ -42,7 +42,7 @@ const getList = ()=>{
 }
 getList()
 const changePage =()=>{
-  console.log(page.value);
+  getList()
 }
 const multipleSelection = ref<IData[]>([])
 const handleSelectionChange = (val:IData[]) => {

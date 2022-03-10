@@ -53,20 +53,17 @@ const emit = defineEmits(['select'])
 // select 选择时触发，返回选择数据；del 确认删除时触发，返回id
 
 interface IData {
-  id:number,
-  group_name:string,//人群名称
-  group_desc:string,//人群描述
-  status:number,//状态
-  address:string,//地区
-  count:number,//覆盖用户人数
-  money:number,//消耗金额 (元)
-  create_time:number,//创建日期
-  plan_url:string,//附件地址
-  source:number,//来源
-  province:number,//省份
-  city:number,//城市
-  district:number,//区
-  error?:string,//拒绝原因
+  city: number
+  create_time: number
+  district: number
+  email: string
+  id: number
+  industry_id: string
+  mobiles: string
+  name: string
+  province: number
+  sex: number
+  source: number
 }
 const handleSelectionChange = (val:IData[]) => {
   emit('select',val)

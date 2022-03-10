@@ -245,16 +245,25 @@ img{
   }
 }
   
-   .up2b{
-    .el-table .el-table__cell{
-      z-index: unset !important;
-    }
-    .el-overlay{
-      background-color: rgba(0,0,0,.2) !important;
-      .el-dialog{
-        box-shadow: none;
-      }
+.up2b{
+  .el-table .el-table__cell{
+    z-index: unset !important;
+  }
+  .el-overlay{
+    background-color: rgba(0,0,0,.2) !important;
+    .el-dialog{
+      box-shadow: none;
     }
   }
+}
 
+.fade-leave-from{
+  display: none;//解决页面过渡抖动
+}
+.fade-enter-active{
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,.fade-leave-to {
+  opacity: 0;
+}
 </style>

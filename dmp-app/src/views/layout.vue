@@ -11,34 +11,39 @@
             <img :src="znkf_i" alt="">
             <div>客服</div>
           </div>
-          <el-button color="#2D68EB" class="l_btn" plain>完善资料</el-button>
-          <!-- <div class="is_company fcc">
+          <div class="is_company fcc" v-if="companyInfo.status == 3">
             <img :src="company_i" alt="">
             <el-tooltip effect="dark" placement="bottom">
               <template #content>
-                <div style="width:100px">重庆康洲大数据…</div>
+                <div style="width:100px">{{companyInfo.name}}</div>
               </template>
-              <div class="els">重庆康洲大数据…</div>
+              <div class="els">{{companyInfo.name}}</div>
             </el-tooltip>
-          </div> -->
+          </div>
+          <el-button color="#2D68EB" class="l_btn" plain v-if="companyInfo.status != 3 && userInfo.name" @click="goCompany">完善资料</el-button>
           <div class="sline"></div>
-          <div class="userbox fcs">
-            <el-avatar :size="48" :src="znkf_i"></el-avatar>
+          <div class="userbox fcs" v-if="userInfo.name">
+            <el-avatar :size="48" :src="userInfo.head||df_avatar_i"></el-avatar>
             <div class="username">
               <el-dropdown>
                 <div class="fcs">
-                  <div>海绵宝宝</div>
+                  <div class="els" style="width:70px;line-height: 1.1;">{{userInfo.name}}</div>
                   <el-icon class="right_icon"><caret-bottom /></el-icon>
                 </div>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item >
+                    <el-dropdown-item @click="loginout">
                       退出
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
             </div>
+          </div>
+          <div class="loginbtn fcc" v-else>
+            <el-link type="primary" :href="'//' + 'dev.yxtong.com/app/login'">登录</el-link>
+            &ensp;/&ensp;
+            <el-link type="primary" :href="'//' + 'dev.yxtong.com/app/register/register'">注册</el-link>
           </div>
         </div>
       </el-col>
@@ -65,12 +70,21 @@
 import logo_i from '@/assets/images/logo.png'
 import znkf_i from '@/assets/images/znkf.png'
 import company_i from '@/assets/images/company_tag.png'
+import df_avatar_i from '@/assets/images/dfavatar.png'
 import {reactive, ref  } from 'vue'
 import LeftNav from '@/components/LeftNav.vue'
 import TopNav from '@/components/TopNav.vue'
 import {useRouter, useRoute,onBeforeRouteUpdate} from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import MyDialog from "@/components/MyDialog.vue";
+import { mainStore } from '@/store/index'
+import {loginOut_api,getUserInfo,getCompanyInfo} from '@/api/login'
+
+const goCompany = ()=>{
+  window.location.href = 'https://dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0'
+}
+
+const store = mainStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -99,7 +113,7 @@ const getNavs = (first:boolean = false)=>{
 }
 getNavs(true)
 
-onBeforeRouteUpdate((to,from)=>{
+onBeforeRouteUpdate((to,from,next)=>{
   getPath((to.meta.leftHidden && to.meta.father)?to.meta.father as string:to.path)
   let tos = to.path.split('/')[1]
   let froms = from.path.split('/')[1]
@@ -108,24 +122,64 @@ onBeforeRouteUpdate((to,from)=>{
     getNavs()
     topNavRef.value.changeLeft()
   }
+
+  // router.options.routes.forEach((item1: any) => {
+  //   if (item1.name === 'Layout') {
+  //     item1.children.forEach((item2: any) => {
+  //       if (item2.path !== '/index') {
+  //         item2.children.forEach((item3: any) => {
+  //           if (item3.path === from.path) {
+  //             item3.meta.keepAlive = to.meta.father ? true :false
+  //           }
+  //         })
+  //       }
+  //     })
+  //   }
+  // })
+  if(from.meta.keepAlive && to.meta.father == from.path){
+    // 从列表进入详情 缓存列表
+    store.setKeepList([from.name as string])
+  }else if(to.meta.keepAlive && from.meta.father == to.path){
+    // 从详情返回上一级 什么都不做
+  }else{
+    // 兄弟列表切换 或者 详情进入非父级列表
+    store.setKeepList([])
+  }
+  next()
 })
 
 const kfShow = ref(false)
+
+const userInfo = ref<any>({})
+const companyInfo = ref<any>({})
+const getUser = ()=>{
+  getUserInfo().then((res:res)=>{
+    if(res.status == 1){
+      userInfo.value = res.body
+    }
+  })
+  getCompanyInfo().then((res:res)=>{
+    if(res.status == 1){
+      companyInfo.value = res.body
+    }
+  })
+}
+getUser()
+const loginout = ()=>{
+  loginOut_api().then((res:res)=>{
+    if(res.status == 1){
+      companyInfo.value = {}
+      userInfo.value = {}
+    }
+  })
+  
+}
 
 </script>
 
 <style lang="scss" scoped>
 .layout_page {
   height: 100%;
-  .fade-leave-from{
-    display: none;//解决页面过渡抖动
-  }
-  .fade-enter-active{
-    transition: opacity 0.5s ease;
-  }
-  .fade-enter-from,.fade-leave-to {
-    opacity: 0;
-  }
   .logobox {
     height: 80px;
     background-color: $dfcolor;
@@ -139,10 +193,11 @@ const kfShow = ref(false)
   .navbox{
     max-width: 89.6%;
     flex: 0 0 89.6%;
+    box-shadow: 0px 0px 2px 0px rgb(231, 231, 231);
+    z-index: 30;
     .kf_btn{
       font-size: 14px;
       color: $dfcolor;
-      margin-right: 20px;
       img{
         width: 32px;
         height: 32px;
@@ -181,6 +236,7 @@ const kfShow = ref(false)
       }
       .l_btn{
         border-color:rgba(178,202,249,1);
+        margin-left: 20px;
         &:hover,&:active,&:focus{
           border-color:$dfcolor;
         }

@@ -1,6 +1,6 @@
 <template>
   <div class="kzdata_page_c">
-    <TopSearch @height-search="heightSearch" @search="wordSearch" :words="words"/>
+    <TopSearch @height-search="heightSearch" @search="wordSearch" :words="words" :hasHeight="false" placeholder="请输入电话号码、姓名查询"/>
     <div class="topbtns fsc">
       <FindNumber class="lt" :total="total"/>
       <div class="rt fcs">
@@ -19,15 +19,19 @@
         <el-table-column property="name" label="姓名" width="150"/>
         <el-table-column property="sex" label="性别" width="150">
           <template #default="scope">
-            <div>{{ scope.row.sex == 1?'男':'女' }}</div>
+            <div>{{ scope.row.sex == 0?'男':'女' }}</div>
           </template>
         </el-table-column>
         <el-table-column property="mobiles" label="联系方式"  width="210"/>
         <el-table-column property="email" label="邮箱" width="210"/>
-        <el-table-column property="address" label="地区"/>
+        <el-table-column property="address" label="地区">
+          <template #default="scope">
+            <div>{{getHashStr(strToArr(scope.row.province,scope.row.city,scope.row.district),addressHash)}}</div>
+          </template>
+        </el-table-column>
         <el-table-column property="source" label="来源" width="100">
           <template #default="scope">
-            <div class="els2">{{ scope.row.source==1?'康洲数智':'第三方数据' }}</div>
+            <div>{{ getSource(scope.row.source) }}</div>
           </template>
         </el-table-column>
         <template #empty>
@@ -35,17 +39,23 @@
         </template>
       </el-table>
     </div>
-    <MyPage :total="total" v-model="page" @change="changePage"/>
+    <MyPage :total="total" v-model="searchParams.current" @change="changePage"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref  } from 'vue'
+import { ref,computed  } from 'vue'
 import TopSearch from '@/components/TopSearch.vue'
 import MyPage from "@/components/MyPage.vue";
 import FindNumber from "@/components/FindNumber.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
+import { mainStore } from '@/store/index'
+import { getHashStr,strToArr,getSource} from '@/utils/index'
 import { getSearchWord_api ,wordSearchList_api } from '@/api/findC'
+import {okMsg} from '@/utils/index'
+
+const store = mainStore()
+const addressHash = computed(() => store.state.addressHash)
 
 const words = ref([])
 const getWord = ()=>{
@@ -55,6 +65,23 @@ const getWord = ()=>{
 }
 getWord()
 
+interface IData {
+  city: number, // 市
+  district: number, // 区
+  email: string, //邮箱
+  id: number,
+  mobiles: string, // 联系方式
+  name: string, // 姓名
+  origin_id: number,
+  province: number, // 省
+  sex: 0, // 性别
+  source: 1, // 来源
+  tags: any[], 
+  tel_prefixs: string[], // 固话号码段
+  telephone: string, // 固话
+}
+const total = ref(0)
+const tableData = ref<IData[]>()
 const searchParams = ref({
   size:10,
   current:1,
@@ -62,19 +89,22 @@ const searchParams = ref({
 })
 const searchType = ref(1) //searchType 1普通搜索 2高级搜索
 const word = ref('')
-const wordSearch = (keyWord:string)=>{
+const wordSearch = async (keyWord:string)=>{
+  okMsg('查询成功')
   searchType.value = 1
   word.value = keyWord
   searchParams.value.current = 1
-  goSearch()
+  await goSearch()
+  getWord()
 }
-const goSearch = ()=>{
-  wordSearchList_api({
+const goSearch = async ()=>{
+  await wordSearchList_api({
     ...searchParams.value,
     str:word.value
   }).then((res:res)=>{
     if(res.status == 1){
-      console.log(res);
+      total.value = res.body.total
+      tableData.value = res.body.records
     }
   })
 }
@@ -93,60 +123,13 @@ const goheightSearch = ()=>{
   
 }
 
-const page = ref(1)
-const total = ref(0)
-
-interface IData {
-  id:number,
-  name:string,//姓名
-  sex:number,//性别
-  mobile:string,//联系方式
-  email:string,//邮箱
-  type:string,//从事行业
-  address:string,//地区
-  source:number,//来源
-}
-
-const tableData = ref<IData[]>([
-  {
-    id:0,
-    name:'王**',
-    sex:1,
-    mobile:'139****1928',
-    email:'jdc31@126.com',
-    type:'计算机软件',
-    address:'四川省成都市金牛区',
-    source:1,
-  },
-  {
-    id:2,
-    name:'张**',
-    sex:2,
-    mobile:'139****1928',
-    email:'jdc31@126.com',
-    type:'计算机软件',
-    address:'四川省成都市金牛区',
-    source:1,
-  },
-  {
-    id:3,
-    name:'李**',
-    sex:1,
-    mobile:'139****1928',
-    email:'jdc31@126.com',
-    type:'计算机软件',
-    address:'四川省成都市金牛区',
-    source:1,
-  },
-])
-
 const multipleSelection = ref<IData[]>([])
 const handleSelectionChange = (val:IData[]) => {
   multipleSelection.value = val
 }
 
 const changePage =()=>{
-  console.log(page.value);
+  searchType.value == 1?goSearch():goheightSearch()
 }
 
 </script>

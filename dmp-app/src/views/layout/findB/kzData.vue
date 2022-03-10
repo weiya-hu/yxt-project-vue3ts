@@ -1,6 +1,6 @@
 <template>
   <div class="kzdata_page">
-    <TopSearch @height-search="heightSearch" @search="wordSearch" :words="words"/>
+    <TopSearch @height-search="heightSearch" @search="wordSearch" :words="words" :hasHeight="true" placeholder="请输入企业名称、联系人、经营范围关键词"/>
     <div class="topbtns fsc">
       <FindNumber class="lt" :total="total"/>
       <div class="rt fcs">
@@ -22,6 +22,7 @@ import FindNumber from "@/components/FindNumber.vue";
 import CompanyTable from "@/components/CompanyTable.vue";
 import { searchByConditions_api,wordSearchList_api,getSearchWord_api } from '@/api/findB'
 import { Gajax } from '@/utils/request'
+import {okMsg} from '@/utils/index'
 
 const words = ref([])
 const getWord = ()=>{
@@ -48,6 +49,7 @@ const searchType = ref(1) //1 关键词，2 条件组
 const word = ref('')
 const wordSearch = async (params:string)=>{
   //关键词搜索
+  okMsg('查询成功')
   searchType.value = 1
   loading.value = true
   searchParams.value.current = 1
@@ -70,6 +72,7 @@ const goSearch = async ()=>{
 const heightParams = ref({})
 const heightSearch = (params:any)=>{
   //高级搜索
+  okMsg('查询成功')
   loading.value = true
   searchType.value = 2
   searchParams.value.current = 1

@@ -9,8 +9,12 @@
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="ID" />
-        <el-table-column property="tel" label="联系方式" />
-        <el-table-column property="address" label="归属地"/>
+        <el-table-column property="mobiles" label="联系方式" />
+        <el-table-column property="address" label="归属地">
+          <template #default="scope">
+            <div>{{getHashStr(strToArr(scope.row.province,scope.row.city,scope.row.district),addressHash)}}</div>
+          </template>
+        </el-table-column>
         <el-table-column property="create_time" label="发送时间" >
           <template #default="scope">
             <div>{{formatDate(new Date(scope.row.create_time),'yyyy-MM-dd hh:mm:ss')}}</div>
@@ -18,7 +22,7 @@
         </el-table-column>
         <el-table-column property="source" label="来源" >
           <template #default="scope">
-            <div>{{ scope.row.source == 1?'号码段':'---' }}</div>
+            <div>{{ getSource(scope.row.source) }}</div>
           </template>
         </el-table-column>
         <template #empty>
@@ -31,20 +35,27 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref  } from 'vue'
+import { ref ,computed } from 'vue'
 import { formatDate } from '@/utils/date'
 import FindNumber from "@/components/FindNumber.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import { getInsetUserList_api } from '@/api/findC'
 import {useRoute} from 'vue-router'
+import { mainStore } from '@/store/index'
+import { getHashStr,strToArr,getSource} from '@/utils/index'
+
+const store = mainStore()
+const addressHash = computed(() => store.state.addressHash)
 
 interface IData {
-  id:number,
-  tel:string,//联系方式
-  address:string,//归属地
-  create_time:number,//发送时间
-  source:number,//来源
+  city: number
+  create_time: number
+  district: number
+  id: number
+  mobiles: string
+  province: number
+  status: number
 }
 const tableData = ref<IData[]>([])
 
@@ -55,7 +66,7 @@ const getList = ()=>{
   getInsetUserList_api({
     size: 10,
     current: page.value,
-    demandId:route.query.id
+    did:route.query.id
   }).then((res:res)=>{
     if(res.status == 1){
       total.value = res.body.total
@@ -66,7 +77,7 @@ const getList = ()=>{
 getList()
 
 const changePage =()=>{
-  console.log(page.value);
+  getList()
 }
 const multipleSelection = ref<IData[]>([])
 const handleSelectionChange = (val:IData[]) => {

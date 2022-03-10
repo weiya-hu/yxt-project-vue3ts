@@ -31,7 +31,7 @@ export default defineConfig({
     //启动服务配置
     "host": "0.0.0.0",
     port: 8000,
-    open: true,
+    open: false,
     https: false,
     proxy: {
       '/api': {

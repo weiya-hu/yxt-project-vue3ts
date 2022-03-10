@@ -1,10 +1,16 @@
 import { get, post } from '@/utils/request'
 
-//登录所需接口 //
-export const firstToken = (): Promise<any> => {
-  return get('/user/public/get-user')
+//获取用户企业认证记录
+export const getCompanyInfo = (): Promise<any> => {
+  return get('/company/get-audit-record')
 }
 
-export const getNewsTypeList_api = (): Promise<any> => {
-  return get('/news/public/type-list')
+//获取用户信息
+export const getUserInfo = (): Promise<any> => {
+  return get('/user/my-center/info')
+}
+
+//退出登录
+export const loginOut_api = (): Promise<any> => {
+  return get('/login/login-out',{},true)
 }

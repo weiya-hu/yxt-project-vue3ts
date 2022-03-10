@@ -17,7 +17,11 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column property="address" label="地区"/>
+      <el-table-column property="address" label="地区">
+        <template #default="scope">
+          <div>{{getHashStr(strToArr(scope.row.province,scope.row.city,scope.row.district),addressHash)}}</div>
+        </template>
+      </el-table-column>
       <el-table-column property="count" label="覆盖用户人数" width="140">
         <template #default="scope">
           <div>{{ scope.row.status == 1?scope.row.count:'---' }}</div>
@@ -42,10 +46,12 @@
         <template #default="scope">
           <div class="fcs" v-if="scope.row.status === 0">
             <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
-            <div class="line" v-if="scope.row.plan_url"></div>
-            <el-link type="primary" v-if="scope.row.plan_url" :href="scope.row.plan_url">下载附件</el-link>
+            <div class="line" v-if="scope.row.attachment"></div>
+            <el-link type="primary" v-if="scope.row.attachment" :href="scope.row.attachment">下载附件</el-link>
           </div>
           <div class="fcs" v-if="scope.row.status === 1">
+            <el-link type="primary" @click="goDetails(scope.row.id)">查看</el-link>
+            <div class="line"></div>
             <el-link type="primary" :href="scope.row.plan_url">下载方案</el-link>
           </div>
           <div class="fcs" v-if="scope.row.status === 2">
@@ -56,7 +62,7 @@
           <div class="fcs" v-if="scope.row.status === 3">
             <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
             <div class="line"></div>
-            <el-link type="primary" @click="errorMsg = scope.row.error;errorShow=true">拒绝原因</el-link>
+            <el-link type="primary" @click="errorMsg = scope.row.fail_reason;errorShow=true">拒绝原因</el-link>
           </div>
         </template>
       </el-table-column>
@@ -81,12 +87,16 @@
 
 <script setup lang="ts">
 //人群表格
-import { ref } from 'vue'
+import { ref ,computed} from 'vue'
 import MyEmpty from "@/components/MyEmpty.vue";
 import { formatDate } from '@/utils/date'
 import MyDialog from "@/components/MyDialog.vue";
 import {useRouter} from 'vue-router'
-import {getSource} from '@/utils/index'
+import { mainStore } from '@/store/index'
+import { getHashStr,strToArr,getSource} from '@/utils/index'
+
+const store = mainStore()
+const addressHash = computed(() => store.state.addressHash)
 
 const props = defineProps({
   data: Array,
@@ -132,6 +142,7 @@ const sureDel = ()=>{
 const router = useRouter()
 const goDetails = (id:string)=>{
   router.push(props.details+'?id='+id)
+  // router.push({path:props.details as string,query: { id }})
 }
 
 const getState = (status:string|number)=>{

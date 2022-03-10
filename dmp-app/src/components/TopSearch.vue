@@ -4,7 +4,7 @@
       <div class="iptbox fsc">
         <el-input
           v-model="searchWord"
-          placeholder="请输入企业名称、联系人、经营范围关键词"
+          :placeholder="placeholder"
         >
           <template #prefix>
             <el-icon class="searchicon"><search /></el-icon>
@@ -13,14 +13,14 @@
             <div class="searchbtn" @click="wordSearch">查询一下</div>
           </template>
         </el-input>
-        <div class="heisearch" @click="heightShow=true">高级查询</div>
+        <div class="heisearch" @click="heightShow=true" v-if="hasHeight">高级查询</div>
       </div>
       <div class="his_search fcs">
         <div>历史搜索：</div>
         <span v-for="v in words" :key="v.id" @click="searchWord=v.keyword;wordSearch()">{{v.keyword}}</span>
       </div>
     </div>
-    <div class="height_searchbox" :class="{'height_searchbox_show':heightShow,'height_condition_show':conditionShow}">
+    <div class="height_searchbox" v-if="hasHeight" :class="{'height_searchbox_show':heightShow,'height_condition_show':conditionShow}">
       <el-icon @click="heightShow=false;conditionShow=false" class="closebtn rotate" size="18px"><close-bold /></el-icon>
 
       <el-form class="myform" ref="formRef" :model="form">
@@ -107,7 +107,7 @@
 
     </div>
     
-    <el-dialog v-model="addShow" title="新建筛选" width="500px" @close="closeAdd">
+    <el-dialog v-model="addShow" title="新建筛选" width="500px" @close="closeAdd" v-if="hasHeight">
       <el-form class="myform no_margin" :model="Addform" :rules="addRules" ref="addFormRef">
         <el-form-item label="条件组名称" prop="title">
           <el-input v-model="Addform.title" placeholder="请输入条件组名称"></el-input>
@@ -133,8 +133,11 @@ import { conditionsList_api,subConditions_api,delConditions_api,getCAndC_api, } 
 import { Gajax } from '@/utils/request'
 import MyCascader from "@/components/MyCascader.vue";
 const props = withDefaults(defineProps<{
-  words:{id:number,keyword:string}[]
+  words:{id:number,keyword:string}[],
+  hasHeight:boolean,
+  placeholder:string
 }>(),{
+  hasHeight:false
 })
 const heightShow = ref(false)
 
@@ -145,9 +148,9 @@ interface CAndC {
 }
 const ctypeArr = ref<CAndC[]>([])
 const contactArr = ref<CAndC[]>([])
-getCAndC_api().then((res:res)=>{
+props.hasHeight && getCAndC_api().then((res:res)=>{
   if(res.status == 1){
-    ctypeArr.value = res.body.cType
+    ctypeArr.value = res.body.c_type
     contactArr.value = res.body.contact
   }  
 })
@@ -242,7 +245,7 @@ const getConditionArr =async ()=>{
   const res:res = await conditionsList_api({current:1,size:10})
   res.status == 1 && (conditionArr.value = res.body)
 }
-getConditionArr()
+props.hasHeight && getConditionArr()
 const dropRef = ref()
 const delCondition = (v:any,i:number)=>{
   //删除条件组
@@ -271,7 +274,7 @@ const changeDrop = (v:any)=>{
   });
   const addr = [v.province,v.city,v.district]
   addr.forEach(v=>{
-    (Number(v)!=0) && form.addr.push(String(v))
+    v && form.addr.push(Number(v))
   })
   // form.industry_id = v.industry_id
   form.industry_id = v.industry_id.split(',')

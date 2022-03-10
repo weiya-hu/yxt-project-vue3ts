@@ -17,11 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref,Ref  } from 'vue'
+import { ref  } from 'vue'
 import MyPage from "@/components/MyPage.vue";
 import PeopleTable from "@/components/PeopleTable.vue";
 import AddPeople from "@/components/AddPeople.vue";
-import { addAd_api ,getAdList_api} from '@/api/findC'
+import { addAd_api ,getAdList_api,delAd_api} from '@/api/findC'
 
 const page = ref(1)
 const total = ref(0)
@@ -61,7 +61,9 @@ const selectTable = (data:IData[])=>{
   console.log(multipleSelection.value);
 }
 const sureDel = (id:string)=>{
-  console.log(id);
+  delAd_api({id}).then((res:res)=>{
+    res.status == 1 && getList()
+  })
 }
 
 const changePage =()=>{
@@ -82,11 +84,16 @@ const submitAddForm = (val:any)=>{
   }).then((res:res)=>{
     if(res.status == 1){
       addShow.value = false
+      getList()
     }else{
       addref.value.addError()
     }
   })
 }
+</script>
+
+<script lang="ts">
+export default { name:'广告投放C' }
 </script>
 
 <style scoped lang="scss">
