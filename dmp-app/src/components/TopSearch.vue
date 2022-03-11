@@ -5,6 +5,7 @@
         <el-input
           v-model="searchWord"
           :placeholder="placeholder"
+          @keyup.enter="wordSearch"
         >
           <template #prefix>
             <el-icon class="searchicon"><search /></el-icon>
@@ -15,7 +16,7 @@
         </el-input>
         <div class="heisearch" @click="heightShow=true" v-if="hasHeight">高级查询</div>
       </div>
-      <div class="his_search fcs">
+      <div class="his_search fcs els">
         <div>历史搜索：</div>
         <span v-for="v in words" :key="v.id" @click="searchWord=v.keyword;wordSearch()">{{v.keyword}}</span>
       </div>
@@ -26,7 +27,7 @@
       <el-form class="myform" ref="formRef" :model="form">
         <div class="topitems fcs">
           <el-form-item label="经营范围" prop="business_scope">
-            <el-input v-model="form.business_scope" placeholder="请输入经营范围"></el-input>
+            <el-input v-model="form.business_scope" placeholder="请输入经营范围" maxlength="36"></el-input>
           </el-form-item>
           <el-form-item label="行业分类" prop="industry_id">
             <MyCascader v-model="form.industry_id" type="type" ref="typeCRef"/>
@@ -131,6 +132,7 @@ import { reactive, ref , computed } from 'vue'
 import type { ElForm } from 'element-plus'
 import { conditionsList_api,subConditions_api,delConditions_api,getCAndC_api, } from '@/api/findB'
 import { Gajax } from '@/utils/request'
+import {errMsg} from '@/utils/index'
 import MyCascader from "@/components/MyCascader.vue";
 const props = withDefaults(defineProps<{
   words:{id:number,keyword:string}[],
@@ -303,7 +305,11 @@ const emit = defineEmits(['heightSearch','search'])
 const searchWord = ref<string>('')
 const wordSearch = ()=>{
   //搜索
-  emit('search',searchWord.value)
+  if(searchWord.value.length < 1 || searchWord.value.length > 36){
+    errMsg('输入长度须在 1 ~ 36 之间')
+    return
+  }
+  emit('search',searchWord.value.trim())
 }
 
 const conditionShow = ref(false)

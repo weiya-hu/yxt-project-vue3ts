@@ -20,14 +20,14 @@
               <div class="els">{{companyInfo.name}}</div>
             </el-tooltip>
           </div>
-          <el-button color="#2D68EB" class="l_btn" plain v-if="companyInfo.status != 3 && userInfo.name" @click="goCompany">完善资料</el-button>
+          <el-button color="#2D68EB" class="l_btn" plain v-if="companyInfo.status != 3 && userInfo.id" @click="goCompany">完善资料</el-button>
           <div class="sline"></div>
-          <div class="userbox fcs" v-if="userInfo.name">
+          <div class="userbox fcs" v-if="userInfo.id">
             <el-avatar :size="48" :src="userInfo.head||df_avatar_i"></el-avatar>
             <div class="username">
               <el-dropdown>
                 <div class="fcs">
-                  <div class="els" style="width:70px;line-height: 1.1;">{{userInfo.name}}</div>
+                  <div class="els" style="max-width:70px;line-height: 1.1;">{{userInfo.name}}</div>
                   <el-icon class="right_icon"><caret-bottom /></el-icon>
                 </div>
                 <template #dropdown>

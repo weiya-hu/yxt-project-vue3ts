@@ -7,7 +7,7 @@ export const getCompanyInfo = (): Promise<any> => {
 
 //获取用户信息
 export const getUserInfo = (): Promise<any> => {
-  return get('/user/my-center/info')
+  return get('/user/public/get-user')
 }
 
 //退出登录

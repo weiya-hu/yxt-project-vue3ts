@@ -104,26 +104,36 @@ export function getHash (arr:any[],key:string){
  * @return 'arr'返回['xx','xx']，'last'返回最后一位'xx'，其他返回'xx，xx'
 */
 export function getHashStr(arr:string[],hash:any,type?:string){
-  //获取哈希表中字符串
-  try {
-    let strArr = [];
-    // (arr[0]&&hash[arr[0]]) && (str += hash[arr[0]].name + '，');
-    (arr[0]&&hash[arr[0]]) && (strArr.push(hash[arr[0]].name));
-    (arr[1]&&hash[arr[0]].children[arr[1]]) && (strArr.push(hash[arr[0]].children[arr[1]].name));
-    (arr[2]&&hash[arr[0]].children[arr[1]].children[arr[2]]) && (strArr.push(hash[arr[0]].children[arr[1]].children[arr[2]].name));
+  //获取哈希表中arr对应的name字符串
+  let strArr:string[] = [];
+  const toReturn = ()=>{
     switch (type) {
       case 'arr':
         return strArr
         break;
       case 'last':
-        return strArr[strArr.length - 1]
+        return strArr[strArr.length - 1] ? strArr[strArr.length - 1] : ''
         break;
       default:
         return strArr.join('，')
         break;
     }
+  }
+  try {
+    (arr[0]&&hash[arr[0]]) && (strArr.push(hash[arr[0]].name));
+    try {
+      (arr[1]&&hash[arr[0]].children[arr[1]]) && (strArr.push(hash[arr[0]].children[arr[1]].name));
+      try {
+        (arr[2]&&hash[arr[0]].children[arr[1]].children[arr[2]]) && (strArr.push(hash[arr[0]].children[arr[1]].children[arr[2]].name));
+        return toReturn()
+      } catch (error) {
+        return toReturn()
+      }
+    } catch (error) {
+      return toReturn()
+    }
   } catch (error) {
-    return error    
+    return toReturn()
   }
 }
 

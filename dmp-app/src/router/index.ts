@@ -77,7 +77,7 @@ const routes = [
             path: '/findB/specificData',
             name: '个性化数据',
             component: () => import('@/views/layout/findB/specificData.vue'),
-            meta: { title: '个性化数据',icon:nav3_i,icon_a:nav3_a_i },
+            meta: { title: '个性化数据',icon:nav3_i,icon_a:nav3_a_i,keepAlive:true },
           },
           {
             path: '/findB/specificDataDetails',

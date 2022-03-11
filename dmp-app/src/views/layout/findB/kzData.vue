@@ -22,7 +22,7 @@ import FindNumber from "@/components/FindNumber.vue";
 import CompanyTable from "@/components/CompanyTable.vue";
 import { searchByConditions_api,wordSearchList_api,getSearchWord_api } from '@/api/findB'
 import { Gajax } from '@/utils/request'
-import {okMsg} from '@/utils/index'
+import {okMsg,errMsg} from '@/utils/index'
 
 const words = ref([])
 const getWord = ()=>{
@@ -49,12 +49,12 @@ const searchType = ref(1) //1 关键词，2 条件组
 const word = ref('')
 const wordSearch = async (params:string)=>{
   //关键词搜索
-  okMsg('查询成功')
   searchType.value = 1
   loading.value = true
   searchParams.value.current = 1
   word.value = params
   await goSearch()
+  // okMsg('查询成功')
   getWord()
 }
 const goSearch = async ()=>{
@@ -67,21 +67,24 @@ const goSearch = async ()=>{
       tableData.value = res.body.records
     }
     loading.value = false
+  }).catch(()=>{
+    errMsg('查询失败')
+    loading.value = false
   })
 }
 const heightParams = ref({})
-const heightSearch = (params:any)=>{
+const heightSearch = async (params:any)=>{
   //高级搜索
-  okMsg('查询成功')
   loading.value = true
   searchType.value = 2
   searchParams.value.current = 1
   heightParams.value = params
-  goHSearch()
+  await goHSearch()
+  // okMsg('查询成功')
 }
 
-const goHSearch = ()=>{
-  searchByConditions_api({
+const goHSearch = async ()=>{
+  await searchByConditions_api({
     ...searchParams.value,
     ...heightParams.value
   }).then((res:res)=>{
@@ -89,6 +92,9 @@ const goHSearch = ()=>{
       total.value = res.body.total
       tableData.value = res.body.records
     }
+    loading.value = false
+  }).catch(()=>{
+    errMsg('查询失败')
     loading.value = false
   })
 }

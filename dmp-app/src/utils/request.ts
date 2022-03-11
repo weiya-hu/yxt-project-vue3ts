@@ -32,14 +32,14 @@ axios.interceptors.response.use(
   (res) => {
     if (res.status == 200) {
       const response = res.data
-      if (response.status==0 && response.errno && response.errno == 10620) {
-        // ElMessage({
-        //   showClose: true,
-        //   message: '登录过期，请重新登录',
-        //   type: 'error'
-        // })
-        // router.push("/login")
-        console.log(response);
+      if (response.status==0 && response.errno && response.errno != 10200) {
+        ElMessage({
+          showClose: true,
+          message: response.message,
+          type: 'error',
+          grouping: true,
+        })
+        // router.push("/index")
       } else if (response.status != 0) {
         // ElMessage({
         //   showClose: true,
@@ -62,7 +62,7 @@ export function get(url: string, params?: any, showmsg?: boolean) {
     axios
       .get(url, { params })
       .then((res) => {
-        if (showmsg) {
+        if (showmsg && res.data.errno != 10200) {
           ElMessage({
             showClose: true,
             message: res.data.message,
@@ -85,7 +85,7 @@ export function post(url: string, params?: any, showmsg?: boolean) {
     axios
       .post(url, params)
       .then((res) => {
-        if (showmsg) {
+        if (showmsg && res.data.errno != 10200) {
           ElMessage({
             showClose: true,
             message: res.data.message,

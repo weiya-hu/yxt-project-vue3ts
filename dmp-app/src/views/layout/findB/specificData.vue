@@ -14,7 +14,6 @@
         <el-table-column property="type" label="行业分类" width="150">
           <template #default="scope">
             <div>{{getHashStr(scope.row.industry_id.split(','),typeHash,'last')}}</div>
-            <!-- <div>{{scope.row.industry_id.split(',')}}</div> -->
           </template>
         </el-table-column>
         <el-table-column property="addr" label="地区" width="180">
@@ -376,6 +375,10 @@ const sureDel = ()=>{
   })
 }
 
+</script>
+
+<script lang="ts">
+export default { name:'个性化数据' }
 </script>
 
 <style scoped lang="scss">

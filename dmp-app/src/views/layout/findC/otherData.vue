@@ -14,6 +14,7 @@
         :data="tableData"
         style="width: 100%"
         @selection-change="handleSelectionChange"
+        v-loading="loading"
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="name" label="姓名" width="150"/>
@@ -52,7 +53,7 @@ import MyEmpty from "@/components/MyEmpty.vue";
 import { mainStore } from '@/store/index'
 import { getHashStr,strToArr,getSource} from '@/utils/index'
 import { getSearchWord_api ,wordSearchList_api } from '@/api/findC'
-import {okMsg} from '@/utils/index'
+import {okMsg,errMsg} from '@/utils/index'
 
 const store = mainStore()
 const addressHash = computed(() => store.state.addressHash)
@@ -81,6 +82,7 @@ interface IData {
   telephone: string, // 固话
 }
 const total = ref(0)
+const loading = ref(false)
 const tableData = ref<IData[]>()
 const searchParams = ref({
   size:10,
@@ -90,11 +92,11 @@ const searchParams = ref({
 const searchType = ref(1) //searchType 1普通搜索 2高级搜索
 const word = ref('')
 const wordSearch = async (keyWord:string)=>{
-  okMsg('查询成功')
   searchType.value = 1
   word.value = keyWord
   searchParams.value.current = 1
   await goSearch()
+  // okMsg('查询成功')
   getWord()
 }
 const goSearch = async ()=>{
@@ -106,6 +108,10 @@ const goSearch = async ()=>{
       total.value = res.body.total
       tableData.value = res.body.records
     }
+    loading.value = false
+  }).catch(()=>{
+    errMsg('查询失败')
+    loading.value = false
   })
 }
 
