@@ -25,12 +25,10 @@ app
 
 const store = mainStore()
 store.setUserinfo().then((res: boolean) => {
-  if (res) {
-    app.mount('#app')
-  } else {
-    errMsg('请登录后在使用')
-    setTimeout(() => {
-      window.location.href = '//dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
-    }, 2000);
-  }
+  app.mount('#app')
+}).catch((error: boolean) => {
+  errMsg('请登录后在使用')
+  setTimeout(() => {
+    window.location.href = 'https://dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
+  }, 2000);
 })

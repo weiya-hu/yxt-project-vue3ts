@@ -151,6 +151,7 @@ const loginout = ()=>{
   loginOut_api().then((res:res)=>{
     if(res.status == 1){
       companyInfo.value = {}
+      window.location.href = '//dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
     }
   })
   
