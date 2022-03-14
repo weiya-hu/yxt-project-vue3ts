@@ -41,9 +41,9 @@
             </div>
           </div>
           <div class="loginbtn fcc" v-else>
-            <el-link type="primary" :href="'//' + 'dev.yxtong.com/app/login'">登录</el-link>
+            <el-link type="primary" href="//dev.yxtong.com/app/login">登录</el-link>
             &ensp;/&ensp;
-            <el-link type="primary" :href="'//' + 'dev.yxtong.com/app/register/register'">注册</el-link>
+            <el-link type="primary" href="//dev.yxtong.com/app/register/register">注册</el-link>
           </div>
         </div>
       </el-col>
@@ -78,7 +78,7 @@ import {useRouter, useRoute,onBeforeRouteUpdate} from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import MyDialog from "@/components/MyDialog.vue";
 import { mainStore } from '@/store/index'
-import {loginOut_api,getUserInfo,getCompanyInfo} from '@/api/login'
+import {loginOut_api,getCompanyInfo} from '@/api/login'
 
 const goCompany = ()=>{
   window.location.href = 'https://dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0'
@@ -123,19 +123,6 @@ onBeforeRouteUpdate((to,from,next)=>{
     topNavRef.value.changeLeft()
   }
 
-  // router.options.routes.forEach((item1: any) => {
-  //   if (item1.name === 'Layout') {
-  //     item1.children.forEach((item2: any) => {
-  //       if (item2.path !== '/index') {
-  //         item2.children.forEach((item3: any) => {
-  //           if (item3.path === from.path) {
-  //             item3.meta.keepAlive = to.meta.father ? true :false
-  //           }
-  //         })
-  //       }
-  //     })
-  //   }
-  // })
   if(from.meta.keepAlive && to.meta.father == from.path){
     // 从列表进入详情 缓存列表
     store.setKeepList([from.name as string])
@@ -164,7 +151,6 @@ const loginout = ()=>{
   loginOut_api().then((res:res)=>{
     if(res.status == 1){
       companyInfo.value = {}
-      window.location.href = '//dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
     }
   })
   

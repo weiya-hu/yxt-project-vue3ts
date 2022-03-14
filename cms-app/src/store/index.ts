@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { reactive, ref, toRefs } from 'vue'
-import { getIndustryList_api,getAddreList_api} from '@/api/findB'
-import { getUserInfo} from '@/api/login'
+import { getIndustryList_api,getAddreList_api,getUserInfo} from '@/api/login'
 import { getHash} from '@/utils/index'
 
 export const mainStore = defineStore('mainStore', () => {

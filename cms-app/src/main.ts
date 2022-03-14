@@ -30,7 +30,7 @@ store.setUserinfo().then((res: boolean) => {
   } else {
     errMsg('请登录后在使用')
     setTimeout(() => {
-      window.location.href = '//dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
+      window.location.href = '//dev.yxtong.com/app/login'
     }, 2000);
   }
 })
