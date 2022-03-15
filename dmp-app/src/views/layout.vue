@@ -41,9 +41,9 @@
             </div>
           </div>
           <div class="loginbtn fcc" v-else>
-            <el-link type="primary" :href="'//' + 'dev.yxtong.com/app/login'">登录</el-link>
+            <el-link type="primary" href="//dev.yxtong.com/app/login">登录</el-link>
             &ensp;/&ensp;
-            <el-link type="primary" :href="'//' + 'dev.yxtong.com/app/register/register'">注册</el-link>
+            <el-link type="primary" href="//dev.yxtong.com/app/register/register">注册</el-link>
           </div>
         </div>
       </el-col>
@@ -81,7 +81,7 @@ import { mainStore } from '@/store/index'
 import {loginOut_api,getUserInfo,getCompanyInfo} from '@/api/login'
 
 const goCompany = ()=>{
-  window.location.href = 'https://dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0'
+  window.open("//dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0")
 }
 
 const store = mainStore()

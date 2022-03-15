@@ -1,5 +1,9 @@
 <template>
   <div class="index_page">
+    <div class="fcs toptip">
+      完善企业信息，可获取更多数据信息和体验功能模块。
+      <el-link type="primary" target="_blank" href="//dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0">去完善 ></el-link>
+    </div>
     <el-carousel trigger="click" height="320px">
       <el-carousel-item v-for="item in 4" :key="item">
         <img :src="`https://dev.yxtong.com/static/images/ib${item}.jpg`" alt="" class="banner">

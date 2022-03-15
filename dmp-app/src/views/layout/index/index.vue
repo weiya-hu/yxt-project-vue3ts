@@ -1,8 +1,12 @@
 <template>
   <div class="index_page">
+    <div class="fcs toptip">
+      完善企业信息，可获取更多数据信息和体验功能模块。
+      <el-link type="primary" target="_blank" href="//dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0">去完善 ></el-link>
+    </div>
     <el-carousel trigger="click" height="320px">
       <el-carousel-item v-for="item in 4" :key="item">
-        <img :src="`https://dev.yxtong.com/static/images/ib${item}.jpg`" alt="" class="banner">
+        <img :src="banner_i" alt="" class="banner">
       </el-carousel-item>
     </el-carousel>
     <div class="fsc index_content">
@@ -40,6 +44,7 @@ import index_2_i from '@/assets/images/index_2.png'
 import index_b_i from '@/assets/images/index_b.png'
 import index_c_i from '@/assets/images/index_c.png'
 import index_m_i from '@/assets/images/index_m.png'
+import banner_i from '@/assets/images/banner.png'
 import { formatDate } from '@/utils/date'
 import {useRouter} from 'vue-router'
 const icons = [
@@ -60,6 +65,11 @@ const goPath = (path:string)=>{
   width: 100%;
   background-color: #F7F8FA;
   box-sizing: border-box;
+  .toptip{
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #363636;
+  }
   .banner{
     width: 100%;
     height: 320px;

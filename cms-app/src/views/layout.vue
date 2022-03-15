@@ -81,7 +81,7 @@ import { mainStore } from '@/store/index'
 import {loginOut_api,getCompanyInfo} from '@/api/login'
 
 const goCompany = ()=>{
-  window.location.href = 'https://dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0'
+  window.open("//dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0")
 }
 
 const store = mainStore()

@@ -32,15 +32,18 @@ axios.interceptors.response.use(
   (res) => {
     if (res.status == 200) {
       const response = res.data
-      if (response.status==0 && response.errno && response.errno == 10620) {
-        window.location.href = 'https://dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
-      } else if (response.status==0 && response.errno && response.errno != 10200) {
+      if (response.status == 0 && response.errno && response.errno != 10200) {
         ElMessage({
           showClose: true,
           message: response.message,
           type: 'error',
           grouping: true,
         })
+        if(response.errno == 10620){
+          setTimeout(() => {
+            window.location.href = 'https://dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
+          }, 2000);
+        }
       }
     }
     return res

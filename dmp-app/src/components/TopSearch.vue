@@ -305,7 +305,7 @@ const emit = defineEmits(['heightSearch','search'])
 const searchWord = ref<string>('')
 const wordSearch = ()=>{
   //搜索
-  if(searchWord.value.length < 1 || searchWord.value.length > 36){
+  if(searchWord.value.trim().length < 1 || searchWord.value.trim().length > 36){
     errMsg('输入长度须在 1 ~ 36 之间')
     return
   }
