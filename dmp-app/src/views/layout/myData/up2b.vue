@@ -1,11 +1,12 @@
 <template>
   <div class="up2b">
     <div class="top-button fsc">
-      <div class="up-user fcc" @click="dialogVisible = true">上传客户</div>
+      <el-button size="large" type="primary"  class="up-user fcc" @click="dialogVisible = true">上传客户</el-button>
+      <!-- <div class="up-user fcc" @click="dialogVisible = true">上传客户</div> -->
       <div class="flexr">
-        <div class="union-button">同步SCRM</div>
-        <div class="union-button">同步CMS</div>
-        <div class="union-button">同步DSP系统</div>
+        <el-button size="large">同步SCRM</el-button>
+        <el-button size="large">同步CMS</el-button>
+        <el-button size="large">同步DSP系统</el-button>
       </div>
     </div>
     <div class="mytable">
