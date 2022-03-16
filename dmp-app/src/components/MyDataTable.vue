@@ -6,6 +6,20 @@
       </div>
     </template>
   </el-table-column>
+  <el-table-column v-if="type==='text-tooltip'" :property="prop" :label="lable" :min-width="width">
+     <template #default="{row}">
+      <div class="flexl">
+        <el-tooltip
+        class="box-item"
+        effect="dark"
+        placement="top-start"
+      >
+        <template #content><div class="text-tooltip-style">{{row[prop] || '---'}}</div></template>
+        <div class="text-style">{{prop && row[prop]?row[prop]:'---'}}</div>
+      </el-tooltip>
+      </div>
+    </template>
+  </el-table-column>
   <el-table-column v-if="type==='num'" :property="prop" :label="lable" :min-width="width">
      <template #default="{row,$index}">
       <div class="flexl">
@@ -82,6 +96,17 @@
 </script>
 
 <style scoped lang="scss">
+  .text-style{
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .text-tooltip-style{
+    width: 150px !important;
+    white-space: wrap;
+  }
   .calculating{
     width: 8px;
     height: 8px;

@@ -49,7 +49,7 @@ const tableTitle=ref([
   {type:'text',lable:'企业类型',prop:'company_type',width:120},
   {type:'text',lable:'统一社会信用代码',prop:'code',width:170},
   {type:'link',lable:'企业官网',prop:'url',width:150},
-  {type:'text',lable:'经营范围',prop:'business_scope',width:150},
+  {type:'text-tooltip',lable:'经营范围',prop:'business_scope',width:150},
 ])
 const tableList=ref([])
 
