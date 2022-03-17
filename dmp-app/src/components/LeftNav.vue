@@ -7,7 +7,7 @@
     router
     class="yxtnav"
   >
-    <el-menu-item :index="v.path" v-for="(v) in nav" :key="v.path" v-show="!v.meta.leftHidden" :class="v.path==modelValue?'is-active':''">
+    <el-menu-item :index="v.path" v-for="(v) in nav" :key="v.path" v-show="!v.meta.leftHidden && v.meta.lv<=userlv" :class="v.path==modelValue?'is-active':'userlv'+userlv">
       <div class="topafter"></div>
       <img :src="v.path==modelValue?v.meta.icon_a:v.meta.icon" alt="" class="left_nav_icon">
       <span>{{v.meta.title}}</span>
@@ -17,6 +17,8 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { mainStore } from '@/store/index'
 
 const props = withDefaults(defineProps<{
   modelValue:string,
@@ -24,6 +26,8 @@ const props = withDefaults(defineProps<{
 }>(),{
   nav:()=>([{path:'/',name:'-',meta:{title:'-'}}]),  //默认值的设置 须要用函数return
 })
+const store = mainStore()
+const userlv = computed(()=>store.state.userLv)
 
 </script>
 

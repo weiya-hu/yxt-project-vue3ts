@@ -41,7 +41,7 @@ axios.interceptors.response.use(
         })
         if(response.errno == 10620){
           setTimeout(() => {
-            window.location.href = 'https://dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
+            // window.location.href = 'https://dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
           }, 2000);
         }
       }

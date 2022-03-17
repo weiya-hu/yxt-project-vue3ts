@@ -1,6 +1,6 @@
 <template>
   <div class="index_page">
-    <div class="fcs toptip">
+    <div class="fcs toptip" v-if="companyInfo.status != 3">
       完善企业信息，可获取更多数据信息和体验功能模块。
       <el-link type="primary" target="_blank" href="//dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0">去完善 ></el-link>
     </div>
@@ -47,6 +47,8 @@ import index_m_i from '@/assets/images/index_m.png'
 import banner_i from '@/assets/images/banner.png'
 import { formatDate } from '@/utils/date'
 import {useRouter} from 'vue-router'
+import { ref } from 'vue'
+import {getCompanyInfo} from '@/api/login'
 const icons = [
   {icon:index_b_i,name:'找B端客户',path:'/findB'},
   {icon:index_c_i,name:'找C端客户',path:'/findC'},
@@ -56,6 +58,16 @@ const router = useRouter()
 const goPath = (path:string)=>{
   router.push(path)
 }
+
+const companyInfo = ref<any>({})
+const getUser = ()=>{
+  getCompanyInfo().then((res:res)=>{
+    if(res.status == 1){
+      companyInfo.value = res.body
+    }
+  })
+}
+getUser()
 </script>
 
 <style scoped lang="scss">
@@ -75,7 +87,7 @@ const goPath = (path:string)=>{
     height: 320px;
   }
   .index_content{
-    margin-top: 30px;
+    margin-top: 20px;
     .lt,.rt{
       height: 252px;
       background-color: #fff;
@@ -95,13 +107,13 @@ const goPath = (path:string)=>{
       }
     }
     .lt{
-      margin-right: 30px;
+      margin-right: 20px;
       .item{
-        width: 200px;
+        width: 216px;
         height: 128px;
         background-color:  #F7F8FA;
         border-radius: 6px;
-        margin-right: 30px;
+        margin-right: 20px;
         color: #333;
         div{
           font-size: 16px;

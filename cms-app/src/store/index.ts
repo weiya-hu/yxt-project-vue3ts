@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia'
-import { reactive, ref, toRefs } from 'vue'
+import { reactive } from 'vue'
 import { getIndustryList_api,getAddreList_api,getUserInfo} from '@/api/login'
 import { getHash} from '@/utils/index'
 
 export const mainStore = defineStore('mainStore', () => {
   //这样写第一个参数就是$id
   const state = reactive({
+    userLv:0,//用户等级
     userInfo:{} as any,//用户信息
     typeList:[] as any[],//行业分类
     typeHash:{} as any,//行业分类哈希表
@@ -58,11 +59,18 @@ export const mainStore = defineStore('mainStore', () => {
       })
     })
   }
+  const setUserLv = ()=>{
+    return new Promise<number>((resolve, reject) => {
+      state.userLv = Math.floor(Math.random()*3+1)
+      resolve(state.userLv)
+    })
+  }
   return {
     state,
     setTypeList,
     setAddressList,
     setKeepList,
-    setUserinfo
+    setUserinfo,
+    setUserLv
   }
 })

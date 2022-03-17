@@ -6,44 +6,52 @@
       </el-col>
       <el-col class="navbox fsc">
         <TopNav :nav="topNav" v-model="activePath" ref="topNavRef"/>
-        <div class="user fcs">
-          <div class="kf_btn fcs" @click="kfShow=true ">
-            <img :src="znkf_i" alt="">
-            <div>客服</div>
-          </div>
-          <div class="is_company fcc" v-if="companyInfo.status == 3">
-            <img :src="company_i" alt="">
-            <el-tooltip effect="dark" placement="bottom">
-              <template #content>
-                <div style="width:100px">{{companyInfo.name}}</div>
-              </template>
-              <div class="els">{{companyInfo.name}}</div>
-            </el-tooltip>
-          </div>
-          <el-button color="#2D68EB" class="l_btn" plain v-if="companyInfo.status != 3 && userInfo.id" @click="goCompany">完善资料</el-button>
-          <div class="sline"></div>
-          <div class="userbox fcs" v-if="userInfo.id">
-            <el-avatar :size="48" :src="userInfo.head||df_avatar_i"></el-avatar>
-            <div class="username">
-              <el-dropdown>
-                <div class="fcs">
-                  <div class="els" style="max-width:70px;line-height: 1.1;">{{userInfo.name}}</div>
-                  <el-icon class="right_icon"><caret-bottom /></el-icon>
-                </div>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item @click="loginout">
-                      退出
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+        <div class="top_right fcs">
+          <div class="top_rt_nav fcs">
+            <div class="top_rt_nav_item fcs" v-for="(v,i) in topRightNav" :key="i" @click="goOther(v.href)">
+              <img :src="v.img" alt="">
+              <div>{{v.name}}</div>
             </div>
           </div>
-          <div class="loginbtn fcc" v-else>
-            <el-link type="primary" href="//dev.yxtong.com/app/login">登录</el-link>
-            &ensp;/&ensp;
-            <el-link type="primary" href="//dev.yxtong.com/app/register/register">注册</el-link>
+          <div class="user fcs">
+            <div class="kf_btn fcs" @click="kfShow=true ">
+              <img :src="znkf_i" alt="">
+              <div>客服</div>
+            </div>
+            <div class="is_company fcc" v-if="companyInfo.status == 3">
+              <img :src="company_i" alt="">
+              <el-tooltip effect="dark" placement="bottom">
+                <template #content>
+                  <div style="width:100px">{{companyInfo.name}}</div>
+                </template>
+                <div class="els">{{companyInfo.name}}</div>
+              </el-tooltip>
+            </div>
+            <el-button color="#2D68EB" class="l_btn" plain v-if="companyInfo.status != 3 && userInfo.id" @click="goCompany">完善资料</el-button>
+            <div class="sline"></div>
+            <div class="userbox fcs" v-if="userInfo.id">
+              <el-avatar :size="48" :src="userInfo.head||df_avatar_i"></el-avatar>
+              <div class="username">
+                <el-dropdown>
+                  <div class="fcs">
+                    <div class="els" style="max-width:70px;line-height: 1.1;">{{userInfo.name}}</div>
+                    <el-icon class="right_icon"><caret-bottom /></el-icon>
+                  </div>
+                  <template #dropdown>
+                    <el-dropdown-menu>
+                      <el-dropdown-item @click="loginout">
+                        退出
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+              </div>
+            </div>
+            <div class="loginbtn fcc" v-else>
+              <el-link type="primary" href="//dev.yxtong.com/app/login">登录</el-link>
+              &ensp;/&ensp;
+              <el-link type="primary" href="//dev.yxtong.com/app/register/register">注册</el-link>
+            </div>
           </div>
         </div>
       </el-col>
@@ -71,6 +79,10 @@ import logo_i from '@/assets/images/logo.png'
 import znkf_i from '@/assets/images/znkf.png'
 import company_i from '@/assets/images/company_tag.png'
 import df_avatar_i from '@/assets/images/dfavatar.png'
+import jqr_i from '@/assets/images/t_jqr.png'
+import scrm_i from '@/assets/images/t_scrm.png'
+import dsp_i from '@/assets/images/t_dsp.png'
+import cms_i from '@/assets/images/t_cms.png'
 import {reactive, ref, computed } from 'vue'
 import LeftNav from '@/components/LeftNav.vue'
 import TopNav from '@/components/TopNav.vue'
@@ -78,7 +90,17 @@ import {useRouter, useRoute,onBeforeRouteUpdate} from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import MyDialog from "@/components/MyDialog.vue";
 import { mainStore } from '@/store/index'
-import {loginOut_api,getUserInfo,getCompanyInfo} from '@/api/login'
+import {loginOut_api,getCompanyInfo} from '@/api/login'
+
+const topRightNav = ref([
+  {img:jqr_i,name:'智能机器人',href:''},
+  {img:scrm_i,name:'SCRM系统',href:''},
+  {img:dsp_i,name:'DSP系统',href:''},
+  {img:cms_i,name:'CMS系统',href:''},
+])
+const goOther = (href:string)=>{
+  href && window.open(href)
+}
 
 const goCompany = ()=>{
   window.open("//dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0")
@@ -200,6 +222,26 @@ const loginout = ()=>{
       }
       &:hover{
         cursor: pointer;
+      }
+    }
+    .top_rt_nav{
+      .top_rt_nav_item{
+        margin-right: 32px;
+        color: $color333;
+        div{
+          font-size: 14px;
+        }
+        img{
+          width: 32px;
+          height: 32px;
+          margin-right: 8px;
+        }
+        &:hover{
+          cursor: pointer;
+          div{
+            color:$dfcolor
+          }
+        }
       }
     }
     .is_company{
