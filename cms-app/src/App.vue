@@ -83,7 +83,7 @@ body {
   display: flex;
   justify-content: center;
   align-content: center;
-  image{
+  img{
     width: 100%;
   }
 }
