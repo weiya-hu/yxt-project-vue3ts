@@ -17,7 +17,7 @@
     <template #default>
       <div class="upbox">
         <div class="fcc up_lt" :class="modelValue?'hasfile':''">
-          <div>
+          <div class="fc fcc">
             <el-icon>
               <document v-if="modelValue"/>
               <plus v-else/>
@@ -53,7 +53,7 @@ const props = withDefaults(defineProps<{
   msg?:string,//描述文字
 }>(),{
   modelValue:'',
-  exnameList:()=>['.doc', '.docx', '.pdf'],
+  exnameList:()=>['.zip、', '.rar', '.7z'],
 })
 
 const emit = defineEmits(['update:modelValue','change','error','success'])
@@ -87,7 +87,7 @@ const upChange = (file: UploadFile, list: UploadFile[])=>{
 }
 
 const submit = ()=>{
-  getAliToken_api().then((res:res)=>{
+  getAliToken_api({site:props.downLink ? 'dmp_excel' : 'dmp_attach'}).then((res:res)=>{
     return new Promise<string>((resolve, reject) => {
       if(res.status == 1){
         hostUrl.value = res.body.host
@@ -152,6 +152,7 @@ defineExpose({
       .file_name{
         font-size: 12px;
         line-height: 12px;
+        margin-top: 12px;
       }
       .el-icon{
         font-size: 28px;

@@ -29,7 +29,7 @@ store.setUserinfo().then((res: boolean) => {
 }).catch((error: boolean) => {
   errMsg('请登录后在使用')
   setTimeout(() => {
-    // window.location.href = 'https://dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
+    window.location.href = 'https://dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
   }, 2000);
 })
 

@@ -1,32 +1,27 @@
 <template>
   <div class="upload-users"> 
-    <el-dialog v-model="modelValue" :width="500" draggable @close="close">
-      <template #title>
-        <div class="up-user-title">创建需求</div>
-      </template>
-      <div>
-        <el-form :model="formValue" v-loading="loading" ref="formRef" :rules="upUserRule">
+    <el-dialog v-model="modelValue" :width="500" @close="close" title="创建需求" :before-close="beforeCloseAdd">
+      <div class="myform" v-loading="loading">
+        <el-form :model="formValue" ref="formRef" :rules="upUserRule" label-width="90px">
           <el-form-item
             label="需求标题"
-            required
             prop="title"
           >
             <el-input 
               placeholder="请输入需求标题"
               v-model="formValue.title"
-              clearable
             ></el-input>
           </el-form-item>
           <el-form-item
             label="需求描述"
-            required
             prop="desc"
           >
             <el-input 
               type="textarea" 
               maxlength="150"
               show-word-limit
-              class="input-textarea"
+              rows="5"
+              resize="none"
               placeholder="简要描述您的具体需求，以及期望目标。"
               v-model="formValue.desc"
             ></el-input>
@@ -34,24 +29,24 @@
           <el-form-item
             label="文件上传"
             prop="updateFile"
+            style="margin-bottom:20px"
           >
-            <MyUpload 
+            <MyUpload
+              msg="附件大小不超过4M<br/>支持.zip、.rar、.7z压缩包"
               v-model="formValue.updateFile" 
               @change="upChange" 
               @error="upError" 
               @success="upSuccess" 
-              :exnameList="['.doc', '.docx', '.pdf','.xls','.xlsx']"
+              :exnameList="['.zip、', '.rar', '.7z']"
               ref="upload"
             />
           </el-form-item>
         </el-form>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
+        <div class="fcs fjend">
           <el-button @click="close">取消</el-button>
-          <el-button type="primary" @click="sure">上传</el-button>
-        </span>
-      </template>
+          <el-button type="primary" @click="sure">提交</el-button>
+        </div>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -59,13 +54,14 @@
 <script setup lang="ts">
 import { reactive,ref,onMounted} from 'vue'
 import  MyUpload from '@/components/MyUpload.vue'
-import { errMsg} from '@/utils/index'
-
-import {useRoute} from 'vue-router'
+import { errMsg, confirm } from '@/utils/index'
+import { useRoute } from 'vue-router'
+import { customAdd_api } from '@/api/custom'
 import axios from 'axios'
 //父组件传的值
 const props = withDefaults(defineProps<{
-  modelValue:boolean,
+  modelValue:boolean, // 是否显示
+  type:number // 1软文，2图库，3海报, 4视频
 }>(),{})
 
 //变量
@@ -76,10 +72,11 @@ const fileVali=(rule:any,value:any,callback:any)=>{
       callback(new Error('请添加大小不超过4M的文件'))
       break;
     case 'type':
-      callback(new Error('请添加 .doc、.docx、.pdf、.xls、.xlsx 格式的文件'))
+      callback(new Error('请添加 .zip、.rar、.7z 格式的文件'))
       break;
     case 'none':
-      callback(new Error('请添加文件'))
+      // callback(new Error('请添加文件'))
+      callback()
       break;
     default:
       callback()
@@ -87,20 +84,12 @@ const fileVali=(rule:any,value:any,callback:any)=>{
   }
 }
 const upUserRule= reactive({
-  personsName:[{
+  title:[{
     required: true,
     message: '请输入需求标题',
-    trigger: 'change',
-  },{
-    required: true,
-    message: '请输入需求标题',
-    trigger: 'blur',}
-  ],
-  personsDesc:[{
-    required: true,
-    message: '请输入需求描述',
-    trigger: 'change',
-  },{
+    trigger: 'blur',
+  }],
+  desc:[{
     required: true,
     message: '请输入需求描述',
     trigger: 'blur',
@@ -121,36 +110,53 @@ let formValue=ref({
 })
 let loading = ref(false)
 let downloadUrl=ref('')
- 
 
 //方法
-onMounted(()=>{
-  console.log(route.path)
-  let url = route.path === '/myData/up2b'?'/dmp/file-download?type=1':'/dmp/file-download?type=2'
-  //下载模板要设置返回类型，不然文件会损坏
-  axios({
-    url:url,
-    method:'get',
-    headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-    }, 
-    responseType: 'blob'
-  }).then((res)=>{
-    downloadUrl.value=URL.createObjectURL(res.data);
-  })
-})
+// onMounted(()=>{
+//   let url = route.path === '/myData/up2b'?'/dmp/file-download?type=1':'/dmp/file-download?type=2'
+//   //下载模板要设置返回类型，不然文件会损坏
+//   axios({
+//     url:url,
+//     method:'get',
+//     headers: {
+//         'Content-Type': 'application/json;charset=UTF-8',
+//     }, 
+//     responseType: 'blob'
+//   }).then((res)=>{
+//     downloadUrl.value=URL.createObjectURL(res.data);
+//   })
+// })
 
+//submitSuccess 添加成功后
 const emit = defineEmits(['update:modelValue','submitSuccess'])
 const close=()=>{
+  formRef.value.resetFields()
+  upload.value.clear()
   emit('update:modelValue',false)
 }
+const beforeCloseAdd = (done:Function)=>{
+  if(loading.value){
+    confirm().then(() => {})
+    .catch(() => {
+      upload.value.doAbort()
+      done()
+    })
+  }else{
+    done()
+  }
+}
+
 const sure=()=>{
   formRef.value.validate((valid:any) => {
     if (valid) {
       //表单效验成功再上传
       console.log('submit!')
       loading.value = true
-      upload.value.submit()
+      if(formValue.value.updateFile){
+        upload.value.submit()
+      }else{
+        upSuccess('')
+      }
     } else {
       console.log('error submit!');
       return false
@@ -162,7 +168,7 @@ const upChange = (errorType:string)=>{
   if(errorType){
     fileErrorType.value = errorType
     formValue.value.updateFile = ''
-    formRef.value!.validateField('file', () => null)
+    formRef.value!.validateField('updateFile', () => null)
   }else{
     fileErrorType.value = ''
     formRef.value!.clearValidate('updateFile')
@@ -177,62 +183,26 @@ const upError = (err:any)=>{
   loading.value = false
   errMsg('上传失败')
 }
-const upSuccess = (path:string)=>{
+const upSuccess = async (path:string)=>{
+  const res = await customAdd_api({
+    attach_url:path,
+    content_type:props.type,
+    detail:formValue.value.desc,
+    title:formValue.value.title,
+  })
   loading.value = false
-  //上传成功再提交表单
-  // upRecordAdd({
-  //   "attachment": path,//附件地址
-  //   "group_desc": formValue.value.personsDesc,//人群描述
-  //   "group_name": formValue.value.personsName,//人群名称
-  //   "type":route.path === '/myData/up2b'?1:2
-  // }).then((res)=>{
-  //   if(res.status){
-  //     close()
-  //     formRef.value.resetFields()
-  //     emit('submitSuccess',1)
-  //   }else{
-  //     formValue.value.updateFile = ''
-  //     fileErrorType.value = 'none'
-  //     upload.value.clear()
-  //   }
-  //   loading.value = false
-  // }).catch(()=>{
-  //   upError('')
-  // })
+  if(res.status == 1){
+    emit('submitSuccess')
+  }
 }
 
 </script>
 
 <style scoped lang="scss">
 .upload-users{
-  .upbox{
-    .up_lt{
-      width: 100px;
-      height: 100px;
-      border:1px dashed $colorddd;
-      flex-shrink: 0;
-      position: relative;
-      .file_name{
-        font-size: 12px;
-        line-height: 12px;
-      }
-      .el-icon{
-        font-size: 28px;
-        color: $colorddd;
-      }
-    }
-    
-    .up_rt{
-      padding-left: 12px;
-      div{
-        font-size: 12px;
-      }
-      color: $color999;
-      line-height: 20px;
-      text-align: left;
-      .up_tip{
-        margin-top: 8px;
-      }
+  :deep(.upbox){
+    .up_tip{
+      display: none;
     }
   }
   .tips{

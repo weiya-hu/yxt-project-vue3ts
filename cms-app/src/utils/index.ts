@@ -1,4 +1,4 @@
-import { ElMessage } from 'element-plus'
+import { ElMessage , ElMessageBox } from 'element-plus'
 
 export const getUrlParams = (search: string, name: string) => {
   //search方式跳转获取参数
@@ -14,7 +14,7 @@ export function okMsg(msg: string, time?: number) {
     message: msg,
     grouping: true,
     type: 'success',
-    duration: time||3000,
+    duration: typeof time == 'number' ? time : 3000,
   })
 }
 
@@ -24,7 +24,7 @@ export function errMsg(msg: string, time?: number) {
     message: msg,
     grouping: true,
     type: 'error',
-    duration: time||3000,
+    duration: typeof time == 'number' ? time : 3000,
   })
 }
 
@@ -36,6 +36,18 @@ export function infoMsg(msg: string, time?: number) {
     type: 'info',
     duration: time||3000,
   })
+}
+
+export function confirm(msg?:string){
+  return ElMessageBox.confirm(
+    msg||'正在上传中，关闭弹窗可能会导致上传失败，是否继续关闭？',
+    '温馨提示',
+    {
+      confirmButtonText: '取消',
+      cancelButtonText: '确定',
+      type: 'warning',
+    }
+  )
 }
 
 /**

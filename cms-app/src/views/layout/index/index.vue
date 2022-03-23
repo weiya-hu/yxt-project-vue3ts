@@ -6,7 +6,7 @@
     </div>
     <el-carousel trigger="click" height="320px">
       <el-carousel-item v-for="item in 4" :key="item">
-        <img :src="`https://dev.yxtong.com/static/images/ib${item}.jpg`" alt="" class="banner">
+        <img :src="banner_i" alt="" class="banner">
       </el-carousel-item>
     </el-carousel>
     <div class="fsc index_content">
@@ -44,9 +44,10 @@ import index_2_i from '@/assets/images/index_2.png'
 import index_m_i from '@/assets/images/index_m.png'
 import index_c_i from '@/assets/images/index_c.png'
 import index_f_i from '@/assets/images/index_f.png'
-import { ref } from 'vue'
-import {getCompanyInfo} from '@/api/login'
+import banner_i from '@/assets/images/banner.png'
+import { computed } from 'vue'
 import { formatDate } from '@/utils/date'
+import { mainStore } from '@/store/index'
 import {useRouter} from 'vue-router'
 const icons = [
   {icon:index_m_i,name:'我的作品库',path:'/myWork'},
@@ -58,15 +59,9 @@ const goPath = (path:string)=>{
   router.push(path)
 }
 
-const companyInfo = ref<any>({})
-const getUser = ()=>{
-  getCompanyInfo().then((res:res)=>{
-    if(res.status == 1){
-      companyInfo.value = res.body
-    }
-  })
-}
-getUser()
+const store = mainStore()
+const companyInfo = computed(()=>store.state.companyInfo)
+
 </script>
 
 <style scoped lang="scss">

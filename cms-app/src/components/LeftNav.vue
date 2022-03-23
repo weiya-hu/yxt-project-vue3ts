@@ -21,8 +21,8 @@ import { computed } from 'vue'
 import { mainStore } from '@/store/index'
 
 const props = withDefaults(defineProps<{
-  modelValue:string,
-  nav:Navitem[],
+  modelValue:string, // 激活的菜单
+  nav:Navitem[], // 菜单数组
 }>(),{
   nav:()=>([{path:'/',name:'-',meta:{title:'-'}}]),  //默认值的设置 须要用函数return
 })

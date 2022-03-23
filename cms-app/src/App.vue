@@ -20,6 +20,7 @@ body {
   width: 100%;
   --el-color-primary: #2D68EB;
   --el-color-danger: #E40000;
+  min-width: 1440px;
 }
 
 .el-button--primary {
@@ -132,6 +133,12 @@ img{
   .el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell{
     background-color: rgba(45,104,235,0.10);
   }
+  .line{
+    height: 14px;
+    width: 1px;
+    margin: 0 16px;
+    background-color: $coloreee;
+  }
 }
 .my-data-table-row{
   height: 60px;
@@ -210,5 +217,8 @@ img{
 }
 .fade-enter-from,.fade-leave-to {
   opacity: 0;
+}
+.el-dialog__header{
+  margin-right: 0!important;
 }
 </style>

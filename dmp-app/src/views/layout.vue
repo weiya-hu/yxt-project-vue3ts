@@ -7,12 +7,12 @@
       <el-col class="navbox fsc">
         <TopNav :nav="topNav" v-model="activePath" ref="topNavRef"/>
         <div class="top_right fcs">
-          <div class="top_rt_nav fcs">
+          <!-- <div class="top_rt_nav fcs">
             <div class="top_rt_nav_item fcs" v-for="(v,i) in topRightNav" :key="i" @click="goOther(v.href)">
               <img :src="v.img" alt="">
               <div>{{v.name}}</div>
             </div>
-          </div>
+          </div> -->
           <div class="user fcs">
             <div class="kf_btn fcs" @click="kfShow=true ">
               <img :src="znkf_i" alt="">
@@ -90,7 +90,7 @@ import {useRouter, useRoute,onBeforeRouteUpdate} from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import MyDialog from "@/components/MyDialog.vue";
 import { mainStore } from '@/store/index'
-import {loginOut_api,getCompanyInfo} from '@/api/login'
+import {loginOut_api} from '@/api/login'
 
 const topRightNav = ref([
   {img:jqr_i,name:'智能机器人',href:''},
@@ -173,23 +173,14 @@ onBeforeRouteUpdate((to,from,next)=>{
 const kfShow = ref(false)
 
 const userInfo = computed(()=>store.state.userInfo)
-const companyInfo = ref<any>({})
-const getUser = ()=>{
-  getCompanyInfo().then((res:res)=>{
-    if(res.status == 1){
-      companyInfo.value = res.body
-    }
-  })
-}
-getUser()
+const companyInfo = computed(()=>store.state.companyInfo)
+
 const loginout = ()=>{
   loginOut_api().then((res:res)=>{
     if(res.status == 1){
-      companyInfo.value = {}
       window.location.href = '//dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
     }
   })
-  
 }
 
 </script>
@@ -200,16 +191,19 @@ const loginout = ()=>{
   .logobox {
     height: 80px;
     background-color: $dfcolor;
-    max-width: 10.4%;
-    flex: 0 0 10.4%;
+    // max-width: 10.4%;
+    // flex: 0 0 10.4%;
+    max-width: 200px;
+    flex: 0 0 200px;
     img{
       width: 100%;
       height: 100%;
     }
   }
   .navbox{
-    max-width: 89.6%;
-    flex: 0 0 89.6%;
+    // max-width: 89.6%;
+    // flex: 0 0 89.6%;
+    flex:1;
     box-shadow: 0px 0px 2px 0px rgb(231, 231, 231);
     z-index: 30;
     .kf_btn{
@@ -248,6 +242,7 @@ const loginout = ()=>{
       font-size: 12px;
       color: $color333;
       font-weight: 400;
+      margin-left: 10px;
       img{
         width: 14px;
         height: 14px;
@@ -284,15 +279,18 @@ const loginout = ()=>{
     height: calc(100% - 80px);
     .layout_nav {
       background-color: $color333;
-      max-width: 10.4%;
-      flex: 0 0 10.4%;
+      // max-width: 10.4%;
+      // flex: 0 0 10.4%;
+      max-width: 200px;
+      flex: 0 0 200px;
       padding-top: 30px;
       padding-left: 8px;
     }
     .layout_content{
       height: 100%;
-      max-width: 89.6%;
-      flex: 0 0 89.6%;
+      // max-width: 89.6%;
+      // flex: 0 0 89.6%;
+      flex:1;
       padding: 30px 50px;
       background-color: $bgcolor;
       overflow-y: scroll;

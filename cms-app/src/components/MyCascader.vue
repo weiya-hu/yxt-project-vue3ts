@@ -26,8 +26,8 @@
 import { mainStore } from '@/store/index'
 import { ref ,computed } from 'vue'
 const props = withDefaults(defineProps<{
-  modelValue:any[],
-  type:string
+  modelValue:any[], // 绑定值
+  type:string // 'type' 行业分类 其他地区分类
 }>(),{
   type:'type',
 })
@@ -62,7 +62,7 @@ const getText = ()=>{
   }
 }
 defineExpose({
-  getText
+  getText // 获取当前显示的文字
 })
 </script>
 

@@ -20,6 +20,7 @@ body {
   width: 100%;
   --el-color-primary: #2D68EB;
   --el-color-danger: #E40000;
+  min-width: 1440px;
 }
 // :root {
 //   --el-color-primary: #2D68EB;
