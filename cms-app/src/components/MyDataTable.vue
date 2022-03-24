@@ -36,8 +36,8 @@
   <el-table-column v-if="type==='status'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
       <div class="flexl">
-        <div :class="row.status === 2?'calculated':row.status === 0?'calculat-false':'calculating'"></div>
-        <div >{{row.status===2?'计算完成':(row.status===0?'处理失败':'计算中')}}</div>
+        <div :class="getStatus(row.status).className"></div>
+        <div >{{getStatus(row.status).text}}</div>
       </div>
     </template>
   </el-table-column>
@@ -70,28 +70,59 @@
 </template>
 
 <script setup lang="ts">
-  import { toRefs,ref} from 'vue'
-  import {Format} from '@/utils/date'
-  const props = withDefaults(defineProps<{
-    type:string,
-    lable?:string,
-    prop:string,
-    width:number,
-    operatButton?:string[]
-  }>(),{})
+import { toRefs,ref} from 'vue'
+import {Format} from '@/utils/date'
+const props = withDefaults(defineProps<{
+  type:string,
+  lable?:string,
+  prop:string,
+  width:number,
+  operatButton?:string[]
+}>(),{})
 
-  const errorShow = ref(false)
+const errorShow = ref(false)
 
 
-  const emit = defineEmits(['click'])
-  const operate=(index:number,row:any)=>{
-    (row.status===2) && emit('click',index,row);
+const emit = defineEmits(['click'])
+const operate=(index:number,row:any)=>{
+  (row.status===2) && emit('click',index,row);
 
-    (row.status===0) && (errorShow.value = true)
-    //  errorShow.value = true
+  (row.status===0) && (errorShow.value = true)
+  //  errorShow.value = true
 
+}
+const {type,lable,prop,width,operatButton} =toRefs(props)
+
+const getStatus = (type:number)=>{
+  const obj = ref<{text:string,className:string}>()
+  switch (type) {
+    case 2:
+      obj.value = {
+        text:'已授理',
+        className:'calculating'
+      }
+      break;
+    case 3:
+      obj.value = {
+        text:'驳回',
+        className:'calculat-false'
+      }
+      break;
+    case 4:
+      obj.value = {
+        text:'已完成',
+        className:'calculated'
+      }
+      break;
+    default:
+      obj.value = {
+        text:'待处理',
+        className:'calcula_yellow'
+      }
+      break;
   }
-  const {type,lable,prop,width,operatButton} =toRefs(props)
+  return obj.value
+}
 
 </script>
 
@@ -107,24 +138,31 @@
     width: 150px !important;
     white-space: wrap;
   }
+  .calcula_yellow{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #FFBF00;
+    margin-right: 8px;
+  }
   .calculating{
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #2BD34E;
+    background-color: #2BD34E;
     margin-right: 8px;
   }
   .calculated{
     width: 8px;
     height: 8px;
-    background: #2D68EB;
+    background-color: $dfcolor;
     border-radius: 50%;
     margin-right: 8px;
   }
   .calculat-false{
     width: 8px;
     height: 8px;
-    background: #e40000;
+    background-color: #e40000;
     border-radius: 50%;
     margin-right: 8px;
   }

@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
-import { getIndustryList_api,getAddreList_api,getUserInfo} from '@/api/login'
-import { getHash} from '@/utils/index'
+import { getIndustryList_api, getAddreList_api, getUserInfo, getCompanyInfo } from '@/api/login'
+import { getHash } from '@/utils/index'
 
 export const mainStore = defineStore('mainStore', () => {
   //这样写第一个参数就是$id
   const state = reactive({
     userLv:0,//用户等级
     userInfo:{} as any,//用户信息
+    companyInfo:{} as any,//公司信息
     typeList:[] as any[],//行业分类
     typeHash:{} as any,//行业分类哈希表
     addressList:[] as any[],//地区列表
@@ -60,9 +61,15 @@ export const mainStore = defineStore('mainStore', () => {
     })
   }
   const setUserLv = ()=>{
-    return new Promise<number>((resolve, reject) => {
-      state.userLv = Math.floor(Math.random()*3+1)
-      resolve(state.userLv)
+    return new Promise<number>(async (resolve, reject) => {
+      const res = await getCompanyInfo()
+      if(res.status == 1){
+        state.companyInfo = res.body
+        state.userLv = res.body.id ? 3 : 1
+        resolve(state.userLv)
+      }else{
+        reject(res.message)
+      }
     })
   }
   return {

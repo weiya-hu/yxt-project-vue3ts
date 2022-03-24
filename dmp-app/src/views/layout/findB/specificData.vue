@@ -216,7 +216,7 @@ const filePass = (rule:any, value:any, callback:any) => {
       callback(new Error('请添加大小不超过4M的文件'))
       break;
     case 'type':
-      callback(new Error('请添加 .doc、.docx、.pdf 格式的文件'))
+      callback(new Error('请添加 .zip、.rar、.7z 格式的文件'))
       break;
     case 'none':
       // callback(new Error('请添加文件'))

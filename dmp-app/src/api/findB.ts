@@ -1,8 +1,8 @@
 import { get, post } from '@/utils/request'
 
 //获取阿里oss参数 //key 过期时间2s
-export const getAliToken_api = (): Promise<any> => {
-  return get('/user/upload-policy')
+export const getAliToken_api = (params:{site:string}): Promise<any> => {
+  return get('/user/upload-policy',params)
 }
 
 //获取行业分类列表

@@ -19,10 +19,13 @@
     <el-dialog v-model="modelValue" :title="title" width="400px" @close="close" v-else>
       <div class="fcc msg">{{msg}}</div>
       <template #footer>
-        <span class="fcc">
+        <span class="fcc" v-if="btn==2">
           <el-button @click="close">取消</el-button>
           <el-button type="primary" @click="sure">确认</el-button>
         </span>
+        <div class="fcc" v-else>
+          <el-button type="primary" @click="close">我知道了</el-button>
+        </div>
       </template>
     </el-dialog>
   </div>
@@ -32,16 +35,19 @@
 //简易的居中布局弹窗 和 客服弹窗
 import kf_code_i from '@/assets/images/kf_code.png'
 const props = withDefaults(defineProps<{
-  modelValue:boolean,
-  title?:string,
-  msg?:string,
-  type?:string,
+  modelValue:boolean, // 是否显示
+  title?:string, // 标题
+  msg?:string, // 内容
+  type?:string, // 'kf' 客服 
+  btn?:number, // 按钮数 1/2
 }>(),{
   title:'提示',
   type:'',
   msg:'',
+  btn:2,
 })
 
+//sure 点击确认时
 const emit = defineEmits(['update:modelValue','sure'])
 
 const close = ()=>{

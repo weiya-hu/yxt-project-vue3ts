@@ -1,5 +1,4 @@
 import { get, post } from '@/utils/request'
-import { debug } from 'console'
 
 /**
  * @name 获取关键词记录

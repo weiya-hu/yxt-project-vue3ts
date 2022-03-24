@@ -9,8 +9,8 @@
 //分页组件
 import { ref } from 'vue'
 const props = withDefaults(defineProps<{
-  modelValue:number,
-  total:number,
+  modelValue:number, // 当前页
+  total:number, // 总数
 }>(),{
   total:0
 })

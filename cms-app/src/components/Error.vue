@@ -21,7 +21,7 @@ const setFunctionName = (name: string) => {
   reDoFunctionName.value = name
 }
 defineExpose({
-  setFunctionName,
+  setFunctionName, // 设置emiter函数名
 })
 </script>
 

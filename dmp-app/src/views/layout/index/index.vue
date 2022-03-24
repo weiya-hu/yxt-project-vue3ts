@@ -47,8 +47,8 @@ import index_m_i from '@/assets/images/index_m.png'
 import banner_i from '@/assets/images/banner.png'
 import { formatDate } from '@/utils/date'
 import {useRouter} from 'vue-router'
-import { ref } from 'vue'
-import {getCompanyInfo} from '@/api/login'
+import { computed } from 'vue'
+import { mainStore } from '@/store/index'
 const icons = [
   {icon:index_b_i,name:'找B端客户',path:'/findB'},
   {icon:index_c_i,name:'找C端客户',path:'/findC'},
@@ -59,15 +59,9 @@ const goPath = (path:string)=>{
   router.push(path)
 }
 
-const companyInfo = ref<any>({})
-const getUser = ()=>{
-  getCompanyInfo().then((res:res)=>{
-    if(res.status == 1){
-      companyInfo.value = res.body
-    }
-  })
-}
-getUser()
+const store = mainStore()
+const companyInfo = computed(()=>store.state.companyInfo)
+
 </script>
 
 <style scoped lang="scss">

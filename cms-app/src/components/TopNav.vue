@@ -13,8 +13,8 @@ import { ref ,onMounted,nextTick,watch } from 'vue'
 import {useRouter} from 'vue-router'
 
 const props = withDefaults(defineProps<{
-  modelValue:string,
-  nav:Navitem[],
+  modelValue:string, // 激活菜单
+  nav:Navitem[], // 菜单数组
 }>(),{
   nav:()=>([{path:'/',name:'-'}]),
   activePath:'/'
@@ -52,7 +52,7 @@ const changeLeft = ()=>{
 //   changeLeft()
 // })
 defineExpose({
-  changeLeft
+  changeLeft // 改变顶部导航线条位置
 })
 </script>
 
@@ -74,14 +74,14 @@ defineExpose({
     }
   }
   .line{
-      position: absolute;
-      width: 20px;
-      height: 4px;
-      border-radius: 2px;
-      background-color: $dfcolor;
-      bottom: 16px;
-      transform: translate(-50%,0);
-    }
+    position: absolute;
+    width: 20px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: $dfcolor;
+    bottom: 16px;
+    transform: translate(-50%,0);
+  }
   .active{
     color:$dfcolor;
     font-weight: 500;

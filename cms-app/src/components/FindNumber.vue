@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 const props = withDefaults(defineProps<{
-  total:number,
+  total:number, // 数量
 }>(),{
   total:0
 })
