@@ -41,6 +41,14 @@
       </div>
     </template>
   </el-table-column>
+  <el-table-column v-if="type==='status_do'" :property="prop" :label="lable" :min-width="width">
+    <template #default="{row}">
+      <div class="flexl">
+        <div :class="row.status === 0?'before-deal':row.status === 1?'dealing':row.status === 2?'deal-refuse':row.status === 3?'dealed':''"></div>
+        <div >{{row.status === 0?'待处理':row.status === 1?'处理中':row.status === 2?'被驳回':row.status === 3?'已完结':''}}</div>
+      </div>
+    </template>
+  </el-table-column>
   <el-table-column v-if="type==='date'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
       <div>{{Format('yyyy-MM-dd',new Date(row[prop])) }}</div>
@@ -107,24 +115,31 @@
     width: 150px !important;
     white-space: wrap;
   }
-  .calculating{
+  .calculating,.dealing{
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background: #2BD34E;
     margin-right: 8px;
   }
-  .calculated{
+  .calculated,.before-deal{
     width: 8px;
     height: 8px;
     background: #2D68EB;
     border-radius: 50%;
     margin-right: 8px;
   }
-  .calculat-false{
+  .calculat-false,.deal-refuse{
     width: 8px;
     height: 8px;
     background: #e40000;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  .dealed{
+    width: 8px;
+    height: 8px;
+    background: #999999;
     border-radius: 50%;
     margin-right: 8px;
   }

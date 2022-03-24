@@ -22,22 +22,23 @@ app
   .use(ElementPlus, {
     locale: zhCn,
   })
-  .directive('error', ErrorDirective)
+  .directive('error', ErrorDirective).mount('#app')
 
 const store = mainStore()
 store.setUserinfo().then((res: boolean) => {
-  app.mount('#app')
+  // app.mount('#app')
 }).catch((error: boolean) => {
-  errMsg('请登录后在使用')
-  setTimeout(() => {
-    window.location.href = 'https://dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
-  }, 2000);
+  // errMsg('请登录后在使用')
+  // setTimeout(() => {
+  //   window.location.href = 'https://dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
+  // }, 2000);
 })
 
 store.setUserLv().then((userlv:number)=>{
   console.log(userlv);
   router.beforeEach((to, from, next) => {
-    if(to.meta.lv && (userlv < Number(to.meta.lv))){
+    // if(to.meta.lv && (userlv < Number(to.meta.lv))){
+      if(to.meta.lv && (4 < Number(to.meta.lv))){
       ElMessageBox.confirm(
         to.meta.lv == 2 ?'此功能模块需要完善企业信息才能使用，是否完善？':'此功能模块需要购买付费套餐才能使用，是否购买？',
         '温馨提示',

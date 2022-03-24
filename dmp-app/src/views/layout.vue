@@ -7,12 +7,12 @@
       <el-col class="navbox fsc">
         <TopNav :nav="topNav" v-model="activePath" ref="topNavRef"/>
         <div class="top_right fcs">
-          <div class="top_rt_nav fcs">
+          <!-- <div class="top_rt_nav fcs">
             <div class="top_rt_nav_item fcs" v-for="(v,i) in topRightNav" :key="i" @click="goOther(v.href)">
               <img :src="v.img" alt="">
               <div>{{v.name}}</div>
             </div>
-          </div>
+          </div> -->
           <div class="user fcs">
             <div class="kf_btn fcs" @click="kfShow=true ">
               <img :src="znkf_i" alt="">
