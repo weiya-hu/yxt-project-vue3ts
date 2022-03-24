@@ -1,7 +1,7 @@
 <template>
   <div class="up2b">
     <div class="top-button fsc">
-      <el-button size="large" type="primary"  class="up-user fcc" @click="addShow = true">添加</el-button>
+      <el-button size="large" type="primary"  class="up-user fcc" @click="addShow = true">添加需求</el-button>
       <div class="flexr">
         <el-button size="large">同步SCRM</el-button>
         <el-button size="large">同步CMS</el-button>
@@ -147,7 +147,7 @@
     desc:'',
     updateFile:''
   })
-  let fileErrorType = ref('none')//上传文件错误类型
+  let fileErrorType = ref()//上传文件错误类型
 
 
   let tableList = ref([
