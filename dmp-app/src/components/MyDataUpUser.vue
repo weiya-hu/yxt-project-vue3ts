@@ -132,7 +132,7 @@ let downloadUrl=ref('')
 //方法
 onMounted(()=>{
   console.log(route.path)
-  let url = route.path === '/myData/up2b'?'/dmp/file-download?type=1':'/dmp/file-download?type=2'
+  let url = route.path === '/myData/up2b'?'/dmp/source/template/download.do?type=1':'/dmp/source/template/download.do?type=2'
   //下载模板要设置返回类型，不然文件会损坏
   axios({
     url:url,

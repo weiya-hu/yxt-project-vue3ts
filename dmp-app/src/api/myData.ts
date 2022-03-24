@@ -3,15 +3,15 @@ import { get, post } from '@/utils/request'
 
 //上传记录列表
 export const upRecordList = (data:any): Promise<any> => {
-  return get('/dmp/upRecord-list',data)
+  return get('/dmp/source/upload.page',data)
 }
 
 //上传记录详情
 export const upRecordDetail = (data:any): Promise<any> => {
-  return get('/dmp/upRecord-detail',data)
+  return get('/dmp/source/upload/detail.page',data)
 }
 
 //上传客户
 export const upRecordAdd = (data:any): Promise<res> => {
-  return post('/dmp/upRecord-add',data,true)
+  return post('/dmp/source/upload.in',data,true)
 }

@@ -218,9 +218,9 @@ img{
   width: 100%;
 }
 .up2b{
-  .el-dialog .el-dialog__header{
-    border: none;
-  }
+  // .el-dialog .el-dialog__header{
+  //   border: none;
+  // }
   .el-form-item--default .el-form-item__label{
     width: 78px;
   }

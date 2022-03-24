@@ -7,12 +7,12 @@ export const getAliToken_api = (params:{site:string}): Promise<any> => {
 
 //获取行业分类列表
 export const getIndustryList_api = (): Promise<any> => {
-  return get('/dim/get-industry')
+  return get('/dim/industry.list')
 }
 
 //获取地区列表id
 export const getAddreList_api = (): Promise<any> => {
-  return get('/dim/get-geo')
+  return get('/dim/geo.list')
 }
 
 //联系方式与企业类型
