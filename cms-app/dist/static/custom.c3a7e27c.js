@@ -1,1 +1,0 @@
-import{g as s,p as e}from"./index.d0f073cb.js";const a=s=>{let e="";switch(s){case 2:e="images";break;case 3:e="posters";break;case 4:e="videos";break;default:e="articles"}return e},c=(e,c)=>s(`/cms/${a(c)}/diy.page`,e),i=(s,c)=>e(`/cms/${a(c)}/diy.in`,s,!0),d=(s,c)=>e(`/cms/${a(c)}/diy.del`,s,!0),t=(e,c)=>s(`/cms/${a(c)}/diy/detail.get`,e);export{c as a,d as b,t as c,i as d};

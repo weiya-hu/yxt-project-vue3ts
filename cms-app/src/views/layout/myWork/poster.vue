@@ -200,6 +200,7 @@ const upOne = async (url:string,length:number)=>{
 const upSuccess = ()=>{
   //全部上传成功
   okMsg('上传成功')
+  upNumber.value = 0
   close()
   getList()
 }
