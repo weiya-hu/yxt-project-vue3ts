@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
-import { getIndustryList_api, getAddreList_api } from '@/api/findB'
+import { getIndustryList_api, getAddreList_api ,getCAndC_api} from '@/api/findB'
 import { getUserInfo, getCompanyInfo } from '@/api/login'
 import { getHash } from '@/utils/index'
 
@@ -15,6 +15,7 @@ export const mainStore = defineStore('mainStore', () => {
     addressList:[] as any[],//地区列表
     addressHash:{} as any,//地区列表哈希表
     keepList:[] as string[],//需要缓存的路由组件列表，须要在组件文件中设置name属性，并且name必须和组件对应的路由的name一致，路由的meta属性中也必须添加keepAlive:true
+    companyType:[] as any,//企业类型
   })
   const setTypeList = () => {
     return new Promise<any[]>((resolve, reject) => {
@@ -78,12 +79,27 @@ export const mainStore = defineStore('mainStore', () => {
       })
     })
   }
+  const getCAndC = ()=>{
+    return new Promise<number>((resolve, reject) => {
+      getCAndC_api().then((res:res)=>{
+        if(res.status == 1){
+          state.companyType = res.body.c_type
+          resolve(state.companyType)
+        }else{
+          reject(res.message)
+        }
+      }).catch(err=>{
+        reject(err)
+      })
+    })
+  }
   return {
     state,
     setTypeList,
     setAddressList,
     setKeepList,
     setUserinfo,
-    setUserLv
+    setUserLv,
+    getCAndC
   }
 })

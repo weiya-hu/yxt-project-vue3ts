@@ -62,10 +62,8 @@
   <el-table-column v-if="type==='operateLook'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
       <div v-for="(item,index) in operatButton" :key="index" class="operate-button" @click="operate(index,row)">{{row.status===2?item:row.status===0?'失败原因':'---'}}</div>
-      <!-- <div v-for="(item,index) in operatButton" :key="index" class="operate-button" @click="operate(index,row)">失败原因</div> -->
       <el-dialog v-model="errorShow" title="失败原因" width="400px">
         <div class="fcc msg">{{row.fail_reason}}</div>
-        <!-- <div class="fcc msg">row.fail_reason</div> -->
         <template #footer>
           <div class="fcc">
             <el-button type="primary" @click="errorShow=false">我知道了</el-button>
@@ -74,12 +72,43 @@
       </el-dialog>
     </template>
   </el-table-column>
-  
+  <el-table-column v-if="type==='industry_id'" :property="prop" :label="lable" :min-width="width">
+    <template #default="scope">
+      <div>{{getHashStr(scope.row.industry_id,typeHash,'last')}}</div>
+    </template>
+  </el-table-column>
+  <el-table-column  v-if="type==='city_id'" :property="prop" :label="lable" :min-width="width">
+    <template #default="{row}">
+      <el-tooltip effect="dark" placement="top">
+        <template #content>
+          <div style="width:100px">{{ row.province >0 && getHashStr(strToArr(row.province,row.city,row.district),addressHash)}}</div>
+        </template>
+        <div class="els2">{{ row.province >0 && getHashStr(strToArr(row.province,row.city,row.district),addressHash)}}</div>
+      </el-tooltip>
+    </template>
+  </el-table-column>
+  <el-table-column v-if="type==='source'" :property="prop" :label="lable" :min-width="width">
+    <template #default="{row}">
+      <div>{{getSource(row[prop])}}</div>
+    </template>
+  </el-table-column>
+  <el-table-column v-if="type==='company_type'" :property="prop" :label="lable" :min-width="width">
+    <template #default="{row}">
+      <div>{{getCompanyType(row[prop])}}</div>
+    </template>
+  </el-table-column>
 </template>
 
 <script setup lang="ts">
-  import { toRefs,ref} from 'vue'
+  import { toRefs,ref,computed} from 'vue'
   import {Format} from '@/utils/date'
+  import { mainStore } from '@/store/index'
+  import { getHashStr,strToArr,getSource} from '@/utils/index'
+
+  const store = mainStore()
+  const typeHash = computed(() => store.state.typeHash)
+  const addressHash = computed(() => store.state.addressHash)
+
   const props = withDefaults(defineProps<{
     type:string,
     lable?:string,
@@ -87,19 +116,27 @@
     width:number,
     operatButton?:string[]
   }>(),{})
-
+  const companyType = ref()
+  props.type==='company_type' && store.getCAndC().then(res=>{
+    companyType.value=res
+  })
   const errorShow = ref(false)
-
-
   const emit = defineEmits(['click'])
   const operate=(index:number,row:any)=>{
     (row.status===2) && emit('click',index,row);
-
     (row.status===0) && (errorShow.value = true)
-    //  errorShow.value = true
-
   }
   const {type,lable,prop,width,operatButton} =toRefs(props)
+  const getCompanyType=(val:any) =>{
+    if(val && companyType.value){
+      let name
+      companyType.value.forEach((m:any)=>{m.value == val && (name=m.name)})
+      return name
+    }else{
+       return '---'
+    }
+    
+  }
 
 </script>
 

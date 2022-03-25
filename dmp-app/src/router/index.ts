@@ -239,39 +239,39 @@ const routes = [
           },
         ]
       },
-      // {
-      //   path: '/seekPathPro',
-      //   name: '找渠道/项目',
-      //   redirect: '/seekPathPro/seekPath',
-      //   meta: { title: '找渠道/项目',lv:2 },
-      //   component: () => import('@/views/layout/seekPathPro/seekPathPro.vue'),
-      //   children:[
-      //     {
-      //       path: '/seekPathPro/seekPath',
-      //       name: '找渠道',
-      //       component: () => import('@/views/layout/seekPathPro/seekPath.vue'),
-      //       meta: { title: '找渠道' ,icon:myData2b ,icon_a:myData2b_a,lv:1 },
-      //     },
-      //     {
-      //       path: '/seekPathPro/seekPathDetail',
-      //       name: '找渠道详情',
-      //       component: () => import('@/views/layout/seekPathPro/seekPathDetail.vue'),
-      //       meta: { title: '找渠道详情',leftHidden:true ,father: '/seekPathPro/seekPath',lv:1},
-      //     },
-      //     {
-      //       path: '/seekPathPro/seekProject',
-      //       name: '找项目',
-      //       component: () => import('@/views/layout/seekPathPro/seekProject.vue'),
-      //       meta: { title: '找项目', icon:myData2c ,icon_a:myData2c_a,lv:1 },
-      //     },
-      //     {
-      //       path: '/seekPathPro/seekProjectDetail',
-      //       name: '找项目详情',
-      //       component: () => import('@/views/layout/seekPathPro/seekProjectDetail.vue'),
-      //       meta: { title: '找项目详情',leftHidden:true, father:'/seekPathPro/seekProject',lv:1 },
-      //     },
-      //   ]
-      // },
+      {
+        path: '/seekPathPro',
+        name: '找渠道/项目',
+        redirect: '/seekPathPro/seekPath',
+        meta: { title: '找渠道/项目',lv:2 },
+        component: () => import('@/views/layout/seekPathPro/seekPathPro.vue'),
+        children:[
+          {
+            path: '/seekPathPro/seekPath',
+            name: '找渠道',
+            component: () => import('@/views/layout/seekPathPro/seekPath.vue'),
+            meta: { title: '找渠道' ,icon:myData2b ,icon_a:myData2b_a,lv:2 },
+          },
+          {
+            path: '/seekPathPro/seekPathDetail',
+            name: '找渠道详情',
+            component: () => import('@/views/layout/seekPathPro/seekPathDetail.vue'),
+            meta: { title: '找渠道详情',leftHidden:true ,father: '/seekPathPro/seekPath',lv:2},
+          },
+          {
+            path: '/seekPathPro/seekProject',
+            name: '找项目',
+            component: () => import('@/views/layout/seekPathPro/seekProject.vue'),
+            meta: { title: '找项目', icon:myData2c ,icon_a:myData2c_a,lv:2 },
+          },
+          {
+            path: '/seekPathPro/seekProjectDetail',
+            name: '找项目详情',
+            component: () => import('@/views/layout/seekPathPro/seekProjectDetail.vue'),
+            meta: { title: '找项目详情',leftHidden:true, father:'/seekPathPro/seekProject',lv:2 },
+          },
+        ]
+      },
     ],
   },
   {

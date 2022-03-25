@@ -21,13 +21,13 @@ app
     locale: zhCn,
   })
   .directive('error', ErrorDirective)
-
 const store = mainStore()
 store.setUserinfo().then((res: boolean) => {
 
   store.setUserLv().then((userlv:number)=>{
     // 要在路由守卫创建之后再挂载路由
-    routerGuard(userlv)
+    // routerGuard(userlv)
+    routerGuard(3)
     app.use(router)
     app.mount('#app')
   }).catch((err)=>{
