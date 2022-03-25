@@ -100,8 +100,8 @@ export function getHash (arr:any[],key:string){
  * 获取哈希表中字符串，先getHash获取哈希表
  * @arr ['A','2'] 要查找的值组成的数组
  * @hash 哈希表，getHash获取
- * @type 返回的数据类型'arr'返回['xx','xx']，其他返回'xx,xx'
- * @return 'arr'返回['xx','xx']，'last'返回最后一位'xx'，其他返回'xx，xx'
+ * @type 返回的数据类型
+ * @return 根据type判断，'arr'返回['xx','xx']，'last'返回最后一位'xx'，其他返回'xx，xx'
 */
 export function getHashStr(arr:string[],hash:any,type?:string){
   //获取哈希表中arr对应的name字符串

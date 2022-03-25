@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts" setup>
+//富文本编辑器组件
 import tinymce from "tinymce/tinymce";
 import Editor from "@tinymce/tinymce-vue";
 import 'tinymce/themes/silver/theme' //编辑器主题
@@ -29,6 +30,8 @@ const props = withDefaults(defineProps<{
 })
 
 const upload = (blobInfo:any, success:Function, failure:Function, progress:any)=>{
+  console.log(blobInfo);
+  
   const fileName = blobInfo.filename()
   getAliToken_api({site:'cms_article'}).then(async (res:res)=>{
     if(res.status == 1){

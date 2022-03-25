@@ -1,1 +1,0 @@
-import{g as s,p as a}from"./index.aa2b542b.js";const e=a=>s("/cms/diy/page",a),d=s=>a("/cms/diy/save",s,!0),i=s=>a("/cms/diy/delete",s,!0),t=a=>s("/cms/diy/getAuditReturn",a);export{e as a,i as b,t as c,d};

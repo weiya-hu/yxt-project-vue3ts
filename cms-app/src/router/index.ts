@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { ElMessageBox } from 'element-plus'
+
 import rw_i from '@/assets/images/rw.png'
 import rw_a_i from '@/assets/images/rw_a.png'
 import tp_i from '@/assets/images/tp.png'
@@ -199,5 +201,31 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 })
+
+export const routerGuard = (userlv:number)=>{
+  //路由守卫
+  router.beforeEach((to, from) => {
+    if(to.meta.lv && (userlv < Number(to.meta.lv))){
+       ElMessageBox.confirm(
+        to.meta.lv == 2 ?'此功能模块需要完善企业信息才能使用，是否完善？':'此功能模块需要购买付费套餐才能使用，是否购买？',
+        '温馨提示',
+        {
+          confirmButtonText: to.meta.lv == 2 ?'去完善':'去购买',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      )
+      .then(() => {
+        window.open(to.meta.lv == 2?"//dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0":'//dev.yxtong.com/benefits.html')
+      })
+      .catch(() => {
+        router.replace(from.fullPath)
+      })
+      return false
+    }else{
+      window.document.title = to.meta.title ? (to.meta.title as string) : '康州数智CMS'
+    }
+  })
+}
 
 export default router

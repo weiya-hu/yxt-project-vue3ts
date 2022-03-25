@@ -37,8 +37,9 @@
               @change="upChange" 
               @error="upError" 
               @success="upSuccess" 
-              :exnameList="['.zip、', '.rar', '.7z']"
+              :exnameList="['.zip', '.rar', '.7z']"
               ref="upload"
+              :max-size="4"
             />
           </el-form-item>
         </el-form>
@@ -186,10 +187,9 @@ const upError = (err:any)=>{
 const upSuccess = async (path:string)=>{
   const res = await customAdd_api({
     attach_url:path,
-    content_type:props.type,
     detail:formValue.value.desc,
     title:formValue.value.title,
-  })
+  },props.type)
   loading.value = false
   if(res.status == 1){
     emit('submitSuccess')

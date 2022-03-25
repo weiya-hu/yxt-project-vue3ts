@@ -73,8 +73,7 @@ const getList = async ()=>{
   const res = await customList_api({
     size: 10,
     current: page.value,
-    content_type:2
-  })
+  },2)
   loading.value = false
   if(res.status == 1){
     totle.value = res.body.total
@@ -97,7 +96,7 @@ const goDel = (id:string)=>{
 }
 const sureDel = ()=>{
   //确认删除
-  customDel_api({id:delId.value}).then((res:res)=>{
+  customDel_api({id:delId.value},2).then((res:res)=>{
     if(res.status == 1){
       getList()
       delShow.value = false

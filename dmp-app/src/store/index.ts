@@ -7,7 +7,7 @@ import { getHash } from '@/utils/index'
 export const mainStore = defineStore('mainStore', () => {
   //这样写第一个参数就是$id
   const state = reactive({
-    userLv:0,//用户等级
+    userLv:1,//用户等级
     userInfo:{} as any,//用户信息
     companyInfo:{} as any,//公司信息
     typeList:[] as any[],//行业分类
@@ -58,19 +58,24 @@ export const mainStore = defineStore('mainStore', () => {
         }else{
           reject(false)
         }
+      }).catch(err=>{
+        reject(false)
       })
     })
   }
   const setUserLv = ()=>{
-    return new Promise<number>(async (resolve, reject) => {
-      const res = await getCompanyInfo()
-      if(res.status == 1){
-        state.companyInfo = res.body
-        state.userLv = res.body.id ? 3 : 1
-        resolve(state.userLv)
-      }else{
-        reject(res.message)
-      }
+    return new Promise<number>((resolve, reject) => {
+      getCompanyInfo().then((res:res)=>{
+        if(res.status == 1){
+          state.companyInfo = res.body
+          state.userLv = res.body.id ? 3 : 1
+          resolve(state.userLv)
+        }else{
+          reject(res.message)
+        }
+      }).catch(err=>{
+        reject(err)
+      })
     })
   }
   return {

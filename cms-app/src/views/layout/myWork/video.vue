@@ -61,12 +61,12 @@
         <MyUpload
           type="video"
           v-model="fileUrls"
-          :max-size="300"
+          :max-size="200"
           @error="upError"
           @success="upSuccess" 
           @change="upChange"
           :exnameList="exnameList"
-          :msg="'视频尺寸：宽高16:9或9:16；<br/>不超过300M；<br/>支持'+exnameList.join('、')+'格式'"
+          :msg="'视频尺寸：宽高16:9或9:16；<br/>不超过200M；<br/>支持'+exnameList.join('、')+'格式'"
           ref="upload"
         />
         <div class="fcs btns fjend">

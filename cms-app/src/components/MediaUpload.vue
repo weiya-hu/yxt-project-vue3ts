@@ -36,9 +36,11 @@ const props = withDefaults(defineProps<{
   exnameList?:string[],//支持的文件格式数组
   max?:number,//最大上传数
   msg?:string,//描述文字
+  maxSize?:number,//最大尺寸 单位M
 }>(),{
   exnameList:()=>['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG'],
   max:3,
+  maxSize:10
 })
 
 //upOneSuccess：上传单个图片成功后，返回文件地址和添加图片的个数；error：上传发生错误，返回错误；look：点击预览图片，返回图片blob地址数组和点击的图片下标
@@ -55,6 +57,9 @@ const upChange = (file: UploadFile, fileList: UploadFile[])=>{
     upload.value.handleRemove(file)
     errMsg('图片格式错误！')
     return
+  }
+  if(file.size && (file.size / 1024 / 1024) > props.maxSize){
+    errMsg(`图片文件大小不能超过${props.maxSize}M`)
   }
   imgs.value = fileList
   const el = document.querySelector('.el-upload--picture-card') as HTMLElement

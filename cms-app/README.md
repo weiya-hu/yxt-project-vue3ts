@@ -6,6 +6,7 @@
 mitt：组件通信器；
 vite-plugin-compression：vite插件压缩；
 vite-plugin-eslint：vite的ESLint插件。
+tinymce：富文本编辑器
 
 
 指令说明：
@@ -15,7 +16,7 @@ vite-plugin-eslint：vite的ESLint插件。
 "lint": lint规则代码检查及自动格式化，配置详见.eslintrc.js,
 "prettier": prettier规则代码检查及自动格式化，配置详见.prettierrc.js
 
-vue3增加的自定义指令： v-error = "boolean" errorRedo="emitName" errorRedo为重试事件名 使用 emiter.on('emitName', function...) 监听点击重试事件
+增加的自定义指令： v-error = "boolean" errorRedo="emitName" errorRedo为重试事件名 使用 emiter.on('emitName', function...) 监听点击重试事件
 
 commit之前请运行指令格式化
 

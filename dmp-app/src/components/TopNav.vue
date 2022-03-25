@@ -3,13 +3,13 @@
     <div class="item fcc" @click="changeNav(v.path)" v-for="v in nav" :key="v.path" :class="modelValue == v.path?'active':''">
       <span>{{v.name}}</span>
     </div>
-    <div class="line" :style="{left:left+'px'}" ref="line"></div>
+    <div class="line" :style="{transform:`translate(${left}px,0)`}" ref="line"></div>
   </div>
 </template>
 
 <script setup lang="ts">
 //布局的顶部导航
-import { ref ,onMounted,nextTick,watch } from 'vue'
+import { ref ,onMounted,nextTick } from 'vue'
 import {useRouter} from 'vue-router'
 
 const props = withDefaults(defineProps<{
@@ -35,7 +35,7 @@ let activeDom
 onMounted (() => {
   //解决刷新时顶部导航线条会从开始跳到激活位置
   setTimeout(() => {
-    line.value.style.transition = 'left 0.5s'
+    line.value.style.transition = 'transform 0.5s'
   }, 500);
   changeLeft()
 });
@@ -43,7 +43,7 @@ const changeLeft = ()=>{
   //改变顶部导航线条位置
   nextTick(()=>{
     activeDom = document.querySelector('.active') as HTMLElement
-    left.value = activeDom.offsetLeft +  activeDom.offsetWidth/2
+    left.value = activeDom.offsetLeft +  activeDom.offsetWidth/2 - 10
   })
 }
 
@@ -80,7 +80,7 @@ defineExpose({
       border-radius: 2px;
       background-color: $dfcolor;
       bottom: 16px;
-      transform: translate(-50%,0);
+      left: 0;
     }
   .active{
     color:$dfcolor;

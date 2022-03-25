@@ -51,9 +51,11 @@ const props = withDefaults(defineProps<{
   exnameList?:string[],//支持的文件格式数组
   downLink?:string,//下载模板链接
   msg?:string,//描述文字
+  maxSize?:number,//最大尺寸 单位M
 }>(),{
   modelValue:'',
-  exnameList:()=>['.zip、', '.rar', '.7z'],
+  exnameList:()=>['.zip', '.rar', '.7z'],
+  maxSize:4
 })
 
 const emit = defineEmits(['update:modelValue','change','error','success'])
@@ -77,7 +79,7 @@ const upChange = (file: UploadFile, list: UploadFile[])=>{
   const names = props.exnameList
   if(names.indexOf(exname)< 0 ){
     emit('change','type')
-  }else if((file.size / 1024 / 1024)>4){
+  }else if((file.size / 1024 / 1024) > props.maxSize){
     emit('change','size')
   }else{
     emit('change','')

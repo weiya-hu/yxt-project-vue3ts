@@ -64,7 +64,7 @@
             </el-checkbox-group>
           </el-form-item>
         </div>
-        <el-form-item label="企业类型" prop="ctype" style="width: 80%;">
+        <el-form-item label="企业类型" prop="ctype">
           <el-checkbox-group v-model="form.ctype">
             <el-checkbox :label="v.value" v-for="v in ctypeArr" :key="v.id">{{v.name}}</el-checkbox>
           </el-checkbox-group>

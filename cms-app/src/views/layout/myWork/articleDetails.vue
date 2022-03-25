@@ -27,7 +27,7 @@ const body = ref<{title:string,content:string}>({
   content:''
 })
 const getData = async ()=>{
-  const res = path == 'myWork' ? await articleDetail_api({id}) : await customDetails_api({id})
+  const res = path == 'myWork' ? await articleDetail_api({id}) : await customDetails_api({id},1)
   res.status == 1 && (body.value = res.body)
 }
 getData()

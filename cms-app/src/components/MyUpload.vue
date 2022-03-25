@@ -59,8 +59,8 @@ const props = withDefaults(defineProps<{
   maxSize?:number,//最大尺寸 单位M
 }>(),{
   modelValue:'',
-  exnameList:()=>['.zip、', '.rar', '.7z'],
-  maxSize:1
+  exnameList:()=>['.zip', '.rar', '.7z'],
+  maxSize:4
 })
 
 //change 文件改变时，返回错误类型； error 上传错误时，返回错误；success 上传成功后，返回文件地址
@@ -87,7 +87,7 @@ const upChange = (file: UploadFile, list: UploadFile[])=>{
   const names = props.exnameList
   if(names.indexOf(exname)< 0 ){
     emit('change','type')
-  }else if(file.size && (file.size / 1024 / 1024)>props.maxSize){
+  }else if(file.size && (file.size / 1024 / 1024) > props.maxSize){
     emit('change','size')
   }else{
     emit('change','')

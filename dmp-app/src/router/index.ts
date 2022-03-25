@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { ElMessageBox } from 'element-plus'
+
 import nav1_i from '@/assets/images/nav1.png'
 import nav1_a_i from '@/assets/images/nav1_a.png'
 import nav2_i from '@/assets/images/nav2.png'
@@ -237,39 +239,39 @@ const routes = [
           },
         ]
       },
-      {
-        path: '/seekPathPro',
-        name: '找渠道/项目',
-        redirect: '/seekPathPro/seekPath',
-        meta: { title: '找渠道/项目',lv:2 },
-        component: () => import('@/views/layout/seekPathPro/seekPathPro.vue'),
-        children:[
-          {
-            path: '/seekPathPro/seekPath',
-            name: '找渠道',
-            component: () => import('@/views/layout/seekPathPro/seekPath.vue'),
-            meta: { title: '找渠道' ,icon:myData2b ,icon_a:myData2b_a,lv:1 },
-          },
-          {
-            path: '/seekPathPro/seekPathDetail',
-            name: '找渠道详情',
-            component: () => import('@/views/layout/seekPathPro/seekPathDetail.vue'),
-            meta: { title: '找渠道详情',leftHidden:true ,father: '/seekPathPro/seekPath',lv:1},
-          },
-          {
-            path: '/seekPathPro/seekProject',
-            name: '找项目',
-            component: () => import('@/views/layout/seekPathPro/seekProject.vue'),
-            meta: { title: '找项目', icon:myData2c ,icon_a:myData2c_a,lv:1 },
-          },
-          {
-            path: '/seekPathPro/seekProjectDetail',
-            name: '找项目详情',
-            component: () => import('@/views/layout/seekPathPro/seekProjectDetail.vue'),
-            meta: { title: '找项目详情',leftHidden:true, father:'/seekPathPro/seekProject',lv:1 },
-          },
-        ]
-      },
+      // {
+      //   path: '/seekPathPro',
+      //   name: '找渠道/项目',
+      //   redirect: '/seekPathPro/seekPath',
+      //   meta: { title: '找渠道/项目',lv:2 },
+      //   component: () => import('@/views/layout/seekPathPro/seekPathPro.vue'),
+      //   children:[
+      //     {
+      //       path: '/seekPathPro/seekPath',
+      //       name: '找渠道',
+      //       component: () => import('@/views/layout/seekPathPro/seekPath.vue'),
+      //       meta: { title: '找渠道' ,icon:myData2b ,icon_a:myData2b_a,lv:1 },
+      //     },
+      //     {
+      //       path: '/seekPathPro/seekPathDetail',
+      //       name: '找渠道详情',
+      //       component: () => import('@/views/layout/seekPathPro/seekPathDetail.vue'),
+      //       meta: { title: '找渠道详情',leftHidden:true ,father: '/seekPathPro/seekPath',lv:1},
+      //     },
+      //     {
+      //       path: '/seekPathPro/seekProject',
+      //       name: '找项目',
+      //       component: () => import('@/views/layout/seekPathPro/seekProject.vue'),
+      //       meta: { title: '找项目', icon:myData2c ,icon_a:myData2c_a,lv:1 },
+      //     },
+      //     {
+      //       path: '/seekPathPro/seekProjectDetail',
+      //       name: '找项目详情',
+      //       component: () => import('@/views/layout/seekPathPro/seekProjectDetail.vue'),
+      //       meta: { title: '找项目详情',leftHidden:true, father:'/seekPathPro/seekProject',lv:1 },
+      //     },
+      //   ]
+      // },
     ],
   },
   {
@@ -283,5 +285,31 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 })
+
+export const routerGuard = (userlv:number)=>{
+  //路由守卫
+  router.beforeEach((to, from) => {
+    if(to.meta.lv && (userlv < Number(to.meta.lv))){
+       ElMessageBox.confirm(
+        to.meta.lv == 2 ?'此功能模块需要完善企业信息才能使用，是否完善？':'此功能模块需要购买付费套餐才能使用，是否购买？',
+        '温馨提示',
+        {
+          confirmButtonText: to.meta.lv == 2 ?'去完善':'去购买',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      )
+      .then(() => {
+        window.open(to.meta.lv == 2?"//dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0":'//dev.yxtong.com/benefits.html')
+      })
+      .catch(() => {
+        router.replace(from.fullPath)
+      })
+      return false
+    }else{
+      window.document.title = to.meta.title ? (to.meta.title as string) : '康州数智DMP'
+    }
+  })
+}
 
 export default router

@@ -88,5 +88,9 @@ const handleSelectionChange = (val:IData[]) => {
 </script>
 
 <style scoped lang="scss">
-
+.company_table{
+  :deep(.el-link.is-underline:hover:after){
+    border-bottom: none;
+  }
+}
 </style>
