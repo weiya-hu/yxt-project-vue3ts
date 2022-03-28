@@ -35,7 +35,7 @@
                 class="flex"
               >
                 <div class="upbox fcc">
-                  <img :src="titleImg" class="title_img" alt="" v-if="titleImg">
+                  <img :src="titleImg||aForm.thumb_url" class="title_img" alt="" v-if="titleImg||aForm.thumb_url">
                   <img :src="tp_i" alt="" v-else>
                 </div>
               </el-upload>
@@ -76,7 +76,10 @@ const id = route.query.id //有id就是编辑
 if(id){
   articleDetail_api({id:id as string}).then((res:res)=>{
     aForm.value = res.body
-    titleImg.value = res.body.thumb_url
+    if(res.body.thumb_url){
+      // titleImg.value = res.body.thumb_url
+      imgErrorType.value = ''
+    }
   })
 }
 
@@ -149,6 +152,7 @@ const handleExceed = (files:UploadFile[])=>{
 
 const upSuccess = (res: UploadProgressEvent, file: UploadFile)=>{
   //封面图片上传成功
+  titleImg.value = ''
   submitAddForm()
 }
 const upError = (err:any, file:UploadFile, fileList:UploadFile[])=>{
@@ -162,12 +166,14 @@ const submitAddForm = async ()=>{
   //提交表单
   console.log(aForm.value);
   const res = id ? await articleUpdate_api({...aForm.value,id}) : await articleAdd_api(aForm.value)
-  if(res.status == 1 && aForm.value.status == 2){
+  upLoading.value = false
+  if(res.status == 1 ){
     store.setKeepList([])
-    setTimeout(() => {
-      upLoading.value = false
-      router.replace('/myWork/article')
-    }, 1000);
+    if(aForm.value.status == 2){
+      setTimeout(() => {
+        router.replace('/myWork/article')
+      }, 1000);
+    }
   }
 }
 const hostUrl = ref('')//封面图片上传路径
@@ -177,8 +183,12 @@ const submit = (type:number)=>{
   aForm.value.status = type
   aFormRef.value.validate((valid: any) => {
     if (valid) {
-      console.log('submit!')
+      console.log('submit!',titleImg.value)
       upLoading.value = true
+      if(!titleImg.value){
+        submitAddForm()
+        return
+      }
       getAliToken_api({site:'cms_article'}).then((res:res)=>{
         if(res.status == 1){
           hostUrl.value = res.body.host
