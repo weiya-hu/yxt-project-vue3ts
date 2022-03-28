@@ -10,7 +10,6 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 
 import { mainStore } from '@/store/index'
 import { errMsg } from '@/utils/index'
-import { ElMessageBox } from 'element-plus'
 
 const app = createApp(App)
 

@@ -105,14 +105,14 @@ const submit = ()=>{
       if(res.status == 1){
         hostUrl.value = res.body.host
         upData.value = {
-          key:res.body.dir + res.body.uuid + file_exname.value,
+          key:res.body.dir + '/' + res.body.uuid + file_exname.value,
           OSSAccessKeyId: res.body.accessid,
           success_action_status: 200,
           policy:res.body.policy,
           signature:res.body.signature,
           'Content-Disposition': 'attachment; filename=' + encodeURIComponent(props.modelValue) //改变下载文件名
         }
-        resolve(res.body.host + '/' + res.body.dir + res.body.uuid + file_exname.value)
+        resolve(res.body.host + '/' + res.body.dir + '/' + res.body.uuid + file_exname.value)
       }else{
         reject(res.message)
       }

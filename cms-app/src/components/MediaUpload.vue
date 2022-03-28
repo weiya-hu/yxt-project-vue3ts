@@ -87,7 +87,7 @@ const upOneImg = async (file:UploadFile)=>{
     const exname=file.name.substring(file.name.lastIndexOf("."))
     const fd = new FormData();
     const upData = {
-      key: res.body.dir+res.body.uuid+exname,
+      key: res.body.dir + '/' + res.body.uuid + exname,
       OSSAccessKeyId: res.body.accessid,
       success_action_status: 200,
       policy: res.body.policy,
@@ -106,7 +106,7 @@ const upOneImg = async (file:UploadFile)=>{
       data: fd,
     })
     if(response.status == 200){
-      const url = res.body.host + '/' + res.body.dir + res.body.uuid + exname
+      const url = res.body.host + '/' + res.body.dir + '/' + res.body.uuid + exname
       filePath.push(url);
       //父组件内部去判断是否全部上传完成，因为上传成功后再走提交接口是个异步操作
       emit('upOneSuccess',url,imgs.value.length)

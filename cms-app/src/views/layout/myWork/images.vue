@@ -206,7 +206,7 @@ const upOneImg = async (file:UploadFile)=>{
     const exname=file.name.substring(file.name.lastIndexOf("."))
     const fd = new FormData();
     const upData = {
-      key: res.body.dir+res.body.uuid+exname,
+      key: res.body.dir + '/' + res.body.uuid + exname,
       OSSAccessKeyId: res.body.accessid,
       success_action_status: 200,
       policy: res.body.policy,
@@ -225,7 +225,7 @@ const upOneImg = async (file:UploadFile)=>{
       data: fd,
     })
     if(response.status == 200){
-      const oneUrl = res.body.host + '/' + res.body.dir + res.body.uuid + exname
+      const oneUrl = res.body.host + '/' + res.body.dir + '/' + res.body.uuid + exname
       filePath.push(oneUrl)
       const oneRes:res = await imagesAdd_api({thumb_url: oneUrl})
       return Promise.resolve(oneUrl)

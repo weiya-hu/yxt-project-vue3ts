@@ -46,7 +46,7 @@
             <el-input v-model="aForm.title" placeholder="请输入文章标题（5~30个字）"></el-input>
           </el-form-item>
           <el-form-item label="文章内容" prop="content">
-            <Edit v-model="aForm.content"/>
+            <Edit v-model="aForm.content" ref="editRef"/>
           </el-form-item>
         </el-form>
         <div class="fjend btns">
@@ -119,7 +119,7 @@ const aRules = {
   ],
   title:[
     { required: true, message: '请输入文章标题（5~30个字）', trigger: 'blur' },
-    { min: 3, max: 30, message: '长度需要在 5 ~ 30 字之间', trigger: 'blur' }
+    { min: 5, max: 30, message: '长度需要在 5 ~ 30 字之间', trigger: 'blur' }
   ],
   content:[
     { required: true, message: '请输入文章内容', trigger: 'blur' }
@@ -169,22 +169,22 @@ const submitAddForm = async ()=>{
   upLoading.value = false
   if(res.status == 1 ){
     store.setKeepList([])
-    if(aForm.value.status == 2){
-      setTimeout(() => {
-        router.replace('/myWork/article')
-      }, 1000);
-    }
+    router.replace('/myWork/article')
   }
 }
 const hostUrl = ref('')//封面图片上传路径
 const upData = ref({})//封面图片上传参数
-const submit = (type:number)=>{
+const editRef = ref() // 富文本组件ref
+const submit = async (type:number)=>{
   //点击提交
+  
   aForm.value.status = type
-  aFormRef.value.validate((valid: any) => {
+  aFormRef.value.validate(async (valid: any) => {
     if (valid) {
       console.log('submit!',titleImg.value)
       upLoading.value = true
+      await editRef.value.upImages()
+      editRef.value.clearImgs()
       if(!titleImg.value){
         submitAddForm()
         return
@@ -193,13 +193,13 @@ const submit = (type:number)=>{
         if(res.status == 1){
           hostUrl.value = res.body.host
           upData.value = {
-            key:res.body.dir + res.body.uuid + timg_exname.value,
+            key:res.body.dir + '/' + res.body.uuid + timg_exname.value,
             OSSAccessKeyId: res.body.accessid,
             success_action_status: 200,
             policy:res.body.policy,
             signature:res.body.signature,
           }
-          aForm.value.thumb_url = res.body.host + '/' + res.body.dir + res.body.uuid + timg_exname.value
+          aForm.value.thumb_url = res.body.host + '/' + res.body.dir + '/' + res.body.uuid + timg_exname.value
           upload.value!.submit()
         }else{
           errMsg('上传参数获取失败')
