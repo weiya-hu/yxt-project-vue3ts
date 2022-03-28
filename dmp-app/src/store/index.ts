@@ -2,12 +2,13 @@ import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import { getIndustryList_api, getAddreList_api ,getCAndC_api} from '@/api/findB'
 import { getUserInfo, getCompanyInfo } from '@/api/login'
+import { countryList} from '@/api/seekAbroad'
 import { getHash } from '@/utils/index'
 
 export const mainStore = defineStore('mainStore', () => {
   //这样写第一个参数就是$id
   const state = reactive({
-    userLv:1,//用户等级
+    userLv:3,//用户等级
     userInfo:{} as any,//用户信息
     companyInfo:{} as any,//公司信息
     typeList:[] as any[],//行业分类
@@ -16,6 +17,7 @@ export const mainStore = defineStore('mainStore', () => {
     addressHash:{} as any,//地区列表哈希表
     keepList:[] as string[],//需要缓存的路由组件列表，须要在组件文件中设置name属性，并且name必须和组件对应的路由的name一致，路由的meta属性中也必须添加keepAlive:true
     companyType:[] as any,//企业类型
+    countryList:[] as any,//国家列表
   })
   const setTypeList = () => {
     return new Promise<any[]>((resolve, reject) => {
@@ -84,7 +86,21 @@ export const mainStore = defineStore('mainStore', () => {
       getCAndC_api().then((res:res)=>{
         if(res.status == 1){
           state.companyType = res.body.c_type
-          resolve(state.companyType)
+          resolve(res.body.c_type)
+        }else{
+          reject(res.message)
+        }
+      }).catch(err=>{
+        reject(err)
+      })
+    })
+  }
+  const getCountryList = ()=>{
+    return new Promise<number>((resolve, reject) => {
+      countryList().then((res:res)=>{
+        if(res.status == 1){
+          state.countryList = res.body
+          resolve(res.body)
         }else{
           reject(res.message)
         }
@@ -100,6 +116,7 @@ export const mainStore = defineStore('mainStore', () => {
     setKeepList,
     setUserinfo,
     setUserLv,
-    getCAndC
+    getCAndC,
+    getCountryList
   }
 })

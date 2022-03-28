@@ -21,7 +21,7 @@
 import {ref} from 'vue'
 import MyDataTable from '@/components/MyDataTable.vue'
 import MyPage from '@/components/MyPage.vue'
-import {channelDetailPage} from '@/api/seekPathPro'
+import {overseasDetailPage} from '@/api/seekAbroad'
 import {useRoute} from 'vue-router'
 import MyEmpty from "@/components/MyEmpty.vue";
 import FindNumber from "@/components/FindNumber.vue";
@@ -38,19 +38,15 @@ const tableTitle=ref([
   {type:'text',lable:'企业名称',prop:'name',width:130},
   {type:'text',lable:'联系人',prop:'contact',width:74},
   {type:'text',lable:'联系方式',prop:'mobiles',width:100},
-  {type:'text',lable:'固定电话',prop:'telephone',width:100},
-  {type:'industry_id',lable:'行业分类',prop:'industry_id',width:100},
-  {type:'city_id',lable:'地区',prop:'city',width:110},
-  {type:'text',lable:'详细地址',prop:'address',width:140},
-  {type:'company_type',lable:'企业类型',prop:'company_type',width:120},
-  {type:'text',lable:'统一社会信用代码',prop:'code',width:170},
+  {type:'text',lable:'邮箱',prop:'email',width:100},
+  {type:'country',lable:'地区',prop:'country_id',width:110},
+  {type:'text',lable:'公司地址',prop:'address',width:140},
   {type:'link',lable:'企业官网',prop:'url',width:150},
-  {type:'text-tooltip',lable:'经营范围',prop:'business_scope',width:200},
-  {type:'text',lable:'主营产品',prop:'sell_product',width:120},
-  {type:'text',lable:'代理产品',prop:'agent_product',width:120},
-  {type:'text',lable:'销售国家',prop:'business_countries',width:120},
-  {type:'text',lable:'销售城市',prop:'business_city',width:120},
-  {type:'source',lable:'来源',prop:'source',width:120},
+  {type:'text-tooltip',lable:'HS编码',prop:'code',width:120},
+  {type:'text',lable:'数量',prop:'product_number',width:90}, 
+  {type:'text',lable:'重量（kg）',prop:'product_weight',width:100},
+  {type:'text',lable:'出货港口',prop:'shipment_port',width:120},
+  {type:'text',lable:'卸货港口',prop:'unload_port',width:120},
 ])
 const tableList=ref([])
 
@@ -63,7 +59,7 @@ const getDetailList=async()=>{
     size:10,
     id:route.query.id
   }
-  const {status,body}=await channelDetailPage(data)
+  const {status,body}=await overseasDetailPage(data)
   loading.value=false
   if(status){
     total.value=body.total

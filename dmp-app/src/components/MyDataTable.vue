@@ -97,6 +97,11 @@
       <div>{{getCompanyType(row[prop])}}</div>
     </template>
   </el-table-column>
+  <el-table-column v-if="type==='country'" :property="prop" :label="lable" :min-width="width">
+    <template #default="{row}">
+      <div>{{getCountry(row[prop])}}</div>
+    </template>
+  </el-table-column>
 </template>
 
 <script setup lang="ts">
@@ -109,6 +114,8 @@
   const typeHash = computed(() => store.state.typeHash)
   const addressHash = computed(() => store.state.addressHash)
 
+  
+  
   const props = withDefaults(defineProps<{
     type:string,
     lable?:string,
@@ -116,17 +123,25 @@
     width:number,
     operatButton?:string[]
   }>(),{})
+  const {type,lable,prop,width,operatButton} =toRefs(props)
   const companyType = ref()
-  props.type==='company_type' && store.getCAndC().then(res=>{
-    companyType.value=res
-  })
+    const country=ref()
   const errorShow = ref(false)
+
+  props.type==='company_type' && (store.getCAndC().then(res=>{
+    companyType.value=res
+  }))
+  props.type==='country' && (store.getCountryList().then(res=>{
+    country.value=res
+  }))
+
   const emit = defineEmits(['click'])
+
   const operate=(index:number,row:any)=>{
     (row.status===2) && emit('click',index,row);
     (row.status===0) && (errorShow.value = true)
   }
-  const {type,lable,prop,width,operatButton} =toRefs(props)
+
   const getCompanyType=(val:any) =>{
     if(val && companyType.value){
       let name
@@ -135,7 +150,17 @@
     }else{
        return '---'
     }
-    
+  }
+
+  const getCountry=(val:any) =>{
+    if(val && country.value){
+      let name
+      country.value.forEach((m:any)=>{m.code == val && (name=m.country_name)})
+      
+      return name
+    }else{
+       return '---'
+    }
   }
 
 </script>

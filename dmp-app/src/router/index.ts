@@ -30,6 +30,11 @@ import myData2b_a from '@/assets/images/myData2b_a.png'
 import myData2c_a from '@/assets/images/myData2c_a.png'
 import myData2b from '@/assets/images/myData2b.png'
 import myData2c from '@/assets/images/myData2c.png'
+import seekpath from '@/assets/images/seekpath.png'
+import seekpath_a from '@/assets/images/seekpath_a.png'
+import seekpro from '@/assets/images/seekpro.png'
+import seekpro_a from '@/assets/images/seekpro_a.png'
+
 
 const routes = [
   {
@@ -250,7 +255,7 @@ const routes = [
             path: '/seekPathPro/seekPath',
             name: '找渠道',
             component: () => import('@/views/layout/seekPathPro/seekPath.vue'),
-            meta: { title: '找渠道' ,icon:myData2b ,icon_a:myData2b_a,lv:2 },
+            meta: { title: '找渠道' ,icon:seekpath ,icon_a:seekpath_a,lv:2 },
           },
           {
             path: '/seekPathPro/seekPathDetail',
@@ -262,13 +267,46 @@ const routes = [
             path: '/seekPathPro/seekProject',
             name: '找项目',
             component: () => import('@/views/layout/seekPathPro/seekProject.vue'),
-            meta: { title: '找项目', icon:myData2c ,icon_a:myData2c_a,lv:2 },
+            meta: { title: '找项目', icon:seekpro ,icon_a:seekpro_a,lv:2 },
           },
           {
             path: '/seekPathPro/seekProjectDetail',
             name: '找项目详情',
             component: () => import('@/views/layout/seekPathPro/seekProjectDetail.vue'),
             meta: { title: '找项目详情',leftHidden:true, father:'/seekPathPro/seekProject',lv:2 },
+          },
+        ]
+      },
+      {
+        path: '/seekAbroad',
+        name: '找海外',
+        redirect: '/seekAbroad/buyer',
+        meta: { title: '找海外',lv:2 },
+        component: () => import('@/views/layout/seekAbroad/seekAbroad.vue'),
+        children:[
+          {
+            path: '/seekAbroad/buyer',
+            name: '采购商',
+            component: () => import('@/views/layout/seekAbroad/buyer.vue'),
+            meta: { title: '采购商' ,icon:myData2b ,icon_a:myData2b_a,lv:2 },
+          },
+          {
+            path: '/seekAbroad/buyerDetail',
+            name: '采购商详情',
+            component: () => import('@/views/layout/seekAbroad/buyerDetail.vue'),
+            meta: { title: '采购商详情',leftHidden:true ,father: '/seekAbroad/buyer',lv:2},
+          },
+          {
+            path: '/seekAbroad/supplier',
+            name: '供应商',
+            component: () => import('@/views/layout/seekAbroad/supplier.vue'),
+            meta: { title: '供应商', icon:myData2c ,icon_a:myData2c_a,lv:2 },
+          },
+          {
+            path: '/seekAbroad/supplierDetail',
+            name: '供应商详情',
+            component: () => import('@/views/layout/seekAbroad/supplierDetail.vue'),
+            meta: { title: '供应商详情',leftHidden:true, father:'/seekAbroad/supplier',lv:2 },
           },
         ]
       },

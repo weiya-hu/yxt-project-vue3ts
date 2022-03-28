@@ -233,6 +233,9 @@ img{
       height: 130px;
     }
   }
+  .el-select{
+    width: 100%;
+  }
 }
 .upload-users{
   .el-form-item__content{
