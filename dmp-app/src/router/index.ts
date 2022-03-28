@@ -34,6 +34,10 @@ import seekpath from '@/assets/images/seekpath.png'
 import seekpath_a from '@/assets/images/seekpath_a.png'
 import seekpro from '@/assets/images/seekpro.png'
 import seekpro_a from '@/assets/images/seekpro_a.png'
+import buyer from '@/assets/images/buyer.png'
+import buyer_a from '@/assets/images/buyer_a.png'
+import supplier from '@/assets/images/supplier.png'
+import supplier_a from '@/assets/images/supplier_a.png'
 
 
 const routes = [
@@ -288,7 +292,7 @@ const routes = [
             path: '/seekAbroad/buyer',
             name: '采购商',
             component: () => import('@/views/layout/seekAbroad/buyer.vue'),
-            meta: { title: '采购商' ,icon:myData2b ,icon_a:myData2b_a,lv:2 },
+            meta: { title: '采购商' ,icon:buyer ,icon_a:buyer_a,lv:2 },
           },
           {
             path: '/seekAbroad/buyerDetail',
@@ -300,7 +304,7 @@ const routes = [
             path: '/seekAbroad/supplier',
             name: '供应商',
             component: () => import('@/views/layout/seekAbroad/supplier.vue'),
-            meta: { title: '供应商', icon:myData2c ,icon_a:myData2c_a,lv:2 },
+            meta: { title: '供应商', icon:supplier ,icon_a:supplier_a,lv:2 },
           },
           {
             path: '/seekAbroad/supplierDetail',
