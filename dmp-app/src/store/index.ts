@@ -8,7 +8,7 @@ import { getHash } from '@/utils/index'
 export const mainStore = defineStore('mainStore', () => {
   //这样写第一个参数就是$id
   const state = reactive({
-    userLv:3,//用户等级
+    userLv:1,//用户等级
     userInfo:{} as any,//用户信息
     companyInfo:{} as any,//公司信息
     typeList:[] as any[],//行业分类

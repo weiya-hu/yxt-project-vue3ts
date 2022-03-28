@@ -21,27 +21,25 @@ app
     locale: zhCn,
   })
   .directive('error', ErrorDirective)
-  app.use(router)
-    app.mount('#app')
 const store = mainStore()
-// store.setUserinfo().then((res: boolean) => {
+store.setUserinfo().then((res: boolean) => {
 
-//   store.setUserLv().then((userlv:number)=>{
-//     // 要在路由守卫创建之后再挂载路由
-//     // routerGuard(userlv)
-//     routerGuard(3)
-//     app.use(router)
-//     app.mount('#app')
-//   }).catch((err)=>{
-//     routerGuard(1)
-//     app.use(router)
-//     app.mount('#app')
-//     errMsg('获取企业认证信息失败')
-//   })
+  store.setUserLv().then((userlv:number)=>{
+    // 要在路由守卫创建之后再挂载路由
+    // routerGuard(userlv)
+    routerGuard(3)
+    app.use(router)
+    app.mount('#app')
+  }).catch((err)=>{
+    routerGuard(1)
+    app.use(router)
+    app.mount('#app')
+    errMsg('获取企业认证信息失败')
+  })
 
-// }).catch((error: boolean) => {
-//   errMsg('请登录后在使用')
-//   setTimeout(() => {
-//     window.location.href = 'https://dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
-//   }, 2000);
-// })
+}).catch((error: boolean) => {
+  errMsg('请登录后在使用')
+  setTimeout(() => {
+    window.location.href = 'https://dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
+  }, 2000);
+})
