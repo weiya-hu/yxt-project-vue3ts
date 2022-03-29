@@ -79,7 +79,8 @@ export default class ImageCompress {
    * 转为Blob
    */
   dataURLtoBlob(dataURL: string, fileType: any) {
-    const byteString = atob(dataURL.split(',')[1])
+    // const byteString = atob(dataURL.split(',')[1])
+    const byteString = Buffer.from(dataURL.split(',')[1], 'base64').toString('base64')
     let mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0]
     const ab = new ArrayBuffer(byteString.length)
     const ia = new Uint8Array(ab)

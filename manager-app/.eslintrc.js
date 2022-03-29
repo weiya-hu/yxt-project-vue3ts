@@ -25,7 +25,7 @@ module.exports = {
   // eslint-plugin-vue @typescript-eslint/eslint-plugin eslint-plugin-prettier的缩写
   plugins: ['vue', '@typescript-eslint', 'prettier'],
   rules: {
-    //强制vue组件名妥否IndexHome
+    //强制vue组件名格式为：IndexHome
     'vue/multi-word-component-names': 0,
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/no-unused-vars': 'off',

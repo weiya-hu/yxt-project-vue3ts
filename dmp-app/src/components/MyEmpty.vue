@@ -6,7 +6,10 @@
 </template>
 
 <script setup lang="ts">
-//空状态组件
+/**
+ * 空状态组件
+ * @author chn 
+*/
 import empty_i from '@/assets/images/empty.png'
 </script>
 

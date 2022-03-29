@@ -22,7 +22,10 @@
 </template>
 
 <script setup lang="ts">
-//行业、地区级联选择组件
+/**
+ * 行业、地区级联选择组件
+ * @author chn 
+*/
 import { mainStore } from '@/store/index'
 import { ref ,computed } from 'vue'
 const props = withDefaults(defineProps<{

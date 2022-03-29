@@ -202,7 +202,7 @@ const router = createRouter({
   routes,
 })
 
-export const routerGuard = (userlv:number)=>{
+export const routerGuard = (userlv:number,url:any)=>{
   //路由守卫
   router.beforeEach((to, from) => {
     if(to.meta.lv && (userlv < Number(to.meta.lv))){
@@ -216,7 +216,7 @@ export const routerGuard = (userlv:number)=>{
         }
       )
       .then(() => {
-        window.open(to.meta.lv == 2?"//dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0":'//dev.yxtong.com/benefits.html')
+        window.open(to.meta.lv == 2?`//${url.domain_user}/app/user?navActiveIndex=4&asideActive=0`:`//${url.domain_user}/benefits.html`)
       })
       .catch(() => {
         router.replace(from.fullPath)

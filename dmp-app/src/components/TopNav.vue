@@ -8,7 +8,10 @@
 </template>
 
 <script setup lang="ts">
-//布局的顶部导航
+/**
+ * 布局的顶部导航
+ * @author chn 
+*/
 import { ref ,onMounted,nextTick } from 'vue'
 import {useRouter} from 'vue-router'
 

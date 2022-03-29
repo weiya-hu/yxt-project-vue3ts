@@ -126,7 +126,10 @@
 </template>
 
 <script setup lang="ts">
-//布局内容中的头部搜索组件
+/**
+ * 布局内容中的头部搜索组件
+ * @author chn 
+*/
 import { Search , CloseBold , ArrowDown} from '@element-plus/icons-vue'
 import { reactive, ref , computed } from 'vue'
 import type { ElForm } from 'element-plus'

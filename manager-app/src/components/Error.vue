@@ -9,6 +9,10 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * v-error="true" 后加载的错误组件
+ * @author chn 
+*/
 import { ElButton, ElResult } from 'element-plus'
 import emiter from '@/utils/bus'
 import { ref } from 'vue'
@@ -20,7 +24,7 @@ const setFunctionName = (name: string) => {
   reDoFunctionName.value = name
 }
 defineExpose({
-  setFunctionName,
+  setFunctionName, // 设置emiter函数名
 })
 </script>
 

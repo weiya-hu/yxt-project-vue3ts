@@ -65,7 +65,10 @@
 </template>
 
 <script setup lang="ts">
-//公司表格
+/**
+ * 公司表格
+ * @author chn 
+*/
 import { ref,computed } from 'vue'
 import { mainStore } from '@/store/index'
 import { getHashStr,strToArr,getSource} from '@/utils/index'

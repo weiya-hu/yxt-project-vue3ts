@@ -48,9 +48,9 @@
               </div>
             </div>
             <div class="loginbtn fcc" v-else>
-              <el-link type="primary" href="//dev.yxtong.com/app/login">登录</el-link>
+              <el-link type="primary" :href="'//' + urlInfo.domain_user + '/app/login'">登录</el-link>
               &ensp;/&ensp;
-              <el-link type="primary" href="//dev.yxtong.com/app/register/register">注册</el-link>
+              <el-link type="primary" :href="'//' + urlInfo.domain_user + '/app/register/register'">注册</el-link>
             </div>
           </div>
         </div>
@@ -103,10 +103,11 @@ const goOther = (href:string)=>{
 }
 
 const goCompany = ()=>{
-  window.open("//dev.yxtong.com/app/user?navActiveIndex=4&asideActive=0")
+  window.open("//" +  urlInfo.value.domain_user + "/app/user?navActiveIndex=4&asideActive=0")
 }
 
 const store = mainStore()
+const urlInfo = computed(()=>store.state.yxtUrl)
 
 const route = useRoute()
 const router = useRouter()
@@ -178,7 +179,7 @@ const companyInfo = computed(()=>store.state.companyInfo)
 const loginout = ()=>{
   loginOut_api().then((res:res)=>{
     if(res.status == 1){
-      window.location.href = '//dev.yxtong.com/app/login?url=https://dmp.yxtong.com/index'
+      window.location.href = `//${urlInfo.value.domain_user}/app/login?url=//${urlInfo.value.domain_dmp}/index`
     }
   })
 }

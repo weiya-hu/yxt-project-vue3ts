@@ -24,7 +24,10 @@
 </template>
 
 <script setup lang="ts">
-//图片上传组件
+/**
+ * 图片上传组件
+ * @author chn 
+*/
 import { ref } from 'vue'
 import { Plus  } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'

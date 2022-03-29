@@ -40,7 +40,10 @@
 </template>
 
 <script setup lang="ts">
-//上传组件
+/**
+ * 上传组件
+ * @author chn 
+*/
 import { ref } from 'vue'
 import { Plus ,Document } from '@element-plus/icons-vue'
 import type { UploadFile,ElUploadProgressEvent } from 'element-plus/es/components/upload/src/upload.type'

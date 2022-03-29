@@ -17,6 +17,10 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 左侧导航
+ * @author chn 
+*/
 import { computed } from 'vue'
 import { mainStore } from '@/store/index'
 

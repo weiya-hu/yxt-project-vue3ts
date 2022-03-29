@@ -21,23 +21,24 @@ app
   .directive('error', ErrorDirective)
 
 const store = mainStore()
-store.setUserinfo().then((res: boolean) => {
-
-  store.setUserLv().then((userlv:number)=>{
-    // 要在路由守卫创建之后再挂载路由
-    routerGuard(userlv)
-    app.use(router)
-    app.mount('#app')
-  }).catch((err)=>{
-    routerGuard(1)
-    app.use(router)
-    app.mount('#app')
-    errMsg('获取企业认证信息失败')
+store.getYxtUrl().then((url:any)=>{
+  localStorage.setItem('yxtUrl',JSON.stringify(url))
+  store.setUserinfo().then((res:boolean) => {
+    store.setUserLv().then((userlv:number)=>{
+      // 要在路由守卫创建之后再挂载路由
+      routerGuard(userlv,url)
+      app.use(router)
+      app.mount('#app')
+    }).catch((err)=>{
+      routerGuard(1,url)
+      app.use(router)
+      app.mount('#app')
+      errMsg('获取企业认证信息失败')
+    })
+  }).catch((error: boolean) => {
+    errMsg('请登录后在使用')
+    setTimeout(() => {
+      window.location.href = `//${url.domain_user}/app/login?url=//${url.domain_dmp}/index`
+    }, 2000);
   })
-
-}).catch((error: boolean) => {
-  errMsg('请登录后在使用')
-  setTimeout(() => {
-    window.location.href = 'https://dev.yxtong.com/app/login?url=https://cms.yxtong.com/index'
-  }, 2000);
 })

@@ -1,1 +1,0 @@
-import{x as a,y as d}from"./index.309d5df4.js";const n=d=>a("/dmp/channel/demand.page",d),e=d=>a("/dmp/channel/demand/detail.page",d),m=a=>d("/dmp/channel/demand.del",a,!0),p=a=>d("/dmp/channel/demand.in",a,!0);export{m as a,p as b,n as c,e as d};

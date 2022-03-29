@@ -37,10 +37,12 @@
 </template>
 
 <script setup lang="ts">
-//客户表格
+/**
+ * 客户表格
+ * @author chn 
+*/
 import { ref,computed } from 'vue'
 import MyEmpty from "@/components/MyEmpty.vue";
-import { formatDate } from '@/utils/date'
 import { mainStore } from '@/store/index'
 import {getHashStr,strToArr,getSource} from '@/utils/index'
 const store = mainStore()

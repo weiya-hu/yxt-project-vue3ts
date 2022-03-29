@@ -9,7 +9,10 @@
 </template>
 
 <script setup lang="ts">
-//v-error="true" 后加载的错误组件
+/**
+ * v-error="true" 后加载的错误组件
+ * @author chn 
+*/
 import { ElButton, ElResult } from 'element-plus'
 import emiter from '@/utils/bus'
 import { ref } from 'vue'

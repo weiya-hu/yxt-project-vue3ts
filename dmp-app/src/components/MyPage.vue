@@ -6,7 +6,10 @@
 </template>
 
 <script setup lang="ts">
-//分页组件
+/**
+ * 分页组件
+ * @author chn 
+*/
 import { ref } from 'vue'
 const props = withDefaults(defineProps<{
   modelValue:number,

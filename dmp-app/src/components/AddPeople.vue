@@ -37,7 +37,10 @@
 </template>
 
 <script setup lang="ts">
-//添加人群表单
+/**
+ * 添加人群表单
+ * @author chn 
+*/
 import { reactive, ref  } from 'vue'
 import MyCascader from "@/components/MyCascader.vue";
 import MyUpload from "@/components/MyUpload.vue";

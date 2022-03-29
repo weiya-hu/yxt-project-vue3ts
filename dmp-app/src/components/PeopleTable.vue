@@ -86,7 +86,10 @@
 </template>
 
 <script setup lang="ts">
-//人群表格
+/**
+ * 人群表格
+ * @author chn 
+*/
 import { ref ,computed} from 'vue'
 import MyEmpty from "@/components/MyEmpty.vue";
 import { formatDate } from '@/utils/date'

@@ -34,3 +34,8 @@ export const getIndustryList_api = (): Promise<any> => {
 export const getAddreList_api = (): Promise<any> => {
   return get('/dim/geo.list')
 }
+
+//获取跳转地址
+export const getYxtUrl_api = (): Promise<any> => {
+  return get('/user/public/env.get')
+}

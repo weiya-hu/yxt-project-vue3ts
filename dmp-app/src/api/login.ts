@@ -19,3 +19,8 @@ export const getUserInfo = (): Promise<any> => {
 export const loginOut_api = (): Promise<any> => {
   return get('/login/out.do',{},true)
 }
+
+//获取跳转地址
+export const getYxtUrl_api = (): Promise<any> => {
+  return get('/user/public/env.get')
+}

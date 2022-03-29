@@ -1,9 +1,12 @@
 import { createApp } from 'vue'
 import { addClass, removeClass } from '@/utils/dom.js'
 import Error from '@/components/Error.vue'
+/**
+ * 自定义指令v-error
+ * @author chn 
+*/
 
-// 一个全局的 position: reactive 的样式类
-const relativeCls = 'p-relative'
+const relativeCls = 'p-relative' // 一个全局的 position: reactive 的样式类
 
 function createStatusDirective(Comp: any, className?: any) {
   const name = Comp.name
