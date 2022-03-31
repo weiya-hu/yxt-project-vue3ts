@@ -38,7 +38,7 @@ store.getYxtUrl().then((url:any)=>{
   }).catch((error: boolean) => {
     errMsg('请登录后在使用')
     setTimeout(() => {
-      window.location.href = `//${url.domain_user}/app/login?url=//${url.domain_dmp}/index`
+      window.location.href = `//${url.domain_user}/app/login?url=${encodeURIComponent('//' + url.domain_cms + '/index')}`
     }, 2000);
   })
 })

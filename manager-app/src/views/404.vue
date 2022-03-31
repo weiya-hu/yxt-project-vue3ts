@@ -1,6 +1,14 @@
 <template>
   <div class="page_404 fcc">
-    404
+    <el-result
+      icon="error"
+      title="Error 404"
+      sub-title="未找到页面，请检查浏览器地址"
+    >
+      <template #extra>
+        <el-button type="primary" @click="$router.back">返回</el-button>
+      </template>
+    </el-result>
   </div>
 </template>
 
@@ -10,7 +18,6 @@
 
 <style lang="scss" scoped>
 .page_404 {
-  font-size: 50px;
   height: 100%;
 }
 </style>

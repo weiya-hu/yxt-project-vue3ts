@@ -180,7 +180,7 @@ img{
     border-bottom: 1px solid $coloreee;
     .el-dialog__title{
       font-size: 16px;
-      color: #333;
+      color: $color333;
       font-weight: 600;
     }
   }
@@ -220,5 +220,74 @@ img{
 }
 .el-dialog__header{
   margin-right: 0!important;
+}
+.bgline{
+  height: 20px;
+  width: 1px;
+  margin:0 20px;
+  background-color: $color333;
+}
+.fw600{
+  font-weight: 600;
+}
+.chover{
+  &:hover{
+    color: $dfcolor;
+    cursor: pointer;
+    transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+}
+.mycard{
+  .el-card__header{
+    font-size: 20px;
+    font-weight: 600;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .el-card__body{
+    padding-top: 10px;
+    .el-descriptions__label{
+      display: inline-block;
+      width: 100px;
+    }
+    .el-descriptions__content{
+      padding-left: 10px;
+      border-left: 1px solid $color999;
+    }
+  }
+}
+.mt20{
+  margin-top: 20px;
+}
+.mb20{
+  margin-bottom: 20px;
+}
+.ml20{
+  margin-left: 20px;
+}
+.mr20{
+  margin-right: 20px;
+}
+.pt20{
+  padding-top: 20px;
+}
+.pb20{
+  padding-bottom: 20px;
+}
+.pl20{
+  padding-left: 20px;
+}
+.pr20{
+  padding-right: 20px;
+}
+.mytabs{
+  .el-tabs__header{
+    .el-tabs__item{
+      font-size: 18px;
+    }
+  }
+  .is-active{
+    font-weight: 600;
+  }
 }
 </style>

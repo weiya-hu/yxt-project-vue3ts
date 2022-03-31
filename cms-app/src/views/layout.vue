@@ -103,7 +103,7 @@ const goOther = (href:string)=>{
 }
 
 const goCompany = ()=>{
-  window.open("//" +  urlInfo.value.domain_user + "/app/user?navActiveIndex=4&asideActive=0")
+  window.open("//" +  urlInfo.value.domain_user + "/app/user?componentId=611")
 }
 
 const store = mainStore()
@@ -166,7 +166,7 @@ const companyInfo = computed(()=>store.state.companyInfo)
 const loginout = ()=>{
   loginOut_api().then((res:res)=>{
     if(res.status == 1){
-      window.location.href = `//${urlInfo.value.domain_user}/app/login?url=//${urlInfo.value.domain_dmp}/index`
+      window.location.href = `//${urlInfo.value.domain_user}/app/login?url=${encodeURIComponent('//' + urlInfo.value.domain_cms) + '/index'}`
     }
   })
 }

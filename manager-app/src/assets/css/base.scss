@@ -18,7 +18,8 @@
  */
 
 html {
-    line-height: 1.15;
+    // line-height: 1.15;
+    line-height: 1;
     /* 1 */
     -webkit-text-size-adjust: 100%;
     /* 2 */
@@ -389,7 +390,6 @@ template {
 
 HTML,
 body,
-div,
 h1,
 h2,
 h3,
@@ -399,7 +399,6 @@ h6,
 ul,
 ol,
 dl,
-li,
 dt,
 dd,
 p,
@@ -407,9 +406,7 @@ blockquote,
 pre,
 form,
 fieldset,
-table,
-th,
-td {
+table{
     border: none;
     font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
         '微软雅黑', Arial, sans-serif;

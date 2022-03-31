@@ -7,12 +7,23 @@
     router
     class="yxtnav"
   >
-    <el-menu-item :index="v.path" v-for="(v) in nav" :key="v.path" v-show="!v.meta.leftHidden && v.meta.lv<=userlv" :class="v.path==modelValue?'is-active':'userlv'+userlv">
+    <el-menu-item index="/index">
       <div class="topafter"></div>
-      <img :src="v.path==modelValue?v.meta.icon_a:v.meta.icon" alt="" class="left_nav_icon">
-      <span>{{v.meta.title}}</span>
+      <span>首页</span>
       <div class="botafter"></div>
     </el-menu-item>
+    <el-sub-menu :index="v.path" v-for="v in nav" :key="v.path" v-show="v.path!='/index' && userlv.some(lv=>v.meta.lv.indexOf(lv)>-1)">
+      <template #title>
+        <span>{{v.meta.title}}</span>
+      </template>
+      <template v-for="value in v.children" :key="v.path">
+        <el-menu-item :index="value.path" v-if="true" v-show="!value.meta.leftHidden && (userlv.indexOf(value.meta.lv)>-1)">
+          <div class="topafter"></div>
+          <span>{{value.meta.title}}</span>
+          <div class="botafter"></div>
+        </el-menu-item>
+      </template>
+    </el-sub-menu>
   </el-menu>
 </template>
 
@@ -21,32 +32,32 @@
  * 左侧导航
  * @author chn 
 */
-import { computed } from 'vue'
-import { mainStore } from '@/store/index'
-
 const props = withDefaults(defineProps<{
   modelValue:string, // 激活的菜单
   nav:Navitem[], // 菜单数组
 }>(),{
   nav:()=>([{path:'/',name:'-',meta:{title:'-'}}]),  //默认值的设置 须要用函数return
 })
-const store = mainStore()
-const userlv = computed(()=>store.state.userLv)
+
+const userlv = ['a','a1','a2','a3','a4','b','b1','b2','b3','c','c1','d','d1','e','e1']
 
 </script>
 
 <style scoped lang="scss">
 .yxtnav{
   border-right: none;
-  .el-menu-item{
-    height: 60px;
-    margin: 10px 0;
-    font-size: 16px;
-  }
   .is-active{
     position: relative;
     background-color: $bgcolor;
+  }
+  .el-menu-item{
+    min-width: 100%;
+  }
+  .is-active.el-menu-item{
+    position: relative;
+    background-color: $bgcolor;
     border-radius: 30px 0 0 30px;
+    z-index: 1;
     .topafter{
       position: absolute;
       right: 0;

@@ -14,7 +14,7 @@ export const mainStore = defineStore('mainStore', () => {
     typeHash:{} as any,//行业分类哈希表
     addressList:[] as any[],//地区列表
     addressHash:{} as any,//地区列表哈希表
-    keepList:[] as string[],//需要缓存的路由组件列表，须要在组件文件中设置name属性，并且name必须和组件对应的路由的name一致，路由的meta属性中也必须添加keepAlive:true
+    keepList:[] as string[],//需要缓存的路由组件列表，须要在组件文件中设置name属性，并且name必须和组件对应的路由的name一致，路由的meta属性中也必须添加keepAlive:true,下级路由的meta中也要加入father字段为需要缓存的路由的path
   })
   const setTypeList = () => {
     return new Promise<any[]>((resolve, reject) => {

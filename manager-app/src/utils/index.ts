@@ -55,9 +55,11 @@ export function confirm(msg?:string){
  * @arr ['A','2'] 要查找的值组成的数组
  * @listArr 带有children的数组，层级和arr的长度一致
  * @key arr在listArr中的字段名称
+ * @nameKey 对应字符的键名，默认值'name'
+ * @childrenKey arr中children数组键名，默认值'children'
  * @return 'xx,xx'
 */
-export function get_Str(arr:any[],listArr:any[],key:string){
+export function get_Str(arr:Array<number|string>, listArr:any[], key:string, nameKey:string = 'name', childrenKey:string = 'children'){
   // 递归循环查找字符
   console.time('getStr');
   let i = 0
@@ -65,11 +67,11 @@ export function get_Str(arr:any[],listArr:any[],key:string){
   const dg = (list:any)=>{
     for (let j = 0; j < list.length; j++) {
       if(arr[i] == list[j][key]){
-        str += list[j].name + '，'
+        str += list[j][nameKey] + '，'
         if(i<arr.length-1){
           i++
-          if(list[j].children){
-            dg(list[j].children)
+          if(list[j][childrenKey]){
+            dg(list[j][childrenKey])
           }
         }else{
           break
@@ -85,21 +87,23 @@ export function get_Str(arr:any[],listArr:any[],key:string){
 /**
  * 带有children的对象数组 转换为 哈希表
  * @arr 要转换的数组
- * @key arr中要当成哈希表键名的字段
- * @return '{A:{name:xx,children:{2:{name:xx}...}},...}'
+ * @key arr中要当成哈希表键名的字段名称
+ * @nameKey arr中要当成哈希表key对应字符串的键名，默认值'name'
+ * @childrenKey arr中children数组键名，默认值'children'
+ * @return '{A:{name:xx,[childrenKey]:{2:{name:xx}...}},...}'
 */
-export function getHash (arr:any[],key:string){
+export function getHash (arr:any[], key:string, nameKey:string = 'name', childrenKey:string = 'children'){
   //转换为哈希表
   console.time('getHash');
   let obj:any = {}
   const dg = (list:any[],item:any)=>{
     for (let i = 0; i < list.length; i++) {
       item[list[i][key]] = {
-        name:list[i].name
+        [nameKey]:list[i][nameKey]
       }
-      if(list[i].children){
-        item[list[i][key]].children = {}
-        dg(list[i].children,item[list[i][key]].children)
+      if(list[i][childrenKey]){
+        item[list[i][key]][childrenKey] = {}
+        dg(list[i][childrenKey],item[list[i][key]][childrenKey])
       }
     }
   }
@@ -110,14 +114,16 @@ export function getHash (arr:any[],key:string){
 
 /**
  * 获取哈希表中字符串，先getHash获取哈希表
- * @arr ['A','2'] 要查找的值组成的数组
+ * @arr 要查找的值组成的数组，例如['A','2'] 
  * @hash 哈希表，getHash获取
  * @type 返回的数据类型
+ * @nameKey 哈希表中所需字符串的键名，默认值'name'
+ * @childrenKey 哈希表中children键名，默认值'children'
  * @return 根据type判断，'arr'返回['xx','xx']，'last'返回最后一位'xx'，其他返回'xx，xx'
 */
-export function getHashStr(arr:string[],hash:any,type?:string){
+export function getHashStr(arr:(string|number)[], hash:any, type?:'arr'|'last', nameKey:string = 'name', childrenKey:string = 'children'){
   //获取哈希表中arr对应的name字符串
-  let strArr:string[] = [];
+  let strArr:(string|number)[] = [];
   const toReturn = ()=>{
     switch (type) {
       case 'arr':
@@ -132,11 +138,11 @@ export function getHashStr(arr:string[],hash:any,type?:string){
     }
   }
   try {
-    (arr[0]&&hash[arr[0]]) && (strArr.push(hash[arr[0]].name));
+    (arr[0]&&hash[arr[0]][nameKey]) && (strArr.push(hash[arr[0]][nameKey]));
     try {
-      (arr[1]&&hash[arr[0]].children[arr[1]]) && (strArr.push(hash[arr[0]].children[arr[1]].name));
+      (arr[1]&&hash[arr[0]][childrenKey][arr[1]][nameKey]) && (strArr.push(hash[arr[0]][childrenKey][arr[1]][nameKey]));
       try {
-        (arr[2]&&hash[arr[0]].children[arr[1]].children[arr[2]]) && (strArr.push(hash[arr[0]].children[arr[1]].children[arr[2]].name));
+        (arr[2]&&hash[arr[0]][childrenKey][arr[1]][childrenKey][arr[2]][nameKey]) && (strArr.push(hash[arr[0]][childrenKey][arr[1]][childrenKey][arr[2]][nameKey]));
         return toReturn()
       } catch (error) {
         return toReturn()

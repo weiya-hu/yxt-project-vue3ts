@@ -1,0 +1,1 @@
+import{_ as a}from"./index.8e773d39.js";import{G as e,H as r}from"./vue.5acda677.js";const s={class:"page_404 fcc"};var d=a({},[["render",function(a,d){return e(),r("div",s," 404 ")}],["__scopeId","data-v-2308f924"]]);export{d as default};
