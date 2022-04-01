@@ -12,6 +12,8 @@ import sp_i from '@/assets/images/sp.png'
 import sp_a_i from '@/assets/images/sp_a.png'
 import h5_i from '@/assets/images/h5.png'
 import h5_a_i from '@/assets/images/h5_a.png'
+import pdf_i from '@/assets/images/pdf.png'
+import pdf_a_i from '@/assets/images/pdf_a.png'
 
 const routes = [
   {
@@ -175,10 +177,16 @@ const routes = [
             meta: { title: '软文库',icon:rw_i,icon_a:rw_a_i,lv:2 },
           },
           {
+            path: '/resource/articleDetails',
+            name: '资源内容库-软文详情',
+            component: () => import('@/views/layout/resource/articleDetails.vue'),
+            meta: { title: '软文详情',leftHidden:true,father:'/resource/article',lv:1 },
+          },
+          {
             path: '/resource/PDF',
             name: '资源内容库-PDF库',
             component: () => import('@/views/layout/resource/PDF.vue'),
-            meta: { title: 'PDF库',lv:2 },
+            meta: { title: 'PDF库',icon:pdf_i,icon_a:pdf_a_i,lv:2 },
           },
           {
             path: '/resource/video',
