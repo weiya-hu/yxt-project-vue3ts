@@ -2,7 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import { ElMessageBox } from 'element-plus'
 
+// lv 当前路由权限id，clv 子路由权限id集合(不包括孙子)
 const routes = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/login.vue'),
+    meta: { title: '登录' },
+  },
   {
     path: '/',
     name: 'Layout',
@@ -14,14 +21,14 @@ const routes = [
         path: '/index',
         name: 'Index',
         component: () => import('@/views/layout/index/index.vue'),
-        meta: { title: '首页' },
+        meta: { title: '首页' , },
       },
       {
         path: '/users',
         name: 'Users',
         redirect: '/users/user',
         component: () => import('@/views/layout/rview.vue'),
-        meta: { title: '用户/企业管理', lv:'a,a1,a2,a3,a4', },
+        meta: { title: '用户/企业管理', lv:'a', clv:'a1,a2,a3,a4' },
         children:[
           {
             path: '/users/user',
@@ -54,7 +61,7 @@ const routes = [
         name: 'Website',
         redirect: '/website/banner',
         component: () => import('@/views/layout/rview.vue'),
-        meta: { title: '官网管理', lv:'b,b1,b2,b3,b4' },
+        meta: { title: '官网管理', lv:'b', clv:'b1,b2,b3,b4' },
         children:[
           {
             path: '/website/banner',
@@ -87,20 +94,47 @@ const routes = [
         name: 'Dmp',
         redirect: '/dmp/findb',
         component: () => import('@/views/layout/rview.vue'),
-        meta: { title: 'DMP系统管理', lv:'c' },
+        meta: { title: 'DMP系统管理', lv:'c', clv:'c1,c2' },
         children:[
           {
             path: '/dmp/findb',
             name: 'FindB',
             redirect: '/dmp/findb/specificdata',
-            component: () => import('@/views/layout/dmp/dmpView.vue'),
-            meta: { title: '找B端客户', lv:'c1' },
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '找B端客户', lv:'c1', clv:'c11,c12' },
             children:[
               {
                 path: '/dmp/findb/specificdata',
                 name: 'SpecificData',
                 component: () => import('@/views/layout/dmp/findb/specificData.vue'),
                 meta: { title: '个性化数据', keepAlive:true, lv:'c11' },
+              },
+              {
+                path: '/dmp/findb/specificdatadetails',
+                name: 'SpecificDataDetails',
+                component: () => import('@/views/layout/dmp/findb/specificDataDetails.vue'),
+                meta: { title: '个性化数据详情', father:'/dmp/findb/specificdata', leftHidden:true, lv:'c12' },
+              },
+            ]
+          },
+          {
+            path: '/dmp/findc',
+            name: 'FindC',
+            redirect: '/dmp/findc/wxdata',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '找C端客户', lv:'c2', clv:'c21,c22' },
+            children:[
+              {
+                path: '/dmp/findc/wxdata',
+                name: 'WxData',
+                component: () => import('@/views/layout/dmp/findc/wxData.vue'),
+                meta: { title: '微信获客', keepAlive:true, lv:'c21' },
+              },
+              {
+                path: '/dmp/findc/teldata',
+                name: 'TelData',
+                component: () => import('@/views/layout/dmp/findc/telData.vue'),
+                meta: { title: '号码段获客', keepAlive:true, lv:'c22' },
               },
             ]
           },
@@ -111,7 +145,7 @@ const routes = [
         name: 'Cms',
         redirect: '/cms/cms',
         component: () => import('@/views/layout/rview.vue'),
-        meta: { title: 'CMS系统管理', lv:'d' },
+        meta: { title: 'CMS系统管理', lv:'d', clv:'d1' },
         children:[
           {
             path: '/cms/cms',
@@ -126,7 +160,7 @@ const routes = [
         name: 'System',
         redirect: '/system/staff',
         component: () => import('@/views/layout/rview.vue'),
-        meta: { title: '系统管理', lv:'e' },
+        meta: { title: '系统管理', lv:'e', clv:'e1' },
         children:[
           {
             path: '/system/staff',
@@ -150,26 +184,21 @@ const router = createRouter({
   routes,
 })
 
-export const routerGuard = (userlv:number,url:any)=>{
+export const routerGuard = (userLv:(number | string)[])=>{ // 用户权限id数组
   //路由守卫
   router.beforeEach((to, from) => {
-    if(to.meta.lv && (userlv < Number(to.meta.lv))){
-      //  ElMessageBox.confirm(
-      //   to.meta.lv == 2 ?'此功能模块需要完善企业信息才能使用，是否完善？':'此功能模块需要购买付费套餐才能使用，是否购买？',
-      //   '温馨提示',
-      //   {
-      //     confirmButtonText: to.meta.lv == 2 ?'去完善':'去购买',
-      //     cancelButtonText: '取消',
-      //     type: 'warning',
-      //   }
-      // )
-      // .then(() => {
-      //   window.open(to.meta.lv == 2?`//${url.domain_user}/app/user?navActiveIndex=4&asideActive=0`:`//${url.domain_user}/benefits.html`)
-      // })
-      // .catch(() => {
-      //   router.replace(from.fullPath)
-      // })
-      // return false
+    if(to.meta.lv && userLv.indexOf(to.meta.lv as string|number) == -1){
+      ElMessageBox.alert(
+        '当前账户无此权限！',
+        '温馨提示',
+        {
+          confirmButtonText: '关闭',
+          callback: () => {
+            router.replace(from.fullPath)
+          },
+        }
+      )
+      return false
     }else{
       window.document.title = to.meta.title ? (to.meta.title as string) : '康州数智后台管理系统'
     }

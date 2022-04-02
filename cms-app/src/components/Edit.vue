@@ -1,6 +1,12 @@
 
 <template>
-  <Editor id="tinymce" v-model="modelValue" :init="init" @change="change"></Editor>
+  <Editor 
+    id="tinymce" 
+    v-model="editvalue"
+    :init="init"
+    @change="change"
+  >
+  </Editor>
 </template>
 
 <script lang="ts" setup>
@@ -24,12 +30,12 @@ import 'tinymce/plugins/advlist'
 import 'tinymce/plugins/autolink'
 import 'tinymce/plugins/fullscreen'
 import 'tinymce/plugins/preview'
-import { ref } from 'vue'
+import { ref, onUpdated, watch } from 'vue'
 import { getAliToken_api } from '@/api/login'
 import axios from 'axios'
 const props = withDefaults(defineProps<{
   modelValue:string, //富文本的值
-  max?:number,//最大尺寸 单位M
+  max?:number,//图片最大尺寸 单位M
 }>(),{
   modelValue:'',
   max:2,
@@ -60,6 +66,8 @@ const upload = (blobInfo:any, success:Function, failure:Function, progress:any)=
 }
 
 // window.tinymce.baseURL = `${window.location.origin}/public/tinymce`;
+// (window as any).tinymce.baseURL = '/tinymce';
+
 const init = {
   selector: '#tinymce',
   height: 500,
@@ -82,9 +90,18 @@ const init = {
 tinymce.init({})
 
 const emit = defineEmits(['update:modelValue'])
-const change = ()=>{
-  emit('update:modelValue',props.modelValue)
+const change = (value:any)=>{
+  console.log(value);
 }
+const editvalue = ref('')
+onUpdated(()=>{
+  editvalue.value = props.modelValue
+  console.log('onUpdated',props.modelValue);
+})
+watch(editvalue,(newValue)=>{
+  emit('update:modelValue',newValue)
+  console.log('watch',newValue);
+})
 
 const upImages = async ()=>{
   const content = props.modelValue

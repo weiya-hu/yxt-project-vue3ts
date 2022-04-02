@@ -1,34 +1,30 @@
 <template>
-  <div class="my_dialog">
-    <el-dialog v-model="modelValue" width="280px" v-if="type=='kf'" @close="close" :show-close="false" custom-class="kf_dialog">
-      <template #title>
-        <div class="fcc kf_title">联系客服</div>
-      </template>
-      <template #default>
-        <div class="fcc fc">
-          <img :src="kf_code_i" alt="">
-          <div class="tip">请扫描上方二维码，联系客服人员</div>
-        </div>
-      </template>
-      <template #footer>
-        <div class="fcc">
-          <el-button type="primary" @click="close">我知道了</el-button>
-        </div>
-      </template>
-    </el-dialog>
-    <el-dialog v-model="modelValue" :title="title" width="400px" @close="close" v-else>
-      <div class="fcc msg">{{msg}}</div>
-      <template #footer>
-        <span class="fcc" v-if="btn==2">
+  <el-dialog v-model="modelValue" :title="title" :width="type=='kf'?'280px':'400px'" v-if="type=='kf'" @close="close" :show-close="false" custom-class="kf_dialog">
+    <template #title v-if="type=='kf'">
+      <div class="fcc kf_title">联系客服</div>
+    </template>
+    <template #default>
+      <div class="fcc fc" v-if="type=='kf'">
+        <img :src="kf_code_i" alt="">
+        <div class="tip">请扫描上方二维码，联系客服人员</div>
+      </div>
+      <div class="fcc msg" v-else>{{msg}}</div>
+    </template>
+    <template #footer>
+      <div class="fcc" v-if="type=='kf'">
+        <el-button type="primary" @click="close">我知道了</el-button>
+      </div>
+      <div v-else>
+        <div class="fcc" v-if="btn==2">
           <el-button @click="close">取消</el-button>
           <el-button type="primary" @click="sure">确认</el-button>
-        </span>
+        </div>
         <div class="fcc" v-else>
           <el-button type="primary" @click="close">我知道了</el-button>
         </div>
-      </template>
-    </el-dialog>
-  </div>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">

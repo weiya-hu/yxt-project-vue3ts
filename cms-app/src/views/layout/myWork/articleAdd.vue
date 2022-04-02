@@ -15,7 +15,7 @@
           <img :src="tip_i" alt="">
           <span>请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</span>
         </div>
-        <el-form ref="aFormRef" :model="aForm" :rules="aRules" size="large">
+        <el-form ref="aFormRef" :model="aForm" :rules="aRules" size="large" @submit.prevent>
           <el-form-item label="文章封面" prop="thumb_url">
             <div class="upload fcs">
               <el-upload
@@ -165,7 +165,7 @@ const upError = (err:any, file:UploadFile, fileList:UploadFile[])=>{
 const submitAddForm = async ()=>{
   //提交表单
   console.log(aForm.value);
-  const res = id ? await articleUpdate_api({...aForm.value,id}) : await articleAdd_api(aForm.value)
+  const res = id ? await articleUpdate_api({...aForm.value, id}) : await articleAdd_api(aForm.value)
   upLoading.value = false
   if(res.status == 1 ){
     store.setKeepList([])

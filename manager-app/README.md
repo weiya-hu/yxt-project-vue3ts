@@ -5,8 +5,9 @@
 其他插件：
 mitt：组件通信器；
 vite-plugin-compression：vite插件压缩；
-vite-plugin-eslint：vite的ESLint插件。
-tinymce：富文本编辑器
+vite-plugin-eslint：vite的ESLint插件；
+tinymce：富文本编辑器；
+vuedraggable：拖拽插件。
 
 
 指令说明：
