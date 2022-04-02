@@ -52,12 +52,12 @@ export default defineConfig({
     minify: 'terser',
     cssCodeSplit: true, // 如果设置为false，整个项目中的所有 CSS 将被提取到一个 CSS 文件中
     terserOptions: {
-      compress: {
-        // warnings: false,
-        drop_console: true, // 打包时删除console
-        drop_debugger: true, // 打包时删除 debugger
-        pure_funcs: ['console.log'],
-      },
+      // compress: {
+      //   // warnings: false,
+      //   drop_console: true, // 打包时删除console
+      //   drop_debugger: true, // 打包时删除 debugger
+      //   pure_funcs: ['console.log'],
+      // },
       output: {
         // 去掉注释内容
         comments: true,
