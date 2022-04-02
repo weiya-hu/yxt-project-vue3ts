@@ -5,7 +5,7 @@
           <img :src="i==0?v.haveColor:v.noColor" alt="">
           <span>{{v.tips}}</span>
           <div class="qcshare" v-if="showTyoe==v.tips && showTyoe=='微信'">
-            <qrcode-vue :value="shareId" :size="qcsize" level="H" class="qrcode" />
+            <qrcode-vue :value="cmsUrl+'/cms_resource.html?id='+shareId+'&invite_code='+invite_code" :size="qcsize" level="H" class="qrcode" />
             <span>微信扫码分享</span>
           </div>
         </li>
@@ -32,7 +32,17 @@ import tt_a_i from '@/assets/images/tt_a.png'
 import link_i from '@/assets/images/link.png'
 import link_a_i from '@/assets/images/link_a.png'
 import { ref } from 'vue';
-import QrcodeVue from 'qrcode.vue'
+import QrcodeVue from 'qrcode.vue';
+import { mainStore } from '@/store/index'
+const store = mainStore()
+
+// console.log(store.state.yxtUrl);
+console.log(store.state.userInfo.invite_code);
+const invite_code = store.state.userInfo.invite_code
+const cmsUrl=store.state.yxtUrl.domain_mobile
+
+
+
 /**
  * 分享弹窗
  * @author pr 
@@ -82,6 +92,9 @@ const showTyoe = ref('')
 const handClick = (value:any)=>{
   showTyoe.value = value.tips
 }
+
+
+
 </script>
 
 <style scoped lang="scss">
@@ -109,12 +122,25 @@ const handClick = (value:any)=>{
   .qcshare{
     position: absolute;
     top:0;
-    left:-150px;
-    border: 10px solid #fff;
-    border-radius: 8px;
-    -webkit-transition: all .4s ease-in-out;
-    -o-transition: all .4s ease-in-out;
-    transition: all .4s ease-in-out;
+    left:-190px;
+    width: 150px;
+    height: 180px;
+    background: #FFFFFF;
+    box-shadow: 0px 3px 9px 0px rgba(0,0,0,0.15);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    .qrcode{
+      margin:24px;
+    }
+    span{
+      font-family: PingFangSC-Regular;
+      font-size: 14px;
+      color: #666666;
+      line-height: 14px;
+      font-weight: 400;
+      margin:0 auto;
+    }
   }
 }
 </style>

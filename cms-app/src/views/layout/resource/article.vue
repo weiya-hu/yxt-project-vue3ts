@@ -10,7 +10,7 @@
           :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary" size="large"  class="cx">&emsp;查询&emsp;</el-button>
+      <el-button type="primary" size="large"  class="cx" @click="wordSearch">&emsp;查询&emsp;</el-button>
     </div>
     <div class="mytable">
      <el-table :data="tableData">
@@ -57,8 +57,6 @@ import { formatDate } from '@/utils/date';
 import { articlesList_api } from '@/api/resource'
 
 
-
-
 const kfShow = ref(false)
 const options = ref([
   {
@@ -89,9 +87,11 @@ interface SData {
   size:number,
   current:number,
 }
-
 const tableData = ref<SData[]>([])
-
+// 查询功能
+const wordSearch =()=>{
+  console.log('查询功能')
+}
 const shareId = ref('')//要分享的id
 const goShare=(id:string)=>{
   shareId.value = id

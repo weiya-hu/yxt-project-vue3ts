@@ -28,6 +28,8 @@ const body = ref<{title:string,content:string}>({
 const getData = async ()=>{
   const res =await resourceDetail_api({id})
   res.status == 1 && (body.value = res.body)
+  console.log(212);
+  
 }
 getData()
 

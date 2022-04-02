@@ -13,7 +13,7 @@ export const articlesList_api = (data:PageParams): Promise<res> => {
 */
 
 export const resourceDetail_api = (data:{id:string}): Promise<res> => {
-  return get('/cms/res.get',data)
+  return get('/cms/public/res.get',data)
 }
 
 /**
