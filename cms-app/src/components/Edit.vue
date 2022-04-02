@@ -2,8 +2,9 @@
 <template>
   <Editor 
     id="tinymce" 
-    v-model="modelValue"
+    v-model="editvalue"
     :init="init"
+    @change="change"
   >
   </Editor>
 </template>
@@ -29,7 +30,7 @@ import 'tinymce/plugins/advlist'
 import 'tinymce/plugins/autolink'
 import 'tinymce/plugins/fullscreen'
 import 'tinymce/plugins/preview'
-import { ref ,onUpdated} from 'vue'
+import { ref, onUpdated, watch } from 'vue'
 import { getAliToken_api } from '@/api/login'
 import axios from 'axios'
 const props = withDefaults(defineProps<{
@@ -92,9 +93,14 @@ const emit = defineEmits(['update:modelValue'])
 const change = (value:any)=>{
   console.log(value);
 }
+const editvalue = ref('')
 onUpdated(()=>{
-  console.log(props.modelValue,'onUpdated');
-  emit('update:modelValue',props.modelValue)
+  editvalue.value = props.modelValue
+  console.log('onUpdated',props.modelValue);
+})
+watch(editvalue,(newValue)=>{
+  emit('update:modelValue',newValue)
+  console.log('watch',newValue);
 })
 
 const upImages = async ()=>{
