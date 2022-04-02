@@ -24,7 +24,7 @@ import 'tinymce/plugins/advlist'
 import 'tinymce/plugins/autolink'
 import 'tinymce/plugins/fullscreen'
 import 'tinymce/plugins/preview'
-import { ref , watch } from 'vue'
+import { ref , watch, computed } from 'vue'
 import { getAliToken_api } from '@/api/login'
 import axios from 'axios'
 const props = withDefaults(defineProps<{
@@ -88,7 +88,8 @@ const change = (value:any)=>{
   // 打包过后似乎有问题
   // emit('update:modelValue',props.modelValue)
 }
-watch(()=> props.modelValue, (newValue)=>{
+
+watch(() => props.modelValue, (newValue)=>{
   emit('update:modelValue',newValue)
 })
 

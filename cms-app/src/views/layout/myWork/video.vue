@@ -172,7 +172,7 @@ const errorMsg = ref('')
 
 const addShow = ref(false)
 const loading = ref(false)
-const exnameList = ['.mp4', '.mpeg', '.3gp', '.avi']
+const exnameList = ['.mp4']
 const upload = ref()//上传组件ref
 const close = ()=>{
   fileUrls.value = ''
