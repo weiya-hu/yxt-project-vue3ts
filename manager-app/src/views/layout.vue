@@ -7,7 +7,8 @@
       <el-col class="navbox fsc">
         <div class="nav_title">管理后台</div>
         <div class="fcs">
-          <el-link type="primary" target="_blank" :href="urlInfo.domain_index">官网</el-link>
+          <el-button type="primary" @click="showLib" class="mr20">资源库</el-button>
+          <el-link type="primary" target="_blank" :href="'//' + urlInfo.domain_index">官网</el-link>
           <div class="sline"></div>
           <div class="userbox fcs" v-if="userInfo.id">
             <el-avatar :size="48" :src="userInfo.head||df_avatar_i"></el-avatar>
@@ -19,9 +20,7 @@
                 </div>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="loginout">
-                      退出
-                    </el-dropdown-item>
+                    <el-dropdown-item @click="loginout">退出</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -42,7 +41,7 @@
         </router-view>
       </el-col>
     </el-row>
-
+    <ResourcePool/>
   </div>
 </template>
 
@@ -55,9 +54,36 @@ import {useRouter, useRoute,onBeforeRouteUpdate} from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
 import {loginOut_api} from '@/api/login'
+import { routerGuard } from '@/router'
+import { errMsg } from '@/utils/index'
+import ResourcePool from '@/components/ResourcePool.vue'
+import emiter from '@/utils/bus'
 
 const store = mainStore()
-const urlInfo = computed(()=>store.state.yxtUrl)
+
+store.setTypeList()
+store.setAddressList()
+
+//获取跳转地址
+const urlInfo = ref<any>({})
+store.getYxtUrl().then((url:any)=>{
+  urlInfo.value = url
+})
+
+// 获取用户信息及权限
+store.setUserinfo().then((res:boolean) => {
+  store.setUserLv().then((userLv:(number | string)[])=>{
+    routerGuard(userLv)
+  }).catch((err)=>{
+    routerGuard([])
+    router.replace('/login')
+    errMsg('获取用户权限失败，请重新登录或联系管理员')
+  })
+}).catch((error: boolean) => {
+  routerGuard([])
+  router.replace('/login')
+  errMsg('获取用户信息失败，请重新登录或联系管理员')
+})
 
 const route = useRoute()
 const router = useRouter()
@@ -96,9 +122,13 @@ const userInfo = computed(()=>store.state.userInfo)
 const loginout = ()=>{
   loginOut_api().then((res:res)=>{
     if(res.status == 1){
-      window.location.href = `//${urlInfo.value.domain_user}/app/login?url=${encodeURIComponent('//' + urlInfo.value.domain_dmp + '/index')}`
+      router.replace('/login')
     }
   })
+}
+
+const showLib = ()=>{
+  emiter.emit('poolShow', '')
 }
 
 </script>

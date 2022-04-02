@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { mainStore } from '@/store/index'
-const store = mainStore()
-store.setTypeList()
-store.setAddressList()
+// import { mainStore } from '@/store/index'
+// const store = mainStore()
+// store.setTypeList()
+// store.setAddressList()
 </script>
 
 <template>

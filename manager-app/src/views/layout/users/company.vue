@@ -43,12 +43,18 @@
 
     <el-tree :data="data" :props="defaultProps" show-checkbox draggable node-key="id" ref="lvtree" :default-checked-keys="[4,5]"/>
     <el-button type="primary" @click="getlv" class="mt20">获取</el-button>
+
+    <div class="selimg" @click="goselimg">
+      <img :src="selimgs" alt="" style="width:100%;height:100%">
+    </div>
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import Mypage from "@/components/Mypage.vue";
+import emiter from '@/utils/bus'
 
 const page = ref(1)
 
@@ -101,7 +107,15 @@ const lvtree = ref()
 const getlv = ()=>{
   const id = lvtree.value.getCheckedKeys() // 选中的
   const hid = lvtree.value.getHalfCheckedKeys() // 半选中
-  console.log(id.concat(hid));
+  console.log(id,hid);
+}
+
+const selimgs = ref('')
+emiter.on('sureSel', (value:any)=>{
+  selimgs.value = value
+})
+const goselimg = ()=>{
+  emiter.emit('poolShow', 'sel')
 }
 
 </script>
@@ -111,5 +125,9 @@ export default { name:'Company' }
 </script>
 
 <style scoped lang="scss">
-
+.selimg{
+  width: 100px;
+  height: 100px;
+  background-color: #eee;
+}
 </style>

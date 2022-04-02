@@ -12,18 +12,39 @@
       <span>首页</span>
       <div class="botafter"></div>
     </el-menu-item>
-    <el-sub-menu :index="v.path" v-for="v in nav" :key="v.path" v-show="v.path!='/index' && userlv.some(lv=>v.meta.lv.indexOf(lv)>-1)">
+
+    <el-sub-menu :index="v.path" v-for="v in nav" :key="v.path" v-show="v.path!='/index' && v.path!='/login' && userlv.indexOf(v.meta.lv)>-1 && userlv.some(lv=>v.meta.clv.split(',').indexOf(lv)>-1)">
+    <!-- v : /users 用户/企业管理 /dmp DMP系统管理 ... -->
       <template #title>
         <span>{{v.meta.title}}</span>
       </template>
+
       <template v-for="value in v.children" :key="v.path">
-        <el-menu-item :index="value.path" v-if="true" v-show="!value.meta.leftHidden && (userlv.indexOf(value.meta.lv)>-1)">
+
+        <el-sub-menu :index="value.path" v-if="value.children" v-show="userlv.indexOf(value.meta.lv)>-1 && userlv.some(lv=>value.meta.clv.split(',').indexOf(lv)>-1)">
+        <!-- value : /dmp/findb 找B端客户 ... -->
+          <template #title>
+            <span>{{value.meta.title}}</span>
+          </template>
+          <el-menu-item :index="cvalue.path" v-for="cvalue in value.children" :key="cvalue.path" v-show="!cvalue.meta.leftHidden && (userlv.indexOf(cvalue.meta.lv)>-1)">
+          <!-- cvalue : /dmp/findb/specificdata 个性化数据 -->
+            <div class="topafter"></div>
+            <span>{{cvalue.meta.title}}</span>
+            <div class="botafter"></div>
+          </el-menu-item>
+        </el-sub-menu>
+
+        <el-menu-item :index="value.path" v-else v-show="!value.meta.leftHidden && (userlv.indexOf(value.meta.lv)>-1)">
+        <!-- value : /users/user 用户管理 ... -->
           <div class="topafter"></div>
           <span>{{value.meta.title}}</span>
           <div class="botafter"></div>
         </el-menu-item>
+
       </template>
+
     </el-sub-menu>
+
   </el-menu>
 </template>
 
@@ -32,14 +53,17 @@
  * 左侧导航
  * @author chn 
 */
+import { mainStore } from '@/store/index'
+import { computed } from 'vue'
 const props = withDefaults(defineProps<{
   modelValue:string, // 激活的菜单
   nav:Navitem[], // 菜单数组
 }>(),{
   nav:()=>([{path:'/',name:'-',meta:{title:'-'}}]),  //默认值的设置 须要用函数return
 })
+const store = mainStore()
+const userlv = computed(() => store.state.userLv)
 
-const userlv = ['a','a1','a2','a3','a4','b','b1','b2','b3','c','c1','d','d1','e','e1']
 
 </script>
 

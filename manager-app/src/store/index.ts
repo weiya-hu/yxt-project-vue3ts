@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
-import { getIndustryList_api, getAddreList_api, getUserInfo, getCompanyInfo, getYxtUrl_api } from '@/api/login'
+import { getIndustryList_api, getAddreList_api, getUserInfo, getYxtUrl_api } from '@/api/login'
 import { getHash } from '@/utils/index'
 
 export const mainStore = defineStore('mainStore', () => {
   //这样写第一个参数就是$id
   const state = reactive({
     yxtUrl:{} as any,//跳转地址
-    userLv:1,//用户等级
+    userLv:[] as (number | string)[],//用户权限数组
     userInfo:{} as any,//用户信息
     companyInfo:{} as any,//公司信息
     typeList:[] as any[],//行业分类
@@ -64,18 +64,9 @@ export const mainStore = defineStore('mainStore', () => {
     })
   }
   const setUserLv = ()=>{
-    return new Promise<number>((resolve, reject) => {
-      getCompanyInfo().then((res:res)=>{
-        if(res.status == 1){
-          state.companyInfo = res.body
-          state.userLv = res.body.id ? 3 : 1
-          resolve(state.userLv)
-        }else{
-          reject(res.message)
-        }
-      }).catch(err=>{
-        reject(err)
-      })
+    return new Promise<(number | string)[]>((resolve, reject) => {
+      state.userLv = ['a','a1','a2','a3','a4','b','b1','b2','b3','c','c1','c11','c12','c2','c21','c22','d','d1','e','e1']
+      resolve(state.userLv)
     })
   }
   const getYxtUrl = ()=>{

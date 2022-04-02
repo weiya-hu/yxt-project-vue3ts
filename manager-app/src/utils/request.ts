@@ -41,8 +41,7 @@ axios.interceptors.response.use(
         })
         if(response.errno == 10620){
           setTimeout(() => {
-            const yxtUrl = JSON.parse(localStorage.getItem('yxtUrl') as string)
-            window.location.href = `//${yxtUrl.value.domain_user}/app/login?url=${encodeURIComponent('//' + yxtUrl.value.domain_dmp + '/index')}`
+            router.replace('/login')
           }, 2000);
         }
       }
