@@ -1,6 +1,6 @@
 
 <template>
-  <Editor id="tinymce" v-model="modelValue" :init="init" @change="change"></Editor>
+  <Editor id="tinymce" v-model:modelValue="modelValue" :init="init" @vnode-updated="change"></Editor>
 </template>
 
 <script lang="ts" setup>
@@ -24,7 +24,7 @@ import 'tinymce/plugins/advlist'
 import 'tinymce/plugins/autolink'
 import 'tinymce/plugins/fullscreen'
 import 'tinymce/plugins/preview'
-import { ref , watch, computed } from 'vue'
+import { ref } from 'vue'
 import { getAliToken_api } from '@/api/login'
 import axios from 'axios'
 const props = withDefaults(defineProps<{
@@ -85,13 +85,8 @@ tinymce.init({})
 
 const emit = defineEmits(['update:modelValue'])
 const change = (value:any)=>{
-  // 打包过后似乎有问题
-  // emit('update:modelValue',props.modelValue)
+  emit('update:modelValue',value.props.modelValue)
 }
-
-watch(() => props.modelValue, (newValue)=>{
-  emit('update:modelValue',newValue)
-})
 
 const upImages = async ()=>{
   const content = props.modelValue
