@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<{
 }>(),{
   type:'type',
 })
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'change'])
 
 const store = mainStore()
 const typeList = computed(() => store.state.typeList)
@@ -54,6 +54,7 @@ const addrProps = {
 
 const change = (value:any) => {
   emit('update:modelValue',value)
+  emit('change',value)
 }
 
 const cRef = ref()

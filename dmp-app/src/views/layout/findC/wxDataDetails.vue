@@ -36,12 +36,14 @@
         </template>
       </el-table>
     </div>
+    <MyPage :total="total" v-model="page" @change="getList"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref ,computed } from 'vue'
 import { formatDate } from '@/utils/date'
+import MyPage from "@/components/MyPage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import { getWxUser_api } from '@/api/findC'
 import {useRoute} from 'vue-router'
@@ -66,10 +68,17 @@ interface IData {
 }
 const tableData = ref<IData[]>([])
 const route = useRoute()
+const page = ref(1)
+const total = ref(0)
 const getList = ()=>{
-  getWxUser_api({wechat_id:route.query.id}).then((res:res)=>{
+  getWxUser_api({
+    did: route.query.id,
+    size: 10,
+    current: page.value
+  }).then((res:res)=>{
     if(res.status == 1){
-      res.body.wechat_id && (tableData.value[0] = res.body)
+      tableData.value = res.body.records
+      total.value = res.body.total
     }
   })
 }

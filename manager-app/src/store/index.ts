@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
-import { getIndustryList_api, getAddreList_api, getUserInfo, getYxtUrl_api } from '@/api/login'
+import { getIndustryList_api, getAddreList_api, getUserInfo, getYxtUrl_api, getUserLv } from '@/api/login'
 import { getHash } from '@/utils/index'
 
 export const mainStore = defineStore('mainStore', () => {
@@ -65,8 +65,16 @@ export const mainStore = defineStore('mainStore', () => {
   }
   const setUserLv = ()=>{
     return new Promise<(number | string)[]>((resolve, reject) => {
-      state.userLv = ['a','a1','a2','a3','a4','b','b1','b2','b3','c','c1','c11','c12','c2','c21','c22','d','d1','e','e1']
-      resolve(state.userLv)
+      getUserLv().then((res:res)=>{
+        if(res.status == 1){
+          state.userLv = res.body.map((v:number|string) => String(v))
+          resolve(state.userLv)
+        }else{
+          reject([])
+        }
+      }).catch(err=>{
+        reject([])
+      })
     })
   }
   const getYxtUrl = ()=>{

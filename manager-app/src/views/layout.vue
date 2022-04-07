@@ -1,7 +1,7 @@
 <template>
   <div class="layout_page">
     <el-row class="layout_top">
-      <el-col class="logobox">
+      <el-col class="logobox fcc">
         <img :src="logo_i" alt=""/>
       </el-col>
       <el-col class="navbox fsc">
@@ -10,17 +10,18 @@
           <el-button type="primary" @click="showLib" class="mr20">资源库</el-button>
           <el-link type="primary" target="_blank" :href="'//' + urlInfo.domain_index">官网</el-link>
           <div class="sline"></div>
-          <div class="userbox fcs" v-if="userInfo.id">
-            <el-avatar :size="48" :src="userInfo.head||df_avatar_i"></el-avatar>
+          <div class="userbox fcs" v-if="userInfo.name">
+            <el-avatar :size="36" :src="userInfo.head||df_avatar_i"></el-avatar>
             <div class="username">
               <el-dropdown>
                 <div class="fcs">
-                  <div class="els" style="max-width:70px;line-height: 1.1;">{{userInfo.name}}</div>
+                  <div style="font-size:16px">{{userInfo.name}}（{{userInfo.dept_name}}）</div>
                   <el-icon class="right_icon"><caret-bottom /></el-icon>
                 </div>
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="loginout">退出</el-dropdown-item>
+                    <el-dropdown-item @click="$router.push('/index/editpass')">修改密码</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -50,7 +51,7 @@ import logo_i from '@/assets/images/logo.png'
 import df_avatar_i from '@/assets/images/dfavatar.png'
 import { ref, computed } from 'vue'
 import LeftNav from '@/components/LeftNav.vue'
-import {useRouter, useRoute,onBeforeRouteUpdate} from 'vue-router'
+import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
 import {loginOut_api} from '@/api/login'
@@ -58,11 +59,12 @@ import { routerGuard } from '@/router'
 import { errMsg } from '@/utils/index'
 import ResourcePool from '@/components/ResourcePool.vue'
 import emiter from '@/utils/bus'
+import { getHashStr } from '@/utils/index'
 
 const store = mainStore()
 
-store.setTypeList()
-store.setAddressList()
+// store.setTypeList()
+// store.setAddressList()
 
 //获取跳转地址
 const urlInfo = ref<any>({})
@@ -84,6 +86,7 @@ store.setUserinfo().then((res:boolean) => {
   router.replace('/login')
   errMsg('获取用户信息失败，请重新登录或联系管理员')
 })
+const userInfo = computed(()=>store.state.userInfo)
 
 const route = useRoute()
 const router = useRouter()
@@ -94,7 +97,7 @@ const nowPath = ref('')
 const getPath = (path:string)=>{
   nowPath.value = path
 }
-getPath((route.meta.leftHidden && route.meta.father) ? route.meta.father as string:route.path)
+getPath(route.meta.father ? route.meta.father as string:route.path)
 const getNavs = ()=>{
   //从路由获取左侧导航
   routers.forEach(v=>{
@@ -104,7 +107,7 @@ const getNavs = ()=>{
 getNavs()
 
 onBeforeRouteUpdate((to,from,next)=>{
-  getPath((to.meta.leftHidden && to.meta.father) ? to.meta.father as string:to.path)
+  getPath(to.meta.father ? to.meta.father as string:to.path)
   if(from.meta.keepAlive && to.meta.father == from.path){
     // 从列表进入详情 缓存列表
     store.setKeepList([from.name as string])
@@ -116,8 +119,6 @@ onBeforeRouteUpdate((to,from,next)=>{
   }
   next()
 })
-
-const userInfo = computed(()=>store.state.userInfo)
 
 const loginout = ()=>{
   loginOut_api().then((res:res)=>{
@@ -137,20 +138,20 @@ const showLib = ()=>{
 .layout_page {
   height: 100%;
   .logobox {
-    height: 80px;
-    background-color: $dfcolor;
-    max-width: 200px;
-    flex: 0 0 200px;
+    height: 64px;
+    width: 220px;
+    flex: 0 0 220px;
+    border-right: 1px solid $colorddd;
     img{
-      width: 100%;
-      height: 100%;
+      width: 136px;
+      height: 30px;
     }
   }
   .navbox{
     flex:1;
     box-shadow: 0px 0px 2px 0px rgb(231, 231, 231);
     z-index: 30;
-    padding: 0 50px;
+    padding: 0 32px 0 16px;
     .nav_title{
       font-size: 20px;
     }
@@ -160,15 +161,18 @@ const showLib = ()=>{
       margin: 0 20px;
       background-color: $coloreee;
     }
+    .username{
+      margin-left: 8px;
+    }
   }
   .layout_container {
-    height: calc(100% - 80px);
+    height: calc(100% - 64px);
     .layout_nav {
-      background-color: $color333;
-      max-width: 200px;
-      flex: 0 0 200px;
-      padding-top: 30px;
-      padding-left: 8px;
+      background-color: #fff;
+      width: 220px;
+      flex: 0 0 220px;
+      padding:30px 16px;
+      border-right: 1px solid $colorddd;
     }
     .layout_content{
       height: 100%;

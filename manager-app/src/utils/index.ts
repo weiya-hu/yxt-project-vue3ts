@@ -119,7 +119,7 @@ export function getHash (arr:any[], key:string, nameKey:string = 'name', childre
  * @type 返回的数据类型
  * @nameKey 哈希表中所需字符串的键名，默认值'name'
  * @childrenKey 哈希表中children键名，默认值'children'
- * @return 根据type判断，'arr'返回['xx','xx']，'last'返回最后一位'xx'，其他返回'xx，xx'
+ * @return 根据type判断，'arr'返回['xx','xx']，'last'返回最后一位'xx'，其他返回'xx，xx'，查找不到返回上一级能查到的数据
 */
 export function getHashStr(arr:(string|number)[], hash:any, type?:'arr'|'last', nameKey:string = 'name', childrenKey:string = 'children'){
   //获取哈希表中arr对应的name字符串
@@ -137,22 +137,21 @@ export function getHashStr(arr:(string|number)[], hash:any, type?:'arr'|'last', 
         break;
     }
   }
-  try {
-    (arr[0]&&hash[arr[0]][nameKey]) && (strArr.push(hash[arr[0]][nameKey]));
-    try {
-      (arr[1]&&hash[arr[0]][childrenKey][arr[1]][nameKey]) && (strArr.push(hash[arr[0]][childrenKey][arr[1]][nameKey]));
-      try {
-        (arr[2]&&hash[arr[0]][childrenKey][arr[1]][childrenKey][arr[2]][nameKey]) && (strArr.push(hash[arr[0]][childrenKey][arr[1]][childrenKey][arr[2]][nameKey]));
-        return toReturn()
-      } catch (error) {
-        return toReturn()
-      }
-    } catch (error) {
-      return toReturn()
+  let i = 0
+  const dg = (obj:any) => {
+    strArr.push(obj[nameKey])
+    if(obj[childrenKey] && i < arr.length){
+      i++
+      dg(obj[childrenKey][arr[i]])
     }
+  }
+  try {
+    hash[arr[i]] && dg(hash[arr[i]])
+    return toReturn()
   } catch (error) {
     return toReturn()
   }
+
 }
 
 /**
@@ -212,3 +211,5 @@ export function getSource(source:number){
       break;
   }
 }
+
+export const telReg = new RegExp(/^(((13[0-9])|(14[5-7])|(15[0-9])|(17[0-9])|(18[0-9]))+\d{8})$/)

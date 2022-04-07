@@ -27,7 +27,7 @@ for (let i = 0; i < route.matched.length; i++) {
     // crumbs.value[0] = v
     crumbs.value.push(v)
     v.children.forEach(value => {
-      if(value.path == route.meta.father){
+      if(value.path == route.meta.father && value.path != '/index'){
         // crumbs.value[1] = value
         crumbs.value.push(value)
       }

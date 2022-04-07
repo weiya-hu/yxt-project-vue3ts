@@ -1,6 +1,11 @@
 
 <template>
-  <Editor id="tinymce" v-model="modelValue" :init="init" @change="change"></Editor>
+  <Editor 
+    id="tinymce" 
+    v-model="editvalue"
+    :init="init"
+  >
+  </Editor>
 </template>
 
 <script lang="ts" setup>
@@ -24,7 +29,7 @@ import 'tinymce/plugins/advlist'
 import 'tinymce/plugins/autolink'
 import 'tinymce/plugins/fullscreen'
 import 'tinymce/plugins/preview'
-import { ref , watch } from 'vue'
+import { ref, onUpdated, watch } from 'vue'
 import { getAliToken_api } from '@/api/login'
 import axios from 'axios'
 const props = withDefaults(defineProps<{
@@ -84,16 +89,20 @@ const init = {
 tinymce.init({})
 
 const emit = defineEmits(['update:modelValue'])
-const change = (value:any)=>{
-  // 打包过后似乎有问题
-  // emit('update:modelValue',props.modelValue)
-}
-watch(()=> props.modelValue, (newValue)=>{
+
+const editvalue = ref('') // 打包到线上绑定值会失效 所以用了这个蠢办法
+onUpdated(()=>{
+  editvalue.value = props.modelValue
+  console.log('onUpdated',props.modelValue);
+})
+watch(editvalue,(newValue)=>{
   emit('update:modelValue',newValue)
+  console.log('watch',newValue);
 })
 
 const upImages = async ()=>{
-  const content = props.modelValue
+  // const content = props.modelValue
+  const content = editvalue.value
   const imgReg = /<img [^>]*src=['"]blob:([^'"]+)[^>]*>/gi;
   const srcReg = /src=[\'\"]?(blob:[^\'\"]*)[\'\"]?/gi
   const imgArr = content.match(imgReg)
@@ -159,7 +168,8 @@ const upImages = async ()=>{
       await upFn(imgArr[i])
     }
     console.log(t,123);
-    emit('update:modelValue',t)
+    // emit('update:modelValue',t)
+    editvalue.value = t
   }
 }
 

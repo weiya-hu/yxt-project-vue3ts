@@ -389,7 +389,12 @@ template {
 }
 
 HTML,
-body,
+body {
+    font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+        '微软雅黑', Arial, sans-serif;
+    font-size: 14px;
+}
+div,
 h1,
 h2,
 h3,
@@ -399,6 +404,7 @@ h6,
 ul,
 ol,
 dl,
+li,
 dt,
 dd,
 p,
@@ -406,11 +412,10 @@ blockquote,
 pre,
 form,
 fieldset,
-table{
+table,
+th,
+td {
     border: none;
-    font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-        '微软雅黑', Arial, sans-serif;
-    font-size: 14px;
     margin: 0px;
     padding: 0px;
 }

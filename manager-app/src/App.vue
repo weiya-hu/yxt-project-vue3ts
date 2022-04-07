@@ -235,7 +235,7 @@ img{
 }
 .mycard{
   .el-card__header{
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     border-bottom: none;
     padding-bottom: 0;
@@ -284,6 +284,16 @@ img{
   }
   .is-active{
     font-weight: 600;
+  }
+}
+.page_header{
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.inline_myform{
+  .el-form-item{
+    margin-bottom: 0;
   }
 }
 </style>

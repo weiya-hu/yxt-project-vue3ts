@@ -1,44 +1,49 @@
 <template>
   <el-menu
-    active-text-color="#2D68EB"
-    background-color="#333333"
-    text-color="#fff"
+    active-text-color="#fff"
+    background-color="#fff"
+    text-color="#333333"
     :default-active="modelValue"
     router
     class="yxtnav"
   >
     <el-menu-item index="/index">
-      <div class="topafter"></div>
-      <span>首页</span>
-      <div class="botafter"></div>
+      <div class="fcs">
+        <img :src="modelValue == '/index' ? nav1_a_i : nav1_i" alt="" class="left_nav_icon">
+        <span class="fz16">首页</span>
+      </div>
     </el-menu-item>
 
     <el-sub-menu :index="v.path" v-for="v in nav" :key="v.path" v-show="v.path!='/index' && v.path!='/login' && userlv.indexOf(v.meta.lv)>-1 && userlv.some(lv=>v.meta.clv.split(',').indexOf(lv)>-1)">
     <!-- v : /users 用户/企业管理 /dmp DMP系统管理 ... -->
       <template #title>
-        <span>{{v.meta.title}}</span>
+        <div class="fcs">
+          <img :src="v.meta.icon" alt="" class="left_nav_icon">
+          <span class="fz16">{{v.meta.title}}</span>
+        </div>
       </template>
 
       <template v-for="value in v.children" :key="v.path">
 
-        <el-sub-menu :index="value.path" v-if="value.children" v-show="userlv.indexOf(value.meta.lv)>-1 && userlv.some(lv=>value.meta.clv.split(',').indexOf(lv)>-1)">
         <!-- value : /dmp/findb 找B端客户 ... -->
+        <!-- cvalue : /dmp/findb/specificdata 个性化数据 -->
+        <!-- <el-sub-menu :index="value.path" v-if="value.children" v-show="userlv.indexOf(value.meta.lv)>-1 && userlv.some(lv=>value.meta.clv.split(',').indexOf(lv)>-1)">
           <template #title>
             <span>{{value.meta.title}}</span>
           </template>
-          <el-menu-item :index="cvalue.path" v-for="cvalue in value.children" :key="cvalue.path" v-show="!cvalue.meta.leftHidden && (userlv.indexOf(cvalue.meta.lv)>-1)">
-          <!-- cvalue : /dmp/findb/specificdata 个性化数据 -->
+          <el-menu-item :index="cvalue.path" v-for="cvalue in value.children" :key="cvalue.path" v-show="!cvalue.meta.father && (userlv.indexOf(cvalue.meta.lv)>-1)">
             <div class="topafter"></div>
             <span>{{cvalue.meta.title}}</span>
             <div class="botafter"></div>
           </el-menu-item>
-        </el-sub-menu>
+        </el-sub-menu> -->
 
-        <el-menu-item :index="value.path" v-else v-show="!value.meta.leftHidden && (userlv.indexOf(value.meta.lv)>-1)">
+        <el-menu-item :index="value.path" v-show="!value.meta.father && (userlv.indexOf(value.meta.lv)>-1)">
         <!-- value : /users/user 用户管理 ... -->
-          <div class="topafter"></div>
-          <span>{{value.meta.title}}</span>
-          <div class="botafter"></div>
+          <div class="fcs">
+            <img :src="value.path == modelValue ? value.meta.icon_a : value.meta.icon" alt="" class="left_nav_icon">
+            <span>{{value.meta.title}}</span>
+          </div>
         </el-menu-item>
 
       </template>
@@ -55,6 +60,8 @@
 */
 import { mainStore } from '@/store/index'
 import { computed } from 'vue'
+import nav1_i from '@/assets/images/nav/nav1.png'
+import nav1_a_i from '@/assets/images/nav/nav1_a.png'
 const props = withDefaults(defineProps<{
   modelValue:string, // 激活的菜单
   nav:Navitem[], // 菜单数组
@@ -64,65 +71,25 @@ const props = withDefaults(defineProps<{
 const store = mainStore()
 const userlv = computed(() => store.state.userLv)
 
-
 </script>
 
 <style scoped lang="scss">
 .yxtnav{
   border-right: none;
-  .is-active{
-    position: relative;
-    background-color: $bgcolor;
+  .fz16{
+    font-size: 16px;
   }
   .el-menu-item{
     min-width: 100%;
+    border-radius: 8px;
   }
   .is-active.el-menu-item{
-    position: relative;
-    background-color: $bgcolor;
-    border-radius: 30px 0 0 30px;
-    z-index: 1;
-    .topafter{
-      position: absolute;
-      right: 0;
-      top: -10px;
-      width: 10px;
-      height: 10px;
-      background-color: $bgcolor;
-      &::after{
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: $color333;
-        border-radius:0 0 10px 0;
-      }
-    }
-    .botafter{
-      position: absolute;
-      right: 0;
-      bottom: -10px;
-      width: 10px;
-      height: 10px;
-      background-color: $bgcolor;
-      &::after{
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: $color333;
-        border-radius:0 10px 0 0;
-      }
-    }
+    background-color: $dfcolor;
   }
   .left_nav_icon{
-    width: 34px;
-    height: 34px;
-    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
   }
 }
 </style>

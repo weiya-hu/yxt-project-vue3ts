@@ -12,7 +12,7 @@ import router from '@/router'
 import { reactive, ref } from 'vue'
 
 // 设置默认地址
-axios.defaults.baseURL = '/api'
+axios.defaults.baseURL = '/'
 
 // 请求拦截器
 axios.interceptors.request.use((config) => {
@@ -54,11 +54,11 @@ axios.interceptors.response.use(
   }
 )
 
-// 封装get请求
-export function get(url: string, params?: any, showmsg?: boolean) {
+// 封装get请求 isBg 1:后台接口 0:前台接口
+export function get(isBg:0|1, url: string, params?: any, showmsg?: boolean) {
   return new Promise<res>((resolve, reject) => {
     axios
-      .get(url, { params })
+      .get(isBg ? 'bgapi' + url : 'api' + url, { params })
       .then((res) => {
         if (showmsg && res.data.errno != 10200) {
           ElMessage({
@@ -77,11 +77,11 @@ export function get(url: string, params?: any, showmsg?: boolean) {
   })
 }
 
-// 封装post请求
-export function post(url: string, params?: any, showmsg?: boolean) {
+// 封装post请求 isBg 0:后台接口 1:前台接口
+export function post(isBg:0|1, url: string, params?: any, showmsg?: boolean) {
   return new Promise<res>((resolve, reject) => {
     axios
-      .post(url, params)
+      .post(isBg ? 'bgapi' + url : 'api' + url, params)
       .then((res) => {
         if (showmsg && res.data.errno != 10200) {
           ElMessage({

@@ -67,7 +67,6 @@ const urlInfo = computed(()=>store.state.yxtUrl)
 
 <style scoped lang="scss">
 .index_page{
-  padding: 30px 50px;
   height: 100%;
   width: 100%;
   background-color: #F7F8FA;

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="modelValue" :title="title" :width="type=='kf'?'280px':'400px'" v-if="type=='kf'" @close="close" :show-close="false" custom-class="kf_dialog">
+  <el-dialog v-model="modelValue" :title="title" :width="type=='kf'?'280px':'400px'" @close="close" :show-close="type!='kf'" :custom-class="type=='kf' ? 'kf_dialog my_dialog':'my_dialog'">
     <template #title v-if="type=='kf'">
       <div class="fcc kf_title">联系客服</div>
     </template>

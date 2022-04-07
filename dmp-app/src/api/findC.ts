@@ -87,7 +87,7 @@ export const addWx_api = (data:any): Promise<res> => {
 /**
  * @name 查看微信客户
 */
-export const getWxUser_api = (data:any): Promise<res> => {
+export const getWxUser_api = (data:PageParams): Promise<res> => {
   return get('/dmp/customer/wechat.page',data)
 }
 

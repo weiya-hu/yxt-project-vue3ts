@@ -28,7 +28,7 @@
         </el-table-column>
         <el-table-column property="money" label="消耗金额">
           <template #default="scope">
-            <div>{{Number(scope.row.money).toFixed(2) }}</div>
+            <div>{{Number(scope.row.money).toFixed(2)}}</div>
           </template>
         </el-table-column>
         <el-table-column property="source" label="来源">
@@ -43,8 +43,9 @@
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
-            <el-link type="primary" @click="goDetails(scope.row.wechat_id)" v-if="scope.row.status != 0">查看</el-link>
-            <div v-else>---</div>
+            <el-link type="primary" @click="goDetails(scope.row.id)" v-if="scope.row.status == 1">查看</el-link>
+            <el-link type="primary" @click="errorMsg = scope.row.fail_reason;errorShow=true" v-if="scope.row.status == 2">拒绝原因</el-link>
+            <div v-if="scope.row.status == 0 ">---</div>
           </template>
         </el-table-column>
         
@@ -70,6 +71,15 @@
           <el-button @click="closeAdd">取消</el-button>
           <el-button type="primary" :disabled="!Addform.acc" @click="goAdd">提交</el-button>
         </span>
+      </template>
+    </el-dialog>
+
+    <el-dialog v-model="errorShow" title="拒绝原因" width="400px">
+      <div class="fcc msg">{{errorMsg}}</div>
+      <template #footer>
+        <div class="fcc">
+          <el-button type="primary" @click="errorShow=false">我知道了</el-button>
+        </div>
       </template>
     </el-dialog>
 
@@ -161,6 +171,9 @@ const goAdd = ()=>{
     }
   })
 }
+
+const errorShow = ref(false)
+const errorMsg = ref('')
 
 </script>
 

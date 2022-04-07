@@ -2,20 +2,26 @@
   <div class="login_page fcc">
     <el-tabs v-model="activeName" class="login_tabs">
       <el-tab-pane label="账号密码登录" name="acc">
-        <el-form :model="user" :rules="rules" ref="userFormRef">
+        <el-form :model="user" :rules="rules" ref="userFormRef" size="large">
           <el-form-item label="用户名" prop="acc">
             <el-input v-model="user.acc" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="密&emsp;码" prop="password">
             <el-input v-model="user.password" placeholder="请输入密码"></el-input>
           </el-form-item>
+          <el-form-item label="验证码" prop="imgCode">
+            <div class="fcs">
+              <el-input v-model="user.imgCode" placeholder="请输入验证码" class="yzm_ipt"></el-input>
+              <img :src="imgCode" alt="重新获取" @click="getImgCode" class="img_code">
+            </div>
+          </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">登录</el-button>
+            <el-button type="primary" class="f1" @click="onSubmit">登录</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="短信登录" name="sms">
-        <el-form :model="telForm" :rules="telRules" ref="telFormRef">
+        <el-form :model="telForm" :rules="telRules" ref="telFormRef" size="large">
           <el-form-item label="手机号" prop="tel">
             <el-input v-model="telForm.tel" placeholder="请输入手机号">
               <template #prepend>
@@ -32,7 +38,7 @@
             </div>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">登录</el-button>
+            <el-button type="primary" class="f1" @click="onSubmit">登录</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -43,20 +49,32 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { sendSms_api, doLogin_api } from '@/api/login'
+import { sendSms_api, doLogin_api, getImgCode_api } from '@/api/login'
 import areaNum from '@/utils/areaNum'
+import { telReg } from '@/utils/index'
 const router = useRouter()
 
 const activeName = ref('acc')
 
+const imgCode = ref('')
+const getImgCode = async () => {
+  const res = await getImgCode_api()
+  if(res.status == 1){
+    imgCode.value = res.body
+  }
+}
+getImgCode()
+
 const user = reactive({
   acc: '',
   password: '',
+  imgCode:''
 })
 const userFormRef = ref()
 const rules = reactive({
   acc: [{ required: true, message: '请输入用户名！', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码！', trigger: 'blur' }],
+  imgCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
 })
 
 const telForm = reactive({
@@ -65,11 +83,10 @@ const telForm = reactive({
 })
 const telFormRef = ref()
 const telPass = (rule:any, value:string, callback:any) => {
-  const telreg = new RegExp(/^(((13[0-9])|(14[5-7])|(15[0-9])|(17[0-9])|(18[0-9]))+\d{8})$/)
-  if(telreg.test(value)){
+  if(telReg.test(value)){
     callback()
   }else{
-    callback(new Error('请输入正确的手机号码'))
+    callback(new Error('请输入正确的手机号码!'))
   }
 }
 const telRules = reactive({
@@ -112,21 +129,28 @@ const onSubmit = () => {
   if(activeName.value == 'acc'){
     userFormRef.value.validate(async (valid:boolean) => {
       if(valid){
-        
+        const res = await doLogin_api({
+          "act": user.acc,
+          "captcha": user.imgCode,
+          "passwd": user.password
+        })
+        if(res.status == 1){
+          router.replace('/index')
+        } 
       }
     })
   }else{
     telFormRef.value.validate(async (valid:boolean) => {
       if(valid){
-        const res = await doLogin_api({
-          type: 1,
-          mobile: telForm.tel,
-          acode: '+' + acode.value,
-          sms: telForm.yzm,
-        })
-        if(res.status == 1){
-          router.replace('/index')
-        }
+        // const res = await doLogin_api({
+        //   type: 1,
+        //   mobile: telForm.tel,
+        //   acode: '+' + acode.value,
+        //   sms: telForm.yzm,
+        // })
+        // if(res.status == 1){
+        //   router.replace('/index')
+        // }
       }
     })
   }
@@ -163,6 +187,10 @@ if(oldtime){
     .yzm_ipt{
       width: 140px;
       margin-right: 10px;
+    }
+    .img_code{
+      width: 102px;
+      height: 32px;
     }
   }
 }

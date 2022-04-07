@@ -4,7 +4,6 @@
     id="tinymce" 
     v-model="editvalue"
     :init="init"
-    @change="change"
   >
   </Editor>
 </template>
@@ -66,7 +65,7 @@ const upload = (blobInfo:any, success:Function, failure:Function, progress:any)=
 }
 
 // window.tinymce.baseURL = `${window.location.origin}/public/tinymce`;
-// (window as any).tinymce.baseURL = '/tinymce';
+(window as any).tinymce.baseURL = '/tinymce';
 
 const init = {
   selector: '#tinymce',
@@ -90,10 +89,8 @@ const init = {
 tinymce.init({})
 
 const emit = defineEmits(['update:modelValue'])
-const change = (value:any)=>{
-  console.log(value);
-}
-const editvalue = ref('')
+
+const editvalue = ref('') // 打包到线上绑定值会失效 所以用了这个蠢办法
 onUpdated(()=>{
   editvalue.value = props.modelValue
   console.log('onUpdated',props.modelValue);
@@ -104,7 +101,8 @@ watch(editvalue,(newValue)=>{
 })
 
 const upImages = async ()=>{
-  const content = props.modelValue
+  // const content = props.modelValue
+  const content = editvalue.value
   const imgReg = /<img [^>]*src=['"]blob:([^'"]+)[^>]*>/gi;
   const srcReg = /src=[\'\"]?(blob:[^\'\"]*)[\'\"]?/gi
   const imgArr = content.match(imgReg)
@@ -170,7 +168,8 @@ const upImages = async ()=>{
       await upFn(imgArr[i])
     }
     console.log(t,123);
-    emit('update:modelValue',t)
+    // emit('update:modelValue',t)
+    editvalue.value = t
   }
 }
 

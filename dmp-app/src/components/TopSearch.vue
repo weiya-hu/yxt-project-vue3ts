@@ -27,13 +27,13 @@
       <el-form class="myform" ref="formRef" :model="form">
         <div class="topitems fcs">
           <el-form-item label="经营范围" prop="business_scope">
-            <el-input v-model="form.business_scope" placeholder="请输入经营范围" maxlength="36"></el-input>
+            <el-input v-model="form.business_scope" placeholder="请输入经营范围" maxlength="36" @change="changeLables"></el-input>
           </el-form-item>
           <el-form-item label="行业分类" prop="industry_id">
-            <MyCascader v-model="form.industry_id" type="type" ref="typeCRef"/>
+            <MyCascader v-model="form.industry_id" type="type" ref="typeCRef" @change="changeLables"/>
           </el-form-item>
           <el-form-item label="省份地区" prop="addr">
-            <MyCascader v-model="form.addr" type="address" ref="addrCRef"/>
+            <MyCascader v-model="form.addr" type="address" ref="addrCRef" @change="changeLables"/>
           </el-form-item>
         </div>
         <div class="contact_mode fcs">
@@ -59,13 +59,13 @@
             </el-select>
           </el-form-item> -->
           <el-form-item label="联系方式" prop="contact">
-            <el-checkbox-group v-model="form.contact">
+            <el-checkbox-group v-model="form.contact" @change="changeLables">
               <el-checkbox :label="v.value" v-for="v in contactArr" :key="v.id">{{v.name}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </div>
         <el-form-item label="企业类型" prop="ctype">
-          <el-checkbox-group v-model="form.ctype">
+          <el-checkbox-group v-model="form.ctype" @change="changeLables">
             <el-checkbox :label="v.value" v-for="v in ctypeArr" :key="v.id">{{v.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
@@ -99,7 +99,7 @@
 
       <div class="now_condition fcs" v-show="conditionShow">
         <div class="fs0">筛选条件：</div>
-        <div class="f1 els">
+        <div class="list flex">
           <template v-for="(value,key) in showLables">
             <el-tag :key="key" closable class="mytag" v-if="value" @close="closeTag(key)">{{getTagName[key]}}：{{value}}</el-tag>
           </template>
@@ -186,6 +186,12 @@ const resetForm = (formEl: FormInstance | undefined) => {
 const reset = ()=>{
   nowCondition.value = '条件组'
   resetForm(formRef.value)
+  showLables.business_scope = ''
+  showLables.industry_id = ''
+  showLables.addr = ''
+  showLables.contact = ''
+  showLables.ctype = ''
+  conditionShow.value = false
 }
 const addShow = ref(false)
 const Addform = reactive({
@@ -287,6 +293,7 @@ const changeDrop = (v:any)=>{
   ctypeArr.value.forEach((value:CAndC)=>{
     (v.company_type & value.value) && form.ctype.push(value.value);
   });
+  changeLables()
   console.log(form);
 }
 
@@ -316,10 +323,8 @@ const wordSearch = ()=>{
 }
 
 const conditionShow = ref(false)
-const addrCRef = ref()
-const typeCRef = ref()
-const goSearch = ()=>{
-  //高级搜索
+const changeLables = () => {
+  // 改变筛选条件
   showLables.business_scope = form.business_scope
   let contact_str = '',ctype_str = '';
   form.contact.forEach(v=>{
@@ -334,6 +339,12 @@ const goSearch = ()=>{
   showLables.industry_id = typeCRef.value.getText()
   showLables.addr = addrCRef.value.getText()
   conditionShow.value = true
+}
+
+const addrCRef = ref()
+const typeCRef = ref()
+const goSearch = ()=>{
+  //高级搜索
   emit('heightSearch',getSearchParams())
 }
 
@@ -479,11 +490,24 @@ const closeTag = (key:string)=>{
     font-size: 12px;
     .fs0{
       line-height: 28px;
-      margin-right: 16px;
+      // margin-right: 16px;
+      width: 86px;
     }
-    .el-tag{
-      height: 28px;
-      margin-right: 20px;
+    .list{
+      width: calc(100% - 86px);
+      .el-tag{
+        height: 28px;
+        margin-right: 20px;
+      }
+      .mytag{
+        // max-width: calc(20% - 20px);
+        overflow:hidden;
+        :deep(.el-tag__content){
+          overflow:hidden;
+          text-overflow:ellipsis;
+          white-space:nowrap
+        }
+      }
     }
   }
 }
