@@ -2,8 +2,8 @@
   <div class="article_details">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' + path }">{{'资源内容库' }}</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/' + path + '/article' }">软文</el-breadcrumb-item>
-      <el-breadcrumb-item>软文详情</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/' + path + '/article' }">内容</el-breadcrumb-item>
+      <el-breadcrumb-item>内容详情</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="content">
       <div class="title">{{body.title}}</div>

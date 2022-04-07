@@ -172,15 +172,15 @@ const routes = [
         children:[
           {
             path: '/resource/article',
-            name: '资源内容库-软文库',
+            name: '资源内容库-内容库',
             component: () => import('@/views/layout/resource/article.vue'),
-            meta: { title: '资源内容库',icon:rw_i,icon_a:rw_a_i,lv:2 },
+            meta: { title: '内容库',icon:rw_i,icon_a:rw_a_i,lv:2 },
           },
           {
             path: '/resource/articleDetails',
-            name: '资源内容库-软文详情',
+            name: '资源内容库-内容详情',
             component: () => import('@/views/layout/resource/articleDetails.vue'),
-            meta: { title: '软文详情',leftHidden:true,father:'/resource/article',lv:1 },
+            meta: { title: '内容详情',leftHidden:true,father:'/resource/article',lv:1 },
           }
         ]
       },
