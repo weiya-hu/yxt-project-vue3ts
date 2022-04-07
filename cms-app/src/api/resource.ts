@@ -23,5 +23,9 @@ export const downList_api =(data:{id:string}): Promise<res> => {
   return get('/cms/res/download.do',data)
 }
 
-
-
+/**
+ * @name 行业分类
+*/
+export const industryList_api =(): Promise<res> => {
+  return get('/cms/industry.list')
+}

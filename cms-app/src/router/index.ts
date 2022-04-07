@@ -174,26 +174,14 @@ const routes = [
             path: '/resource/article',
             name: '资源内容库-软文库',
             component: () => import('@/views/layout/resource/article.vue'),
-            meta: { title: '软文库',icon:rw_i,icon_a:rw_a_i,lv:2 },
+            meta: { title: '资源内容库',icon:rw_i,icon_a:rw_a_i,lv:2 },
           },
           {
             path: '/resource/articleDetails',
             name: '资源内容库-软文详情',
             component: () => import('@/views/layout/resource/articleDetails.vue'),
             meta: { title: '软文详情',leftHidden:true,father:'/resource/article',lv:1 },
-          },
-          {
-            path: '/resource/PDF',
-            name: '资源内容库-PDF库',
-            component: () => import('@/views/layout/resource/PDF.vue'),
-            meta: { title: 'PDF库',icon:pdf_i,icon_a:pdf_a_i,lv:2 },
-          },
-          {
-            path: '/resource/video',
-            name: '资源内容库-视频库',
-            component: () => import('@/views/layout/resource/video.vue'),
-            meta: { title: '视频库',icon:sp_i,icon_a:sp_a_i,lv:2 },
-          },
+          }
         ]
       },
     ],

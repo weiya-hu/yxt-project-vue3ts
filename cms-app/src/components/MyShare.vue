@@ -17,6 +17,10 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * 分享弹窗
+ * @author pr 
+*/
 import wx_i from '@/assets/images/wx.png'
 import wx_a_i from '@/assets/images/wx_a.png'
 import QQ_i from '@/assets/images/QQ.png'
@@ -34,26 +38,15 @@ import link_a_i from '@/assets/images/link_a.png'
 import { ref } from 'vue';
 import QrcodeVue from 'qrcode.vue';
 import { mainStore } from '@/store/index'
-const store = mainStore()
-
-// console.log(store.state.yxtUrl);
-console.log(store.state.userInfo.invite_code);
-const invite_code = store.state.userInfo.invite_code
-const cmsUrl=store.state.yxtUrl.domain_mobile
-
-
-
-/**
- * 分享弹窗
- * @author pr 
-*/
 const props = withDefaults(defineProps<{
   shareId:string, // 分享id
 }>(),{})
 
-/**
- * 点击弹出分享组件
- */
+const store = mainStore()
+
+const invite_code = store.state.userInfo.invite_code
+const cmsUrl=store.state.yxtUrl.domain_mobile
+
 const imgArr=ref([
   {
     haveColor:wx_i,
@@ -92,8 +85,6 @@ const showTyoe = ref('')
 const handClick = (value:any)=>{
   showTyoe.value = value.tips
 }
-
-
 
 </script>
 

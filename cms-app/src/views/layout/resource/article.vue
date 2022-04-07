@@ -2,13 +2,13 @@
   <div class="resource_article">
     <div class="myNav">
     <div class="tips">行业分类</div>
-      <el-select v-model="value" class="article_sel" placeholder="请选择">
-          <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
+      <el-select v-model="value" class="article_sel"  placeholder="请选择" clearable>
+        <el-option
+          v-for="item in induList"
+          :key="item.id"
+          :label="item.industry_name"
+          :value="item.id"
+        />
       </el-select>
       <el-button type="primary" size="large"  class="cx" @click="wordSearch">&emsp;查询&emsp;</el-button>
     </div>
@@ -54,28 +54,10 @@ import MyShare from '@/components/MyShare.vue';
 import MyPage from "@/components/MyPage.vue";
 import MyDown from "@/components/MyDown.vue";
 import { formatDate } from '@/utils/date';
-import { articlesList_api } from '@/api/resource'
+import { articlesList_api,industryList_api } from '@/api/resource'
 
 
 const kfShow = ref(false)
-const options = ref([
-  {
-          value: '选项1',
-          label: '医疗器械1'
-        }, {
-          value: '选项2',
-          label: '医疗器械2'
-        }, {
-          value: '选项3',
-          label: '食品安全'
-        }, {
-          value: '选项4',
-          label: '医疗器械3'
-        }, {
-          value: '选项5',
-          label: '医疗器械4'
-        }
-])
 
 const value = ref()
 const page = ref(1)
@@ -88,9 +70,19 @@ interface SData {
   current:number,
 }
 const tableData = ref<SData[]>([])
+
+const induList=ref<any>({})
+const industryList = async()=>{
+   const res = await industryList_api()
+   if(res.status == 1){
+     induList.value=res.body
+   }
+}
+
+industryList()
 // 查询功能
 const wordSearch =()=>{
-  console.log('查询功能')
+  getList()
 }
 const shareId = ref('')//要分享的id
 const goShare=(id:string)=>{
