@@ -83,6 +83,8 @@ const lvtree = ref()
 const menuList = ref<any[]>([])
 const getMenuList = async () => {
   const res = await getLvList_api()
+  console.log(res);
+  
   menuList.value = res.body
 }
 getMenuList()

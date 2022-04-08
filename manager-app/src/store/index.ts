@@ -69,6 +69,8 @@ export const mainStore = defineStore('mainStore', () => {
         if(res.status == 1){
           state.userLv = res.body.map((v:number|string) => String(v))
           resolve(state.userLv)
+          
+          
         }else{
           reject([])
         }

@@ -181,15 +181,39 @@ const routes = [
       {
         path: '/cms',
         name: 'Cms',
-        redirect: '/cms/cms',
+        redirect: '/cms/myWork',
         component: () => import('@/views/layout/rview.vue'),
-        meta: { title: 'CMS系统管理', lv:'4', clv:'4' },
+        meta: { title: 'CMS系统管理', lv:'4', clv:'27,32,37' },
         children:[
           {
-            path: '/cms/cms',
-            name: 'Cms1',
-            component: () => import('@/views/layout/cms/cms.vue'),
-            meta: { title: 'cms', keepAlive:true, },
+            path: '/cms/mywork',
+            name: 'Mywork',
+            // redirect: '/cms/myWork/article',
+            component: () => import('@/views/layout/cms/myWork/article.vue'),
+            meta: { title: '我的作品库', lv:'27' },
+            
+          },
+          {
+            path: '/cms/myworkdet',
+            name: 'Myworkdet',
+            component: () => import('@/views/layout/cms/myWork/articleDetails.vue'),
+            meta: { title: '软文详情', father:'/cms/mywork' },
+          },
+          {
+            path: '/cms/custom',
+            name: 'Custom',
+            // redirect: '/cms/custom/article.vue',
+            component: () => import('@/views/layout/cms/custom/article.vue'),
+            meta: { title: '个性化内容库', lv:'32' },
+           
+          },
+          {
+            path: '/cms/resource',
+            name: 'Resource',
+            // redirect: '/cms/resource/article.vue',
+            component: () => import('@/views/layout/cms/resource/article.vue'),
+            meta: { title: '资源内容库', lv:'37'},
+            
           },
         ]
       },
