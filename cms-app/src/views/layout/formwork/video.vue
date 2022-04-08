@@ -1,6 +1,6 @@
 <template>
   <div>
-    模板内容库 视频
+    系统正在努力建设中..
   </div>
 </template>
 

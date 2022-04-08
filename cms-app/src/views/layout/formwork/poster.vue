@@ -1,6 +1,6 @@
 <template>
   <div>
-    模板内容库 海报
+    系统正在努力建设中..
   </div>
 </template>
 
