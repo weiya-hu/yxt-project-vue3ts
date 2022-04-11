@@ -5,7 +5,7 @@
           <img :src="i==0?v.haveColor:v.noColor" alt="">
           <span>{{v.tips}}</span>
           <div class="qcshare" v-if="showTyoe==v.tips && showTyoe=='微信'">
-            <qrcode-vue :value="cmsUrl+'/cms_resource.html?id='+shareId+'&invite_code='+invite_code" :size="qcsize" level="H" class="qrcode" />
+            <qrcode-vue :value="'https://' + cmsUrl+'/cms_resource.html?id='+shareId+'&invite_code='+invite_code" :size="qcsize" level="H" class="qrcode" />
             <span>微信扫码分享</span>
           </div>
         </li>

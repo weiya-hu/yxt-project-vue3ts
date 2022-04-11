@@ -12,8 +12,7 @@ import sp_i from '@/assets/images/sp.png'
 import sp_a_i from '@/assets/images/sp_a.png'
 import h5_i from '@/assets/images/h5.png'
 import h5_a_i from '@/assets/images/h5_a.png'
-import pdf_i from '@/assets/images/pdf.png'
-import pdf_a_i from '@/assets/images/pdf_a.png'
+
 
 const routes = [
   {
