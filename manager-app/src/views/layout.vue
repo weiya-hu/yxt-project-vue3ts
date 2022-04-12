@@ -42,7 +42,11 @@
         </router-view>
       </el-col>
     </el-row>
+
     <ResourcePool/>
+
+    <el-image-viewer @close="imgShow=false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/>
+
   </div>
 </template>
 
@@ -54,17 +58,14 @@ import LeftNav from '@/components/LeftNav.vue'
 import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
-import {loginOut_api} from '@/api/login'
+import { loginOut_api } from '@/api/login'
 import { routerGuard } from '@/router'
 import { errMsg } from '@/utils/index'
 import ResourcePool from '@/components/ResourcePool.vue'
 import emiter from '@/utils/bus'
-import { getHashStr } from '@/utils/index'
+import { ElMessageBox } from 'element-plus'
 
 const store = mainStore()
-
-// store.setTypeList()
-// store.setAddressList()
 
 //获取跳转地址
 const urlInfo = ref<any>({})
@@ -73,14 +74,29 @@ store.getYxtUrl().then((url:any)=>{
 })
 
 // 获取用户信息及权限
-store.setUserinfo().then((res:boolean) => {
-  store.setUserLv().then((userLv:(number | string)[])=>{
-    routerGuard(userLv)
-  }).catch((err)=>{
+store.setUserinfo().then((res:any) => {
+  if(res.login_passwd_type == 1){
+    store.setUserLv().then((userLv:(number | string)[])=>{
+      routerGuard(userLv)
+    }).catch((err)=>{
+      routerGuard([])
+      router.replace('/login')
+      errMsg('获取用户权限失败，请重新登录或联系管理员')
+    })
+  }else{
+    ElMessageBox.alert(
+      '修改默认密码后才能继续使用',
+      '温馨提示',
+      {
+        confirmButtonText: '关闭',
+        callback: () => {
+        },
+      }
+    )
+    router.replace('/index/editpass')
+    store.setUserLv([])
     routerGuard([])
-    router.replace('/login')
-    errMsg('获取用户权限失败，请重新登录或联系管理员')
-  })
+  }
 }).catch((error: boolean) => {
   routerGuard([])
   router.replace('/login')
@@ -131,6 +147,15 @@ const loginout = ()=>{
 const showLib = ()=>{
   emiter.emit('poolShow', '')
 }
+
+const showImgs = ref<string[]>([])//预览图片列表
+const imgShow = ref(false)//预览是否显示
+const showImgIndex = ref(0)//首张预览图片
+emiter.on('lookImage', ({ imgs, index } : { imgs:string[], index:number }) => {
+  imgShow.value = true
+  showImgs.value = imgs
+  showImgIndex.value = index
+})
 
 </script>
 

@@ -221,4 +221,7 @@ img{
 .el-dialog__header{
   margin-right: 0!important;
 }
+.lookhover{
+  cursor: url('@/assets/images/imagelook.cur'),pointer;
+}
 </style>

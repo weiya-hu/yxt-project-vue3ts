@@ -43,13 +43,30 @@
 
     <el-tree :data="data" :props="defaultProps" show-checkbox draggable node-key="id" ref="lvtree" :default-checked-keys="[4,5]"/>
     <el-button type="primary" @click="getlv" class="mt20">获取</el-button>
+
+    <div class="dragbox">
+      <draggable 
+        v-model="myArray" 
+        @start="drag=true" 
+        @end="drag=false"
+        tag="transition-group"
+        item-key="order"
+        v-bind="dragOptions"
+        @change="changeDrag"
+      >
+        <template #item="{element}">
+          <div class="items fcc">{{element.name}}</div>
+        </template>
+      </draggable>
+    </div>
+    
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import Mypage from "@/components/Mypage.vue";
-
+import draggable from 'vuedraggable'
 const page = ref(1)
 
 const activeName = ref('first')
@@ -102,6 +119,50 @@ const getlv = ()=>{
   const id = lvtree.value.getCheckedKeys() // 选中的
   const hid = lvtree.value.getHalfCheckedKeys() // 半选中
   console.log(id,hid);
+}
+
+const myArray = ref([
+  {
+    "name": "vue.draggable",
+    "order": 1
+  },
+  {
+    "name": "draggable",
+    "order": 2
+  },
+  {
+    "name": "component",
+    "order": 3
+  },
+  {
+    "name": "for",
+    "order": 4
+  },
+  {
+    "name": "vue.js 2.0",
+    "order": 5
+  },
+  {
+    "name": "based",
+    "order": 6
+  },
+  {
+    "name": "on",
+    "order": 7
+  },
+  {
+    "name": "Sortablejs",
+    "order": 8
+  }
+])
+const drag = ref(false)
+const dragOptions ={
+  animation: 200,
+  ghostClass: "ghost",
+  disabled:false
+}
+const changeDrag = ()=>{
+  console.log(myArray.value);
 }
 
 </script>

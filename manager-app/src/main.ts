@@ -15,6 +15,7 @@ app
   .use(createPinia())
   .use(ElementPlus, {
     locale: zhCn,
+    // size:'small'
   })
   .directive('error', ErrorDirective)
   .mount('#app')

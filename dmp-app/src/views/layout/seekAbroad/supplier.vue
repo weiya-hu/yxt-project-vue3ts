@@ -1,13 +1,8 @@
 <template>
   <div class="up2b">
-    <div class="top-button fsc">
-      <el-button size="large" type="primary"  class="up-user fcc" @click="add">添加需求</el-button>
-      <div class="flexr">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步CMS</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+    
+    <TopBtns @add="add"/>
+
     <div class="mytable">
       <el-table
         :data="tableList"
@@ -99,7 +94,7 @@
       </div>
       <template #footer>
         <div class="flexr">
-          <el-button type="primary" @click="addShow=false">取消</el-button>
+          <el-button @click="addShow=false">取消</el-button>
           <el-button type="primary" @click="addSure">确认</el-button>
         </div>
       </template>
@@ -116,6 +111,7 @@
   import {overseasPage,overseasIn,overseasDel} from '@/api/seekAbroad'
   import MyEmpty from "@/components/MyEmpty.vue";
   import  MyUpload from '@/components/MyUpload.vue'
+  import TopBtns from "@/components/TopBtns.vue";
   import { ElMessageBox} from 'element-plus'
   import { errMsg} from '@/utils/index'
   import { mainStore } from '@/store/index'

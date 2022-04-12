@@ -8,7 +8,7 @@ export const getSearchWord_api = (): Promise<res> => {
 }
 
 /**
- * @name 获取康州数据源或第三方数据分页列表
+ * @name 获取康洲数据源或第三方数据分页列表
 */
 export const wordSearchList_api = (data:PageParams): Promise<res> => {
   return post('/dmp/customer/source.page',data)

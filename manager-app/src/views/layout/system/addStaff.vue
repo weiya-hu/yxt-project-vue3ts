@@ -11,13 +11,13 @@
         </template>
         <div class="fcc">
           <el-form :model="info" :rules="rules" ref="addFormRef">
-            <el-form-item label="姓名：" prop="name">
+            <el-form-item label="姓&emsp;名：" prop="name">
               <el-input v-model="info.name" placeholder="请输入姓名"></el-input>
             </el-form-item>
-            <el-form-item label="电话：" prop="mobile">
+            <el-form-item label="手机号：" prop="mobile">
               <el-input v-model="info.mobile" placeholder="请输入电话"></el-input>
             </el-form-item>
-            <el-form-item label="部门：" prop="dept_id">
+            <el-form-item label="部&emsp;门：" prop="dept_id">
               <el-select v-model="info.dept_id" placeholder="请选择部门">
                 <el-option :label="v.dept_name" :value="v.id" v-for="(v,i) in deptList" :key="i"/>
               </el-select>
@@ -65,10 +65,10 @@ const telPass = (rule:any, value:string, callback:any) => {
 const rules = reactive({
   name: [
     { required: true, message: '请输入姓名！', trigger: 'blur' },
-    { min: 1, max:10, message: '姓名长度须在1~10个字符！', trigger: 'blur' },
+    { min: 1, max:12, message: '姓名长度须在1~12个字符！', trigger: 'blur' },
   ],
   mobile: [
-    { required: true, message: '请输入电话！', trigger: 'blur' },
+    { required: true, message: '请输入手机号！', trigger: 'blur' },
     { validator: telPass, trigger: 'blur' },
   ],
   dept_id: [{ required: true, message: '请选择部门!', trigger: 'blur' }],
@@ -83,8 +83,6 @@ const lvtree = ref()
 const menuList = ref<any[]>([])
 const getMenuList = async () => {
   const res = await getLvList_api()
-  console.log(res);
-  
   menuList.value = res.body
 }
 getMenuList()

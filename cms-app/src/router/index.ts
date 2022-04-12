@@ -218,7 +218,7 @@ export const routerGuard = (userlv:number,url:any)=>{
       })
       return false
     }else{
-      window.document.title = to.meta.title ? (to.meta.title as string) : '康州数智CMS'
+      window.document.title = to.meta.title ? (to.meta.title as string) : '康洲数智CMS'
     }
   })
 }

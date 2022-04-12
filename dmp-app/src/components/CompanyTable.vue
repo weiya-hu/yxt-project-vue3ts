@@ -37,9 +37,9 @@
         </template>
       </el-table-column>
       <el-table-column property="code" label="统一社会信用代码" width="165"/>
-      <el-table-column property="url" label="企业官网" >
+      <el-table-column property="url" label="企业官网">
         <template #default="scope">
-          <el-link type="primary" target="_blank" :href="'//'+scope.row.url">{{ scope.row.url }}</el-link>
+          <el-link type="primary" target="_blank" :href="scope.row.url">{{ scope.row.url }}</el-link>
         </template>
       </el-table-column>
       <el-table-column property="business_scope" label="经营范围" width="200">

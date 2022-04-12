@@ -1,5 +1,7 @@
 import { ElMessage , ElMessageBox } from 'element-plus'
 
+import emiter from '@/utils/bus'
+
 export const getUrlParams = (search: string, name: string) => {
   //search方式跳转获取参数
   const paramsString = search.substring(1)
@@ -43,8 +45,8 @@ export function confirm(msg?:string){
     msg||'正在上传中，关闭弹窗可能会导致上传失败，是否继续关闭？',
     '温馨提示',
     {
-      confirmButtonText: '取消',
-      cancelButtonText: '确定',
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
       type: 'warning',
     }
   )
@@ -177,7 +179,7 @@ export function strToArr(str1:string|number,str2?:string|number,str3?:string|num
 export function getSource(source:number){
   switch (source) {
     case 1:
-      return '康州数智'
+      return '康洲数智'
       break;
     case 2:
       return '第三方数据'
@@ -212,4 +214,14 @@ export function getSource(source:number){
   }
 }
 
-export const telReg = new RegExp(/^(((13[0-9])|(14[5-7])|(15[0-9])|(17[0-9])|(18[0-9]))+\d{8})$/)
+export const telReg = new RegExp(/^(((13[0-9])|(14[5-7])|(15[0-9])|(17[0-9])|(18[0-9]))+\d{8})$/) // 手机号
+export const passReg = /^[A-Za-z0-9]*$/ // 数字或者字母
+
+/**
+ * 预览图片
+ * @imgs 图片数组
+ * @index 要展示的图片在imgs里对应的索引
+*/
+export function lookImage(imgs:string[], index:number){
+  emiter.emit('lookImage', {imgs, index})
+}

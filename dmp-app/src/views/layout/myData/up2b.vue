@@ -1,14 +1,8 @@
 <template>
   <div class="up2b">
-    <div class="top-button fsc">
-      <el-button size="large" type="primary"  class="up-user fcc" @click="dialogVisible = true">上传客户</el-button>
-      <!-- <div class="up-user fcc" @click="dialogVisible = true">上传客户</div> -->
-      <div class="flexr">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步CMS</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+
+    <TopBtns @add="dialogVisible = true"/>
+
     <div class="mytable">
       <el-table
         :data="tableList"
@@ -38,6 +32,7 @@
   import {useRouter} from 'vue-router'
   import {upRecordList} from '@/api/myData'
   import MyEmpty from "@/components/MyEmpty.vue";
+  import TopBtns from "@/components/TopBtns.vue";
 
   interface TableTitleProp{
       type:string,

@@ -3,7 +3,7 @@
     <el-tabs v-model="activeName" class="login_tabs">
       <el-tab-pane label="账号密码登录" name="acc">
         <el-form :model="user" :rules="rules" ref="userFormRef" size="large">
-          <el-form-item label="用户名" prop="acc">
+          <el-form-item label="手机号" prop="acc">
             <el-input v-model="user.acc" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="密&emsp;码" prop="password">
@@ -12,7 +12,7 @@
           <el-form-item label="验证码" prop="imgCode">
             <div class="fcs">
               <el-input v-model="user.imgCode" placeholder="请输入验证码" class="yzm_ipt"></el-input>
-              <img :src="imgCode" alt="重新获取" @click="getImgCode" class="img_code">
+              <img :src="imgCode" alt="重新获取" @click="T_getImgCode" class="img_code">
             </div>
           </el-form-item>
           <el-form-item>
@@ -52,6 +52,8 @@ import { useRouter } from 'vue-router'
 import { sendSms_api, doLogin_api, getImgCode_api } from '@/api/login'
 import areaNum from '@/utils/areaNum'
 import { telReg } from '@/utils/index'
+import { throttle } from 'lodash'
+
 const router = useRouter()
 
 const activeName = ref('acc')
@@ -63,7 +65,8 @@ const getImgCode = async () => {
     imgCode.value = res.body
   }
 }
-getImgCode()
+const T_getImgCode = throttle(getImgCode,5000)
+T_getImgCode()
 
 const user = reactive({
   acc: '',
@@ -135,7 +138,11 @@ const onSubmit = () => {
           "passwd": user.password
         })
         if(res.status == 1){
-          router.replace('/index')
+          if(res.body == 1){
+            router.replace('/index')
+          }else{
+            router.replace('/index/editpass')
+          }
         } 
       }
     })

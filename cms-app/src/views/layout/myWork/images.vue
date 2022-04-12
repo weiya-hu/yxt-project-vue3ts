@@ -1,13 +1,8 @@
 <template>
   <div class="m_images">
-    <div class="fsc m_topbtn">
-      <el-button type="primary" size="large" @click="addShow = true">&emsp;创建&emsp;</el-button>
-      <div class="fcs">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步官网</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+    
+    <TopBtns @add="addShow = true"/>
+
     <div class="mytable">
       <el-table
         :data="tableData"
@@ -18,7 +13,7 @@
         <el-table-column property="id" label="ID" width="230"/>
         <el-table-column property="thumb_url" label="图片" >
           <template #default="{row}">
-            <img :src="row.thumb_url" alt="" class="firstimg">
+            <img :src="row.thumb_url" alt="" class="firstimg lookhover" @click="look(row.thumb_url)">
           </template>
         </el-table-column>
         <el-table-column property="create_time" label="创建日期" width="200">
@@ -96,6 +91,7 @@ import axios from 'axios'
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import { errMsg ,okMsg } from '@/utils/index'
 import { imagesList_api, imagesAdd_api, imagesDel_api } from '@/api/myWork'
 

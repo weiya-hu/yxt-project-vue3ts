@@ -1,13 +1,8 @@
 <template>
   <div class="specific_data_details_page">
-    <div class="topbtns fsc">
-      <FindNumber class="lt" :total="total"/>
-      <div class="rt fcs">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步CMS</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+    
+    <TopBtns :total="total" class="topbtns"/>
+
     <CompanyTable :data="tableData"/>
     <MyPage :total="total" v-model="page" @change="changePage"/>
   </div>
@@ -17,7 +12,7 @@
 import { reactive, ref  } from 'vue'
 import MyPage from "@/components/MyPage.vue";
 import CompanyTable from "@/components/CompanyTable.vue";
-import FindNumber from "@/components/FindNumber.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import {useRoute} from 'vue-router'
 import { demandDetail_api } from '@/api/findB'
 
@@ -47,9 +42,5 @@ getList()
 </script>
 
 <style scoped lang="scss">
-.specific_data_details_page{
-  .topbtns{
-    padding-bottom: 20px;
-  }
-}
+
 </style>

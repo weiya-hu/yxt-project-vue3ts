@@ -1,122 +1,75 @@
 <template>
   <div class="company_page">
-    <div @click="$router.push('companydetails')">去详情</div>
-    <Mypage :total="50" v-model="page"/>
-
-    <el-card class="mycard">
-      <template #header>
-        <div class="fsc">
-          <span>Card name</span>
-          <el-button type="primary">Operation button</el-button>
-        </div>
-      </template>
-      <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
+    <div class="ftitle">企业管理</div>
+    <el-card class="mycard" header="企业列表">
+      <div class="mytable">
+        <el-table :data="tableData" border>
+          <el-table-column prop="company_name" label="企业名称"/>
+          <el-table-column prop="industry_id" label="所属行业" width="200">
+            <template #default="{row}">
+              <div>{{getHashStr(row.industry_id.split(','),typeHash,'last')}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="注册地">
+            <template #default="{row}">
+            <div>{{getHashStr(strToArr(row.province, row.city, row.district),addressHash)}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="legal_person" label="联系人"/>
+          <el-table-column prop="contact" label="联系电话"/>
+          <el-table-column property="user_name" label="认证用户"/>
+          <el-table-column property="user_mobile" label="认证用户电话"/>
+          <el-table-column property="status" label="认证状态">
+            <template #default="{row}">
+              {{row.status == 2 ? '认证中' : row.status == 3 ? '认证通过' : '认证失败'}}
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" fixed="right">
+            <template #default="{row}">
+              <div class="fcs">
+                <el-link type="primary" @click="$router.push('companydetails?id=' + row.id)">详细信息</el-link>
+                <span class="line" v-if="row.status == 2"></span>
+                <el-link type="primary" v-if="row.status == 2" @click="$router.push('companyreview?id=' + row.id)">认证审核</el-link>
+              </div>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <MyEmpty/>
+          </template>
+        </el-table>
+      </div>
+      <Mypage :total="total" v-model="page" @change="getList" :size="size"/>
     </el-card>
-
-    <el-card class="mycard mt20">
-      <template #header>
-        <div class="fsc">
-          <span>Card name</span>
-          <el-button type="primary">Operation button</el-button>
-        </div>
-      </template>
-      <el-descriptions :column="2">
-        <el-descriptions-item label="Username">kooriookami</el-descriptions-item>
-        <el-descriptions-item label="Telephone">18100000000</el-descriptions-item>
-        <el-descriptions-item label="Place">Suzhou</el-descriptions-item>
-        <el-descriptions-item label="Remarks">
-          <el-tag size="small">School</el-tag>
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-card>
-
-    <el-tabs
-      v-model="activeName"
-      type="border-card"
-      class="mytabs mt20 mb20"
-    >
-      <el-tab-pane label="User" name="first">User</el-tab-pane>
-      <el-tab-pane label="Config" name="second">Config</el-tab-pane>
-      <el-tab-pane label="Role" name="third">Role</el-tab-pane>
-      <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
-    </el-tabs>
-
-    <el-tree :data="data" :props="defaultProps" show-checkbox draggable node-key="id" ref="lvtree" :default-checked-keys="[4,5]"/>
-    <el-button type="primary" @click="getlv" class="mt20">获取</el-button>
-
-    <div class="selimg" @click="goselimg">
-      <img :src="selimgs" alt="" style="width:100%;height:100%">
-    </div>
 
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import Mypage from "@/components/Mypage.vue";
-import emiter from '@/utils/bus'
+import MyEmpty from "@/components/MyEmpty.vue";
+import { getCompanyList_api, size } from '@/api/users'
+import { mainStore } from '@/store/index'
+import { getHashStr, strToArr } from '@/utils/index'
 
+const store = mainStore()
+const addressHash = computed(() => store.state.addressHash)
+const typeHash = computed(() => store.state.typeHash)
+
+const tableData = ref([])
 const page = ref(1)
-
-const activeName = ref('first')
-
-const defaultProps = {
-  children: 'children',
-  label: 'label',
-  disabled: 'disabled',
+const total = ref(0)
+const getList = async () => {
+  const res = await getCompanyList_api({
+    size,
+    current: page.value,
+  })
+  if(res.status == 1){
+    tableData.value = res.body.records
+    total.value = res.body.total
+  }
 }
-
-const data = [
-  {
-    id: 1,
-    label: 'Level one 1 id:1',
-    children: [
-      {
-        id: 3,
-        label: 'Level two 2-1 id:3',
-        children: [
-          {
-            id: 4,
-            label: 'Level three 3-1-1 id:4',
-          },
-          {
-            id: 5,
-            label: 'Level three 3-1-2 id:5',
-          },
-        ],
-      },
-      {
-        id: 2,
-        label: 'Level two 2-2 id:2',
-        children: [
-          {
-            id: 6,
-            label: 'Level three 3-2-1 id:6',
-          },
-          {
-            id: 7,
-            label: 'Level three 3-2-2 id:7',
-          },
-        ],
-      },
-    ],
-  },
-]
-
-const lvtree = ref()
-const getlv = ()=>{
-  const id = lvtree.value.getCheckedKeys() // 选中的
-  const hid = lvtree.value.getHalfCheckedKeys() // 半选中
-  console.log(id,hid);
-}
-
-const selimgs = ref('')
-emiter.on('sureSel', (value:any)=>{
-  selimgs.value = value
-})
-const goselimg = ()=>{
-  emiter.emit('poolShow', 'sel')
-}
+getList()
 
 </script>
 
@@ -125,9 +78,5 @@ export default { name:'Company' }
 </script>
 
 <style scoped lang="scss">
-.selimg{
-  width: 100px;
-  height: 100px;
-  background-color: #eee;
-}
+
 </style>

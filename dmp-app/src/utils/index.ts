@@ -160,7 +160,7 @@ export function strToArr(str1:string|number,str2?:string|number,str3?:string|num
 export function getSource(source:number){
   switch (source) {
     case 1:
-      return '康州数智'
+      return '康洲数智'
       break;
     case 2:
       return '第三方数据'

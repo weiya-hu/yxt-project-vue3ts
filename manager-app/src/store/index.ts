@@ -9,7 +9,6 @@ export const mainStore = defineStore('mainStore', () => {
     yxtUrl:{} as any,//跳转地址
     userLv:[] as (number | string)[],//用户权限数组
     userInfo:{} as any,//用户信息
-    companyInfo:{} as any,//公司信息
     typeList:[] as any[],//行业分类
     typeHash:{} as any,//行业分类哈希表
     addressList:[] as any[],//地区列表
@@ -50,33 +49,36 @@ export const mainStore = defineStore('mainStore', () => {
     state.keepList = list
   }
   const setUserinfo = ()=>{
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       getUserInfo().then((res:res)=>{
         if(res.status == 1){
           state.userInfo = res.body
-          resolve(true)
+          resolve(state.userInfo)
         }else{
-          reject(false)
+          reject(res.message)
         }
       }).catch(err=>{
-        reject(false)
+        reject(err)
       })
     })
   }
-  const setUserLv = ()=>{
+  const setUserLv = (lvArr?:(number | string)[]) => {
     return new Promise<(number | string)[]>((resolve, reject) => {
-      getUserLv().then((res:res)=>{
-        if(res.status == 1){
-          state.userLv = res.body.map((v:number|string) => String(v))
-          resolve(state.userLv)
-          
-          
-        }else{
+      if(lvArr){
+        state.userLv = lvArr
+        resolve(state.userLv)
+      }else{
+        getUserLv().then((res:res)=>{
+          if(res.status == 1){
+            state.userLv = res.body.map((v:number|string) => String(v))
+            resolve(state.userLv)
+          }else{
+            reject([])
+          }
+        }).catch(err=>{
           reject([])
-        }
-      }).catch(err=>{
-        reject([])
-      })
+        })
+      }
     })
   }
   const getYxtUrl = ()=>{

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { mainStore } from '@/store/index'
+const store = mainStore()
+store.setTypeList()
+store.setAddressList()
 </script>
 
 <template>
@@ -295,5 +299,13 @@ img{
   .el-form-item{
     margin-bottom: 0;
   }
+}
+.ftitle{
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.lookhover{
+  cursor: url('@/assets/images/imagelook.cur'),pointer;
 }
 </style>

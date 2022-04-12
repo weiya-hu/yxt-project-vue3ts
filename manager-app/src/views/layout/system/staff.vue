@@ -58,7 +58,7 @@
           </template>
         </el-table>
       </div>
-      <MyPage :total="total" v-model="page" @change="getList"/>
+      <MyPage :total="total" v-model="page" @change="getList" :size="size"/>
     </el-card>
 
     <MyDialog v-model="delShow" :msg="'确认删除此用户?'" @sure="sureDel"/>
@@ -68,7 +68,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import { getDeptList_api, getStaffList_api, setStaffStatus_api, delStaff_api } from '@/api/system'
+import { getDeptList_api, getStaffList_api, setStaffStatus_api, delStaff_api, size } from '@/api/system'
 import { formatDate } from '@/utils/date'
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyPage from "@/components/MyPage.vue";
@@ -101,7 +101,7 @@ const page = ref(1)
 const total = ref(0)
 const getList = async () => {
   const res = await getStaffList_api({
-    size: 10,
+    size,
     current: page.value,
     ...search
   })

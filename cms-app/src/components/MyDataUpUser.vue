@@ -137,11 +137,11 @@ const close=()=>{
 }
 const beforeCloseAdd = (done:Function)=>{
   if(loading.value){
-    confirm().then(() => {})
-    .catch(() => {
+    confirm().then(() => {
       upload.value.doAbort()
       done()
     })
+    .catch(() => {})
   }else{
     done()
   }

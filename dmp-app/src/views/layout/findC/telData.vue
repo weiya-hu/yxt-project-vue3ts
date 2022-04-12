@@ -1,13 +1,8 @@
 <template>
   <div class="teldata_page_c">
-    <div class="topbtns fsc">
-      <el-button size="large" type="primary" @click="addShow = true">新建人群</el-button>
-      <div class="rt fcs">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步CMS</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+    
+    <TopBtns @add="addShow = true"/>
+    
     <div class="mytable">
       <el-table
         :data="tableData"
@@ -120,6 +115,7 @@ import { formatDate } from '@/utils/date'
 import MyPage from "@/components/MyPage.vue";
 import MyCascader from "@/components/MyCascader.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import { mainStore } from '@/store/index'
 import { getHashStr,strToArr,getSource} from '@/utils/index'
 import { addInset_api ,getInsetList_api,getTelList_api} from '@/api/findC'

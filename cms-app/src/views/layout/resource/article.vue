@@ -1,7 +1,7 @@
 <template>
   <div class="resource_article">
     <div class="myNav">
-    <div class="tips">行业分类</div>
+      <div class="tips">行业分类</div>
       <el-select v-model="value" class="article_sel"  placeholder="请选择" clearable>
         <el-option
           v-for="item in induList"
@@ -13,34 +13,37 @@
       <el-button type="primary" size="large"  class="cx" @click="wordSearch">&emsp;查询&emsp;</el-button>
     </div>
     <div class="mytable">
-     <el-table :data="tableData">
-        <el-table-column type="selection" width="50"/>
-        <el-table-column property="id" label="ID" width="230"/>
-       <el-table-column property="thumb_url" label="封面图片" width="160">
-          <template #default="{row}">
-            <img :src="row.thumb_url" alt="" class="firstimg">
-          </template>
-        </el-table-column>
-        <el-table-column property="title" label="标题"/>
-         <el-table-column property="source" label="来源">康州数智</el-table-column>
-        <el-table-column property="time" label="时间" width="200">
-          <template #default="{row}">
-            <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200">
-          <template #default="{row}">
-            <div class="fcs">
-              <MyShare :share-id="row.id">
-                <el-link type="primary" @click="goShare(row.id)">分享</el-link>
-              </MyShare>
-              <div class="line"></div>
-              <el-link type="primary"  @click="downLoad(row.id) ">下载</el-link>
-              <div class="line"></div>
-              <el-link type="primary" @click="$router.push('/resource/articleDetails?id='+row.id)">查看</el-link>
-            </div>
-          </template>
-        </el-table-column>
+    <el-table :data="tableData">
+      <el-table-column type="selection" width="50"/>
+      <el-table-column property="id" label="ID" width="230"/>
+      <el-table-column property="thumb_url" label="封面图片" width="160">
+        <template #default="{row}">
+          <img :src="row.thumb_url" alt="" class="firstimg">
+        </template>
+      </el-table-column>
+      <el-table-column property="title" label="标题"/>
+        <el-table-column property="source" label="来源">康洲数智</el-table-column>
+      <el-table-column property="time" label="时间" width="200">
+        <template #default="{row}">
+          <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="200">
+        <template #default="{row}">
+          <div class="fcs">
+            <MyShare :share-id="row.id">
+              <el-link type="primary" @click="goShare(row.id)">分享</el-link>
+            </MyShare>
+            <div class="line"></div>
+            <el-link type="primary"  @click="downLoad(row.id) ">下载</el-link>
+            <div class="line"></div>
+            <el-link type="primary" @click="$router.push('/resource/articleDetails?id='+row.id)">查看</el-link>
+          </div>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <MyEmpty/>
+      </template>
      </el-table>
     </div>
     <MyPage :total="total" v-model="page" @change="changePage"/>
@@ -53,6 +56,7 @@ import { ref } from 'vue'
 import MyShare from '@/components/MyShare.vue';
 import MyPage from "@/components/MyPage.vue";
 import MyDown from "@/components/MyDown.vue";
+import MyEmpty from "@/components/MyEmpty.vue";
 import { formatDate } from '@/utils/date';
 import { articlesList_api,industryList_api } from '@/api/resource'
 
@@ -73,10 +77,10 @@ const tableData = ref<SData[]>([])
 
 const induList=ref<any>({})
 const industryList = async()=>{
-   const res = await industryList_api()
-   if(res.status == 1){
-     induList.value=res.body
-   }
+  const res = await industryList_api()
+  if(res.status == 1){
+    induList.value=res.body
+  }
 }
 
 industryList()
@@ -109,6 +113,7 @@ const getList = async ()=>{
 getList()
 const changePage = ()=>{
   console.log(page.value);
+  getList()
 }
 </script>
 <style scoped lang="scss">
@@ -122,13 +127,20 @@ const changePage = ()=>{
   .article_sel{
     margin: 0 40px 0 20px;
     width: 270px;
-    height: 36px;
-    border-radius: 3px;
   }
   .cx{
     width: 92px;
     height: 32px;
   }
- 
+  .myNav{
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+  }
+  .firstimg{
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+  }
 }
 </style>

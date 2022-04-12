@@ -39,7 +39,7 @@ const routes = [
     name: 'Layout',
     component: () => import('@/views/layout.vue'),
     redirect: '/index',
-    meta: { title: '康州数智后台管理系统' },
+    meta: { title: '康洲数智后台管理系统' },
     children: [
       {
         path: '/index',
@@ -91,6 +91,12 @@ const routes = [
             name: 'Companydetails',
             component: () => import('@/views/layout/users/companyDetails.vue'),
             meta: { title: '企业详情', father:'/users/company' },
+          },
+          {
+            path: '/users/companyreview',
+            name: 'CompanyReview',
+            component: () => import('@/views/layout/users/companyReview.vue'),
+            meta: { title: '企业认证审核', father:'/users/company' },
           },
         ]
       },
@@ -258,25 +264,27 @@ const router = createRouter({
   routes,
 })
 
-export const routerGuard = (userLv:(number | string)[])=>{ // 用户权限id数组
-  //路由守卫
-  router.beforeEach((to, from) => {
-    if(to.meta.lv && userLv.indexOf(to.meta.lv as string|number) == -1){
-      ElMessageBox.alert(
-        '当前账户无此权限！',
-        '温馨提示',
-        {
-          confirmButtonText: '关闭',
-          callback: () => {
-            router.replace(from.fullPath)
-          },
-        }
-      )
-      return false
-    }else{
-      window.document.title = to.meta.title ? (to.meta.title as string) : '康州数智后台管理系统'
-    }
-  })
+let userLvs:(number | string)[] = [] // 用户权限id数组
+export const routerGuard = (userLv:(number | string)[])=>{
+  userLvs = userLv
 }
+router.beforeEach((to, from) => {
+  //路由守卫
+  if(to.meta.lv && userLvs.indexOf(to.meta.lv as string|number) == -1){
+    // ElMessageBox.alert(
+    //   '当前账户无此权限！',
+    //   '温馨提示',
+    //   {
+    //     confirmButtonText: '关闭',
+    //     callback: () => {
+    //       router.replace(from.fullPath)
+    //     },
+    //   }
+    // )
+    // return false
+  }else{
+    window.document.title = to.meta.title ? (to.meta.title as string) : '康洲数智后台管理系统'
+  }
+})
 
 export default router

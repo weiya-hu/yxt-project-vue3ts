@@ -49,12 +49,14 @@ const uinfo = ref<any>({
   per_list: []
 })
 const getStaffLv = async () => {
+  if(!bg_uid) return
   const res = await getStaffInfo_api({ id: bg_uid })
   uinfo.value = res.body
 }
 getStaffLv()
 
 const setStaffLv = async () => {
+  if(!bg_uid) return
   const id = lvtree.value.getCheckedKeys() // 选中的
   const hid = lvtree.value.getHalfCheckedKeys() // 半选中
   const pid = id.concat(hid)

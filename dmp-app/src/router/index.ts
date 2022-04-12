@@ -74,9 +74,9 @@ const routes = [
         children:[
           {
             path: '/findB/kzData',
-            name: '康州数据源',
+            name: '康洲数据源',
             component: () => import('@/views/layout/findB/kzData.vue'),
-            meta: { title: '康州数据源',icon:nav1_i,icon_a:nav1_a_i,lv:1 },
+            meta: { title: '康洲数据源',icon:nav1_i,icon_a:nav1_a_i,lv:1 },
           },
           {
             path: '/findB/otherData',
@@ -107,9 +107,9 @@ const routes = [
         children:[
           {
             path: '/findC/kzData',
-            name: '康州数据源C',
+            name: '康洲数据源C',
             component: () => import('@/views/layout/findC/kzData.vue'),
-            meta: { title: '康州数据源',icon:nav1_i,icon_a:nav1_a_i,lv:2 },
+            meta: { title: '康洲数据源',icon:nav1_i,icon_a:nav1_a_i,lv:2 },
           },
           {
             path: '/findC/otherData',
@@ -349,7 +349,7 @@ export const routerGuard = (userlv:number,url:any)=>{
       })
       return false
     }else{
-      window.document.title = to.meta.title ? (to.meta.title as string) : '康州数智DMP'
+      window.document.title = to.meta.title ? (to.meta.title as string) : '康洲数智DMP'
     }
   })
 }

@@ -342,15 +342,15 @@ const beforeCloseAdd = (done:Function)=>{
       '正在上传中，关闭弹窗可能会导致上传失败，是否继续关闭？',
       '温馨提示',
       {
-        confirmButtonText: '取消',
-        cancelButtonText: '确定',
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         type: 'warning',
       }
     )
     .then(() => {
+      done()
     })
     .catch(() => {
-      done()
     })
   }else{
     done()

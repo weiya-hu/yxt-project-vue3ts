@@ -24,6 +24,11 @@
 import { ref, reactive } from 'vue'
 import DetailsHeader from "@/components/DetailsHeader.vue";
 import type { FormInstance } from 'element-plus'
+import { editPass_api, loginOut_api } from '@/api/login'
+import { useRouter } from 'vue-router'
+import { passReg } from '@/utils/index'
+
+const router = useRouter()
 
 const passFormRef = ref<FormInstance>()
 
@@ -43,6 +48,8 @@ const validatePass = (rule: any, value: any, callback: any) => {
 const validatePass1 = (rule: any, value: any, callback: any) => {
   if(value === passForm.oldPass){
     callback(new Error('新旧密码不能相同！'))
+  } else if(!passReg.test(value)){
+    callback(new Error('密码只能由数字及字母组成'))
   } else {
     if (passForm.checkPass !== '') {
       if (!passFormRef.value) return
@@ -78,7 +85,18 @@ const rules = reactive({
 const onSubmit = () => {
   passFormRef.value!.validate(async (valid:boolean) => {
     if(valid){
-      
+      const res = await editPass_api({
+        old_passwd:passForm.oldPass,
+        one_passwd:passForm.pass,
+        two_passwd:passForm.checkPass,
+      })
+      if(res.status == 1){
+        loginOut_api().then((res1:res)=>{
+          if(res1.status == 1){
+            router.replace('/login')
+          }
+        })
+      }
     }
   })
 }

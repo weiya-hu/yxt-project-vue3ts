@@ -43,8 +43,8 @@ export function confirm(msg?:string){
     msg||'正在上传中，关闭弹窗可能会导致上传失败，是否继续关闭？',
     '温馨提示',
     {
-      confirmButtonText: '取消',
-      cancelButtonText: '确定',
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
       type: 'warning',
     }
   )
@@ -172,7 +172,7 @@ export function strToArr(str1:string|number,str2?:string|number,str3?:string|num
 export function getSource(source:number){
   switch (source) {
     case 1:
-      return '康州数智'
+      return '康洲数智'
       break;
     case 2:
       return '第三方数据'

@@ -1,13 +1,8 @@
 <template>
   <div class="fourdata_page_c">
-    <div class="topbtns fsc">
-      <el-button size="large" type="primary" @click="addShow = true">新建人群</el-button>
-      <div class="rt fcs">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步CMS</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+    
+    <TopBtns @add="addShow = true"/>
+    
     <PeopleTable :data="tableData" details="/findC/fourDataDetails" @select="selectTable" @del="sureDel"/>
     <MyPage :total="total" v-model="page" @change="changePage"/>
 
@@ -21,6 +16,7 @@ import { ref } from 'vue'
 import MyPage from "@/components/MyPage.vue";
 import PeopleTable from "@/components/PeopleTable.vue";
 import AddPeople from "@/components/AddPeople.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import { addFour_api ,getFourList_api,delFour_api} from '@/api/findC'
 
 const page = ref(1)
@@ -97,9 +93,4 @@ export default { name:'400获客C' }
 </script>
 
 <style scoped lang="scss">
-.fourdata_page_c{
-  .topbtns{
-    margin-bottom: 20px;
-  }
-}
 </style>

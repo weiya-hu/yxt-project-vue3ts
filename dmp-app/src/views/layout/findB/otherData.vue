@@ -1,14 +1,9 @@
 <template>
   <div class="otherdata_page">
     <TopSearch @height-search="heightSearch" @search="wordSearch" :words="words" :hasHeight="true" placeholder="请输入企业名称、联系人、经营范围关键词"/>
-    <div class="topbtns fsc">
-      <FindNumber class="lt" :total="total"/>
-      <div class="rt fcs">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步CMS</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+    
+    <TopBtns :total="total" class="topbtns"/>
+
     <CompanyTable :data="tableData" v-loading="loading"/>
     <MyPage :total="total" v-model="searchParams.current" @change="changePage"/>
   </div>
@@ -18,7 +13,7 @@
 import { reactive, ref  } from 'vue'
 import TopSearch from '@/components/TopSearch.vue'
 import MyPage from "@/components/MyPage.vue";
-import FindNumber from "@/components/FindNumber.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import CompanyTable from "@/components/CompanyTable.vue";
 import { searchByConditions_api,wordSearchList_api,getSearchWord_api } from '@/api/findB'
 import { Gajax } from '@/utils/request'
@@ -106,7 +101,7 @@ const changePage =()=>{
 <style scoped lang="scss">
 .otherdata_page{
   .topbtns{
-    padding: 30px 0 20px 0;
+    padding-top: 30px;
   }
 }
 </style>

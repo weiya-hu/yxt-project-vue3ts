@@ -1,14 +1,7 @@
 <template>
   <div class="wx_data">
 
-    <div class="topbtns fsc">
-      <el-button size="large" type="primary" @click="addShow = true">新增需求</el-button>
-      <div class="rt fcs">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步CMS</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+    <TopBtns @add="addShow = true"/>
 
     <div class="mytable">
       <el-table
@@ -92,6 +85,7 @@ import type { ElForm } from 'element-plus'
 import { formatDate } from '@/utils/date'
 import MyPage from "@/components/MyPage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import {useRouter} from 'vue-router'
 import warning_i from '@/assets/images/warning.png'
 import { getWxList_api ,addWx_api} from '@/api/findC'

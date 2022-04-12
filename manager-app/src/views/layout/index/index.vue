@@ -1,6 +1,6 @@
 <template>
   <div class="index_page">
-    <div class="fcs toptip" v-if="companyInfo.status != 3">
+    <div class="fcs toptip">
       完善企业信息，可获取更多数据信息和体验功能模块。
       <el-link type="primary" target="_blank" :href="'//' +  urlInfo.domain_user + '/app/user?navActiveIndex=4&asideActive=0'">去完善 ></el-link>
     </div>
@@ -48,7 +48,7 @@ import banner_i from '@/assets/images/banner.png'
 import { computed } from 'vue'
 import { formatDate } from '@/utils/date'
 import { mainStore } from '@/store/index'
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 const icons = [
   {icon:index_m_i,name:'我的作品库',path:'/myWork'},
   {icon:index_c_i,name:'个性化内容库',path:'/custom'},
@@ -60,9 +60,7 @@ const goPath = (path:string)=>{
 }
 
 const store = mainStore()
-const companyInfo = computed(()=>store.state.companyInfo)
 const urlInfo = computed(()=>store.state.yxtUrl)
-
 </script>
 
 <style scoped lang="scss">

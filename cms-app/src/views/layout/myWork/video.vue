@@ -1,13 +1,8 @@
 <template>
   <div class="m_video">
-    <div class="fsc m_topbtn">
-      <el-button type="primary" size="large" @click="addShow = true">&emsp;创建&emsp;</el-button>
-      <div class="fcs">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步官网</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+
+    <TopBtns @add="addShow = true"/>
+
     <div class="mytable">
       <el-table
         :data="tableData"
@@ -18,7 +13,7 @@
         <el-table-column property="id" label="ID" width="230"/>
         <el-table-column property="video" label="视频" >
           <template #default="{row}">
-            <video :src="row.video_url" alt="" class="firstimg"/>
+            <video :src="row.video_url" alt="" class="firstimg lookhover" @click="look(row.video_url)"/>
           </template>
         </el-table-column>
         <el-table-column property="create_time" label="创建日期" width="200">
@@ -89,6 +84,7 @@ import MyEmpty from "@/components/MyEmpty.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import MyUpload from "@/components/MyUpload.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import { errMsg ,okMsg ,confirm } from '@/utils/index'
 import { videoList_api, videoAdd_api, videoDel_api } from '@/api/myWork'
 
@@ -208,11 +204,11 @@ const upError = (err:string)=>{
 
 const beforeCloseAdd = (done:Function)=>{
   if(loading.value){
-    confirm().then(() => {})
-    .catch(() => {
+    confirm().then(() => {
       upload.value.doAbort()
       done()
     })
+    .catch(() => {})
   }else{
     done()
   }
@@ -226,9 +222,6 @@ export default { name:'我的作品库-视频库' }
 
 <style scoped lang="scss">
 .m_video{
-  .m_topbtn{
-    margin-bottom: 20px;
-  }
   .firstimg{
     width: 48px;
     height: 48px;

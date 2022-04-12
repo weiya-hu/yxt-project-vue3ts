@@ -1,4 +1,4 @@
-let areaNum1 = [{
+const areaNum = [{
     "short": 'zh-CN',
     "name": "中国",  
     "value": "86",
@@ -732,4 +732,4 @@ let areaNum1 = [{
     "value": "1876",  
 }]
 
-export default areaNum1
+export default areaNum

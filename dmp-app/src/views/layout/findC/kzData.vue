@@ -1,14 +1,9 @@
 <template>
   <div class="kzdata_page_c">
     <TopSearch @height-search="heightSearch" @search="wordSearch" :words="words" :hasHeight="false" placeholder="请输入电话号码、姓名查询"/>
-    <div class="topbtns fsc">
-      <FindNumber class="lt" :total="total"/>
-      <div class="rt fcs">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步CMS</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+    
+    <TopBtns :total="total" class="topbtns"/>
+
     <div class="mytable">
       <el-table
         :data="tableData"
@@ -48,7 +43,7 @@
 import { ref,computed  } from 'vue'
 import TopSearch from '@/components/TopSearch.vue'
 import MyPage from "@/components/MyPage.vue";
-import FindNumber from "@/components/FindNumber.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import { mainStore } from '@/store/index'
 import { getHashStr,strToArr,getSource} from '@/utils/index'
@@ -144,7 +139,7 @@ const changePage =()=>{
 <style scoped lang="scss">
 .kzdata_page_c{
   .topbtns{
-    padding: 30px 0 20px 0;
+    padding-top: 30px;
   }
 }
 </style>

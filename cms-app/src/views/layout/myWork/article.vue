@@ -1,13 +1,8 @@
 <template>
   <div class="m_article">
-    <div class="fsc m_topbtn">
-      <el-button type="primary" size="large" @click="$router.push('/myWork/articleAdd')">&emsp;创建&emsp;</el-button>
-      <div class="fcs">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步官网</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+    
+    <TopBtns @add="$router.push('/myWork/articleAdd')"/>
+
     <div class="mytable">
       <el-table
         :data="tableData"
@@ -18,10 +13,15 @@
         <el-table-column property="id" label="ID" width="230"/>
         <el-table-column property="thumb_url" label="封面图片" width="160">
           <template #default="{row}">
-            <img :src="row.thumb_url" alt="" class="firstimg">
+            <img :src="row.thumb_url" alt="" class="firstimg lookhover" @click="look(row.thumb_url)">
           </template>
         </el-table-column>
-        <el-table-column property="title" label="标题"/>
+        <el-table-column property="title" label="标题">
+          <template #default="{row}">
+            <el-link v-if="row.status == 2 || row.status == 3" type="primary" @click="$router.push('/myWork/articleDetails?id='+row.id)">{{row.title}}</el-link>
+            <span v-else @click="errorMsg = row.fail_reason;errorShow=true">{{row.title}}</span>
+          </template>
+        </el-table-column>
         <el-table-column property="create_time" label="创建日期" width="200">
           <template #default="{row}">
             <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
@@ -62,6 +62,7 @@
     <MyPage :total="total" v-model="page" @change="changePage"/>
     <MyDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel"/>
     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'拒绝原因'" :btn="1"/>
+    <el-image-viewer @close="imgShow=false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/>
   </div>
 </template>
 
@@ -71,6 +72,7 @@ import { formatDate } from '@/utils/date'
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import { articleList_api, articleDel_api } from '@/api/myWork'
 interface SData {
   id: number|string,
@@ -153,6 +155,20 @@ const sureDel = ()=>{
 const errorShow = ref(false)
 const errorMsg = ref('')
 
+const showImgs = ref<string[]>([])//预览图片列表
+const imgShow = ref(false)//预览是否显示
+const showImgIndex = ref(0)//首张预览图片
+const look = (url:string)=>{
+  // window.open(url)
+  let arr:string[] = []
+  tableData.value.forEach(v=>{
+    arr.push(v.thumb_url)
+  })
+  showImgs.value  = arr
+  showImgIndex.value = showImgs.value.findIndex(v=>v==url)
+  imgShow.value = true
+}
+
 </script>
 
 <script lang="ts">
@@ -161,9 +177,6 @@ export default { name:'我的作品库-软文' }
 
 <style scoped lang="scss">
 .m_article{
-  .m_topbtn{
-    margin-bottom: 20px;
-  }
   .firstimg{
     width: 48px;
     height: 48px;

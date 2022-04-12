@@ -1,13 +1,8 @@
 <template>
   <div class="custom_video">
-    <div class="top-button fsc">
-      <el-button size="large" type="primary"  class="up-user fcc" @click="dialogVisible = true">&ensp;&ensp;创建&ensp;&ensp;</el-button>
-      <div class="flexr">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步CMS</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+    
+    <TopBtns @add="dialogVisible = true"/>
+    
     <div class="mytable">
       <el-table
         :data="tableList"
@@ -46,6 +41,7 @@ import MyPage from '@/components/MyPage.vue'
 import MyDataUpUser from '@/components/MyDataUpUser.vue'
 import MyDialog from "@/components/MyDialog.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import { customList_api, customDel_api } from '@/api/custom'
 interface TableTitleProp{
   type:string,

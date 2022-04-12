@@ -1,13 +1,8 @@
 <template>
   <div class="m_poster">
-    <div class="fsc m_topbtn">
-      <el-button type="primary" size="large" @click="addShow = true">&emsp;创建&emsp;</el-button>
-      <div class="fcs">
-        <el-button size="large">同步SCRM</el-button>
-        <el-button size="large">同步官网</el-button>
-        <el-button size="large">同步DSP系统</el-button>
-      </div>
-    </div>
+
+    <TopBtns @add="addShow = true"/>
+
     <div class="mytable">
       <el-table
         :data="tableData"
@@ -18,7 +13,7 @@
         <el-table-column property="id" label="ID" width="230"/>
         <el-table-column property="thumb_url" label="海报" >
           <template #default="{row}">
-            <img :src="row.thumb_url" alt="" class="firstimg">
+            <img :src="row.thumb_url" alt="" class="firstimg lookhover" @click="look(row.thumb_url)">
           </template>
         </el-table-column>
         <el-table-column property="create_time" label="创建日期" width="200">
@@ -83,6 +78,7 @@ import MyEmpty from "@/components/MyEmpty.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import MediaUpload from "@/components/MediaUpload.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import { errMsg ,okMsg } from '@/utils/index'
 import { posterList_api, posterAdd_api, posterDel_api } from '@/api/myWork'
 
@@ -226,9 +222,6 @@ export default { name:'我的作品库-海报库' }
 
 <style scoped lang="scss">
 .m_poster{
-  .m_topbtn{
-    margin-bottom: 20px;
-  }
   .firstimg{
     width: 48px;
     height: 48px;

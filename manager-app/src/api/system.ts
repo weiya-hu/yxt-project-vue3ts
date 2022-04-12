@@ -1,5 +1,7 @@
 import { get, post } from '@/utils/request'
 
+export const size = 20
+
 /**
  * @name 获取所有部门
 */
