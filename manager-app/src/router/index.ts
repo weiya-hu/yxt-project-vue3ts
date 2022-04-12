@@ -228,7 +228,7 @@ const routes = [
         name: 'System',
         redirect: '/system/staff',
         component: () => import('@/views/layout/rview.vue'),
-        meta: { title: '系统管理', lv:'5', clv:'24' },
+        meta: { title: '系统管理', lv:'5', clv:'24,39' },
         children:[
           {
             path: '/system/staff',
@@ -247,6 +247,27 @@ const routes = [
             name: 'EditStaff',
             component: () => import('@/views/layout/system/editStaff.vue'),
             meta: { title: '权限修改', father:'/system/staff' },
+          },
+          {
+            path: '/system/resourcepool',
+            name: 'ResourcePool',
+            redirect: '/system/resourcepool/imagepool',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '素材库', lv:'39', showTopNav:true },
+            children:[
+              {
+                path: '/system/resourcepool/imagepool',
+                name: 'ImagePool',
+                component: () => import('@/views/layout/system/imagePool.vue'),
+                meta: { title: '图片', father:'/system/resourcepool', isTopNav:true },
+              },
+              {
+                path: '/system/resourcepool/videopool',
+                name: 'VideoPool',
+                component: () => import('@/views/layout/system/videoPool.vue'),
+                meta: { title: '视频', father:'/system/resourcepool', isTopNav:true },
+              },
+            ]
           },
         ]
       },
