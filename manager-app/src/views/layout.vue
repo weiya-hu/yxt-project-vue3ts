@@ -124,20 +124,23 @@ getPath(route.meta.father ? route.meta.father as string:route.path)
 
 topPath.value = route.path
 
-const getNavs = (first = false, path?:string)=>{
+const getNavs = (path?:string, first = false)=>{
   //从路由获取左侧导航 和 顶部导航
   routers.forEach(v=>{
     if(first && v.name == 'Layout') leftNav.value = v.children;
     if(path && v.meta.showTopNav && v.children.some(v => v.path == path)) topNav.value = v.children
   })
 }
-getNavs(true, route.path)
+getNavs(route.path, true)
 
 onBeforeRouteUpdate((to,from,next)=>{
   getPath(to.meta.father ? to.meta.father as string:to.path)
 
   topPath.value = to.path
-  if(to.meta.isTopNav && to.meta.father != from.meta.father) getNavs(false, to.path)
+  if(to.meta.isTopNav && to.meta.father != from.meta.father){
+    getNavs(to.path);
+    from.meta.isTopNav && topNavRef.value.changeLeft()
+  }
   if(to.meta.isTopNav && from.meta.isTopNav && to.meta.father == from.meta.father ) topNavRef.value.changeLeft()
   
   if(from.meta.keepAlive && to.meta.father == from.path){

@@ -32,8 +32,8 @@ const changeNav = (path:string)=>{
   router.push(path)
 }
 
-let left = ref(0)
-let line = ref()
+const left = ref(0)
+const line = ref()
 let activeDom
 onMounted (() => {
   //解决刷新时顶部导航线条会从开始跳到激活位置
