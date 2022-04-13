@@ -28,14 +28,14 @@
             </div>
           </div>
         </div>
+        <KzTopNav v-model="topPath" :nav="topNav" v-if="$route.meta.isTopNav" ref="topNavRef"/>
       </el-col>
     </el-row>
     <el-row class="layout_container">
       <el-col class="layout_nav">
         <LeftNav v-model="nowPath" :nav="leftNav"/>
       </el-col>
-      <el-col :class="$route.meta.isTopNav?'layout_content layout_content_hasnav':'layout_content layout_content_nonav'">
-        <KzTopNav v-model="topPath" :nav="topNav" v-if="$route.meta.isTopNav" ref="topNavRef"/>
+      <el-col class="layout_content" :class="$route.meta.isTopNav?'layout_content_hasnav':''">
         <router-view v-slot="{ Component }">
           <transition name="fade">
             <component :is="Component" />
@@ -187,7 +187,9 @@ emiter.on('lookImage', ({ imgs, index } : { imgs:string[], index:number }) => {
   }
   .navbox{
     flex:1;
-    box-shadow: 0px 0px 2px 0px rgb(231, 231, 231);
+    // box-shadow: 0px 0px 2px 0px rgb(231, 231, 231);
+    border-bottom: 1px solid $coloreee;
+    position: relative;
     z-index: 30;
     padding: 0 32px 0 16px;
     .nav_title{

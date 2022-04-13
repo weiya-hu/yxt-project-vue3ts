@@ -59,11 +59,11 @@ defineExpose({
 .topnav{
   height: 48px;
   box-sizing: border-box;
-  position: fixed;
+  position: absolute;
   background-color: #fff;
   border-bottom: 1px solid $colorddd;
   top: 64px;
-  left: 220px;
+  left: 0;
   width: 100%;
   z-index: 11;
   .item{
