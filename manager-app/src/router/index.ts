@@ -194,8 +194,9 @@ const routes = [
           {
             path: '/cms/mywork',
             name: 'Mywork',
+            // redirect: '/cms/myWork/article',
             component: () => import('@/views/layout/cms/myWork/article.vue'),
-            meta: { title: '我的作品库', keepAlive:true,lv:'27' },
+            meta: { title: '我的作品库', lv:'27' },
             
           },
           {
@@ -207,22 +208,10 @@ const routes = [
           {
             path: '/cms/custom',
             name: 'Custom',
+            // redirect: '/cms/custom/article.vue',
             component: () => import('@/views/layout/cms/custom/article.vue'),
-            meta: { title: '个性化内容库', lv:'32' },           
-          },
-          
-         
-          {
-            path: '/cms/customedit',
-            name: 'Customedit',
-            component: () => import('@/views/layout/cms/custom/articleEdit.vue'),
-            meta: { title: '软文编辑', father:'/cms/custom' },
-          },
-          {
-            path: '/cms/customdet',
-            name: 'Customedet',
-            component: () => import('@/views/layout/cms/custom/articleDetails.vue'),
-            meta: { title: '软文详情', father:'/cms/custom' },
+            meta: { title: '个性化内容库', lv:'32' },
+           
           },
           {
             path: '/cms/resource',
@@ -297,26 +286,29 @@ const router = createRouter({
 })
 
 let userLvs:(number | string)[] = [] // 用户权限id数组
-export const routerGuard = (userLv:(number | string)[])=>{
-  userLvs = userLv
+export const routerGuard = (userLv:(number | string)[], isSet = false)=>{
+  userLvs = userLv;
+  isSet && guardFn()
 }
-router.beforeEach((to, from) => {
-  //路由守卫
-  if(to.meta.lv && userLvs.indexOf(to.meta.lv as string|number) == -1){
-    ElMessageBox.alert(
-      '当前账户无此权限！',
-      '温馨提示',
-      {
-        confirmButtonText: '关闭',
-        callback: () => {
-          router.replace(from.fullPath)
-        },
-      }
-    )
-    return false
-  }else{
-    window.document.title = to.meta.title ? (to.meta.title as string) : '康洲数智后台管理系统'
-  }
-})
+const guardFn = () => {
+  router.beforeEach((to, from) => {
+    //路由守卫
+    if(to.meta.lv && userLvs.indexOf(to.meta.lv as string|number) == -1){
+      ElMessageBox.alert(
+        '当前账户无此权限！',
+        '温馨提示',
+        {
+          confirmButtonText: '关闭',
+          callback: () => {
+            router.replace(from.fullPath)
+          },
+        }
+      )
+      return false
+    }else{
+      window.document.title = to.meta.title ? (to.meta.title as string) : '康洲数智后台管理系统'
+    }
+  })
+}
 
 export default router

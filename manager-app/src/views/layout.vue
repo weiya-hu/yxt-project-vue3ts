@@ -79,7 +79,7 @@ store.getYxtUrl().then((url:any)=>{
 store.setUserinfo().then((res:any) => {
   if(res.login_passwd_type == 1){
     store.setUserLv().then((userLv:(number | string)[])=>{
-      routerGuard(userLv)
+      routerGuard(userLv, true)
     }).catch((err)=>{
       routerGuard([])
       router.replace('/login')
