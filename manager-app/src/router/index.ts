@@ -292,17 +292,17 @@ export const routerGuard = (userLv:(number | string)[])=>{
 router.beforeEach((to, from) => {
   //路由守卫
   if(to.meta.lv && userLvs.indexOf(to.meta.lv as string|number) == -1){
-    // ElMessageBox.alert(
-    //   '当前账户无此权限！',
-    //   '温馨提示',
-    //   {
-    //     confirmButtonText: '关闭',
-    //     callback: () => {
-    //       router.replace(from.fullPath)
-    //     },
-    //   }
-    // )
-    // return false
+    ElMessageBox.alert(
+      '当前账户无此权限！',
+      '温馨提示',
+      {
+        confirmButtonText: '关闭',
+        callback: () => {
+          router.replace(from.fullPath)
+        },
+      }
+    )
+    return false
   }else{
     window.document.title = to.meta.title ? (to.meta.title as string) : '康洲数智后台管理系统'
   }
