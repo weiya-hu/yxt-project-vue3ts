@@ -49,9 +49,9 @@
             </div>
           </template>
         </el-table-column>
-        <!-- <template #empty>
+        <template #empty>
           <MyEmpty/>
-        </template> -->
+        </template>
       </el-table>
     </div>
     <Mypage :total="50" v-model="page"/>
@@ -62,6 +62,7 @@
 import { ref } from 'vue'
 import { formatDate } from '@/utils/date'
 import DetailsHeader from "@/components/DetailsHeader.vue"
+import MyEmpty from "@/components/MyEmpty.vue";
 import search from'@/components/Search.vue'
 import Mypage from "@/components/Mypage.vue";
 interface SData {
@@ -119,7 +120,7 @@ const errorShow = ref(false)
 const errorMsg = ref('')
 </script>
 <script lang="ts">
-export default { name:'TelData' }
+export default { name:'我的作品库——图片库' }
 </script>
 
 <style scoped lang="scss">

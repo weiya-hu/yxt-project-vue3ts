@@ -194,9 +194,8 @@ const routes = [
           {
             path: '/cms/mywork',
             name: 'Mywork',
-            // redirect: '/cms/myWork/article',
             component: () => import('@/views/layout/cms/myWork/article.vue'),
-            meta: { title: '我的作品库', lv:'27' },
+            meta: { title: '我的作品库', keepAlive:true,lv:'27' },
             
           },
           {
@@ -208,10 +207,22 @@ const routes = [
           {
             path: '/cms/custom',
             name: 'Custom',
-            // redirect: '/cms/custom/article.vue',
             component: () => import('@/views/layout/cms/custom/article.vue'),
-            meta: { title: '个性化内容库', lv:'32' },
-           
+            meta: { title: '个性化内容库', lv:'32' },           
+          },
+          
+         
+          {
+            path: '/cms/customedit',
+            name: 'Customedit',
+            component: () => import('@/views/layout/cms/custom/articleEdit.vue'),
+            meta: { title: '软文编辑', father:'/cms/custom' },
+          },
+          {
+            path: '/cms/customdet',
+            name: 'Customedet',
+            component: () => import('@/views/layout/cms/custom/articleDetails.vue'),
+            meta: { title: '软文详情', father:'/cms/custom' },
           },
           {
             path: '/cms/resource',

@@ -1,24 +1,22 @@
 <template >
     <div>
-        <el-form :inline="true" :model="formData" class="demo-form-inline" ref="myform" >
+        <el-form :inline="true" :model="modelValue" class="demo-form-inline" ref="myform" >
     <el-form-item prop="name">
-      <el-input v-model="formData.name" placeholder="请输入客户名称" />
+      <el-input v-model="modelValue.userName" placeholder="请输入客户名称" />
     </el-form-item>
     <el-form-item prop="status">
-      <el-select v-model="formData.status" placeholder="状态">
-        <el-option label="全部" value="1" />
-        <el-option label="待处理" value="2" />
-        <el-option label="已受理" value="3" />
-        <el-option label="被驳回" value="4" />
-        <el-option label="已完结" value="5" />
+      <el-select v-model="modelValue.status" placeholder="状态">
+        <slot></slot>
       </el-select>
     </el-form-item>
     <el-form-item prop="date">
-       <el-date-picker v-model="formData.date" type="date" placeholder="创建日期" />
+       <el-date-picker v-model="modelValue.create_time" type="date" placeholder="创建日期"  format="YYYY/MM/DD"
+        value-format="YYYY/MM/DD"
+        />
     </el-form-item>
     <el-form-item >
-      <el-button type="primary" @click="submitForm">查询</el-button>
-      <el-button @click="submitReset">重置</el-button>
+      <el-button type="primary" @click="submitForm" size="large">查询</el-button>
+      <el-button @click="submitReset" size="large">重置</el-button>
     </el-form-item>
   </el-form>
     </div>
@@ -29,26 +27,18 @@ import { reactive, ref} from 'vue'
 import type { ElForm } from 'element-plus'
 import {errMsg} from '@/utils/index'
 const myform = ref<InstanceType<typeof ElForm>>()
-const formData = reactive({
-  name: '',
-  status: '',
-  date: ''
-})
+const props = withDefaults(defineProps<{
+  modelValue:any,
+}>(),{})
+
 // 搜索
-const emit = defineEmits(['search'])
+const emit = defineEmits(['search','reset'])
 const submitForm = () => {
-  const { name, status, date } = formData
-  if (formData.name.trim().length <1 || formData.name.trim().length > 36) {
-      errMsg('客户名称输入长度须在 1 ~ 36 之间')
-      return
-  }
-    emit('search',formData)
-    myform.value?.resetFields()
-  console.log(name, status, date)
+  emit('search')
 }
 // 重置
 const submitReset = () => {
-  myform.value?.resetFields()
+  emit('reset')
 }
 </script>
 <style scoped lang="scss">
