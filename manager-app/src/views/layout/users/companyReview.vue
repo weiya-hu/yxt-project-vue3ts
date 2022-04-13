@@ -6,7 +6,9 @@
         <el-descriptions-item label="企业名称">{{info.name}}</el-descriptions-item>
         <el-descriptions-item label="所属行业"></el-descriptions-item>
         <el-descriptions-item label="统一社会信用代码" label-class-name="icode">{{info.code}}</el-descriptions-item>
-        <el-descriptions-item label="资质照片"><img :src="info.license" alt="" class="zzimg lookhover"></el-descriptions-item>
+        <el-descriptions-item label="资质照片">
+          <img :src="info.license" alt="" class="zzimg lookhover"  @click="lookImage([info.license],0)">
+        </el-descriptions-item>
         <el-descriptions-item label="证照有效期">{{formatDate(new Date(info.left_time),'yyyy-MM-dd')}}</el-descriptions-item>
         <el-descriptions-item label="联系人">{{info.legal_person}}</el-descriptions-item>
         <el-descriptions-item label="联系电话">{{info.contact}}</el-descriptions-item>
@@ -40,6 +42,7 @@ import DetailsHeader from "@/components/DetailsHeader.vue";
 import { getCompanyInfo_api, rejectCompany_api, passCompany_api } from '@/api/users'
 import { formatDate } from '@/utils/date'
 import { mainStore } from '@/store/index'
+import { lookImage } from '@/utils/index'
 
 const store = mainStore()
 const route = useRoute()

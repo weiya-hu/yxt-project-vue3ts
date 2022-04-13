@@ -32,12 +32,12 @@ export const getUserInfo = (): Promise<res> => {
 
 //退出登录
 export const loginOut_api = (): Promise<res> => {
-  return get(1,'/public/out.do',{},true)
+  return get(1,'/public/out.do', {}, true)
 }
 
 //获取阿里oss参数 //key 过期时间2s
-export const getAliToken_api = (params:{site:string}): Promise<res> => {
-  return get(0,'/user/upload.sign',params)
+export const getAliToken_api = (params:{ site:string }): Promise<res> => {
+  return get(1,'/public/upload.sign', params)
 }
 
 //获取行业分类列表
