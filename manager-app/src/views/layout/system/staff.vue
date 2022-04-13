@@ -36,7 +36,7 @@
           <el-table-column prop="mobile" label="电话"/>
           <el-table-column property="log_time" label="最近一次登录">
             <template #default="{row}">
-              <div>{{formatDate(new Date(row.log_time),'yyyy-MM-dd')}}</div>
+              <div>{{formatDate(new Date(row.log_time),'yyyy-MM-dd hh:mm:ss')}}</div>
             </template>
           </el-table-column>
           <el-table-column property="user_status" label="账号状态">

@@ -239,7 +239,7 @@ const routes = [
         name: 'System',
         redirect: '/system/staff',
         component: () => import('@/views/layout/rview.vue'),
-        meta: { title: '系统管理', lv:'5', clv:'24' },
+        meta: { title: '系统管理', lv:'5', clv:'24,39' },
         children:[
           {
             path: '/system/staff',
@@ -258,6 +258,27 @@ const routes = [
             name: 'EditStaff',
             component: () => import('@/views/layout/system/editStaff.vue'),
             meta: { title: '权限修改', father:'/system/staff' },
+          },
+          {
+            path: '/system/resourcepool',
+            name: 'ResourcePool',
+            redirect: '/system/resourcepool/imagepool',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '素材库', lv:'39', showTopNav:true },
+            children:[
+              {
+                path: '/system/resourcepool/imagepool',
+                name: 'ImagePool',
+                component: () => import('@/views/layout/system/imagePool.vue'),
+                meta: { title: '图片', father:'/system/resourcepool', isTopNav:true },
+              },
+              {
+                path: '/system/resourcepool/videopool',
+                name: 'VideoPool',
+                component: () => import('@/views/layout/system/videoPool.vue'),
+                meta: { title: '视频', father:'/system/resourcepool', isTopNav:true },
+              },
+            ]
           },
         ]
       },
@@ -282,17 +303,17 @@ export const routerGuard = (userLv:(number | string)[])=>{
 router.beforeEach((to, from) => {
   //路由守卫
   if(to.meta.lv && userLvs.indexOf(to.meta.lv as string|number) == -1){
-    // ElMessageBox.alert(
-    //   '当前账户无此权限！',
-    //   '温馨提示',
-    //   {
-    //     confirmButtonText: '关闭',
-    //     callback: () => {
-    //       router.replace(from.fullPath)
-    //     },
-    //   }
-    // )
-    // return false
+    ElMessageBox.alert(
+      '当前账户无此权限！',
+      '温馨提示',
+      {
+        confirmButtonText: '关闭',
+        callback: () => {
+          router.replace(from.fullPath)
+        },
+      }
+    )
+    return false
   }else{
     window.document.title = to.meta.title ? (to.meta.title as string) : '康洲数智后台管理系统'
   }

@@ -28,13 +28,14 @@
             </div>
           </div>
         </div>
+        <KzTopNav v-model="topPath" :nav="topNav" v-if="$route.meta.isTopNav" ref="topNavRef"/>
       </el-col>
     </el-row>
     <el-row class="layout_container">
       <el-col class="layout_nav">
         <LeftNav v-model="nowPath" :nav="leftNav"/>
       </el-col>
-      <el-col class="layout_content">
+      <el-col class="layout_content" :class="$route.meta.isTopNav?'layout_content_hasnav':''">
         <router-view v-slot="{ Component }">
           <transition name="fade">
             <component :is="Component" />
@@ -43,7 +44,7 @@
       </el-col>
     </el-row>
 
-    <ResourcePool/>
+    <KzResourcePool/>
 
     <el-image-viewer @close="imgShow=false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/>
 
@@ -55,13 +56,14 @@ import logo_i from '@/assets/images/logo.png'
 import df_avatar_i from '@/assets/images/dfavatar.png'
 import { ref, computed } from 'vue'
 import LeftNav from '@/components/LeftNav.vue'
+import KzTopNav from '@/components/KzTopNav.vue'
 import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
 import { loginOut_api } from '@/api/login'
 import { routerGuard } from '@/router'
 import { errMsg } from '@/utils/index'
-import ResourcePool from '@/components/ResourcePool.vue'
+import KzResourcePool from '@/components/KzResourcePool.vue'
 import emiter from '@/utils/bus'
 import { ElMessageBox } from 'element-plus'
 
@@ -110,20 +112,31 @@ const router = useRouter()
 const routers = router.getRoutes()
 const leftNav = ref<any[]>([])
 const nowPath = ref('')
+
+const topNav = ref<any[]>([])
+const topPath = ref('')
+const topNavRef = ref()
+
 const getPath = (path:string)=>{
   nowPath.value = path
 }
 getPath(route.meta.father ? route.meta.father as string:route.path)
+
+topPath.value = route.path
+
 const getNavs = ()=>{
   //从路由获取左侧导航
   routers.forEach(v=>{
     if(v.name == 'Layout') leftNav.value = v.children
+    if(v.meta.showTopNav) topNav.value = v.children
   })
 }
 getNavs()
 
 onBeforeRouteUpdate((to,from,next)=>{
   getPath(to.meta.father ? to.meta.father as string:to.path)
+  topPath.value = to.path
+  if(to.meta.isTopNav && from.meta.isTopNav) topNavRef.value.changeLeft()
   if(from.meta.keepAlive && to.meta.father == from.path){
     // 从列表进入详情 缓存列表
     store.setKeepList([from.name as string])
@@ -174,7 +187,9 @@ emiter.on('lookImage', ({ imgs, index } : { imgs:string[], index:number }) => {
   }
   .navbox{
     flex:1;
-    box-shadow: 0px 0px 2px 0px rgb(231, 231, 231);
+    // box-shadow: 0px 0px 2px 0px rgb(231, 231, 231);
+    border-bottom: 1px solid $coloreee;
+    position: relative;
     z-index: 30;
     padding: 0 32px 0 16px;
     .nav_title{
@@ -205,6 +220,10 @@ emiter.on('lookImage', ({ imgs, index } : { imgs:string[], index:number }) => {
       padding: 30px;
       background-color: $bgcolor;
       overflow-y: scroll;
+    }
+    .layout_content_hasnav{
+      padding-top: 78px;
+      position: relative;
     }
   }
 }
