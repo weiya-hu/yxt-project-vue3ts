@@ -1,8 +1,10 @@
 <template>
   <div class="topnav fcs">
-    <div class="item fcc" @click="changeNav(v.path)" v-for="v in nav" :key="v.path" :class="modelValue == v.path?'active':''">
-      <span>{{v.meta.title}}</span>
-    </div>
+    <template v-for="v in nav" :key="v.path">
+      <div class="item fcc" @click="changeNav(v.path)" :class="modelValue == v.path?'active':''" v-if="v.meta.isTopNav">
+        <span>{{v.meta.title}}</span>
+      </div>
+    </template>
     <div class="line" :style="{transform:`translate(${left}px,0)`}" ref="line"></div>
   </div>
 </template>
@@ -78,14 +80,14 @@ defineExpose({
     }
   }
   .line{
-      position: absolute;
-      width: 20px;
-      height: 2.5px;
-      border-radius: 2px;
-      background-color: $dfcolor;
-      bottom: 0px;
-      left: 0;
-    }
+    position: absolute;
+    width: 20px;
+    height: 2.5px;
+    border-radius: 2px;
+    background-color: $dfcolor;
+    bottom: 0px;
+    left: 0;
+  }
   .active{
     color:$dfcolor;
     font-weight: 500;

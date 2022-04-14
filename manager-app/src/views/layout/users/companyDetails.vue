@@ -5,7 +5,7 @@
       <template #header>
         <div class="fsc">
           <span>产品与服务</span>
-          <el-button type="primary" @click="show = true">+ 添加</el-button>
+          <el-button type="primary" @click="show = true" v-if="info.status == 3">+ 添加</el-button>
         </div>
       </template>
     </el-card>

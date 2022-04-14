@@ -3,7 +3,7 @@
     <div class="ftitle">用户管理</div>
     <el-card class="mycard" header="用户列表">
       <div class="mytable">
-        <el-table :data="tableData" border>
+        <el-table :data="tableData" border draggable>
           <el-table-column prop="name" label="用户名"/>
           <el-table-column prop="real_name" label="真实姓名">
             <template #default="{row}">{{row.real_name||'-'}}</template>

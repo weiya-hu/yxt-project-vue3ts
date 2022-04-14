@@ -37,7 +37,7 @@ export const loginOut_api = (): Promise<res> => {
 
 //获取阿里oss参数 //key 过期时间2s
 export const getAliToken_api = (params:{ site:string }): Promise<res> => {
-  return get(1,'/public/upload.sign', params)
+  return get(1,'/manage/upload.sign', params)
 }
 
 //获取行业分类列表

@@ -30,7 +30,7 @@
         </div>
       </template>
       <div class="mytable">
-        <el-table :data="tableData" border>
+        <el-table :data="tableData" border draggable>
           <el-table-column prop="user_name" label="姓名"/>
           <el-table-column prop="dept_name" label="所属部门"/>
           <el-table-column prop="mobile" label="电话"/>

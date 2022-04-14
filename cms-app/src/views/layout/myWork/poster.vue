@@ -52,19 +52,21 @@
     <MyDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel"/>
     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'拒绝原因'" :btn="1"/>
     <el-dialog v-model="addShow" title="上传海报" width="380px" @close="close" custom-class="upimgs">
-      <MediaUpload
-        :max="1"
-        v-if="addShow"
-        @upOneSuccess="upOne"
-        @error="upError"
-        @look="upLook"
-        :exnameList="exnameList"
-        :msg="'图片尺寸：16:9<br/>建议尺寸：640x1136px、800*2000px、1242px*1242px<br/>支持'+exnameList.join('、')+'等图片格式'"
-        ref="upload"
-      />
-      <div class="fcs btns fjend">
-        <el-button @click="close">取消</el-button>
-        <el-button v-if="upload" type="primary" @click="goSubmit" :disabled="!upload.imgs.length">提交</el-button>
+      <div v-loading="loading">
+        <MediaUpload
+          :max="1"
+          v-if="addShow"
+          @upOneSuccess="upOne"
+          @error="upError"
+          @look="upLook"
+          :exnameList="exnameList"
+          :msg="'图片尺寸：16:9<br/>建议尺寸：640x1136px、800*2000px、1242px*1242px<br/>支持'+exnameList.join('、')+'等图片格式'"
+          ref="upload"
+        />
+        <div class="fcs btns fjend">
+          <el-button @click="close">取消</el-button>
+          <el-button v-if="upload" type="primary" @click="goSubmit" :disabled="!upload.imgs.length">提交</el-button>
+        </div>
       </div>
     </el-dialog>
     <el-image-viewer @close="imgShow=false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/>

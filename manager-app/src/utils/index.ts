@@ -225,3 +225,40 @@ export const passReg = /^[A-Za-z0-9]*$/ // 数字或者字母
 export function lookImage(imgs:string[], index:number){
   emiter.emit('lookImage', {imgs, index})
 }
+
+/**
+ * 下载图片 图片地址不同源时a标签无法下载而会直接跳转，则用此方法
+ * @imgSrc 图片地址
+ * @imgName 下载文件名
+*/
+export const downLoadimage = (imgSrc:string, imgName?:string) => {
+  const image = new Image();
+  // 解决跨域 Canvas 污染问题
+  image.setAttribute("crossOrigin", "anonymous");
+  image.onload = function() {
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const context = canvas.getContext("2d");
+    context!.drawImage(image, 0, 0, image.width, image.height);
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob as Blob)
+      const a = document.createElement('a')
+      a.download = imgName || '未命名' // 设置图片名称
+      a.href = url
+      a.click()
+      a.remove()
+      canvas.remove()
+      image.remove()
+      URL.revokeObjectURL(url)
+    })
+    // const url = canvas.toDataURL("image/png"); //得到图片的base64
+    // const a = document.createElement("a");
+    // a.download = imgName || '未命名'; // 设置图片名称
+    // a.href = url;
+    // a.click();
+    // a.remove()
+    // canvas.remove()
+  };
+  image.src = imgSrc;
+}

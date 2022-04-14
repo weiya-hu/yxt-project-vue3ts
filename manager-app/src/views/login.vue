@@ -20,7 +20,7 @@
           </el-form-item>
         </el-form>
       </el-tab-pane>
-      <el-tab-pane label="短信登录" name="sms">
+      <el-tab-pane label="短信登录" name="sms" disabled>
         <el-form :model="telForm" :rules="telRules" ref="telFormRef" size="large">
           <el-form-item label="手机号" prop="tel">
             <el-input v-model="telForm.tel" placeholder="请输入手机号">

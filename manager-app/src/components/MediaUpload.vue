@@ -42,20 +42,19 @@ const props = withDefaults(defineProps<{
   maxSize?:number,//最大尺寸 单位M
 }>(),{
   exnameList:()=>['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG'],
-  max:3,
-  maxSize:10
+  max:1,
+  maxSize:2
 })
 
-//upOneSuccess：上传单个图片成功后，返回文件地址和添加图片的个数；error：上传发生错误，返回错误；look：点击预览图片，返回图片blob地址数组和点击的图片下标
-const emit = defineEmits(['upOneSuccess','error','look'])
+//upOneSuccess：上传单个图片成功后，返回文件地址和添加图片的个数；error：上传发生错误，返回错误；look：点击预览图片，返回图片blob地址数组和点击的图片下标；change：图片改变时，返回图片名
+const emit = defineEmits(['upOneSuccess','error','look','change'])
 
 const imgs = ref<UploadFile[]>([])
 const upload = ref()//上传组件ref
 
 const upChange = (file: UploadFile, fileList: UploadFile[])=>{
-  console.log('change');
-  
-  const exname=file.name.substring(file.name.lastIndexOf("."))
+  if(!file.name) return // 当前版本elment2.1.7会触发两次on-change
+  const exname = file.name.substring(file.name.lastIndexOf("."))
   if(props.exnameList.indexOf(exname) == -1){
     upload.value.handleRemove(file)
     errMsg('图片格式错误！')
@@ -71,6 +70,9 @@ const upChange = (file: UploadFile, fileList: UploadFile[])=>{
   if(imgs.value.length>=props.max){
     el.style.display = 'none'
   }
+
+  const fxname = file.name.substring(0, file.name.indexOf("."))
+  emit('change',fxname)
 }
 const upRemove = (file: UploadFile, fileList: UploadFile[])=>{
   imgs.value = fileList;
@@ -87,7 +89,7 @@ const lookimgs = (file: UploadFile)=>{
 const filePath: string[] = []
 const upOneImg = async (file:UploadFile)=>{
   //上传单张图片
-  const res:res = await getAliToken_api({site:'cms_image'})
+  const res:res = await getAliToken_api({site:'official_img'})
   if(res.status == 1){
     const exname=file.name.substring(file.name.lastIndexOf("."))
     const fd = new FormData();
@@ -151,6 +153,7 @@ const handleExceed = (files:UploadFile[])=>{
     upload.value.handleStart(files[0])
   }
 }
+
 defineExpose({
   submit, // 上传
   clear, // 清除
@@ -185,6 +188,13 @@ defineExpose({
       border:1px dashed $colorddd;
       border-radius: 3px;
       // margin: 0 20px 20px 0;
+      &:hover{
+        border-color: $dfcolor;
+        color: $dfcolor;
+        .el-icon{
+          color: $dfcolor;
+        }
+      }
     }
     .file_name{
       font-size: 12px;

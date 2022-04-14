@@ -68,6 +68,8 @@ import emiter from '@/utils/bus'
 import { ElMessageBox } from 'element-plus'
 
 const store = mainStore()
+store.setTypeList()
+store.setAddressList()
 
 //获取跳转地址
 const urlInfo = ref<any>({})
@@ -137,11 +139,8 @@ onBeforeRouteUpdate((to,from,next)=>{
   getPath(to.meta.father ? to.meta.father as string:to.path)
 
   topPath.value = to.path
-  if(to.meta.isTopNav && to.meta.father != from.meta.father){
-    getNavs(to.path);
-    from.meta.isTopNav && topNavRef.value.changeLeft()
-  }
-  if(to.meta.isTopNav && from.meta.isTopNav && to.meta.father == from.meta.father ) topNavRef.value.changeLeft()
+  if(to.meta.isTopNav && to.meta.father != from.meta.father) getNavs(to.path);
+  if(to.meta.isTopNav && from.meta.isTopNav) topNavRef.value.changeLeft();
   
   if(from.meta.keepAlive && to.meta.father == from.path){
     // 从列表进入详情 缓存列表

@@ -57,3 +57,31 @@ export const getStaffInfo_api = (data:{ id:number|string }): Promise<res> => {
 export const setStaffLv_api = (data:{ bg_uid:number|string, list:(number|string)[] }): Promise<res> => {
   return post(1,'/manage/per/user.up', data, true)
 }
+
+/**
+ * @name 管理端素材库分页
+*/
+export const getPoolList_api = (data:PageParams): Promise<res> => {
+  return get(1,'/manage/material.page', data)
+}
+
+/**
+ * @name 上传素材
+*/
+export const upPool_api = (data:{ source_url:string, source_name:string, source_type:1|2, cover_url?:string }): Promise<res> => {
+  return post(1,'/manage/material.do', data, true)
+}
+
+/**
+ * @name 根据id删除素材
+*/
+export const delPool_api = (data:{ id:string|number }): Promise<res> => {
+  return post(1,'/manage/material.del', data, true)
+}
+
+/**
+ * @name 根据id删除素材
+*/
+export const editPoolName_api = (data:{ id:string|number, source_name:string }): Promise<res> => {
+  return post(1,'/manage/material.up', data, true)
+}

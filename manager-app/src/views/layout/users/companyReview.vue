@@ -4,7 +4,7 @@
     <el-card class="card1 mt20">
       <el-descriptions :column="1">
         <el-descriptions-item label="企业名称">{{info.name}}</el-descriptions-item>
-        <el-descriptions-item label="所属行业"></el-descriptions-item>
+        <el-descriptions-item label="所属行业" v-if="info.industry_id">{{getHashStr(info.industry_id.split(','),typeHash)}}</el-descriptions-item>
         <el-descriptions-item label="统一社会信用代码" label-class-name="icode">{{info.code}}</el-descriptions-item>
         <el-descriptions-item label="资质照片">
           <img :src="info.license" alt="" class="zzimg lookhover"  @click="lookImage([info.license],0)">
@@ -16,7 +16,7 @@
         <el-descriptions-item label="官网地址">
           <el-link type="primary" :href="info.url" target="_blank">{{info.url}}</el-link>
         </el-descriptions-item>
-        <el-descriptions-item label="经营范围"></el-descriptions-item>
+        <el-descriptions-item label="经营范围">{{info.business_scope}}</el-descriptions-item>
       </el-descriptions>
       <div class="fcc mt20" v-if="info.status == 2">
         <el-popover placement="top" :width="400" trigger="click" v-model:visible="errMsgShow">
@@ -36,15 +36,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DetailsHeader from "@/components/DetailsHeader.vue";
 import { getCompanyInfo_api, rejectCompany_api, passCompany_api } from '@/api/users'
 import { formatDate } from '@/utils/date'
 import { mainStore } from '@/store/index'
-import { lookImage } from '@/utils/index'
+import { getHashStr, lookImage } from '@/utils/index'
 
 const store = mainStore()
+const typeHash = computed(() => store.state.typeHash)
 const route = useRoute()
 const router = useRouter()
 const cid = route.query.id as string

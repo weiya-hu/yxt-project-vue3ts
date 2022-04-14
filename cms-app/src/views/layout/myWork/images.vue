@@ -52,29 +52,30 @@
     <MyDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="sureDel"/>
     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'拒绝原因'" :btn="1"/>
     <el-dialog v-model="addShow" title="上传图片" width="380px" @close="close" custom-class="upimgs">
-      <el-upload
-        action="#"
-        :auto-upload="false"
-        :limit="9"
-        :multiple="true"
-        list-type="picture-card"
-        :on-change="upChange"
-        :on-preview="lookimgs"
-        :on-remove="upRemove"
-        :accept="imgTypes.join(',')"
-        ref="upload"
-        class="upbox"
-        v-loading="loading"
-      >
-        <div class="fc fcc">
-          <el-icon><Plus /></el-icon>
-          <div class="file_name">点击上传</div>
+      <div v-loading="loading">
+        <el-upload
+          action="#"
+          :auto-upload="false"
+          :limit="9"
+          :multiple="true"
+          list-type="picture-card"
+          :on-change="upChange"
+          :on-preview="lookimgs"
+          :on-remove="upRemove"
+          :accept="imgTypes.join(',')"
+          ref="upload"
+          class="upbox"
+        >
+          <div class="fc fcc">
+            <el-icon><Plus /></el-icon>
+            <div class="file_name">点击上传</div>
+          </div>
+        </el-upload>
+        <div class="tips">图片尺寸16:9，建议尺寸：220*160≤尺寸≤1920*890；支持JPG、PNG 、JPEG等格式；一次最多上传9张</div>
+        <div class="fcs btns fjend">
+          <el-button @click="close">取消</el-button>
+          <el-button type="primary" @click="goSubmit" :disabled="!imgs.length">提交</el-button>
         </div>
-      </el-upload>
-      <div class="tips">图片尺寸16:9，建议尺寸：220*160≤尺寸≤1920*890；支持JPG、PNG 、JPEG等格式；一次最多上传9张</div>
-      <div class="fcs btns fjend">
-        <el-button @click="close">取消</el-button>
-        <el-button type="primary" @click="goSubmit" :disabled="!imgs.length">提交</el-button>
       </div>
     </el-dialog>
     <el-image-viewer @close="imgShow=false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/>
@@ -259,6 +260,11 @@ const upChange = (file: UploadFile, fileList: UploadFile[])=>{
   if(imgTypes.indexOf(exname) == -1){
     upload.value.handleRemove(file)
     errMsg('图片格式错误！')
+    return
+  }
+  if(file.size && (file.size / 1024 / 1024) > 10){
+    upload.value.handleRemove(file)
+    errMsg('图片文件大小不能超过10M')
     return
   }
   imgs.value = fileList

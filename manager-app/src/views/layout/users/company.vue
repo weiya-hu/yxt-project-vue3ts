@@ -3,7 +3,7 @@
     <div class="ftitle">企业管理</div>
     <el-card class="mycard" header="企业列表">
       <div class="mytable">
-        <el-table :data="tableData" border>
+        <el-table :data="tableData" border draggable>
           <el-table-column prop="company_name" label="企业名称"/>
           <el-table-column prop="industry_id" label="所属行业" width="200">
             <template #default="{row}">
@@ -16,10 +16,10 @@
             </template>
           </el-table-column>
           <el-table-column prop="legal_person" label="联系人"/>
-          <el-table-column prop="contact" label="联系电话"/>
+          <el-table-column prop="contact" label="联系电话" width="120px"/>
           <el-table-column property="user_name" label="认证用户"/>
-          <el-table-column property="user_mobile" label="认证用户电话"/>
-          <el-table-column property="status" label="认证状态">
+          <el-table-column property="user_mobile" label="认证用户电话" width="120px"/>
+          <el-table-column property="status" label="认证状态" width="100px">
             <template #default="{row}">
               {{row.status == 2 ? '认证中' : row.status == 3 ? '认证通过' : '认证失败'}}
             </template>
