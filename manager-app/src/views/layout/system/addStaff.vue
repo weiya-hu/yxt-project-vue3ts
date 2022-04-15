@@ -29,7 +29,7 @@
         <template #header>
           <div class="fcc mb20">权限</div>
         </template>
-        <el-tree :data="menuList" :props="defaultProps" node-key="pid" show-checkbox ref="lvtree"/>
+        <el-tree :data="menuList" :props="defaultProps" node-key="permission_id" show-checkbox ref="lvtree"/>
       </el-card>
     </div>
   </div>
@@ -94,9 +94,9 @@ const sureAdd = () => {
     if(valid){
       const id = lvtree.value.getCheckedKeys() // 选中的
       const hid = lvtree.value.getHalfCheckedKeys() // 半选中
-      const pid = id.concat(hid)
+      const pidList = id.concat(hid)
       const res = await addStaff_api({
-        ...info,pid
+        ...info,permission_ids:pidList
       })
       if(res.status == 1){
         store.setKeepList([])

@@ -83,7 +83,7 @@ import Mypage from "@/components/Mypage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import MediaUpload from "@/components/MediaUpload.vue";
-import { lookImage, downLoadimage, errMsg } from '@/utils/index'
+import { lookImage, downLoadimage, errMsg, clearKzPool } from '@/utils/index'
 import { getPoolList_api, upPool_api, delPool_api, editPoolName_api } from '@/api/system'
 
 const exnameList = ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG']
@@ -102,6 +102,7 @@ const upOne = async (url:string) => {
   if(res && res.status == 1){
     close()
     getList()
+    clearKzPool(1)
   }else{
     loading.value = false
   }
@@ -174,6 +175,7 @@ const sureDel = async () => {
     const i = list.value.findIndex(v => v.id == imgId.value)
     delShow.value = false
     getList()
+    clearKzPool(1)
   }
 }
 
@@ -191,6 +193,7 @@ const sureEdit = async () => {
   if(status == 1){
     editShow.value = false
     getList()
+    clearKzPool(1)
   }
 }
 

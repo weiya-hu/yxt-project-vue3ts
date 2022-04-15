@@ -15,7 +15,7 @@
         </div>
         <div class="rt f1 ml20">
           <div class="fw600 mb20 pt20">修改权限</div>
-          <el-tree :data="menuList" :props="defaultProps" node-key="pid" show-checkbox ref="lvtree"/>
+          <el-tree :data="menuList" :props="defaultProps" node-key="permission_id" show-checkbox ref="lvtree"/>
         </div>
       </div>
     </el-card>
@@ -57,7 +57,7 @@ const getStaffLv = async () => {
   if(!bg_uid) return
   const res = await getStaffInfo_api({ id: bg_uid })
   uinfo.value = res.body
-  uinfo.value.per_list = uinfo.value.per_list.filter((v:number|string) => !menuList.value.find(j => Number(v) == Number(j.pid))) // 剔除一级权限，setCheckedKeys方法会选中一级权限下所有子权限
+  uinfo.value.per_list = uinfo.value.per_list.filter((v:number|string) => !menuList.value.find(j => Number(v) == Number(j.permission_id))) // 剔除一级权限，setCheckedKeys方法会选中一级权限下所有子权限
   lvtree.value.setCheckedKeys(uinfo.value.per_list)
 }
 
@@ -65,10 +65,10 @@ const setStaffLv = async () => {
   if(!bg_uid) return
   const id = lvtree.value.getCheckedKeys() // 选中的
   const hid = lvtree.value.getHalfCheckedKeys() // 半选中
-  const pid = id.concat(hid)
+  const pidList = id.concat(hid)
   const res = await setStaffLv_api({
     bg_uid,
-    list: pid
+    list: pidList,
   })
   if(res.status == 1){
     if(store.state.userInfo.bg_uid == bg_uid){

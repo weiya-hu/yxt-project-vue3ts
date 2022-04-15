@@ -35,6 +35,15 @@
         </div>
       </div>
     </div>
+
+    <div class="test fcs mt20">
+      <img :src="imgs1" alt="" @click="showKzPool('test1')" style="width:100px;height:100px"/>
+      <img :src="imgs2" alt="" @click="showKzPool('test2')" style="width:100px;height:100px" class="ml20"/>
+      <div class="fcc" @click="showKzPool('test3', 2)">
+        <video :src="video1" alt="" style="width:100px;height:100px" class="ml20" controls/>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -49,6 +58,23 @@ import { computed } from 'vue'
 import { formatDate } from '@/utils/date'
 import { mainStore } from '@/store/index'
 import { useRouter } from 'vue-router'
+
+import { ref } from 'vue'
+import emiter from '@/utils/bus'
+import { showKzPool } from '@/utils/index'
+const imgs1 = ref('')
+emiter.on('test1', (val:KzPool) => {
+  imgs1.value = val.source_url
+})
+const imgs2 = ref('')
+emiter.on('test2', (val:KzPool) => {
+  imgs2.value = val.source_url
+})
+const video1 = ref('')
+emiter.on('test3', (val:KzPool) => {
+  video1.value = val.source_url
+})
+
 const icons = [
   {icon:index_m_i,name:'我的作品库',path:'/myWork'},
   {icon:index_c_i,name:'个性化内容库',path:'/custom'},

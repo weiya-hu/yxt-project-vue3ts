@@ -2,6 +2,8 @@ import { ElMessage , ElMessageBox } from 'element-plus'
 
 import emiter from '@/utils/bus'
 
+import { ref } from 'vue'
+
 export const getUrlParams = (search: string, name: string) => {
   //search方式跳转获取参数
   const paramsString = search.substring(1)
@@ -232,6 +234,19 @@ export function lookImage(imgs:string[], index:number){
 */
 export function lookVideo(video:string){
   emiter.emit('lookVideo', video)
+}
+
+/**
+ * 显示素材库组件以选择 
+ * @callbackName emiter.on回调名 (内部emiter.emit为'kzPoolShow')
+ * @type 1：图片，2：视频 不传默认1
+*/
+export function showKzPool(callbackName:string, type?:1|2) {
+  emiter.emit('kzPoolShow', { callbackName , type })
+}
+
+export function clearKzPool(type:1 | 2) {
+  emiter.emit('kzPoolClear', type)
 }
 
 /**
