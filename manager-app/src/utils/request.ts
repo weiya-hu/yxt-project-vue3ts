@@ -50,6 +50,12 @@ axios.interceptors.response.use(
   },
   (error) => {
     console.log(error, 'axios.error')
+    ElMessage({
+      showClose: true,
+      message: '接口错误，请联系管理员',
+      type: 'error',
+      grouping: true,
+    })
     return error
   }
 )
@@ -60,7 +66,7 @@ export function get(isBg:0|1, url: string, params?: any, showmsg?: boolean) {
     axios
       .get(isBg ? 'bgapi' + url : 'api' + url, { params })
       .then((res) => {
-        if (showmsg && res.data.errno != 10200) {
+        if (showmsg && res.data && res.data.errno != 10200) {
           ElMessage({
             showClose: true,
             message: res.data.message,
@@ -83,7 +89,7 @@ export function post(isBg:0|1, url: string, params?: any, showmsg?: boolean) {
     axios
       .post(isBg ? 'bgapi' + url : 'api' + url, params)
       .then((res) => {
-        if (showmsg && res.data.errno != 10200) {
+        if (showmsg && res.data && res.data.errno != 10200) {
           ElMessage({
             showClose: true,
             message: res.data.message,

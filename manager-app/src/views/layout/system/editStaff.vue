@@ -15,7 +15,7 @@
         </div>
         <div class="rt f1 ml20">
           <div class="fw600 mb20 pt20">修改权限</div>
-          <el-tree :data="menuList" :props="defaultProps" node-key="pid" show-checkbox :default-checked-keys="uinfo.per_list" ref="lvtree"/>
+          <el-tree :data="menuList" :props="defaultProps" node-key="pid" show-checkbox ref="lvtree"/>
         </div>
       </div>
     </el-card>
@@ -27,6 +27,10 @@ import { ref } from 'vue'
 import DetailsHeader from "@/components/DetailsHeader.vue";
 import { useRoute, useRouter } from 'vue-router'
 import { getLvList_api, getStaffInfo_api, setStaffLv_api } from '@/api/system'
+import { mainStore } from '@/store/index'
+import { routerGuard } from '@/router'
+
+const store = mainStore()
 const route = useRoute()
 const router = useRouter()
 const bg_uid = route.query.id as string
@@ -40,6 +44,7 @@ const menuList = ref<any[]>([])
 const getMenuList = async () => {
   const res = await getLvList_api()
   menuList.value = res.body
+  getStaffLv()
 }
 getMenuList()
 
@@ -52,8 +57,9 @@ const getStaffLv = async () => {
   if(!bg_uid) return
   const res = await getStaffInfo_api({ id: bg_uid })
   uinfo.value = res.body
+  uinfo.value.per_list = uinfo.value.per_list.filter((v:number|string) => !menuList.value.find(j => Number(v) == Number(j.pid))) // 剔除一级权限，setCheckedKeys方法会选中一级权限下所有子权限
+  lvtree.value.setCheckedKeys(uinfo.value.per_list)
 }
-getStaffLv()
 
 const setStaffLv = async () => {
   if(!bg_uid) return
@@ -65,7 +71,18 @@ const setStaffLv = async () => {
     list: pid
   })
   if(res.status == 1){
-    router.back()
+    if(store.state.userInfo.bg_uid == bg_uid){
+      store.setUserLv().then((userLv:(number | string)[])=>{
+        routerGuard(userLv)
+        if(userLv.indexOf('24') == -1){
+          router.replace('/index')
+        }else{
+          router.back()
+        }
+      })
+    }else{
+      router.back()
+    }
   }
 }
 </script>

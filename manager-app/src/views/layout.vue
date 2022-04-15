@@ -7,7 +7,7 @@
       <el-col class="navbox fsc">
         <div class="nav_title">管理后台</div>
         <div class="fcs">
-          <el-button type="primary" @click="showLib" class="mr20">资源库</el-button>
+          <!-- <el-button type="primary" @click="showLib" class="mr20">资源库</el-button> -->
           <el-link type="primary" target="_blank" :href="'//' + urlInfo.domain_index">官网</el-link>
           <div class="sline"></div>
           <div class="userbox fcs" v-if="userInfo.name">
@@ -35,7 +35,7 @@
       <el-col class="layout_nav">
         <LeftNav v-model="nowPath" :nav="leftNav"/>
       </el-col>
-      <el-col class="layout_content" :class="$route.meta.isTopNav?'layout_content_hasnav':''">
+      <el-col class="layout_content" :class="$route.meta.isTopNav?'layout_content_hasnav':''" v-if="isGetLv">
         <router-view v-slot="{ Component }">
           <transition name="fade">
             <component :is="Component" />
@@ -47,6 +47,10 @@
     <KzResourcePool/>
 
     <el-image-viewer @close="imgShow = false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/>
+
+    <el-dialog v-model="lookShow" title="查看视频" width="60%" @close="lookVideo = ''" custom-class="view_videobox">
+      <video :src="lookVideo" controls class="show_video"></video>
+    </el-dialog>
 
   </div>
 </template>
@@ -71,17 +75,28 @@ const store = mainStore()
 store.setTypeList()
 store.setAddressList()
 
+const route = useRoute()
+const router = useRouter()
+
 //获取跳转地址
 const urlInfo = ref<any>({})
 store.getYxtUrl().then((url:any)=>{
   urlInfo.value = url
 })
 
+const isGetLv = ref(false) // 是否加载路由出口layout_content
 // 获取用户信息及权限
 store.setUserinfo().then((res:any) => {
   if(res.login_passwd_type == 1){
     store.setUserLv().then((userLv:(number | string)[])=>{
       routerGuard(userLv, true)
+      if(route.meta.lv && userLv.indexOf(route.meta.lv as string) == -1){
+        router.replace('/index').then(()=>{
+          isGetLv.value = true
+        })
+      }else{
+        isGetLv.value = true
+      }
     }).catch((err)=>{
       routerGuard([])
       router.replace('/login')
@@ -100,6 +115,7 @@ store.setUserinfo().then((res:any) => {
     router.replace('/index/editpass')
     store.setUserLv([])
     routerGuard([])
+    isGetLv.value = true
   }
 }).catch((error: boolean) => {
   routerGuard([])
@@ -107,9 +123,6 @@ store.setUserinfo().then((res:any) => {
   errMsg('获取用户信息失败，请重新登录或联系管理员')
 })
 const userInfo = computed(()=>store.state.userInfo)
-
-const route = useRoute()
-const router = useRouter()
 
 const routers = router.getRoutes()
 const leftNav = ref<any[]>([])
@@ -136,6 +149,8 @@ const getNavs = (path?:string, first = false)=>{
 getNavs(route.path, true)
 
 onBeforeRouteUpdate((to,from,next)=>{
+  
+
   getPath(to.meta.father ? to.meta.father as string:to.path)
 
   topPath.value = to.path
@@ -162,10 +177,6 @@ const loginout = ()=>{
   })
 }
 
-const showLib = ()=>{
-  emiter.emit('poolShow', '')
-}
-
 const showImgs = ref<string[]>([])//预览图片列表
 const imgShow = ref(false)//预览是否显示
 const showImgIndex = ref(0)//首张预览图片
@@ -175,6 +186,12 @@ emiter.on('lookImage', ({ imgs, index } : { imgs:string[], index:number }) => {
   showImgIndex.value = index
 })
 
+const lookShow = ref(false)
+const lookVideo = ref('')
+emiter.on('lookVideo',(video:string) => {
+  lookVideo.value = video
+  lookShow.value = true
+})
 </script>
 
 <style lang="scss" scoped>
@@ -229,6 +246,15 @@ emiter.on('lookImage', ({ imgs, index } : { imgs:string[], index:number }) => {
     .layout_content_hasnav{
       padding-top: 78px;
       position: relative;
+    }
+  }
+}
+:deep(.view_videobox){
+  .el-dialog__body{
+    padding: 0;
+    .show_video{
+      width: 100%;
+      height: 600px;
     }
   }
 }

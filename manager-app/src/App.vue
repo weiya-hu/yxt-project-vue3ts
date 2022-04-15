@@ -174,6 +174,7 @@ img{
 .el-dialog{
   .el-dialog__header{
     border-bottom: 1px solid $coloreee;
+    margin-right: 0;
     .el-dialog__title{
       font-size: 16px;
       color: $color333;
@@ -213,9 +214,6 @@ img{
 }
 .fade-enter-from,.fade-leave-to {
   opacity: 0;
-}
-.el-dialog__header{
-  margin-right: 0!important;
 }
 .bgline{
   height: 20px;
@@ -303,5 +301,11 @@ img{
 }
 .lookhover{
   cursor: url('@/assets/images/imagelook.cur'),pointer;
+}
+.pool_box{
+  .el-dialog__body{
+    padding-top: 10px;
+    position: relative;
+  }
 }
 </style>

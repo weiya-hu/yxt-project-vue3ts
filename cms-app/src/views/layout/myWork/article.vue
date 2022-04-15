@@ -18,7 +18,7 @@
         </el-table-column>
         <el-table-column property="title" label="标题">
           <template #default="{row}">
-            <el-link v-if="row.status == 2 || row.status == 3" type="primary" @click="$router.push('/myWork/articleDetails?id='+row.id)">{{row.title}}</el-link>
+            <el-link v-if="row.status != 4" type="primary" @click="$router.push(row.status == 1 ? '/myWork/articleAdd?id=' + row.id : '/myWork/articleDetails?id=' + row.id)">{{row.title}}</el-link>
             <span v-else @click="errorMsg = row.fail_reason;errorShow=true">{{row.title}}</span>
           </template>
         </el-table-column>
@@ -37,20 +37,12 @@
         </el-table-column>
         <el-table-column label="操作" width="150">
           <template #default="{row}">
-            <div class="fcs" v-if="row.status == 1">
+            <div class="fcs">
               <el-link type="primary" @click="goDel(row.id)">删除</el-link>
               <div class="line"></div>
-              <el-link type="primary" @click="$router.push('/myWork/articleAdd?id='+row.id)">编辑</el-link>
-            </div>
-            <div class="fcs" v-if="row.status == 2 || row.status == 3">
-              <el-link type="primary" @click="goDel(row.id)">删除</el-link>
-              <div class="line"></div>
-              <el-link type="primary" @click="$router.push('/myWork/articleDetails?id='+row.id)">查看</el-link>
-            </div>
-            <div class="fcs" v-if="row.status == 4">
-              <el-link type="primary" @click="goDel(row.id)">删除</el-link>
-              <div class="line"></div>
-              <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true">拒绝原因</el-link>
+              <el-link type="primary" v-if="row.status == 1" @click="$router.push('/myWork/articleAdd?id='+row.id)">编辑</el-link>
+              <el-link type="primary" v-if="row.status == 2 || row.status == 3" @click="$router.push('/myWork/articleDetails?id='+row.id)">查看</el-link>
+              <el-link type="primary" v-if="row.status == 4" @click="errorMsg = row.fail_reason;errorShow=true">拒绝原因</el-link>
             </div>
           </template>
         </el-table-column>

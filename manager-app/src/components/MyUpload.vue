@@ -66,8 +66,8 @@ const props = withDefaults(defineProps<{
   maxSize:4
 })
 
-//change 文件改变时，返回错误类型； error 上传错误时，返回错误；success 上传成功后，返回文件地址
-const emit = defineEmits(['update:modelValue','change','error','success'])
+//change 文件改变时，返回错误类型； error 上传错误时，返回错误；success 上传成功后，返回文件地址；changeName：改变视频名
+const emit = defineEmits(['update:modelValue','change','error','success','changeName'])
 
 const upload = ref()//上传组件ref
 const upData:any = ref({})//上传参数
@@ -83,6 +83,7 @@ const handleExceed = (files:any) => {
 const nowFile = ref<UploadFile>()
 const upChange = (file: UploadFile, list: UploadFile[])=>{
   //上传组件状态改变时 添加时效验文件格式大小
+  if(!file.name) return;
   nowFile.value = file
   const tmpcnt = file.name.lastIndexOf(".")
   const exname = file.name.substring(tmpcnt)
@@ -93,17 +94,18 @@ const upChange = (file: UploadFile, list: UploadFile[])=>{
   }else if(file.size && (file.size / 1024 / 1024) > props.maxSize){
     emit('change','size')
   }else{
-    emit('change','')
+    emit('change', '')
     emit('update:modelValue',file.name)
     file_exname.value = exname
     if(props.type == 'video'){
+      !videoBlobUrl.value && emit('changeName', file.name.substring(0, file.name.indexOf(".")));
       videoBlobUrl.value = URL.createObjectURL(file.raw as Blob)
     }
   }
 }
 
 const submit = ()=>{
-  getAliToken_api({site:props.type=='video'?'cms_video':'cms_attach'}).then((res:res)=>{
+  getAliToken_api({site:props.type=='video'?'official_video':'official_img'}).then((res:res)=>{
     return new Promise<string>((resolve, reject) => {
       if(res.status == 1){
         hostUrl.value = res.body.host
@@ -143,6 +145,7 @@ const clear = ()=>{
   //清除文件
   upload.value.clearFiles()
   emit('update:modelValue','')
+  URL.revokeObjectURL(videoBlobUrl.value);
   videoBlobUrl.value = ''
 }
 
@@ -191,6 +194,11 @@ defineExpose({
         color: $colorddd;
       }
       &:hover{
+        border-color: $dfcolor;
+        color: $dfcolor;
+        .el-icon{
+          color: $dfcolor;
+        }
         .file_name{
           color: $dfcolor;
         }

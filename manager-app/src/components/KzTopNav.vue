@@ -40,7 +40,11 @@ let activeDom
 onMounted (() => {
   //解决刷新时顶部导航线条会从开始跳到激活位置
   setTimeout(() => {
-    line.value.style.transition = 'transform 0.5s'
+    try {
+      line.value && (line.value.style.transition = 'transform 0.5s')
+    } catch (error) {
+      return      
+    }
   }, 500);
   changeLeft()
 });

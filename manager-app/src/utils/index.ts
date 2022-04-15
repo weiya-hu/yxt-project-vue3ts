@@ -227,6 +227,14 @@ export function lookImage(imgs:string[], index:number){
 }
 
 /**
+ * 预览视频
+ * @video 视频地址
+*/
+export function lookVideo(video:string){
+  emiter.emit('lookVideo', video)
+}
+
+/**
  * 下载图片 图片地址不同源时a标签无法下载而会直接跳转，则用此方法
  * @imgSrc 图片地址
  * @imgName 下载文件名
@@ -261,4 +269,21 @@ export const downLoadimage = (imgSrc:string, imgName?:string) => {
     // canvas.remove()
   };
   image.src = imgSrc;
+}
+
+/**
+ * 下载视频
+ * @VideoSrc 视频地址
+ * @videoName 下载文件名
+*/
+export const downLoadVideo = (videoSrc:string, videoName?:string) => {
+  fetch(videoSrc).then(res => res.blob()).then(blob => {
+    const a = document.createElement('a');
+    const url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = videoName || '未命名'
+    a.click();
+    a.remove()
+    window.URL.revokeObjectURL(url);
+  });
 }

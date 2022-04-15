@@ -24,3 +24,11 @@ interface PageParams {
   source?:number,
   [propName: string]: any
 }
+
+interface KzPool {
+  source_url:string,
+  source_name:string,
+  source_type:number|string,
+  id:string|number,
+  [propName: string]: any
+}

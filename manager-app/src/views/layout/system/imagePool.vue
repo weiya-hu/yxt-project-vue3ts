@@ -2,7 +2,7 @@
   <div class="imagepool_page">
     <div class="fsc topbox">
       <div class="fcs">
-        <el-input v-model="word" placeholder="输入图片名搜索" clearable/>
+        <el-input v-model="word" placeholder="输入图片名关键字搜索" clearable/>
         <el-button type="primary" class="ml20" @click="getList">搜索</el-button>
       </div>
       <div class="fcs">
@@ -12,7 +12,7 @@
     </div>
     <div class="imgs_list flex" v-if="total">
       <div class="imgs_item" v-for="(v, i) in list" :key="v.id">
-        <div class="imgbox lookhover" @click="lookImage([v.source_url],0)">
+        <div class="imgbox lookhover" @click="look(i)">
           <img :src="v.source_url" alt="" @load="getImageSize(i,$event)">
           <div class="lookicon fcc">
             <el-icon size="20px"><zoom-in/></el-icon>
@@ -57,6 +57,7 @@
             @error="upError"
             @look="upLook"
             @change="upChange"
+            @del="addForm.source_name = ''"
             :exnameList="exnameList"
             :msg="'只能上传'+exnameList.join('、')+'图片，不超过2M'"
             ref="upload"
@@ -82,7 +83,6 @@ import Mypage from "@/components/Mypage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import MediaUpload from "@/components/MediaUpload.vue";
-import empty_i from '@/assets/images/empty.png'
 import { lookImage, downLoadimage, errMsg } from '@/utils/index'
 import { getPoolList_api, upPool_api, delPool_api, editPoolName_api } from '@/api/system'
 
@@ -93,15 +93,17 @@ const upload = ref()
 const upChange = (fileName:string) => {
   addForm.source_name = fileName
 }
-const upOne = async (url:string, length:number) => {
-  const { status } = await upPool_api({
+const upOne = async (url:string) => {
+  const res = await upPool_api({
     source_url: url,
     source_name: addForm.source_name,
     source_type: 1
   })
-  if(status == 1){
+  if(res && res.status == 1){
     close()
     getList()
+  }else{
+    loading.value = false
   }
 }
 const upError = (err:string) => {
@@ -133,7 +135,7 @@ const close = () => {
   addShow.value = false
 }
 
-const sizeList = ref<string[]>([])
+const sizeList = ref<string[]>([]) // 专门用另外的数组是因为每次getList()会重新赋值整个list，但为了节约性能dom是绑定了:key="v.id"的，有key那vue就会根据key对比dom是否改变而更新dom，不会更新整个列表，没有改变的dom就不会再次触发img的onload事件，如果宽高直接添加在list上，getList()更新整个list，id不变的dom又不触发img的onload，导致宽高丢失
 const getImageSize = (i:number,e:any) => {
   // 图片加载后获取图片真实宽高
   const a = e.path[0] as HTMLImageElement
@@ -170,7 +172,6 @@ const sureDel = async () => {
   const { status } = await delPool_api({id: imgId.value})
   if(status == 1){
     const i = list.value.findIndex(v => v.id == imgId.value)
-    sizeList.value.splice(i, 1)
     delShow.value = false
     getList()
   }
@@ -191,6 +192,11 @@ const sureEdit = async () => {
     editShow.value = false
     getList()
   }
+}
+
+const look = (i:number) => {
+  const imgs = list.value.map(v => v.source_url)
+  lookImage(imgs, i)
 }
 
 </script>

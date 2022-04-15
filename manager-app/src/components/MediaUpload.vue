@@ -46,14 +46,14 @@ const props = withDefaults(defineProps<{
   maxSize:2
 })
 
-//upOneSuccess：上传单个图片成功后，返回文件地址和添加图片的个数；error：上传发生错误，返回错误；look：点击预览图片，返回图片blob地址数组和点击的图片下标；change：图片改变时，返回图片名
-const emit = defineEmits(['upOneSuccess','error','look','change'])
+//upOneSuccess：上传单个图片成功后，返回文件地址和添加图片的个数；error：上传发生错误，返回错误；look：点击预览图片，返回图片blob地址数组和点击的图片下标；change：图片改变时，返回图片名；del：删除图片时触发
+const emit = defineEmits(['upOneSuccess','error','look','change','del'])
 
 const imgs = ref<UploadFile[]>([])
 const upload = ref()//上传组件ref
 
 const upChange = (file: UploadFile, fileList: UploadFile[])=>{
-  if(!file.name) return // 当前版本elment2.1.7会触发两次on-change
+  if(!file.name) return; // 当前版本elment2.1.7会触发两次on-change
   const exname = file.name.substring(file.name.lastIndexOf("."))
   if(props.exnameList.indexOf(exname) == -1){
     upload.value.handleRemove(file)
@@ -75,6 +75,7 @@ const upChange = (file: UploadFile, fileList: UploadFile[])=>{
   emit('change',fxname)
 }
 const upRemove = (file: UploadFile, fileList: UploadFile[])=>{
+  emit('del')
   imgs.value = fileList;
   (document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'inline-flex'
 }
