@@ -48,7 +48,7 @@
  * @author chn 
 */
 import { ref } from 'vue'
-import { Plus ,Document } from '@element-plus/icons-vue'
+import { Plus, Document } from '@element-plus/icons-vue'
 import type { UploadFile, UploadProgressEvent} from 'element-plus'
 import { getAliToken_api } from '@/api/login'
 import { errMsg } from '@/utils'

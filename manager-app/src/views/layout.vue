@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <KzTopNav v-model="topPath" :nav="topNav" v-if="$route.meta.isTopNav" ref="topNavRef"/>
+        <KzTopNav v-model="topPath" :nav="topNav" v-if="$route.meta.isTopNav && isGetLv" ref="topNavRef"/>
       </el-col>
     </el-row>
     <el-row class="layout_container">
@@ -77,6 +77,7 @@ store.setAddressList()
 
 const route = useRoute()
 const router = useRouter()
+const routers = router.getRoutes()
 
 //获取跳转地址
 const urlInfo = ref<any>({})
@@ -88,12 +89,22 @@ const isGetLv = ref(false) // 是否加载路由出口layout_content
 // 获取用户信息及权限
 store.setUserinfo().then((res:any) => {
   if(res.login_passwd_type == 1){
-    store.setUserLv().then((userLv:(number | string)[])=>{
+    store.setUserLv().then((userLv:string[])=>{
       routerGuard(userLv, true)
       if(route.meta.lv && userLv.indexOf(route.meta.lv as string) == -1){
-        router.replace('/index').then(()=>{
-          isGetLv.value = true
-        })
+        if(route.meta.isTopNav){
+          routers.forEach(v => {
+            if(route.meta.father == v.path){
+              router.replace(v.children.find(v => userLv.indexOf(v.meta!.lv as string) > -1)!.path).then(()=>{
+                isGetLv.value = true
+              })
+            }
+          }) 
+        }else{
+          router.replace('/index').then(()=>{
+            isGetLv.value = true
+          })
+        }
       }else{
         isGetLv.value = true
       }
@@ -124,7 +135,6 @@ store.setUserinfo().then((res:any) => {
 })
 const userInfo = computed(()=>store.state.userInfo)
 
-const routers = router.getRoutes()
 const leftNav = ref<any[]>([])
 const nowPath = ref('')
 
@@ -149,13 +159,12 @@ const getNavs = (path?:string, first = false)=>{
 getNavs(route.path, true)
 
 onBeforeRouteUpdate((to,from,next)=>{
-  
 
   getPath(to.meta.father ? to.meta.father as string:to.path)
 
   topPath.value = to.path
   if(to.meta.isTopNav && to.meta.father != from.meta.father) getNavs(to.path);
-  if(to.meta.isTopNav && from.meta.isTopNav) topNavRef.value.changeLeft();
+  if(to.meta.isTopNav && from.meta.isTopNav) topNavRef.value && topNavRef.value.changeLeft();
   
   if(from.meta.keepAlive && to.meta.father == from.path){
     // 从列表进入详情 缓存列表

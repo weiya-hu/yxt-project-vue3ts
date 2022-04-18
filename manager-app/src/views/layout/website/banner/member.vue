@@ -1,6 +1,6 @@
 <template>
   <div>
-    banner管理
+    会员中心
   </div>
 </template>
 

@@ -3,7 +3,7 @@
     <DetailsHeader/>
     <el-card class="mycard mt20">
       <template #header>
-        <div class="fsc">
+        <div class="fsc f1">
           <span>产品与服务</span>
           <el-button type="primary" @click="show = true" v-if="info.status == 3">+ 添加</el-button>
         </div>

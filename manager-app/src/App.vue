@@ -103,6 +103,9 @@ img{
 .dfcolor{
   color: $dfcolor!important;
 }
+.color999{
+  color: $color999;
+}
 .w100{
   width: 100%;
 }
@@ -237,6 +240,16 @@ img{
     font-weight: 600;
     border-bottom: none;
     padding-bottom: 0;
+    display: flex;
+    align-items: center;
+    &::before{
+      content: '';
+      width: 4px;
+      height: 16px;
+      left: 20px;
+      margin-right: 8px;
+      background-color: $dfcolor;
+    }
   }
   .el-card__body{
     padding-top: 10px;

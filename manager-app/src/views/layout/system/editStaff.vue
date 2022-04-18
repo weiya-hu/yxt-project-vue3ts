@@ -57,8 +57,26 @@ const getStaffLv = async () => {
   if(!bg_uid) return
   const res = await getStaffInfo_api({ id: bg_uid })
   uinfo.value = res.body
-  uinfo.value.per_list = uinfo.value.per_list.filter((v:number|string) => !menuList.value.find(j => Number(v) == Number(j.permission_id))) // 剔除一级权限，setCheckedKeys方法会选中一级权限下所有子权限
-  lvtree.value.setCheckedKeys(uinfo.value.per_list)
+  // uinfo.value.per_list = uinfo.value.per_list.filter((v:number|string) => !menuList.value.find(j => Number(v) == Number(j.permission_id))) // 剔除一级权限，setCheckedKeys方法会选中一级权限下所有子权限
+  const lvList = ref<number[]>([])
+  uinfo.value.per_list.forEach((v:number|string) => {
+    menuList.value.forEach((j) => {
+      j.children.forEach((k:any) => {
+        if(k.children){
+          k.children.forEach((l:any) => {
+            if(l.permission_id == v){
+              lvList.value.push(Number(v))
+            }
+          });
+        }else{
+          if(k.permission_id == v){
+            lvList.value.push(Number(v))
+          }
+        }
+      });
+    })
+  })
+  lvtree.value.setCheckedKeys(lvList.value)
 }
 
 const setStaffLv = async () => {
@@ -72,7 +90,7 @@ const setStaffLv = async () => {
   })
   if(res.status == 1){
     if(store.state.userInfo.bg_uid == bg_uid){
-      store.setUserLv().then((userLv:(number | string)[])=>{
+      store.setUserLv().then((userLv:string[])=>{
         routerGuard(userLv)
         if(userLv.indexOf('24') == -1){
           router.replace('/index')

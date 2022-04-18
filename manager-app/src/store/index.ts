@@ -7,7 +7,7 @@ export const mainStore = defineStore('mainStore', () => {
   //这样写第一个参数就是$id
   const state = reactive({
     yxtUrl:{} as any,//跳转地址
-    userLv:[] as (number | string)[],//用户权限数组
+    userLv:[] as string[],//用户权限数组
     userInfo:{} as any,//用户信息
     typeList:[] as any[],//行业分类
     typeHash:{} as any,//行业分类哈希表
@@ -62,8 +62,8 @@ export const mainStore = defineStore('mainStore', () => {
       })
     })
   }
-  const setUserLv = (lvArr?:(number | string)[]) => {
-    return new Promise<(number | string)[]>((resolve, reject) => {
+  const setUserLv = (lvArr?:string[]) => {
+    return new Promise<string[]>((resolve, reject) => {
       if(lvArr){
         state.userLv = lvArr
         resolve(state.userLv)

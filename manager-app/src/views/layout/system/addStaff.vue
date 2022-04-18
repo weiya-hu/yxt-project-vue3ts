@@ -7,9 +7,9 @@
     <div class="flex mt20">
       <el-card class="mycard mr20 f1" style="height:100%">
         <template #header>
-          <div class="fcc mb20">基本信息</div>
+          <div class="fcs">基本信息</div>
         </template>
-        <div class="fcc">
+        <div class="fcc mt20">
           <el-form :model="info" :rules="rules" ref="addFormRef">
             <el-form-item label="姓&emsp;名：" prop="name">
               <el-input v-model="info.name" placeholder="请输入姓名"></el-input>
@@ -27,9 +27,11 @@
       </el-card>
       <el-card class="mycard f1">
         <template #header>
-          <div class="fcc mb20">权限</div>
+          <div class="fcs">权限</div>
         </template>
-        <el-tree :data="menuList" :props="defaultProps" node-key="permission_id" show-checkbox ref="lvtree"/>
+        <div class="mt20">
+          <el-tree :data="menuList" :props="defaultProps" node-key="permission_id" show-checkbox ref="lvtree"/>
+        </div>
       </el-card>
     </div>
   </div>

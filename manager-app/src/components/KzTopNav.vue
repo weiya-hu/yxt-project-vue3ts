@@ -1,7 +1,7 @@
 <template>
   <div class="topnav fcs">
     <template v-for="v in nav" :key="v.path">
-      <div class="item fcc" @click="changeNav(v.path)" :class="modelValue == v.path?'active':''" v-if="v.meta.isTopNav">
+      <div class="item fcc" @click="changeNav(v.path)" :class="modelValue == v.path?'active':''" v-if="v.meta.isTopNav && userlv.indexOf(v.meta.lv)>-1">
         <span>{{v.meta.title}}</span>
       </div>
     </template>
@@ -14,7 +14,8 @@
  * 布局的顶部导航
  * @author chn 
 */
-import { ref ,onMounted,nextTick } from 'vue'
+import { ref, onMounted, nextTick, computed } from 'vue'
+import { mainStore } from '@/store/index'
 import {useRouter} from 'vue-router'
 
 const props = withDefaults(defineProps<{
@@ -25,6 +26,9 @@ const props = withDefaults(defineProps<{
   activePath:'/'
 })
 const emits = defineEmits(['update:modelValue'])
+
+const store = mainStore()
+const userlv = computed(() => store.state.userLv)
 
 const router = useRouter()
 const changeNav = (path:string)=>{

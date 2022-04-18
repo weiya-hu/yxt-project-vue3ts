@@ -240,12 +240,15 @@ const beforeCloseAdd = (done:Function)=>{
       border: 1px solid #e4e7ed;
       box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
       .imgbox{
-        height: 150px;
         position: relative;
+        // aspect-ratio: 16 / 9; // 低版本浏览器及ie不支持
+        padding-top: 56.25%;  // margin-top/bottom、padding-top/bottom 设置百分比时是以父级元素的宽度为参考对象
         img{
           width: 100%;
           height: 100%;
           object-fit: scale-down;
+          position: absolute;
+          top: 0;
         }
         .lookicon{
           position: absolute;

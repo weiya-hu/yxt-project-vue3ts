@@ -24,7 +24,7 @@
 
     <el-card class="mycard mt20">
       <template #header>
-        <div class="fsc">
+        <div class="fsc f1">
           <span>管理员列表</span>
           <el-button type="primary" @click="$router.push('addstaff')">添加人员</el-button>
         </div>
