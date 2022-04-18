@@ -3,7 +3,7 @@
     <div class="fsc topbox">
       <div class="fcs">
         <el-input v-model="word" placeholder="输入图片名关键字搜索" clearable/>
-        <el-button type="primary" class="ml20" @click="getList">搜索</el-button>
+        <el-button type="primary" class="ml20" @click="page = 1;getList">搜索</el-button>
       </div>
       <div class="fcs">
         <div class="total mr20">共{{total}}条</div>

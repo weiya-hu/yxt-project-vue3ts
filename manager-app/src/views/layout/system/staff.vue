@@ -88,6 +88,7 @@ const search = reactive({
   deptId:''
 })
 const goSearch = () => {
+  page.value = 1
   getList()
 }
 const reset = () => {
