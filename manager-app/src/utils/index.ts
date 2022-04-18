@@ -42,7 +42,7 @@ export function infoMsg(msg: string, time?: number) {
   })
 }
 
-export function confirm(msg?:string){
+export function kzConfirm(msg?:string){
   return ElMessageBox.confirm(
     msg||'正在上传中，关闭弹窗可能会导致上传失败，是否继续关闭？',
     '温馨提示',
@@ -245,6 +245,10 @@ export function showKzPool(callbackName:string, type?:1|2) {
   emiter.emit('kzPoolShow', { callbackName , type })
 }
 
+/**
+ * 清空重置素材库内容 (内部emiter.emit为'kzPoolClear')
+ * @type 1：图片，2：视频
+*/
 export function clearKzPool(type:1 | 2) {
   emiter.emit('kzPoolClear', type)
 }

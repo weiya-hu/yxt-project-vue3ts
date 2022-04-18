@@ -47,7 +47,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog v-model="addShow" title="上传图片" width="380px" @close="close">
+    <el-dialog v-model="addShow" title="上传图片" width="380px" @close="close" :before-close="beforeCloseAdd">
       <el-form v-loading="loading" :model="addForm" :rules="addRules" ref="addFormRef">
         <el-form-item label="图片" required>
           <MediaUpload
@@ -83,7 +83,7 @@ import Mypage from "@/components/Mypage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import MediaUpload from "@/components/MediaUpload.vue";
-import { lookImage, downLoadimage, errMsg, clearKzPool } from '@/utils/index'
+import { lookImage, downLoadimage, errMsg, clearKzPool, kzConfirm } from '@/utils/index'
 import { getPoolList_api, upPool_api, delPool_api, editPoolName_api } from '@/api/system'
 
 const exnameList = ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG']
@@ -208,6 +208,18 @@ const sureEdit = async () => {
 const look = (i:number) => {
   const imgs = list.value.map(v => v.source_url)
   lookImage(imgs, i)
+}
+
+
+const beforeCloseAdd = (done:Function)=>{
+  if(loading.value){
+    kzConfirm().then(() => {
+      done()
+    })
+    .catch(() => {})
+  }else{
+    done()
+  }
 }
 
 </script>

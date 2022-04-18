@@ -47,7 +47,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog v-model="addShow" title="上传视频" width="380px" @close="close">
+    <el-dialog v-model="addShow" title="上传视频" width="380px" @close="close" :before-close="beforeCloseAdd">
       <el-form v-loading="loading" :model="addForm" :rules="addRules" ref="addFormRef">
         <el-form-item label="视&emsp;频" required>
           <MyUpload
@@ -95,7 +95,7 @@ import MyEmpty from "@/components/MyEmpty.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import MediaUpload from "@/components/MediaUpload.vue";
 import MyUpload from "@/components/MyUpload.vue";
-import { lookImage, lookVideo, downLoadVideo, errMsg, clearKzPool } from '@/utils/index'
+import { lookImage, lookVideo, downLoadVideo, errMsg, clearKzPool, kzConfirm } from '@/utils/index'
 import { getPoolList_api, upPool_api, delPool_api, editPoolName_api } from '@/api/system'
 import { formatDate } from '@/utils/date'
 
@@ -219,6 +219,18 @@ const sureEdit = async () => {
     editShow.value = false
     getList()
     clearKzPool(2)
+  }
+}
+
+const beforeCloseAdd = (done:Function)=>{
+  if(loading.value){
+    kzConfirm().then(() => {
+      upVideo.value.doAbort()
+      done()
+    })
+    .catch(() => {})
+  }else{
+    done()
   }
 }
 
