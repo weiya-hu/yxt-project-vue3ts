@@ -8,12 +8,12 @@
         <div class="imageslibrary images_sel">
           <div class="imgsel fcs">
             <el-input placeholder="请输入图片名关键字" style="width:200px" v-model="imgWord" clearable></el-input>
-            <el-button type="primary" class="ml20" @click="imgPage = 1;getList">搜索</el-button>
+            <el-button type="primary" class="ml20" @click="wordSearch">搜索</el-button>
           </div>
           <div class="imglist fcs" v-if="imgTotal">
             <div class="imgitem flex fc mt20 mr20" :class="i == imgIndex ? 'active' : ''" v-for="(v,i) in imgList" :key="v.id" @click.stop="imgIndex = i" @dblclick="handTwo(i)">
               <div class="imgbox">
-                <img :src="v.source_url" alt="" @load="getImageSize(i,$event)">
+                <img :src="v.source_url" alt="" @load="getImageSize(v.id,$event)">
                 <div class="lookicon fcc" @click="look(i)">
                   <el-icon><zoom-in/></el-icon>
                 </div>
@@ -23,12 +23,12 @@
               </div>
               <div class="imginfo">
                 <div class="imgname els">{{v.source_name}}</div>
-                <div class="imgsize">{{v.natural}}</div>
+                <div class="imgsize">{{sizeHash[v.id]}}</div>
               </div>
             </div>
           </div>
           <MyEmpty v-else/>
-          <Mypage v-model="imgPage" :total="imgTotal"/>
+          <Mypage v-model="imgPage" :total="imgTotal" @change="changePage"/>
         </div>
         
       </el-tab-pane>
@@ -37,7 +37,7 @@
         <div class="imageslibrary images_sel">
           <div class="imgsel fcs">
             <el-input placeholder="请输入视频名关键字" style="width:200px" v-model="videoWord" clearable></el-input>
-            <el-button type="primary" class="ml20" @click="videoPage = 1;getList">搜索</el-button>
+            <el-button type="primary" class="ml20" @click="wordSearch">搜索</el-button>
           </div>
           <div class="imglist fcs" v-if="videoTotal">
             <div class="imgitem flex fc mt20 mr20" :class="i == videoIndex ? 'active' : ''" v-for="(v,i) in videoList" :key="v.id" @click.stop="videoIndex = i" @dblclick="handTwo(i)">
@@ -57,7 +57,7 @@
             </div>
           </div>
           <MyEmpty v-else/>
-          <Mypage v-model="videoPage" :total="videoTotal"/>
+          <Mypage v-model="videoPage" :total="videoTotal" @change="changePage"/>
         </div>
 
       </el-tab-pane>
@@ -115,9 +115,32 @@ const getList = async () => {
   }
 }
 
-const getImageSize = (i:number,e:any) => {
+const wordSearch = () => {
+  if(Tabtype.value == 1){
+    imgPage.value = 1
+    imgIndex.value = 0
+  }else{
+    videoPage.value = 1
+    videoIndex.value = 0
+  }
+  getList()
+}
+
+const changePage = () => {
+  if(Tabtype.value == 1){
+    imgIndex.value = 0
+    sizeHash.value = {}
+  }else{
+    videoIndex.value = 0
+  }
+  getList()
+}
+
+const sizeHash = ref<any>({})
+const getImageSize = (id:string|number,e:any) => {
+  // 图片加载后获取图片真实宽高
   const a = e.path[0] as HTMLImageElement
-  imgList.value[i].natural = a.naturalWidth + '*' + a.naturalHeight
+  sizeHash.value[id] = a.naturalWidth + '*' + a.naturalHeight
 }
 
 const changeTabs = () => {
@@ -205,6 +228,7 @@ export default { name:'Company' }
         img{
           width: 100%;
           height: 100%;
+          object-fit: scale-down;
         }
         .lookicon{
           position: absolute;

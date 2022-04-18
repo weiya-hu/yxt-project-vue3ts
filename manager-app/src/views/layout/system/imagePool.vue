@@ -3,7 +3,7 @@
     <div class="fsc topbox">
       <div class="fcs">
         <el-input v-model="word" placeholder="输入图片名关键字搜索" clearable/>
-        <el-button type="primary" class="ml20" @click="page = 1;getList">搜索</el-button>
+        <el-button type="primary" class="ml20" @click="search">搜索</el-button>
       </div>
       <div class="fcs">
         <div class="total mr20">共{{total}}条</div>
@@ -13,14 +13,14 @@
     <div class="imgs_list flex" v-if="total">
       <div class="imgs_item" v-for="(v, i) in list" :key="v.id">
         <div class="imgbox lookhover" @click="look(i)">
-          <img :src="v.source_url" alt="" @load="getImageSize(i,$event)">
+          <img :src="v.source_url" alt="" @load="getImageSize(v.id,$event)">
           <div class="lookicon fcc">
             <el-icon size="20px"><zoom-in/></el-icon>
           </div>
         </div>
         <div class="imginfo">
           <div class="imgname els">{{v.source_name}}</div>
-          <div class="imgsize">{{sizeList[i]}}</div>
+          <div class="imgsize">{{sizeHash[v.id]}}</div>
           <div class="fcs fjend imgicon">
             <el-tooltip effect="dark" content="下载" placement="bottom">
               <el-icon class="chover" size="18px" @click="downLoadimage(v.source_url, v.source_name)"><download /></el-icon>
@@ -36,7 +36,7 @@
       </div>
     </div>
     <MyEmpty v-else/>
-    <Mypage v-model="page" :total="total"/>
+    <Mypage v-model="page" :total="total" @change="changePage"/>
 
     <MyDialog v-model="delShow" :msg="'确认删除图片 “ ' + imgName +' ” ?'" @sure="sureDel"/>
     <el-dialog v-model="editShow" title="修改名称" width="380px" @close="imgName = ''">
@@ -136,11 +136,11 @@ const close = () => {
   addShow.value = false
 }
 
-const sizeList = ref<string[]>([]) // 专门用另外的数组是因为每次getList()会重新赋值整个list，但为了节约性能dom是绑定了:key="v.id"的，有key那vue就会根据key对比dom是否改变而更新dom，不会更新整个列表，没有改变的dom就不会再次触发img的onload事件，如果宽高直接添加在list上，getList()更新整个list，id不变的dom又不触发img的onload，导致宽高丢失
-const getImageSize = (i:number,e:any) => {
+const sizeHash = ref<any>({}) // 专门用另外的对象是因为每次getList()会重新赋值整个list，但为了节约性能dom是绑定了:key="v.id"的，有key那vue就会根据key对比dom是否改变而更新dom，不会更新整个列表，没有改变的dom就不会再次触发img的onload事件，如果宽高直接添加在list上，getList()更新整个list，id不变的dom又不触发img的onload，导致宽高丢失
+const getImageSize = (id:string|number,e:any) => {
   // 图片加载后获取图片真实宽高
   const a = e.path[0] as HTMLImageElement
-  sizeList.value[i] = a.naturalWidth + '*' + a.naturalHeight
+  sizeHash.value[id] = a.naturalWidth + '*' + a.naturalHeight
 }
 
 const list = ref<any[]>([])
@@ -160,6 +160,14 @@ const getList = async () => {
   }
 }
 getList()
+const search = () => {
+  page.value = 1
+  getList()
+}
+const changePage = () => {
+  sizeHash.value = {}
+  getList()
+}
 
 const imgId = ref(0)
 const imgName = ref('')
@@ -225,6 +233,7 @@ const look = (i:number) => {
         img{
           width: 100%;
           height: 100%;
+          object-fit: scale-down;
         }
         .lookicon{
           position: absolute;

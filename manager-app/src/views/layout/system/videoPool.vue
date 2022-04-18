@@ -3,7 +3,7 @@
     <div class="fsc topbox">
       <div class="fcs">
         <el-input v-model="word" placeholder="输入视频名关键字搜索" clearable/>
-        <el-button type="primary" class="ml20" @click="page = 1;getList">搜索</el-button>
+        <el-button type="primary" class="ml20" @click="search">搜索</el-button>
       </div>
       <div class="fcs">
         <div class="total mr20">共{{total}}条</div>
@@ -181,6 +181,10 @@ const getList = async () => {
   }
 }
 getList()
+const search = () => {
+  page.value = 1
+  getList()
+}
 
 const imgId = ref(0)
 const imgName = ref('')
@@ -241,6 +245,7 @@ const sureEdit = async () => {
         img{
           width: 100%;
           height: 100%;
+          object-fit: scale-down;
         }
         .lookicon{
           position: absolute;
