@@ -30,5 +30,6 @@ interface KzPool {
   source_name:string,
   source_type:number|string,
   id:string|number,
+  cover_url?:string,
   [propName: string]: any
 }

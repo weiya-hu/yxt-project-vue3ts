@@ -14,7 +14,7 @@
         <el-descriptions-item label="联系电话">{{info.contact}}</el-descriptions-item>
         <el-descriptions-item label="注册地址">{{info.address}}</el-descriptions-item>
         <el-descriptions-item label="官网地址">
-          <el-link type="primary" :href="info.url" target="_blank">{{info.url}}</el-link>
+          <el-link type="primary" :href="'//' + info.url" target="_blank">{{info.url}}</el-link>
         </el-descriptions-item>
         <el-descriptions-item label="经营范围">{{info.business_scope}}</el-descriptions-item>
       </el-descriptions>
