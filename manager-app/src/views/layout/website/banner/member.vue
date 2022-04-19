@@ -1,6 +1,6 @@
 <template>
   <div>
-    资讯管理
+    会员中心
   </div>
 </template>
 

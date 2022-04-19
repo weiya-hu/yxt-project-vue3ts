@@ -195,17 +195,70 @@ const routes = [
             ]
           },
           {
-            path: '/website/notice',
-            name: 'Notice',
-            component: () => import('@/views/layout/website/notice.vue'),
-            meta: { title: '动态与公告', icon:nav3_2_i, icon_a:nav3_2_a_i, lv:'7' },
+            path: '/website/inform',
+            name: 'Inform',
+            redirect: '/website/inform/dynamic',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '动态与公告', icon:nav3_2_i, icon_a:nav3_2_a_i, lv:'7', showTopNav:true },
+            children:[
+              {
+                path: '/website/inform/dynamic',
+                name: 'Dynamic',
+                component: () => import('@/views/layout/website/inform/dynamic.vue'),
+                meta: { title: '首页动态', father:'/website/inform',lv:'16', isTopNav:true },
+              },
+              {
+                path: '/website/inform/dynamic/dynamicdetails',
+                name: '动态与公告-首页动态',
+                component: () => import('@/views/layout/website/inform/detail.vue'),
+                meta: { title: '动态详情',father:'/website/inform/dynamic',lv:'16'},
+              },
+              
+              {
+                path: '/website/inform/dynamic/dynamicAdd',
+                name: '动态与公告-首页动态编辑/新增',
+                component: () => import('@/views/layout/website/inform/articleAdd.vue'),
+                meta: { title: '动态详情编辑/新增',father:'/website/inform/dynamic',lv:'16'},
+              },
+              {
+                path: '/website/inform/notice',
+                name: 'notice',
+                component: () => import('@/views/layout/website/inform/notice.vue'),
+                meta: { title: '通知与公告', father:'/website/inform',lv:'17', isTopNav:true },
+              },
+              {
+                path: '/website/inform/notice/noticedetails',
+                name: '动态与公告-通知与公告',
+                component: () => import('@/views/layout/website/inform/detail.vue'),
+                meta: { title: '通知与公告详情',father:'/website/inform/notice',lv:'17' },
+              },
+              {
+                path: '/website/inform/notice/noticeAdd',
+                name: '动态与公告-通知与公告编辑/新增',
+                component: () => import('@/views/layout/website/inform/articleAdd.vue'),
+                meta: { title: '通知与公告详情编辑/新增',father:'/website/inform/notice',lv:'17' },
+              },
+            ]
           },
           {
             path: '/website/news',
             name: 'News',
-            component: () => import('@/views/layout/website/news.vue'),
+            component: () => import('@/views/layout/website/news/news.vue'),
             meta: { title: '资讯中心', icon:nav3_3_i, icon_a:nav3_3_a_i, lv:'18' },
           },
+          {
+            path: '/website/newsdetails',
+            name: 'NewsDetails',
+            component: () => import('@/views/layout/website/news/newsDetail.vue'),
+            meta: { title: '资讯详情',father:'/website/news',lv:'18' },
+          },
+          {
+            path: '/website/examine',
+            name: 'NewsExamine',
+            component: () => import('@/views/layout/website/news/newsExamine.vue'),
+            meta: { title: '资讯审核',father:'/website/news',lv:'18' },
+          },
+        
           {
             path: '/website/service',
             name: 'Service',

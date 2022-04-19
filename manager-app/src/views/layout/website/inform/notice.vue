@@ -1,0 +1,135 @@
+<template>
+  <div class="notice-container">
+    <el-button  type="primary" class="btns"  @click="$router.push('/website/inform/dynamic/dynamicAdd')">添加</el-button>
+    <el-card class="mycard">
+      <template #header>
+      <div class="card-header">
+        <span>通知公告列表</span>
+      </div>
+      </template>
+      <div class="mytable ">
+        <el-table :data="noticeData"  border style="width: 100%">
+          <el-table-column property="title" label="标题" width="230"/>
+          <el-table-column property="type_name" label="分类" width="160"/>
+          <el-table-column property="time" label="发布时间" width="200">
+            <template #default="{row}">
+              <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column property="readed" label="查看量"/>
+        <el-table-column property="source" label="状态">
+            <template #default="{row}">
+              <div>{{row.status == 0?'草稿':row.status == 1?'离线':'在线'}}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="300">
+            <template #default="{row}">
+              <div class="fcs" >
+                <el-link type="primary" @click="$router.push('/website/inform/notice/noticedetails?id='+row.id)">查看</el-link>
+                <div class="line"></div>
+                <el-link type="primary"  @click="getNtDown(row.id)" v-if="row.status == 2">下线</el-link>
+                <el-link type="primary" @click="getNtUp(row.id)" v-if="row.status == 1">上线</el-link>
+                <div class="line"></div>
+                <el-link type="primary" v-if="row.status == 1||row.status == 0" @click=" ">编辑</el-link>
+                <div class="line"></div>
+                <el-link type="primary"  v-if="row.status == 1||row.status == 0" @click="getDel(row.id)">删除</el-link>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <MyPage :total="total" v-model:page="page" @change="noticeList" v-model:size="size"/>
+      <MyDialog v-model="delShow" :msg="'此通知删除后无法撤回，请谨慎删除！'" @sure="getDelDate"/>
+    
+    </el-card>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { formatDate } from '@/utils/date';
+import MyPage from "@/components/MyPage.vue";
+import MyDialog from "@/components/MyDialog.vue";
+import {notice_api,ntUp_api,ntDown_api,ntDel_api} from '@/api/website';
+
+
+const size = ref(10)
+const total = ref(0)
+const page = ref(1)
+interface SData {
+  size:number,
+  current:number,
+}
+const noticeData = ref<SData[]>([])
+const noticeList= async ()=>{
+  const res = await notice_api({
+    current:page.value,
+    size:size.value
+  })
+  if(res.status==1){
+    noticeData.value=res.body.records
+    total.value = res.body.total
+  }
+}
+noticeList()
+
+// 上线
+const upId = ref('')
+const getNtUp =(id:string)=>{
+  upId.value=id
+  getUp()
+}
+
+const getUp = async()=>{
+  const res = await ntUp_api({id:upId.value}).then((res:res)=>{
+  if(res.status==1){
+    noticeList()
+  }
+})
+}
+// 下线
+const DownId = ref('')
+const getNtDown =(id:string)=>{
+  DownId.value=id
+  getDown()
+}
+const getDown = async()=>{
+  const res = await ntDown_api({id:DownId.value}).then((res:res)=>{
+  if(res.status==1){
+   noticeList()
+  }
+})
+}
+// 删除
+const delId = ref('')
+const delShow = ref(false)
+const getDel = (id:string)=>{
+  delId.value = id
+  delShow.value = true
+}
+const getDelDate = async()=>{
+  ntDel_api({id:delId.value}).then((res:res)=>{
+    if(res.status == 1){
+      noticeList()
+      delShow.value = false
+    }
+  })
+}
+
+</script>
+
+<style scoped lang="scss">
+.notice-container{
+  position: relative;
+  .btns{
+    position: absolute;
+    right: 24px;
+    top:8px;
+  }
+} 
+.line{
+  margin-left: -3px;
+}
+  
+
+</style>

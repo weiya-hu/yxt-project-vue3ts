@@ -1,6 +1,6 @@
 <template>
   <div>
-    公告管理
+    帮助中心
   </div>
 </template>
 
