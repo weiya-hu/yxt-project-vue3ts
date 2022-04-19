@@ -90,7 +90,7 @@ interface SData {
 const tableData = ref<SData[]>([])
 const page = ref(1)
 const total = ref(0)
-const size = ref(20)
+const size = ref(10)
 const errorShow = ref(false)
 const errorMsg = ref('')
 // 搜索

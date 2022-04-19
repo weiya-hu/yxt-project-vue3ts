@@ -137,7 +137,7 @@ const tableTitle = ref(<TableTitleProp[]>[
 const loading = ref(false)
 
 const totle = ref(0)
-const size = ref(20)
+const size = ref(10)
 const page = ref(1)
 interface SData {
   id: number|string,
