@@ -119,7 +119,7 @@ const tableTitle = ref(<TableTitleProp[]>[
   {type:'status',lable:'状态',prop:'status',width:100},    
 ]) 
 const loading = ref(false)
-const size = ref(20)
+const size = ref(10)
 const totle = ref(0)
 const page = ref(1)
 interface SData {
