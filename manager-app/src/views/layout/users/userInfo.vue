@@ -22,7 +22,7 @@
     <el-card class="mycard mt20" header="会员信息">
       <el-descriptions :column="2">
         <el-descriptions-item label="邀请码">{{userInfo.invite_code}}</el-descriptions-item>
-        <el-descriptions-item label="会员等级" v-if="userInfo.id">{{lvList.find(v => v.id == userInfo.level).name}}</el-descriptions-item>
+        <el-descriptions-item label="会员等级" v-if="userInfo.level && lvList.length">{{lvList.find(v => v.id == userInfo.level).name}}</el-descriptions-item>
         <el-descriptions-item label="邀请者">{{userInfo.inviter||'-'}}</el-descriptions-item>
         <el-descriptions-item label="会员积分">{{userInfo.integral}}</el-descriptions-item>
         <el-descriptions-item label="下级用户数">{{userInfo.direct_count}}</el-descriptions-item>

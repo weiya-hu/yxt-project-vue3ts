@@ -1,6 +1,16 @@
 <template>
   <div class="mypage">
-    <el-pagination background layout="prev, pager, next ,jumper" :total="total" :pager-count="9" v-model:currentPage="modelValue" v-model:page-size="size" @current-change="change">
+    <el-pagination 
+      background
+      :layout="hideSizes ? 'total, prev, pager, next, jumper' : 'total, sizes, prev, pager, next, jumper' " 
+      :total="total" 
+      :pager-count="9" 
+      v-model:currentPage="page" 
+      v-model:page-size="size" 
+      @current-change="change"
+      @size-change="changeSize"
+      :page-sizes="[10, 20, 30]"
+    >
     </el-pagination>
   </div>
 </template>
@@ -10,19 +20,24 @@
  * 分页组件
  * @author chn 
 */
-import { ref } from 'vue'
 const props = withDefaults(defineProps<{
-  modelValue:number, // 当前页
+  page:number, // 当前页
   total:number, // 总数
   size?:number, // 每页条数
+  hideSizes?:boolean // 是否隐藏条数选择
 }>(),{
   total:0,
   size:10,
+  hideSizes:false
 })
-const emit = defineEmits(['update:modelValue','change'])
+const emit = defineEmits(['update:page','change','update:size'])
 
-const change = (page:number)=>{
-  emit('update:modelValue',page)
+const change = (page:number) => {
+  emit('update:page',page)
+  emit('change')
+}
+const changeSize = (size: number) => {
+  emit('update:size',size)
   emit('change')
 }
 

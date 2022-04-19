@@ -34,7 +34,7 @@
           </template>
         </el-table>
       </div>
-      <Mypage :total="total" v-model="page" @change="getList" :size="size"/>
+      <Mypage :total="total" v-model:page="page" @change="getList" v-model:size="size"/>
     </el-card>
     
   </div>
@@ -45,14 +45,15 @@ import { ref } from 'vue'
 import Mypage from "@/components/Mypage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import { formatDate } from '@/utils/date'
-import { getUserList_api, setUserStatus_api, getLevelList_api, size } from '@/api/users'
+import { getUserList_api, setUserStatus_api, getLevelList_api } from '@/api/users'
 
 const tableData = ref([])
 const page = ref(1)
+const size = ref(20)
 const total = ref(0)
 const getList = async () => {
   const res = await getUserList_api({
-    size,
+    size:size.value,
     current: page.value,
   })
   if(res.status == 1){

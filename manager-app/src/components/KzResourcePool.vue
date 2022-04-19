@@ -28,7 +28,7 @@
             </div>
           </div>
           <MyEmpty v-else/>
-          <Mypage v-model="imgPage" :total="imgTotal" @change="changePage"/>
+          <Mypage v-model:page="imgPage" :total="imgTotal" @change="changePage" hide-sizes/>
         </div>
         
       </el-tab-pane>
@@ -57,7 +57,7 @@
             </div>
           </div>
           <MyEmpty v-else/>
-          <Mypage v-model="videoPage" :total="videoTotal" @change="changePage"/>
+          <Mypage v-model:page="videoPage" :total="videoTotal" @change="changePage" hide-sizes/>
         </div>
 
       </el-tab-pane>

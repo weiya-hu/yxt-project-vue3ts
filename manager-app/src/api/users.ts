@@ -1,7 +1,5 @@
 import { get, post } from '@/utils/request'
 
-export const size = 20
-
 /**
  * @name 获取用户分页列表
 */

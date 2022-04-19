@@ -36,7 +36,7 @@
       </div>
     </div>
     <MyEmpty v-else/>
-    <Mypage v-model="page" :total="total" @change="changePage"/>
+    <Mypage v-model:page="page" :total="total" @change="changePage" :hide-sizes="true"/>
 
     <MyDialog v-model="delShow" :msg="'确认删除图片 “ ' + imgName +' ” ?'" @sure="sureDel"/>
     <el-dialog v-model="editShow" title="修改名称" width="380px" @close="imgName = ''">

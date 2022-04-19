@@ -128,7 +128,7 @@ switch (route.name) {
 
 const list = ref<any[]>([])
 const getList = async () => {
-  const { status, body } = await getBannerList_api({ sectionType : pageProps.value.type })
+  const { status, body } = await getBannerList_api({ section_type : pageProps.value.type })
   if(status == 1){
     list.value = body
   }

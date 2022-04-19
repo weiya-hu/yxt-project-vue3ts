@@ -38,7 +38,7 @@
           </template>
         </el-table>
       </div>
-      <Mypage :total="total" v-model="page" @change="getList" :size="size"/>
+      <Mypage :total="total" v-model:page="page" @change="getList" v-model:size="size"/>
     </el-card>
 
   </div>
@@ -48,7 +48,7 @@
 import { ref, computed } from 'vue'
 import Mypage from "@/components/Mypage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
-import { getCompanyList_api, size } from '@/api/users'
+import { getCompanyList_api } from '@/api/users'
 import { mainStore } from '@/store/index'
 import { getHashStr, strToArr } from '@/utils/index'
 
@@ -58,10 +58,11 @@ const typeHash = computed(() => store.state.typeHash)
 
 const tableData = ref([])
 const page = ref(1)
+const size = ref(20)
 const total = ref(0)
 const getList = async () => {
   const res = await getCompanyList_api({
-    size,
+    size: size.value,
     current: page.value,
   })
   if(res.status == 1){

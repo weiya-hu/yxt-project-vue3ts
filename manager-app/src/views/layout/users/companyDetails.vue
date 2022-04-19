@@ -21,7 +21,7 @@
             <MyEmpty/>
           </template>
         </el-table>
-        <Mypage :total="total" v-model="page" @change="getList" :size="size"/>
+        <Mypage :total="total" v-model:page="page" @change="getList" v-model:size="size"/>
       </el-card>
       <el-card class="card1 f1">
         <el-descriptions :column="1">
@@ -78,7 +78,7 @@ import { useRoute } from 'vue-router'
 import Mypage from "@/components/Mypage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import DetailsHeader from "@/components/DetailsHeader.vue";
-import { getCompanyUserList_api, getCompanyInfo_api, size } from '@/api/users'
+import { getCompanyUserList_api, getCompanyInfo_api } from '@/api/users'
 import { formatDate } from '@/utils/date'
 import { mainStore } from '@/store/index'
 import { getHashStr, lookImage } from '@/utils/index'
@@ -91,10 +91,11 @@ const cid = route.query.id as string
 
 const tableData = ref([])
 const page = ref(1)
+const size = ref(20)
 const total = ref(0)
 const getList = async () => {
   const res = await getCompanyUserList_api({
-    size,
+    size: size.value,
     current: page.value,
     cid,
   })
