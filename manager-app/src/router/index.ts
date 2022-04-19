@@ -26,6 +26,24 @@ import nav3_3_a_i from '@/assets/images/nav/nav3_3_a.png'
 import nav3_4_i from '@/assets/images/nav/nav3_4.png'
 import nav3_4_a_i from '@/assets/images/nav/nav3_4_a.png'
 
+import nav4_i from '@/assets/images/nav/nav4.png'
+import nav4_a_i from '@/assets/images/nav/nav4_a.png'
+
+import nav4_1_i from '@/assets/images/nav/nav4_1.png'
+import nav4_1_a_i from '@/assets/images/nav/nav4_1_a.png'
+
+import nav4_2_i from '@/assets/images/nav/nav4_2.png'
+import nav4_2_a_i from '@/assets/images/nav/nav4_2_a.png'
+
+import nav4_3_i from '@/assets/images/nav/nav4_3.png'
+import nav4_3_a_i from '@/assets/images/nav/nav4_3_a.png'
+
+import nav4_4_i from '@/assets/images/nav/nav4_4.png'
+import nav4_4_a_i from '@/assets/images/nav/nav4_4_a.png'
+
+import nav4_5_i from '@/assets/images/nav/nav4_5.png'
+import nav4_5_a_i from '@/assets/images/nav/nav4_5_a.png'
+
 // lv 当前路由权限id，clv 子路由权限id集合(不包括孙子)
 const routes = [
   {
@@ -230,6 +248,144 @@ const routes = [
                 name: 'TelData',
                 component: () => import('@/views/layout/dmp/findc/telData.vue'),
                 meta: { title: '号码段获客', keepAlive:true, },
+              },
+            ]
+          },
+        ]
+      },
+      {
+        path: '/dmp',
+        name: 'Dmp',
+        redirect: '/dmp/findb',
+        component: () => import('@/views/layout/rview.vue'),
+        meta: { title: 'DMP系统', icon:nav4_i, icon_a:nav4_a_i,lv:'3', clv:'40,42,50,53,56' },
+        children:[
+          {
+            path: '/dmp/findb',
+            name: 'FindB',
+            redirect: '/dmp/findb/specificdata',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '找B端客户', icon:nav4_1_i, icon_a:nav4_1_a_i, lv:'40', showTopNav:true},
+            children:[
+              {
+                path: '/dmp/findb/specificdata',
+                name: 'SpecificData',
+                component: () => import('@/views/layout/dmp/findb/specificData.vue'),
+                meta: { title: '个性化数据', keepAlive:true,father:'/dmp/findb',lv:'41', isTopNav:true },
+              },
+              {
+                path: '/dmp/findb/specificdatadetails',
+                name: 'SpecificDataDetails',
+                component: () => import('@/views/layout/dmp/findb/specificDataDetails.vue'),
+                meta: { title: '个性化数据详情', father:'/dmp/findb/specificdata' },
+              },
+            ]
+          },
+          {
+            path: '/dmp/findc',
+            name: 'FindC',
+            redirect: '/dmp/findc/wxdata',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '找C端客户', icon:nav4_2_i, icon_a:nav4_2_a_i, lv:'42', showTopNav:true },
+            children:[
+              {
+                path: '/dmp/findc/wxdata',
+                name: 'WxData',
+                component: () => import('@/views/layout/dmp/findc/wxData.vue'),
+                meta: { title: '微信获客', keepAlive:true, father:'/dmp/findc',lv:'43', isTopNav:true },
+              },
+              {
+                path: '/dmp/findc/addata',
+                name: 'AdData',
+                component: () => import('@/views/layout/dmp/findc/adData.vue'),
+                meta: { title: '广告投放', keepAlive:true, father:'/dmp/findc',lv:'44', isTopNav:true },
+              },
+              {
+                path: '/dmp/findc/baidudata',
+                name: 'BaiduData',
+                component: () => import('@/views/layout/dmp/findc/baiduData.vue'),
+                meta: { title: '百度关键词获客', keepAlive:true, father:'/dmp/findc',lv:'45', isTopNav:true },
+              },
+              {
+                path: '/dmp/findc/bigdata',
+                name: 'BigData',
+                component: () => import('@/views/layout/dmp/findc/bigData.vue'),
+                meta: { title: '大数据获客', keepAlive:true, father:'/dmp/findc',lv:'46', isTopNav:true },
+              },
+              {
+                path: '/dmp/findc/teldata',
+                name: 'TelData',
+                component: () => import('@/views/layout/dmp/findc/telData.vue'),
+                meta: { title: '400获客', keepAlive:true, father:'/dmp/findc',lv:'47', isTopNav:true},
+              },
+              {
+                path: '/dmp/findc/biddingdata',
+                name: 'BiddingData',
+                component: () => import('@/views/layout/dmp/findc/biddingData.vue'),
+                meta: { title: '竞价获客', keepAlive:true, father:'/dmp/findc',lv:'48', isTopNav:true },
+              },
+              {
+                path: '/dmp/findc/msgdata',
+                name: 'MsgData',
+                component: () => import('@/views/layout/dmp/findc/msgData.vue'),
+                meta: { title: '短信获客', keepAlive:true, father:'/dmp/findc',lv:'49', isTopNav:true },
+              },
+            ]
+          },
+          {
+            path: '/dmp/seekpathpro',
+            name: 'Seekpathpro',
+            redirect: '/dmp/seekpathpro/seekpath',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '找渠道/项目', icon:nav4_3_i, icon_a:nav4_3_a_i, lv:'50',clv:'51,52' ,showTopNav:true},
+            children:[
+              {
+                path: '/dmp/seekpathpro/seekpath',
+                name: 'SeekPath',
+                component: () => import('@/views/layout/dmp/seekPathPro/seekPath.vue'),
+                meta: { title: '找渠道', keepAlive:true,father:'/dmp/seekpathpro',lv:'51', isTopNav:true },
+              },
+              {
+                path: '/dmp/seekpathpro/seekpro',
+                name: 'SeekPro',
+                component: () => import('@/views/layout/dmp/seekPathPro/seekProject.vue'),
+                meta: { title: '找项目', keepAlive:true,father:'/dmp/seekpathpro',lv:'52', isTopNav:true },
+              },
+            ]
+          },
+          {
+            path: '/dmp/seekabroad',
+            name: 'SeekAbroad',
+            redirect: '/dmp/seekabroad/buyer',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '找海外客户', icon:nav4_4_i, icon_a:nav4_4_a_i, lv:'53',clv:'54,55' ,showTopNav:true},
+            children:[
+              {
+                path: '/dmp/seekabroad/buyer',
+                name: 'Buyer',
+                component: () => import('@/views/layout/dmp/seekAbroad/buyer.vue'),
+                meta: { title: '找采购商', keepAlive:true,father:'/dmp/seekabroad',lv:'54', isTopNav:true },
+              },
+              {
+                path: '/dmp/seekabroad/supplier',
+                name: 'Supplier',
+                component: () => import('@/views/layout/dmp/seekAbroad/supplier.vue'),
+                meta: { title: '找供应商', keepAlive:true,father:'/dmp/seekabroad',lv:'55', isTopNav:true },
+              },
+            ]
+          },
+          {
+            path: '/dmp/dmpset',
+            name: 'DmpSet',
+            redirect: '/dmp/dmpSet/dataset',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: 'DMP设置', icon:nav4_5_i, icon_a:nav4_5_a_i, lv:'56',clv:'57' ,showTopNav:true},
+            children:[
+              {
+                path: '/dmp/dmpset/dataset',
+                name: 'DataSet',
+                component: () => import('@/views/layout/dmp/dmpSet/dataSet.vue'),
+                meta: { title: '数据设置', keepAlive:true,father:'/dmp/dmpset',lv:'57', isTopNav:true },
               },
             ]
           },

@@ -1,5 +1,5 @@
 <template>
-  <div class="tel_data">
+  <div class="ad_data">
     <!-- <div @click="$router.push('teldatadetails')">去详情</div> -->
     <Mypage :total="50" v-model="page"/>
   </div>
@@ -12,7 +12,7 @@ const page = ref(1)
 </script>
 
 <script lang="ts">
-export default { name:'TelData' }
+export default { name:'AdData' }
 </script>
 
 <style scoped lang="scss">
