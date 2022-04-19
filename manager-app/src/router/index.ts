@@ -219,57 +219,6 @@ const routes = [
         name: 'Dmp',
         redirect: '/dmp/findb',
         component: () => import('@/views/layout/rview.vue'),
-        meta: { title: 'DMP系统管理', lv:'3', clv:'3' },
-        children:[
-          {
-            path: '/dmp/findb',
-            name: 'FindB',
-            redirect: '/dmp/findb/specificdata',
-            component: () => import('@/views/layout/rview.vue'),
-            meta: { title: '找B端客户', },
-            children:[
-              {
-                path: '/dmp/findb/specificdata',
-                name: 'SpecificData',
-                component: () => import('@/views/layout/dmp/findb/specificData.vue'),
-                meta: { title: '个性化数据', keepAlive:true, },
-              },
-              {
-                path: '/dmp/findb/specificdatadetails',
-                name: 'SpecificDataDetails',
-                component: () => import('@/views/layout/dmp/findb/specificDataDetails.vue'),
-                meta: { title: '个性化数据详情', father:'/dmp/findb/specificdata' },
-              },
-            ]
-          },
-          {
-            path: '/dmp/findc',
-            name: 'FindC',
-            redirect: '/dmp/findc/wxdata',
-            component: () => import('@/views/layout/rview.vue'),
-            meta: { title: '找C端客户', },
-            children:[
-              {
-                path: '/dmp/findc/wxdata',
-                name: 'WxData',
-                component: () => import('@/views/layout/dmp/findc/wxData.vue'),
-                meta: { title: '微信获客', keepAlive:true, },
-              },
-              {
-                path: '/dmp/findc/teldata',
-                name: 'TelData',
-                component: () => import('@/views/layout/dmp/findc/telData.vue'),
-                meta: { title: '号码段获客', keepAlive:true, },
-              },
-            ]
-          },
-        ]
-      },
-      {
-        path: '/dmp',
-        name: 'Dmp',
-        redirect: '/dmp/findb',
-        component: () => import('@/views/layout/rview.vue'),
         meta: { title: 'DMP系统', icon:nav4_i, icon_a:nav4_a_i,lv:'3', clv:'40,42,50,53,56' },
         children:[
           {
