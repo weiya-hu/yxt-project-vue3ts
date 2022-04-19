@@ -1,28 +1,32 @@
 <template>
   <div class="tel_data">
-    <DetailsHeader/>
-    <search @search="searchword"></search>
-    <div class="mytable">
+    <search @search="searchword" @reset="resetSearch" v-model="inputSearch">
+      <el-option label="待审核" value=2 />
+        <el-option label="已通过" value=3 />
+        <el-option label="被驳回" value=4 />
+    </search>
+     <el-card class="mycard mt20">
+       <div class="mytable">
       <el-table
+        border
         :data="tableData"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="70" align="center"/>
-        <el-table-column property="id" label="ID" width="180" align="center"/>
-        <el-table-column property="user_name" label="账户名" width="180" align="center"/>
-        <el-table-column property="company_name" label="客户名称" width="180" align="center"/>
-        <el-table-column property="thumb_url" label="海报" width="210" align="center">
+        <el-table-column property="id" label="ID" width="180"/>
+        <el-table-column property="uname" label="账户名" width="180"/>
+        <el-table-column property="cname" label="客户名称" />
+        <el-table-column property="thumb_url" label="海报" width="210" >
           <template #default="{row}">
             <img :src="row.thumb_url" alt="" class="firstimg">
           </template>
         </el-table-column>
-        <el-table-column property="create_time" label="创建日期" width="200" align="center">
+        <el-table-column property="create_time" label="创建日期" width="200">
           <template #default="{row}">
             <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
           </template>
         </el-table-column>
-        <el-table-column property="status" label="状态" width="200" align="center">
+        <el-table-column property="status" label="状态"  width="200"  >
           <template #default="{row}">
             <div class="fcs">
               <div class="dot" :class="getStatus(row.status).className"></div>
@@ -30,22 +34,18 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作"  align="center">
+         <el-table-column label="操作"  >
           <template #default="{row}">
-            <div class="fcs" v-if="row.status == 1">
-              <!-- <el-link type="primary" @click="goDel(row.id)">删除</el-link> -->
-              <div class="line"></div>
-              <el-link type="primary" @click="$router.push('/myWork/articleAdd?id='+row.id)">编辑</el-link>
+            <div class="fcs" v-if="row.status == 3">
+              <el-link type="primary" @click="$router.push('/cms/myworkdet?id='+row.id)">详情</el-link>
             </div>
-            <div class="fcs" v-if="row.status == 2 || row.status == 3">
-              <!-- <el-link type="primary" @click="goDel(row.id)">删除</el-link> -->
+             <div class="fcs" v-if="row.status == 2">
+              <el-link type="primary" @click="pass(row.id)">通过</el-link>
               <div class="line"></div>
-              <el-link type="primary" @click="$router.push('/myWork/articleDetails?id='+row.id)">查看</el-link>
+              <el-link type="primary" @click="open(row.id)">驳回</el-link>
             </div>
             <div class="fcs" v-if="row.status == 4">
-              <!-- <el-link type="primary" @click="goDel(row.id)">删除</el-link> -->
-              <div class="line"></div>
-              <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true">拒绝原因</el-link>
+              <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true">驳回原因</el-link>
             </div>
           </template>
         </el-table-column>
@@ -54,21 +54,27 @@
         </template>
       </el-table>
     </div>
-    <Mypage :total="50" v-model="page"/>
+    <MyPage :total="total" v-model:page="page" @change="getList" v-model:size="size"/>
+     </el-card>
+    
+     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1"/>
+     
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref,reactive } from 'vue'
 import { formatDate } from '@/utils/date'
-import DetailsHeader from "@/components/DetailsHeader.vue"
 import MyEmpty from "@/components/MyEmpty.vue";
 import search from'@/components/Search.vue'
-import Mypage from "@/components/Mypage.vue";
+import MyPage from "@/components/MyPage.vue";
+import MyDialog from "@/components/MyDialog.vue";
+import { posterList_api,posterUpdate_api} from '@/api/myWork'
+import { ElMessage, ElMessageBox } from 'element-plus'
 interface SData {
   id: number|string,
-  user_name: string,
-  company_name: string,
+  uname: string,
+  cname: string,
   thumb_url:string,
   create_time:number,
   status:number,
@@ -76,48 +82,103 @@ interface SData {
 }
 const tableData = ref<SData[]>([])
 const page = ref(1)
+const total= ref(0)
+const size = ref(20)
+const errorShow = ref(false)
+const errorMsg = ref('')
 // 搜索
-const searchword = (val:any) => {
-  console.log(val.name);
+const inputSearch = reactive({
+  userName:'',
+  status:'',
+  create_time:''
+})
+const searchword = () => {
+  getList()
+}
+// 重置
+const resetSearch=()=>{
+  inputSearch.userName='',
+  inputSearch.status='',
+  inputSearch.create_time=''
+  getList()
+}
+// 获取列表
+const getList =async ()=>{
+  const res = await posterList_api({
+     size: size.value,
+    current: page.value,
+    ...inputSearch
+  })
+  console.log(res);
   
+  if(res.status == 1){
+    tableData.value = res.body.records
+    total.value = res.body.total
+  }
+}
+getList()
+// 驳回弹出框
+const open = (id:string|number) => {
+  ElMessageBox.prompt('驳回原因', '提示', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+  })
+    .then(async ({ value }) => {
+     await posterUpdate_api({
+        fail_reason:value,
+        status:4,
+        id
+  })
+     getList()
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消驳回',
+      })
+    })
+}
+// 通过
+const pass =async(id:string|number)=>{
+await posterUpdate_api({ id,status:3,fail_reason:''})
+ getList()
 }
 const multipleSelection = ref<SData[]>([])
 const handleSelectionChange = (val:SData[]) => {
   //表格选择
   multipleSelection.value = val
 }
-const getStatus = (type:number)=>{
+const getStatus = (type:string)=>{
   const obj = ref<{text:string,className:string}>()
   switch (type) {
-    case 2:
+    case '2':
       obj.value = {
         text:'待审核',
-        className:'cyellow'
+        className:'cred'
       }
       break;
-    case 3:
+    case '3':
       obj.value = {
         text:'已通过',
         className:'cdf'
       }
       break;
-    case 4:
+    case '4':
       obj.value = {
-        text:'已拒绝',
-        className:'cred'
+        text:'被驳回',
+        className:'cyellow '
       }
       break;
     default:
       obj.value = {
-        text:'草稿',
+        text:'草稿草稿',
         className:'cbbb'
       }
       break;
   }
   return obj.value
 }
-const errorShow = ref(false)
-const errorMsg = ref('')
+
 </script>
 <script lang="ts">
 export default { name:'我的作品库——海报库' }
@@ -139,14 +200,17 @@ export default { name:'我的作品库——海报库' }
   .cbbb{
     background-color: $colorbbb;
   }
-  .cyellow{
-    background-color: $coloryellow;
+.cyellow{
+    background-color: #e70207;
   }
   .cdf{
-    background-color: $dfcolor;
+    background-color: #38b227;
   }
   .cred{
-    background-color: $colorred;
+    background-color: #fbc40d;
   } 
 }
+.mycard{
+      padding-top: 20px;
+    }
 </style>

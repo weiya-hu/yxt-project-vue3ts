@@ -43,6 +43,18 @@ import nav4_4_a_i from '@/assets/images/nav/nav4_4_a.png'
 
 import nav4_5_i from '@/assets/images/nav/nav4_5.png'
 import nav4_5_a_i from '@/assets/images/nav/nav4_5_a.png'
+import nav5_i from '@/assets/images/nav/nav5.png'
+import nav5_a_i from '@/assets/images/nav/nav5_a.png'
+
+import nav5_1_i from '@/assets/images/nav/nav5_1.png'
+import nav5_1_a_i from '@/assets/images/nav/nav5_1_a.png'
+
+import nav5_2_i from '@/assets/images/nav/nav5_2.png'
+import nav5_2_a_i from '@/assets/images/nav/nav5_2_a.png'
+
+import nav5_3_i from '@/assets/images/nav/nav5_3.png'
+import nav5_3_a_i from '@/assets/images/nav/nav5_3_a.png'
+
 
 // lv 当前路由权限id，clv 子路由权限id集合(不包括孙子)
 const routes = [
@@ -396,15 +408,41 @@ const routes = [
         name: 'Cms',
         redirect: '/cms/myWork',
         component: () => import('@/views/layout/rview.vue'),
-        meta: { title: 'CMS系统管理', lv:'4', clv:'27,32,37' },
+        meta: { title: 'CMS系统管理', lv:'4', clv:'27,32,37', icon:nav5_i, icon_a:nav5_a_i },
         children:[
           {
             path: '/cms/mywork',
             name: 'Mywork',
-            // redirect: '/cms/myWork/article',
-            component: () => import('@/views/layout/cms/myWork/article.vue'),
-            meta: { title: '我的作品库', lv:'27' },
-            
+            redirect: '/cms/myWork/article',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '我的作品库', lv:'27',showTopNav:true ,icon:nav5_1_i, icon_a:nav5_1_a_i},
+            children:[
+              {
+                path: '/cms/myWork/article',
+                name: 'MyworkArticle',
+                component: () => import('@/views/layout/cms/myWork/article.vue'),
+                meta: { title: '软文', father:'/cms/mywork',isTopNav:true,lv:'28' },
+              },
+              {
+                path: '/cms/myWork/images',
+                name: 'MyworkImage',
+                component: () => import('@/views/layout/cms/myWork/images.vue'),
+                meta: { title: '图片库', father:'/cms/mywork',isTopNav:true,lv:'29'},
+              },
+              {
+                path: '/cms/myWork/poster',
+                name: 'MyworkPoster',
+                component: () => import('@/views/layout/cms/myWork/poster.vue'),
+                meta: { title: '海报库', father:'/cms/mywork',isTopNav:true,lv:'30' },
+              },
+              {
+                path: '/cms/myWork/video',
+                name: 'MyworkVideo',
+                component: () => import('@/views/layout/cms/myWork/video.vue'),
+                meta: { title: '视频库', father:'/cms/mywork',isTopNav:true,lv:'31' },
+              },
+              
+            ]
           },
           {
             path: '/cms/myworkdet',
@@ -415,17 +453,56 @@ const routes = [
           {
             path: '/cms/custom',
             name: 'Custom',
-            // redirect: '/cms/custom/article.vue',
-            component: () => import('@/views/layout/cms/custom/article.vue'),
-            meta: { title: '个性化内容库', lv:'32' },
+            redirect: '/cms/custom/article',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '个性化内容库', lv:'32' ,showTopNav:true ,icon:nav5_2_i, icon_a:nav5_2_a_i},
+            children:[
+              {
+                path: '/cms/custom/article',
+                name: 'CustomArticle',
+                component: () => import('@/views/layout/cms/custom/article.vue'),
+                meta: { title: '软文', father:'/cms/custom',isTopNav:true,lv:'33' },
+              },
+              {
+                path: '/cms/custom/images',
+                name: 'CustomImage',
+                component: () => import('@/views/layout/cms/custom/images.vue'),
+                meta: { title: '图片', father:'/cms/custom',isTopNav:true,lv:'34' },
+              },
+              {
+                path: '/cms/custom/poster',
+                name: 'CustomPoster',
+                component: () => import('@/views/layout/cms/custom/poster.vue'),
+                meta: { title: '海报', father:'/cms/custom',isTopNav:true,lv:'35' },
+              },
+              {
+                path: '/cms/custom/video',
+                name: 'CustomVideo',
+                component: () => import('@/views/layout/cms/custom/video.vue'),
+                meta: { title: '视频', father:'/cms/custom',isTopNav:true,lv:'36' },
+              },
+              
+            ]
            
+          },
+          {
+            path: '/cms/customdet',
+            name: 'Customdet',
+            component: () => import('@/views/layout/cms/custom/articleDetails.vue'),
+            meta: { title: '软文详情', father:'/cms/custom' },
+          },
+          {
+            path: '/cms/customedit',
+            name: 'Customedit',
+            component: () => import('@/views/layout/cms/custom/articleEdit.vue'),
+            meta: { title: '编辑', father:'/cms/custom' },
           },
           {
             path: '/cms/resource',
             name: 'Resource',
             // redirect: '/cms/resource/article.vue',
             component: () => import('@/views/layout/cms/resource/article.vue'),
-            meta: { title: '资源内容库', lv:'37'},
+            meta: { title: '资源内容库', lv:'37',icon:nav5_3_i, icon_a:nav5_3_a_i},
             
           },
         ]

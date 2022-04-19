@@ -4,20 +4,20 @@
       <el-option label="待审核" value=2 />
         <el-option label="已通过" value=3 />
         <el-option label="被驳回" value=4 />
-        <el-option label="全部" />
     </search>
-    <div class="mytable">
+    <el-card class="mycard mt20">
+      <div class="mytable">
       <el-table
         :data="tableData"
         style="width: 100%"
          border
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" />
         <el-table-column property="id" label="ID" />
         <el-table-column property="uname" label="账户名"  />
-        <el-table-column property="cname" label="客户名称"  />
-        <el-table-column property="thumb_url" label="封面图片" >
+        <el-table-column property="cname" label="客户名称">
+        </el-table-column>
+        <el-table-column property="thumb_url" label="封面图片">
           <template #default="{row}">
             <img :src="row.thumb_url" alt="" class="firstimg">
           </template>
@@ -43,13 +43,12 @@
         <el-table-column label="操作"  >
           <template #default="{row}">
             <div class="fcs" v-if="row.status == 3">
-           
               <el-link type="primary" @click="$router.push('/cms/myworkdet?id='+row.id)">详情</el-link>
             </div>
              <div class="fcs" v-if="row.status == 2">
               <el-link type="primary" @click="pass(row.id)">通过</el-link>
               <div class="line"></div>
-              <el-link type="primary" >驳回</el-link>
+              <el-link type="primary" @click="open(row.id)">驳回</el-link>
             </div>
             <div class="fcs" v-if="row.status == 4">
               <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true">驳回原因</el-link>
@@ -61,8 +60,11 @@
         </template>
       </el-table>
     </div>
-    <Mypage :total="total" v-model="page" @change="changePage"/>
+    <MyPage :total="total" v-model:page="page" @change="getList" v-model:size="size"/>
+    </el-card>
+    
     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1"/>
+    
   </div>
 </template>
 
@@ -71,8 +73,9 @@ import { ref,reactive } from 'vue'
 import { formatDate } from '@/utils/date'
 import search from'@/components/Search.vue'
 import MyEmpty from "@/components/MyEmpty.vue";
-import Mypage from "@/components/Mypage.vue";
+import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { articleList_api,articleUpdate_api} from '@/api/myWork'
 interface SData {
   id: number|string,
@@ -87,6 +90,7 @@ interface SData {
 const tableData = ref<SData[]>([])
 const page = ref(1)
 const total = ref(0)
+const size = ref(20)
 const errorShow = ref(false)
 const errorMsg = ref('')
 // 搜索
@@ -95,24 +99,24 @@ const inputSearch = reactive({
   status:'',
   create_time:''
 })
+const searchword = () => {
+  getList()
+}
 // 重置
 const resetSearch=()=>{
   inputSearch.userName='',
   inputSearch.status='',
   inputSearch.create_time=''
-}
-const searchword = () => {
-  console.log(inputSearch);
-  
   getList()
 }
+// 获取列表
 const getList =async ()=>{
   const res = await articleList_api({
-    size: 10,
+    size: size.value,
     current: page.value,
     ...inputSearch
   })
-  console.log(res);
+  // console.log(res);
   
   if(res.status == 1){
     tableData.value = res.body.records
@@ -123,16 +127,31 @@ getList()
 const changePage =()=>{
   getList()
 }
-// 驳回详情
-// const getDetail =async(id:string)=>{
-// const res = await articleReason_api({ id})
-// console.log(res);
-// }
+// 驳回弹出框
+const open = (id:string|number) => {
+  ElMessageBox.prompt('驳回原因', '提示', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+  })
+    .then(async ({ value }) => {
+      await articleUpdate_api({
+          fail_reason:value,
+          status:4,
+          id
+  })
+     getList()
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消驳回',
+      })
+    })
+}
 // 通过
 const pass =async(id:string|number)=>{
-const res = await articleUpdate_api({ id,status:3})
+await articleUpdate_api({ id,status:3,fail_reason:''})
  getList()
-console.log(res);
 }
 const multipleSelection = ref<SData[]>([])
 const handleSelectionChange = (val:SData[]) => {
@@ -141,7 +160,7 @@ const handleSelectionChange = (val:SData[]) => {
 }
 const getStatus = (type:number)=>{
   const obj = ref<{text:string,className:string}>()
-  switch (type) {
+  switch (Number(type)) {
     case 2:
       obj.value = {
         text:'待审核',
@@ -178,7 +197,7 @@ export default { name:'我的作品库——软文' }
 <style scoped lang="scss">
 .tel_data{
  .firstimg{
-    width: 75px;
+    width: 48px;
     height: 48px;
     border-radius: 4px;
   }
@@ -192,13 +211,16 @@ export default { name:'我的作品库——软文' }
     background-color: $colorbbb;
   }
   .cyellow{
-    background-color: $coloryellow;
+    background-color: #e70207;
   }
   .cdf{
-    background-color: #4bd863;
+    background-color: #38b227;
   }
   .cred{
-    background-color: #0079fe;
+    background-color: #fbc40d;
   } 
 }
+.mycard{
+      padding-top: 20px;
+    }
 </style>

@@ -3,7 +3,7 @@
     <DetailsHeader/>
     <div class="addform">
         <div class="fjend btns">
-          <el-button size="large" @click="$router.push('/cms/resource')">&ensp;返回&ensp;</el-button>
+          <el-button size="large" @click="$router.push('/cms/custom')">&ensp;返回&ensp;</el-button>
           <el-button size="large" @click="submit(1)">&ensp;保存&ensp;</el-button>
           <el-button size="large" type="primary" @click="submit(2)">&ensp;完成&ensp;</el-button>
         </div>
@@ -26,13 +26,14 @@
                 :on-exceed="handleExceed"
                 :on-success="upSuccess"
                 :on-error="upError"
+                
                 accept=".jpg,.png,.jpeg,.JPG,.PNG,.JPEG"
                 ref="upload"
                 class="flex"
               >
                 <div class="upbox fcc">
                   <img :src="titleImg||aForm.thumb_url" class="title_img" alt="" v-if="titleImg||aForm.thumb_url">
-                  <!-- <img :src="tp_i" alt="" v-else> -->
+                  <img :src="tp_i" alt="" v-else>
                 </div>
               </el-upload>
               <div class="img_tip flex">仅支持 JPG、PNG 、JPEG等图片格式，大小不超过2M</div>
@@ -56,25 +57,27 @@ import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DetailsHeader from "@/components/DetailsHeader.vue";
 import type { UploadFile, UploadProgressEvent} from 'element-plus'
-import Edit from "@/components/richText.vue";
+import Edit from "@/components/Edit.vue";
+import tp_i from '@/assets/images/tp.png'
 import { errMsg } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
-// import { articleAdd_api, articleDetail_api, articleUpdate_api } from '@/api/myWork'
+import { articleEditing_api,articleSaveedit_api,articleDetail_api} from '@/api/custom'
 import { mainStore } from '@/store/index'
 const labelPosition = ref('top')
 const store = mainStore()
 const route = useRoute()
 const router = useRouter()
 const id = route.query.id //有id就是编辑
-// if(id){
-//   articleDetail_api({id:id as string}).then((res:res)=>{
-//     aForm.value = res.body
-//     if(res.body.thumb_url){
-//       // titleImg.value = res.body.thumb_url
-//       imgErrorType.value = ''
-//     }
-//   })
-// }
+if(id){
+  articleDetail_api({id:id as string}).then((res:res)=>{
+    console.log(res);    
+    aForm.value = res.body
+    if(res.body.thumb_url){
+      // titleImg.value = res.body.thumb_url
+      imgErrorType.value = ''
+    }
+  })
+}
 
 interface AForm {
   thumb_url:string,
@@ -86,7 +89,7 @@ const aForm = ref<AForm>({
   thumb_url:'',
   title:'',
   content:'',
-  status:1,// 1:草稿(保存),2:待审核(提交)
+  status: 1//1是保存，2是完成
 })
 const aFormRef = ref()
 const imgErrorType = ref('none')//封面图片错误类型
@@ -146,7 +149,7 @@ const handleExceed = (files:UploadFile[])=>{
 const upSuccess = (res: UploadProgressEvent, file: UploadFile)=>{
   //封面图片上传成功
   titleImg.value = ''
-//   submitAddForm()
+  submitAddForm()
 }
 const upError = (err:any, file:UploadFile, fileList:UploadFile[])=>{
   titleImg.value = ''
@@ -155,23 +158,34 @@ const upError = (err:any, file:UploadFile, fileList:UploadFile[])=>{
   errMsg('封面图片上传失败')
 }
 
-// const submitAddForm = async ()=>{
-//   //提交表单
-//   console.log(aForm.value);
-//   const res = id ? await articleUpdate_api({...aForm.value, id}) : await articleAdd_api(aForm.value)
-//   upLoading.value = false
-//   if(res.status == 1 ){
-//     store.setKeepList([])
-//     router.replace('/myWork/article')
-//   }
-// }
+const submitAddForm = async ()=>{
+  //提交表单
+  console.log(aForm.value);
+  if(aForm.value.status == 1){
+    const res=await articleSaveedit_api({...aForm.value, order_id:id})
+     if(res.status == 1 ){
+    store.setKeepList([])
+    router.replace('/cms/custom/article')
+  }
+  }else{
+    const res=await articleEditing_api({...aForm.value, order_id:id})
+    console.log(res);
+     if(res.status == 1 ){
+    store.setKeepList([])
+    router.replace('/cms/custom/article')
+  }
+  }
+  
+  upLoading.value = false
+ 
+}
 const hostUrl = ref('')//封面图片上传路径
 const upData = ref({})//封面图片上传参数
 const editRef = ref() // 富文本组件ref
 const submit = async (type:number)=>{
-  //点击提交
+  //点击保存
   
-  aForm.value.status = type
+  aForm.value.status = type//选择提交类型是保存还是完成
   aFormRef.value.validate(async (valid: any) => {
     if (valid) {
       console.log('submit!',titleImg.value)
@@ -179,10 +193,11 @@ const submit = async (type:number)=>{
       await editRef.value.upImages()
       editRef.value.clearImgs()
       if(!titleImg.value){
-        // submitAddForm()
+        submitAddForm()
         return
       }
-      getAliToken_api({site:'cms_article'}).then((res:res)=>{
+      getAliToken_api({site:'official_img'}).then((res:res)=>{
+        console.log(res);        
         if(res.status == 1){
           hostUrl.value = res.body.host
           upData.value = {
@@ -194,6 +209,8 @@ const submit = async (type:number)=>{
           }
           aForm.value.thumb_url = res.body.host + '/' + res.body.dir + '/' + res.body.uuid + timg_exname.value
           upload.value!.submit()
+          console.log(aForm);
+          
         }else{
           errMsg('上传参数获取失败')
         }

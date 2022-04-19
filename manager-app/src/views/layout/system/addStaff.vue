@@ -84,7 +84,7 @@ const defaultProps = {
 const lvtree = ref()
 const menuList = ref<any[]>([])
 const getMenuList = async () => {
-  const res = await getLvList_api()
+  const res = await getLvList_api() 
   menuList.value = res.body
 }
 getMenuList()

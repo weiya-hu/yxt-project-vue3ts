@@ -1,150 +1,365 @@
 <template>
-  <div class="tel_data">
-    <div @click="$router.push('Myworkdet')">去详情</div>
-    <search @search="searchword"></search>
     <div class="mytable">
-      <el-table
-        :data="tableData"
+         <search @search="searchword" v-model="inputSearch"  @reset="resetSearch">
+           <el-option label="待处理" value=1 />
+           <el-option label="已受理" value=2 />
+        <el-option label="被驳回" value=3 />
+        <el-option label="已完成" value=4 />
+         </search>
+         <el-card class="mycard mt20">
+           <el-table
+        :data="tableList"
+        border
         style="width: 100%"
-        @selection-change="handleSelectionChange"
+        row-class-name="my-data-table-row"
+        v-loading="loading"
       >
-        <el-table-column type="selection" width="70" align="center"/>
-        <el-table-column property="id" label="ID" width="180" align="center"/>
-        <el-table-column property="user_name" label="账户名" width="180" align="center"/>
-        <el-table-column property="company_name" label="客户名称" width="180" align="center"/>
-        <el-table-column property="thumb_url" label="图片" width="210" align="center">
-          <template #default="{row}">
-            <img :src="row.thumb_url" alt="" class="firstimg">
-          </template>
-        </el-table-column>
-        <el-table-column property="create_time" label="创建日期" width="200" align="center">
-          <template #default="{row}">
-            <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
-          </template>
-        </el-table-column>
-        <el-table-column property="status" label="状态" width="200" align="center">
+        <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
+        <el-table-column width="150" label="操作" >
           <template #default="{row}">
             <div class="fcs">
-              <div class="dot" :class="getStatus(row.status).className"></div>
-              <div class="staus">{{getStatus(row.status).text}}</div>
+              <el-link type="primary"  v-if="row.status == 2" @click="imageEit(row.id,row.attach_url)">编辑</el-link>
+              <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true" v-if="row.status == 3">驳回原因</el-link>
+              <el-link type="primary" v-if="row.status == 4" @click="look(row.id)">详情</el-link>
+              <div v-if="row.status == 1" >
+                  <el-link type="primary" class="fcss" @click="getData(row.id) " >下载附件</el-link>                  
+                  <el-link type="primary" class="fcss" @click="pass(row.id)">通过</el-link>                  
+                  <el-link type="primary" @click="open(row.id)">驳回</el-link>
+              </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作"  align="center">
-          <template #default="{row}">
-            <div class="fcs" v-if="row.status == 1">
-              <!-- <el-link type="primary" @click="goDel(row.id)">删除</el-link> -->
-              <div class="line"></div>
-              <el-link type="primary" @click="$router.push('/myWork/articleAdd?id='+row.id)">编辑</el-link>
-            </div>
-            <div class="fcs" v-if="row.status == 2 || row.status == 3">
-              <!-- <el-link type="primary" @click="goDel(row.id)">删除</el-link> -->
-              <div class="line"></div>
-              <el-link type="primary" @click="$router.push('/myWork/articleDetails?id='+row.id)">查看</el-link>
-            </div>
-            <div class="fcs" v-if="row.status == 4">
-              <!-- <el-link type="primary" @click="goDel(row.id)">删除</el-link> -->
-              <div class="line"></div>
-              <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true">拒绝原因</el-link>
-            </div>
-          </template>
-        </el-table-column>
-        <!-- <template #empty>
+        <template #empty>
           <MyEmpty/>
-        </template> -->
+        </template>
       </el-table>
+      <MyPage :total="totle" v-model:page="page" @change="getList" v-model:size="size"/>
+         </el-card>
+      <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1"/>
+          <el-dialog
+            v-model="dialogVisible"
+            title="详情图片"
+            width="500px" 
+            >
+            <div class="img-dialog" v-if="showImgs ">
+              <el-image style="width: 125px; height: 135px"  fit  v-for="url in showImgs" :key="url" :src="url">
+                  <template #error>
+                    <div class="image-slot">
+                      <h3>暂无数据</h3>
+                    </div>
+                  </template>
+              </el-image>
+            </div>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button type="primary" @click="dialogVisible = false">确认</el-button>
+            </span>
+          </template>
+      </el-dialog>
+        <el-dialog v-model="addShow" title="编辑图片" width="500px" @close="close" custom-class="upimgs" >
+           <span class="uptext">图片上传：</span>
+          <el-upload
+            action="#"
+            :auto-upload="false"
+            :limit="9"
+            :multiple="true"
+            list-type="picture-card"
+            :on-change="upChange"
+            :on-preview="lookimgs"
+            :on-remove="upRemove"
+            :accept="imgTypes.join(',')"
+            ref="upload"
+            class="upbox"
+            
+          >
+            <div class="fc fcc">
+              <el-icon><Plus /></el-icon>
+              <div class="file_name">点击上传</div>
+            </div>
+          </el-upload>
+          <div class="tips">图片尺寸16:9，建议尺寸：220*160≤尺寸≤1920*890；支持JPG、PNG 、JPEG等格式；一次最多上传9张</div>
+          <div class="fcs btns fjend">
+          <el-button @click="close">取消</el-button>
+          <el-button type="primary" @click="goSubmit" :disabled="!imgs.length">提交</el-button>
+      </div>
+    </el-dialog>
+    <el-image-viewer @close="imgShow=false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/>
     </div>
-    <Mypage :total="50" v-model="page"/>
-  </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-import { formatDate } from '@/utils/date'
+<script setup  lang="ts">
+import { ref ,reactive} from 'vue'
 import search from'@/components/Search.vue'
-import Mypage from "@/components/Mypage.vue";
+import MyPage from '@/components/MyPage.vue'
+import MyDataTable from '@/components/MyDataTable.vue'
+import MyDialog from "@/components/MyDialog.vue";
+import MyEmpty from "@/components/MyEmpty.vue";
+import { Plus,Picture as IconPicture } from '@element-plus/icons-vue'
+import type { UploadFile, UploadUserFile, } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import axios from 'axios'
+import { errMsg ,okMsg } from '@/utils/index'
+import { getAliToken_api } from '@/api/login'
+import { useRoute, useRouter } from 'vue-router'
+import { imagesList_api,articlePass_api,articleReject_api,articleAttach_api,articleImagsave_api,articleDetail_api } from '@/api/custom'
+import { log } from 'console'
+interface TableTitleProp{
+  type:string,
+  lable?:string,
+  prop:string,
+  width:number,
+  operatButton?:string[]
+}
+const tableTitle = ref(<TableTitleProp[]>[
+  {type:'text',lable:'需求ID',prop:'id',width:120},
+  {type:'text',lable:'账户名',prop:'user_name',width:120},
+  {type:'text',lable:'客户名称',prop:'company_name',width:180},
+  {type:'text',lable:'标题',prop:'title',width:150},
+  {type:'text',lable:'描述',prop:'detail',width:120},
+  {type:'date',lable:'创建日期',prop:'create_time',width:110},
+  {type:'status',lable:'状态',prop:'status',width:100},    
+]) 
+const loading = ref(false)
+const size = ref(20)
+const totle = ref(0)
+const page = ref(1)
 interface SData {
   id: number|string,
-  user_name: string,
-  company_name: string,
-  thumb_url:string,
+  attach_url:any,
   create_time:number,
   status:number,
   fail_reason?:string,
 }
-const tableData = ref<SData[]>([])
-const page = ref(1)
-// 搜索
-const searchword = (val:any) => {
-  console.log(val.name);
-  
-}
-const multipleSelection = ref<SData[]>([])
-const handleSelectionChange = (val:SData[]) => {
-  //表格选择
-  multipleSelection.value = val
-}
-const getStatus = (type:number)=>{
-  const obj = ref<{text:string,className:string}>()
-  switch (type) {
-    case 2:
-      obj.value = {
-        text:'待审核',
-        className:'cyellow'
-      }
-      break;
-    case 3:
-      obj.value = {
-        text:'已通过',
-        className:'cdf'
-      }
-      break;
-    case 4:
-      obj.value = {
-        text:'已拒绝',
-        className:'cred'
-      }
-      break;
-    default:
-      obj.value = {
-        text:'草稿',
-        className:'cbbb'
-      }
-      break;
-  }
-  return obj.value
-}
+const tableList = ref<SData[]>([])
 const errorShow = ref(false)
 const errorMsg = ref('')
-</script>
-<script lang="ts">
-export default { name:'TelData' }
+
+const inputSearch = reactive({
+  userName:'',
+  status:'',
+  create_time:''
+})
+// 重置
+const resetSearch=()=>{
+  inputSearch.userName='',
+  inputSearch.status='',
+  inputSearch.create_time=''
+  getList()
+}
+// 搜索
+const searchword = (val:any) => {
+  console.log(inputSearch.status);
+  getList()
+}
+// 通过
+const pass =async(id:string|number)=>{
+await articlePass_api({ id})
+ getList()
+}
+// 驳回弹出框
+const open = (id:string|number) => {
+  ElMessageBox.prompt('驳回原因', '提示', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+  })
+    .then(async ({ value }) => {
+      await articleReject_api({
+          fail_reason:value,
+          id
+  })
+     getList()
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消驳回',
+      })
+    })
+}
+// 下载附件
+const getData = async (id:string)=>{
+  const res = await articleAttach_api({ id})
+  if(res.status == 1){
+    window.location.href = res.body.attach_url
+  }
+}
+// 图片详情
+const dialogVisible = ref(false)
+const showImgs = ref<string[]>([])//预览图片列表
+const look = async(id:string)=>{
+  const res = await articleDetail_api({ id})
+  console.log(res);
+  let arr:string[] = []
+   if(res.status == 1){
+       showImgs.value  = res.body.list
+  }
+  dialogVisible.value = true
+}
+// 编辑图片
+const addShow = ref(false)
+const imgs = ref<UploadFile[]>([])//展示图片
+const upload = ref()//上传组件ref
+const imgShow = ref(false)//预览是否显示
+const showImgIndex = ref(0)//首张预览图片
+let filePath: string[] = []//上传成功后的文件地址
+
+const editId = ref('')
+const imageEit=(id:string,urls:any[])=>{
+  editId.value = id
+  addShow.value =true
+  console.log(id);
+}
+const imgTypes = ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG']
+const upChange = (file: UploadFile, fileList: UploadFile[])=>{
+  const exname=file.name.substring(file.name.lastIndexOf("."))
+  if(imgTypes.indexOf(exname) == -1){
+    upload.value.handleRemove(file)
+    errMsg('图片格式错误！')
+    return
+  }
+  imgs.value = fileList
+  if(imgs.value.length>=9){
+    (document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'none'
+  }
+  console.log(imgs.value);
+}
+const upRemove = (file: UploadFile, fileList: UploadFile[])=>{
+  imgs.value = fileList;
+  (document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'inline-flex'
+  console.log(imgs.value);
+}
+const lookimgs = (file: UploadFile)=>{
+  let arr:string[] = []
+  imgs.value.forEach(v=>{
+    arr.push(v.url!)
+  })
+  showImgs.value  = arr
+  showImgIndex.value = showImgs.value.findIndex(v=>v==file.url)
+  imgShow.value = true
+}
+const close = ()=>{
+  upload.value.clearFiles()
+  addShow.value = false
+  loading.value = false
+  imgs.value = []
+  showImgs.value = []
+  imgShow.value = false
+  showImgIndex.value = 0
+  filePath = []
+}
+const upOneImg = async (file:UploadFile,order_id:string,urls:any[])=>{
+  //上传单张图片
+  const res:res = await getAliToken_api({site:'official_img'})
+  if(res.status == 1){
+    const exname=file.name.substring(file.name.lastIndexOf("."))
+    const fd = new FormData();
+    const upData = {
+      key: res.body.dir + '/' + res.body.uuid + exname,
+      OSSAccessKeyId: res.body.accessid,
+      success_action_status: 200,
+      policy: res.body.policy,
+      signature: res.body.signature,
+    };
+    for (const [key, value] of Object.entries(upData)) {
+      fd.append(key, value as string);
+    }
+    fd.append("file", file.raw as Blob);
+    const response = await axios({
+      url: res.body.host,
+      method: 'post',
+      headers: {
+        "Content-Type": "multipart/form-data;",
+      },
+      data: fd,
+    })
+    if(response.status == 200){
+      const oneUrl = res.body.host + '/' + res.body.dir + '/' + res.body.uuid + exname
+      filePath.push(oneUrl)
+      // const oneRes:res = await articleImagsave_api({urls: oneUrl,order_id:id})
+      return Promise.resolve(oneUrl)
+    }else{
+      return Promise.reject(file.name+'上传失败')
+    }
+  }else{
+    return Promise.reject('获取上传配置失败')
+  }
+}
+const goSubmit =async (order_id:string,urls:any[])=>{
+  loading.value = true
+  try {
+    for (let i = 0; i < imgs.value.length; i++) {
+      const v = imgs.value[i];
+      const url = await upOneImg(v,order_id,urls).catch(err=>{
+        throw new Error(err)
+      }).then(()=>{
+        if(filePath.length == imgs.value.length){
+          articleImagsave_api({urls: filePath,order_id:editId.value}).then((res:res)=>{
+
+          })
+        }
+      });
+
+      if(filePath.length == imgs.value.length){
+        okMsg('上传成功')
+        close()
+        getList()
+        break
+      }
+    }
+    
+  } catch (error:any) {
+    errMsg(error,0)
+    close()
+    getList()
+  }
+}
+defineExpose({
+  getData
+})
+// 列表
+const getList = async ()=>{
+  loading.value = true
+  const res = await imagesList_api({
+     size: size.value,
+    current: page.value,
+    ...inputSearch
+  })
+  console.log(res);
+  
+  loading.value = false
+  if(res.status == 1){
+    totle.value = res.body.total
+    tableList.value = res.body.records
+  }
+}
+getList()
+
 </script>
 
-<style scoped lang="scss">
-.tel_data{
- .firstimg{
-    width: 48px;
-    height: 48px;
-    border-radius: 4px;
-  }
-  .dot{
-    width: 8px;
-    height: 8px;
-    margin-right: 8px;
-    border-radius: 50%;
-  }
-  .cbbb{
-    background-color: $colorbbb;
-  }
-  .cyellow{
-    background-color: $coloryellow;
-  }
-  .cdf{
-    background-color: $dfcolor;
-  }
-  .cred{
-    background-color: $colorred;
-  } 
-}
+<script lang="ts">
+export default { name:'个性化内容库-软文' }
+</script>
+<style lang="scss" scoped>
+    .fcss{
+      z-index: 20;
+      margin-right: 6px;
+    }
+     .mycard{
+      padding-top: 20px;
+    }
+    .img-dialog {
+      display: flex;
+    flex-wrap: wrap;
+    justify-content:space-around;
+    align-items: center;
+    }
+    .image-slot {
+       display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .uptext{
+      display: block;
+      width: 110px;
+      height: 50px;
+    }
 </style>

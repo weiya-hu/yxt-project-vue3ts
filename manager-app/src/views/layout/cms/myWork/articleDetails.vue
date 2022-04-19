@@ -13,13 +13,10 @@ import { ref } from 'vue'
 import {useRoute} from 'vue-router'
 import DetailsHeader from "@/components/DetailsHeader.vue";
 import {articleDetail_api } from '@/api/myWork'
-import { log } from 'console';
 // import Mypage from "@/components/、Mypage.vue";
 // const page = ref(1)
 const route = useRoute()
 const id = route.query.id as string
-// const fatherUrl = route.meta.father as string
-// const path = fatherUrl.split('/')[1]
 const body = ref<{title:string,content:string}>({
   title:'',
   content:''
@@ -41,7 +38,7 @@ export default { name:'我的作品库软文详情' }
   .content{
     background-color: #fff;
     border-radius: 6px;
-    padding: 30px 16%;
+    padding: 32px 50px;
     margin-top: 20px;
     .title{
       font-size: 28px;

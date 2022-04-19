@@ -96,27 +96,33 @@ const {type,lable,prop,width,operatButton} =toRefs(props)
 const getStatus = (type:number)=>{
   const obj = ref<{text:string,className:string}>()
   switch (type) {
+    case 1:
+      obj.value = {
+        text:'待处理',
+        className:'calculating'
+      }
+      break;
     case 2:
       obj.value = {
-        text:'已授理',
-        className:'calculating'
+        text:'已受理',
+        className:'calculat-false'
       }
       break;
     case 3:
       obj.value = {
-        text:'驳回',
-        className:'calculat-false'
+        text:'被驳回',
+        className:'calculated'
       }
       break;
     case 4:
       obj.value = {
         text:'已完成',
-        className:'calculated'
+        className:'calculat-true'
       }
       break;
     default:
       obj.value = {
-        text:'待处理',
+        text:'草稿',
         className:'calcula_yellow'
       }
       break;
@@ -149,20 +155,27 @@ const getStatus = (type:number)=>{
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: #2BD34E;
+    background-color:#f7c41b;
     margin-right: 8px;
   }
   .calculated{
     width: 8px;
     height: 8px;
-    background-color: $dfcolor;
+    background-color: #ff3b31;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+  .calculat-true{
+    width: 8px;
+    height: 8px;
+    background-color: #3568de;
     border-radius: 50%;
     margin-right: 8px;
   }
   .calculat-false{
     width: 8px;
     height: 8px;
-    background-color: #e40000;
+    background-color: #35b225;
     border-radius: 50%;
     margin-right: 8px;
   }
