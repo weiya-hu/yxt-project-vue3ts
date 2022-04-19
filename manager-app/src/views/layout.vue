@@ -99,7 +99,7 @@ store.setUserinfo().then((res:any) => {
                 isGetLv.value = true
               })
             }
-          }) 
+          })
         }else{
           router.replace('/index').then(()=>{
             isGetLv.value = true

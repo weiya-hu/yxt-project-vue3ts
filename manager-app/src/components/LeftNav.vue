@@ -14,41 +14,45 @@
       </div>
     </el-menu-item>
 
-    <el-sub-menu :index="v.path" v-for="v in nav" :key="v.path" v-show="v.path!='/index' && v.path!='/login' && userlv.indexOf(v.meta.lv)>-1 && userlv.some(lv=>v.meta.clv.split(',').indexOf(lv)>-1)">
-    <!-- v : /users 用户/企业管理 /dmp DMP系统管理 ... -->
-      <template #title>
-        <div class="fcs">
-          <img :src="v.meta.icon" alt="" class="left_nav_icon">
-          <span class="fz16">{{v.meta.title}}</span>
-        </div>
-      </template>
+    <template  v-for="v in nav" :key="v.path">
 
-      <template v-for="value in v.children" :key="v.path">
-
-        <!-- value : /dmp/findb 找B端客户 ... -->
-        <!-- cvalue : /dmp/findb/specificdata 个性化数据 -->
-        <!-- <el-sub-menu :index="value.path" v-if="value.children" v-show="userlv.indexOf(value.meta.lv)>-1 && userlv.some(lv=>value.meta.clv.split(',').indexOf(lv)>-1)">
-          <template #title>
-            <span>{{value.meta.title}}</span>
-          </template>
-          <el-menu-item :index="cvalue.path" v-for="cvalue in value.children" :key="cvalue.path" v-show="!cvalue.meta.father && (userlv.indexOf(cvalue.meta.lv)>-1)">
-            <div class="topafter"></div>
-            <span>{{cvalue.meta.title}}</span>
-            <div class="botafter"></div>
-          </el-menu-item>
-        </el-sub-menu> -->
-
-        <el-menu-item :index="value.path" v-show="!value.meta.father && (userlv.indexOf(value.meta.lv)>-1)">
-        <!-- value : /users/user 用户管理 ... -->
+      <el-sub-menu :index="v.path" v-if="v.path!='/index' && v.path!='/login' && userlv.indexOf(v.meta.lv)>-1 && userlv.some(lv=>v.meta.clv.split(',').indexOf(lv)>-1)">
+      <!-- v : /users 用户/企业管理 /dmp DMP系统管理 ... -->
+        <template #title>
           <div class="fcs">
-            <img :src="value.path == modelValue ? value.meta.icon_a : value.meta.icon" alt="" class="left_nav_icon">
-            <span>{{value.meta.title}}</span>
+            <img :src="v.meta.icon" alt="" class="left_nav_icon">
+            <span class="fz16">{{v.meta.title}}</span>
           </div>
-        </el-menu-item>
+        </template>
 
-      </template>
+        <template v-for="value in v.children" :key="v.path">
 
-    </el-sub-menu>
+          <!-- value : /dmp/findb 找B端客户 ... -->
+          <!-- cvalue : /dmp/findb/specificdata 个性化数据 -->
+          <!-- <el-sub-menu :index="value.path" v-if="value.children" v-show="userlv.indexOf(value.meta.lv)>-1 && userlv.some(lv=>value.meta.clv.split(',').indexOf(lv)>-1)">
+            <template #title>
+              <span>{{value.meta.title}}</span>
+            </template>
+            <el-menu-item :index="cvalue.path" v-for="cvalue in value.children" :key="cvalue.path" v-show="!cvalue.meta.father && (userlv.indexOf(cvalue.meta.lv)>-1)">
+              <div class="topafter"></div>
+              <span>{{cvalue.meta.title}}</span>
+              <div class="botafter"></div>
+            </el-menu-item>
+          </el-sub-menu> -->
+
+          <el-menu-item :index="value.path" v-if="!value.meta.father && (userlv.indexOf(value.meta.lv)>-1)">
+          <!-- value : /users/user 用户管理 ... -->
+            <div class="fcs">
+              <img :src="value.path == modelValue ? value.meta.icon_a : value.meta.icon" alt="" class="left_nav_icon">
+              <span>{{value.meta.title}}</span>
+            </div>
+          </el-menu-item>
+
+        </template>
+
+      </el-sub-menu>
+
+    </template>
 
   </el-menu>
 </template>

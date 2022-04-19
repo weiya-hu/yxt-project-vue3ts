@@ -56,7 +56,7 @@ const changeLeft = ()=>{
   //改变顶部导航线条位置
   nextTick(()=>{
     activeDom = document.querySelector('.active') as HTMLElement
-    left.value = activeDom.offsetLeft +  activeDom.offsetWidth/2 - 10
+    activeDom && (left.value = activeDom.offsetLeft +  activeDom.offsetWidth/2 - 10);
   })
 }
 

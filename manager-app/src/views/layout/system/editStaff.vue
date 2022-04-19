@@ -93,6 +93,7 @@ const setStaffLv = async () => {
       store.setUserLv().then((userLv:string[])=>{
         routerGuard(userLv)
         if(userLv.indexOf('24') == -1){
+          // 24 管理员设置
           router.replace('/index')
         }else{
           router.back()

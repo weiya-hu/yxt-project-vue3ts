@@ -310,13 +310,13 @@ const routes = [
                 path: '/system/resourcepool/imagepool',
                 name: 'ImagePool',
                 component: () => import('@/views/layout/system/imagePool.vue'),
-                meta: { title: '图片', father:'/system/resourcepool', isTopNav:true },
+                meta: { title: '图片', father:'/system/resourcepool', lv:'58', isTopNav:true },
               },
               {
                 path: '/system/resourcepool/videopool',
                 name: 'VideoPool',
                 component: () => import('@/views/layout/system/videoPool.vue'),
-                meta: { title: '视频', father:'/system/resourcepool', isTopNav:true },
+                meta: { title: '视频', father:'/system/resourcepool', lv:'59', isTopNav:true },
               },
             ]
           },
@@ -350,15 +350,16 @@ const guardFn = () => {
         // 解决重定向到三级topNav时没有权限的问题，循环路由寻找同父级路由下第一个有权限的路由
         rlist.forEach(v => {
           if(to.meta.father == v.path){
-            router.replace(v.children.find(v => userLvs.indexOf(v.meta!.lv as string) > -1)!.path)
+            const afterRoute = v.children.find(v => userLvs.indexOf(v.meta!.lv as string) > -1)
+            afterRoute ? router.replace(afterRoute.path) : router.back()
           }
-        })    
+        })
       }else{
         ElMessageBox.alert(
           '当前账户无此权限！',
           '温馨提示',
           {
-            confirmButtonText: '关闭',
+            confirmButtonText: '返回',
             callback: () => {
               router.replace(from.fullPath)
             },
