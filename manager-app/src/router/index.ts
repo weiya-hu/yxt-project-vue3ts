@@ -209,14 +209,14 @@ const routes = [
               },
               {
                 path: '/website/inform/dynamic/dynamicdetails',
-                name: '动态与公告-首页动态',
+                name: 'DynamicDetails',
                 component: () => import('@/views/layout/website/inform/detail.vue'),
                 meta: { title: '动态详情',father:'/website/inform/dynamic',lv:'16'},
               },
               
               {
                 path: '/website/inform/dynamic/dynamicadd',
-                name: '动态与公告-首页动态编辑/新增',
+                name: 'DynamicAdd',
                 component: () => import('@/views/layout/website/inform/articleAdd.vue'),
                 meta: { title: '动态详情编辑/新增',father:'/website/inform/dynamic',lv:'16'},
               },
@@ -228,13 +228,13 @@ const routes = [
               },
               {
                 path: '/website/inform/notice/noticedetails',
-                name: '动态与公告-通知与公告',
+                name: 'NoticeDetails',
                 component: () => import('@/views/layout/website/inform/detail.vue'),
                 meta: { title: '通知与公告详情',father:'/website/inform/notice',lv:'17' },
               },
               {
                 path: '/website/inform/notice/noticeadd',
-                name: '动态与公告-通知与公告编辑/新增',
+                name: 'NoticeAdd',
                 component: () => import('@/views/layout/website/inform/articleAdd.vue'),
                 meta: { title: '通知与公告详情编辑/新增',father:'/website/inform/notice',lv:'17' },
               },
@@ -258,7 +258,12 @@ const routes = [
             component: () => import('@/views/layout/website/news/newsExamine.vue'),
             meta: { title: '资讯审核',father:'/website/news',lv:'18' },
           },
-        
+          {
+            path: '/website/news/newsadd',
+            name: 'NewsAdd',
+            component: () => import('@/views/layout/website/inform/articleAdd.vue'),
+            meta: { title: '添加资讯',father:'/website/news',lv:'18' },
+          },
           {
             path: '/website/service',
             name: 'Service',

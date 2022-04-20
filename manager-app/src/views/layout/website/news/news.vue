@@ -3,8 +3,18 @@
     <div class="ftitle">资讯中心</div>
     <div class="news-handle">
       <el-button type="primary" @click="drawer2 = true">分类管理</el-button>
-      <el-button type="primary" @click="drawer2 = true">数据源更新</el-button>
-      <el-button type="primary" @click="$router.push('/website/articleAdd')">添加</el-button>
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          content="点击将更新从第三方获取的资讯"
+          placement="bottom-end"
+        >
+          <div class="update">
+          <div class="ntxts">数据源更新</div>
+          <img :src="tips" alt="">
+        </div>
+        </el-tooltip>
+      <el-button type="primary" @click="$router.push('/website/news/newsadd')">添加</el-button>
     </div>
     <div class="news-search">
       <el-card class="mycard">
@@ -51,16 +61,15 @@
       </el-card>
     </div>
     <div class="news-content">
-      <div class="news-tips">
+      <el-card class="mycard" header="资讯列表">
+        <template #header>
+          <div class="fsc f1">
+            <span>资讯列表</span>
+            <div class="news-tips">
               <span>线上咨讯：{{statisticsDate.audit}}</span>
               <span>待审核：{{statisticsDate.online}}</span>
               <span>今日新增：{{statisticsDate.increase}}</span>
             </div>
-      <el-card class="mycard" header="资讯列表">
-        <template #header>
-          <div class="card-header">
-            <span>资讯列表</span>
-            
           </div>
         </template>
       <div class="mytable">
@@ -88,7 +97,7 @@
           <el-table-column property="source" label="状态">
             <template #default="{row}">
               <div class="ss">
-                <div class="point" :style="row.state == 4?'background: #51A1FC;': 'background:#24BD13;'"></div>
+                <div class="point" :style="row.state == 4?'background: #24BD13;': 'background:#E40000;'"></div>
                 <span> {{row.state == 4?'在线':'离线'}}</span>
               </div>
             </template>
@@ -153,6 +162,7 @@ import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import index_1 from '@/assets/images/index_1.png'
 import index_2 from '@/assets/images/index_2.png'
+import tips from '@/assets/images/news-tips.png'
 import {news_api,statistics_api,typeList_api,newsUp_api,newsDown_api,newsDel_api} from '@/api/website';
 
 const page = ref(1)
@@ -293,11 +303,26 @@ const getDelDate = async()=>{
   flex-direction: row;
   justify-content: flex-end;
   margin:10px 20px;
-  .tj,.gl,.update{
-    width:130px;
-    height: 40px;
-    border: 1px solid #333;
-    color:#333
+  .update{
+    width: 144px;
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid #2D68EB;
+    margin:0 10px;
+    .ntxts{
+      display: inline;
+      width: 70px;
+      height: 20px;
+      font-size: 14px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #2D68EB;
+      line-height: 30px;
+      margin-left: 28px;
+    }
+    img{
+      margin-left: 2px;
+    }
   }
 }
 
@@ -399,12 +424,5 @@ const getDelDate = async()=>{
     margin: 7px 15px 3px 0;
   }
 }
-.news-content{
-  position: relative;
-  .news-tips{
-    position: absolute;
-    right: 100px;
-    top:40px;
-  }
-}
+
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div class="dynamic-container">
-    <el-button  type="primary" class="btns"  @click="$router.push('/website/inform/dynamic/dynamicadd')">添加</el-button>
     <el-card class="mycard">
       <template #header>
-      <div class="card-header">
+      <div class="fsc f1">
         <span>动态列表</span>
+        <el-button  type="primary" class="btns"  @click="$router.push('/website/inform/dynamic/dynamicadd')">添加</el-button>
       </div>
       </template>
       <div class="mytable">

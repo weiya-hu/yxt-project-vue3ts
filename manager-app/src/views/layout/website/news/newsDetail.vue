@@ -8,7 +8,7 @@
           <span>查看量：{{body.readed}}</span>
           <span>{{formatDate(new Date(body.create_time),'yyyy-MM-dd hh:mm:ss')}}</span><br>
           <div class="ss">
-            <div class="point" :style="body.state == 4?'background: #51A1FC;': 'background:#24BD13;'"></div>
+            <div class="point" :style="body.state == 4?'background: #24BD13;': 'background:#E40000;'"></div>
             <span> {{body.state == 4?'在线':'离线'}}</span>
             <div class="s-tips" :style="body.state == 1?'background: rgba(255, 183, 0, 0.1);color: #FFB700 ;'
             :body.state == 2?'background: rgba(228, 0, 0, 0.1);color: #E40000 ;'

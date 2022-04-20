@@ -1,10 +1,10 @@
 <template>
   <div class="notice-container">
-    <el-button  type="primary" class="btns"  @click="$router.push('/website/inform/notice/noticeadd')">添加</el-button>
     <el-card class="mycard">
       <template #header>
-      <div class="card-header">
+      <div class="fsc f1">
         <span>通知公告列表</span>
+        <el-button  type="primary"  @click="$router.push('/website/inform/notice/noticeadd')">添加</el-button>
       </div>
       </template>
       <div class="mytable ">

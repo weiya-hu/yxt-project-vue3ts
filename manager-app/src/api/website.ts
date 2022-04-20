@@ -95,3 +95,13 @@ export const share_api = (data:PageParams): Promise<res> => {
 export const newsShield_api = (data:{id:string}): Promise<res> => {
   return post(1,'/news/info/comment/logic.do',data)
 }
+
+// 添加动态
+export const dynamicAdd_api = (data:any): Promise<res> => {
+  return post(1,'/official/dynamic.in',data,true)
+}
+// 添加通知
+export const noticeAdd_api = (data:any): Promise<res> => {
+  return post(1,'/official/notice.in',data,true)
+}
+
