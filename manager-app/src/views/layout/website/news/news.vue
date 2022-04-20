@@ -77,15 +77,20 @@
           <el-table-column property="collectioned" label="收藏量"/>
           <el-table-column property="shared" label="分享数"/>
           <el-table-column property="commented" label="评论数"/>
-          <el-table-column property="source" label="审核结果">
+          <el-table-column property="source" label="审核结果" width="120">
             <template #default="{row}">
-              <div>{{row.state == 1?'审核中':row.state == 2?'驳回':'已通过'}}</div>
+              <div class="ss">
+                <div class="point" :style="row.state == 1?'background:#FFB700':row.state == 2?'background:#E40000':row.state == 0?'background:#51A1FC':'background:#24BD13'"></div>
+                <span>{{row.state == 1?'审核中':row.state == 2?'驳回':row.state == 0?'草稿':'已通过'}}</span>          
+              </div>
             </template>
           </el-table-column>
           <el-table-column property="source" label="状态">
             <template #default="{row}">
-              <div>{{row.state == 3?'离线':'在线'}}</div>
-              <span>{{row.state}}</span>
+              <div class="ss">
+                <div class="point" :style="row.state == 4?'background: #51A1FC;': 'background:#24BD13;'"></div>
+                <span> {{row.state == 4?'在线':'离线'}}</span>
+              </div>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="200" fixed="right">
@@ -95,7 +100,7 @@
                 <div class="line"></div>
                 <el-link type="primary" v-if="row.state == 4" @click="getNewsDown(row.id)">下线</el-link>
                 <el-link type="primary" v-if="row.state == 3" @click="getNewsUp(row.id)">上线</el-link>
-                <el-link type="primary" v-if="row.state == 1" @click="$router.push('/website/news/examine?id='+row.id)">审核</el-link>
+                <el-link type="primary" v-if="row.state == 1" @click="$router.push('/website/examine?id='+row.id)">审核</el-link>
                 <div class="line"></div>
                 <el-link type="primary" v-if="row.state == 2||row.state == 3|| row.state ==0"  @click="getDel(row.id)">删除</el-link>
               </div>
@@ -380,6 +385,18 @@ const getDelDate = async()=>{
         }
       }
     }
+  }
+}
+.ss{
+  margin:20px 0;
+  font-size: 14px;
+  .point{
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background:  #24BD13;
+    border-radius: 50%;
+    margin: 7px 15px 3px 0;
   }
 }
 .news-content{

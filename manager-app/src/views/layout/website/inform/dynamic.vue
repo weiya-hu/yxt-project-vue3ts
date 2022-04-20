@@ -1,6 +1,6 @@
 <template>
   <div class="dynamic-container">
-    <el-button  type="primary" class="btns"  @click="$router.push('/website/inform/dynamic/dynamicAdd')">添加</el-button>
+    <el-button  type="primary" class="btns"  @click="$router.push('/website/inform/dynamic/dynamicadd')">添加</el-button>
     <el-card class="mycard">
       <template #header>
       <div class="card-header">
@@ -19,9 +19,12 @@
         </el-table-column>
         <el-table-column property="readed" label="查看量"/>
         <el-table-column property="source" label="状态">
-            <template #default="{row}">
-            <div>{{row.status == 0?'草稿':row.status == 1?'离线':'在线'}}</div>
-            </template>
+          <template #default="{row}">
+            <div class="ss">
+              <div class="point" :style="row.status == 0?'background: #51A1FC;':row.status == 1?'background: #E40000;' : 'background:#24BD13;'"></div>
+              <span> {{row.status == 0?'草稿':row.status == 1?'离线':'在线'}}</span>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column label="操作" width="300">
             <template #default="{row}">
@@ -30,7 +33,7 @@
                 <div class="line"></div>
                <el-link type="primary"   v-if="row.status == 2" @click="getDyDown(row.id)">下线</el-link>
                 <el-link type="primary"  v-if="row.status == 1" @click="getDyUp(row.id)">上线</el-link>
-                <div class="line"></div>
+                <div class="line"  v-if="row.status == 1||row.status == 2"></div>
                 <el-link type="primary" v-if="row.status == 1||row.status == 0" @click=" ">编辑</el-link>
                 <div class="line"></div>
                 <el-link type="primary"  v-if="row.status == 1||row.status == 0" @click="getDel(row.id)">删除</el-link>
@@ -130,6 +133,18 @@ const getDelDate = async()=>{
     right: 24px;
     top:8px;
   }
-}  
+} 
+.ss{
+  margin:20px 0;
+  font-size: 14px;
+  .point{
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background:  #24BD13;
+    border-radius: 50%;
+    margin: 7px 15px 3px 0;
+  }
+} 
 
 </style>

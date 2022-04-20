@@ -7,11 +7,17 @@
           <span>分类：{{body.type_name}}</span>                  
           <span>查看量：{{body.readed}}</span>
           <span>{{formatDate(new Date(body.create_time),'yyyy-MM-dd hh:mm:ss')}}</span><br>
-          <p>
-          <span>{{body.state==0?'草稿':body.state==1?'审核中':body.state==2?'驳回':'已通过'}}</span>
-          <span> {{body.state==4?'在线':'离线'}}</span><br>
-          </p>
-          <p>{{body.fail_reason}}</p>
+          <div class="ss">
+            <div class="point" :style="body.state == 4?'background: #51A1FC;': 'background:#24BD13;'"></div>
+            <span> {{body.state == 4?'在线':'离线'}}</span>
+            <div class="s-tips" :style="body.state == 1?'background: rgba(255, 183, 0, 0.1);color: #FFB700 ;'
+            :body.state == 2?'background: rgba(228, 0, 0, 0.1);color: #E40000 ;'
+            :body.state == 0?'background:  rgba(81, 161, 252, 0.1);color: #51A1FC ;'
+            :'background: rgba(36, 189, 19, 0.1);color: #24BD13 ;'">
+              {{body.state == 1?'审核中':body.state == 2?'已驳回':body.state == 0?'草稿':'已通过'}}
+            </div>
+            <p v-if="body.state==2">驳回原因：{{body.fail_reason}}</p>
+          </div>
           <el-button type="primary" class="tj" size="large" v-if="body.state == 1" @click="goExamine(id)">审核</el-button>
           <el-button type="primary" class="tj" size="large" v-if="body.state == 3" @click="getNewsUp(id)">上线</el-button>
           <el-button type="primary" class="tj" size="large" v-if="body.state == 4" @click="getNewsDown(id)">下线</el-button>
@@ -32,7 +38,7 @@
                   <el-table-column property="mobile" label="电话" width="230"/>
                   <el-table-column property="create_time" label="收藏时间" width="200">
                     <template #default="{row}">
-                      <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
+                      <div>{{formatDate(new Date(Number(row.create_time)),'yyyy-MM-dd')}}</div>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -48,8 +54,7 @@
                   <el-table-column property="shareMode" label="分享方式" width="200">微信</el-table-column>
                   <el-table-column property="time" label="分享时间" width="230">
                     <template #default="{row}">
-                      <span>{{new Date(row.create_time) + row.create_time}}</span>
-                      <div v-if="row.create_time">{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
+                      <div v-if="row.create_time">{{formatDate(new Date(Number(row.create_time)),'yyyy-MM-dd')}}</div>
                     </template>
                 </el-table-column>
                 </el-table>
@@ -218,7 +223,7 @@ const newsUp=async()=>{
 }
 // 审核
 const goExamine = (id:string)=>{
-  window.location.href='/website/news/examine?id='+id
+  window.location.href='/website/examine?id='+id
 }
 // 屏蔽评论
 
@@ -247,10 +252,8 @@ const getDelDate = async()=>{
 
 <style scoped lang="scss">
 .article_details{
-  .el-breadcrumb{
-    font-size: 12px;
-  }
   .content{
+    font-size: 14px;
     background-color: #fff;
     border-radius: 6px;
     padding: 30px 16%;
@@ -309,6 +312,33 @@ const getDelDate = async()=>{
       }
     }
 
+  }
+}
+.ss{
+  margin:20px 0;
+  font-size: 14px;
+  .point{
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background:  #24BD13;
+    border-radius: 50%;
+    margin: 7px 15px 3px 0;
+  }
+  .s-tips{
+    display: inline-block;
+    width: 52px;
+    height: 22px;
+    background: rgba(228, 0, 0, 0.1);
+    border-radius: 4px;
+    line-height: 22px;
+    text-align: center;
+    font-size: 12px;
+    color: #E40000;
+  }
+  p{
+    font-weight: 400;
+color: #E40000;
   }
 }
 </style>

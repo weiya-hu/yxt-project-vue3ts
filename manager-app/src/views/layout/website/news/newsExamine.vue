@@ -95,7 +95,7 @@ const newsPass=async()=>{
 const goReject =()=>{
   tipShow.value=true
 }
-const failTips = ref('dsefr')
+const failTips = ref('')
 const newsReject=async()=>{
   const res = await newsReject_api({
     id,

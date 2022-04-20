@@ -6,15 +6,21 @@
       <div class="nav-tips">
           <span>分类：{{body.type_name}}</span>                  
           <span>查看量：{{body.readed}}</span>
-          <span>{{formatDate(new Date(body.create_time),'yyyy-MM-dd hh:mm:ss')}}</span>
-         <p> {{body.status==2?'在线':'离线'}}</p>
-         
-           <el-button type="primary" class="tj" size="large" v-if="body.status == 1" @click="">编辑</el-button>
-          <el-button type="primary" class="tj" size="large" v-if="body.status == 1" @click="getUp">上线</el-button>
-          <el-button type="primary" class="tj" size="large" v-if="body.status == 2" @click="getDown">下线</el-button>
-           <el-button type="primary" class="tj" size="large" v-if="body.status == 1" @click="getDel(id)">删除</el-button>
+          <span>{{formatDate(new Date(Number(body.create_time)),'yyyy-MM-dd hh:mm:ss')}}</span>
+          <div class="ss" v-if="body.status != 0">
+            <div class="point" :style="body.status==2 ? 'background: #E40000;' : 'background:#24BD13;'"></div>
+            <span> {{body.status==2?'在线':'离线'}}</span>
+          </div>
+          <div class="btns">
+            <el-button type="primary" class="tj" size="large" v-if="body.status == 1" @click="getUp">上线</el-button>
+            <el-button type="primary" class="tj" size="large" v-if="body.status == 2" @click="getDown">下线</el-button>
+            <el-button type="primary" class="tj" size="large" v-if="body.status == 1 || body.status == 0" @click="">编辑</el-button>
+            <el-button type="primary" class="tj" size="large" v-if="body.status == 1 || body.status == 0" @click="getDel(id)">删除</el-button>
+          </div>
       </div>
-      <div v-html="body.content"></div>
+      <el-card>
+        <div class="txt" v-html="body.content"></div>
+      </el-card>
       <MyDialog v-model="delShow" :msg="path == 'dynamic' ? '此动态删除后无法撤回，请谨慎删除！':'此通知删除后无法撤回，请谨慎删除！'" @sure="getDelDate"/>
     </div>
   </div>
@@ -90,10 +96,8 @@ const getDelDate = async()=>{
 
 <style scoped lang="scss">
 .article_details{
-  .el-breadcrumb{
-    font-size: 12px;
-  }
   .content{
+    font-size: 14px;
     background-color: #fff;
     border-radius: 6px;
     padding: 30px 16%;
@@ -109,19 +113,20 @@ const getDelDate = async()=>{
       span{
         margin-right: 50px;
       }
-      p{
-        margin:15px 0;
-        width:70px;
-        height:30px;
-        background: #999;
-        line-height: 30px;
-        text-align: center;
-        border-radius: 4px;
+      .ss{
+        margin:20px 0;
+        font-size: 14px;
+          .point{
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          background:  #24BD13;
+          border-radius: 50%;
+          margin: 7px 15px 3px 0;
+        }
       }
       .btns{
-        width:100px;
-        height:30px;
-        margin:5px 10px 10px 0;
+        margin:20px 0;
       }
     }
   }

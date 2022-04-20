@@ -215,7 +215,7 @@ const routes = [
               },
               
               {
-                path: '/website/inform/dynamic/dynamicAdd',
+                path: '/website/inform/dynamic/dynamicadd',
                 name: '动态与公告-首页动态编辑/新增',
                 component: () => import('@/views/layout/website/inform/articleAdd.vue'),
                 meta: { title: '动态详情编辑/新增',father:'/website/inform/dynamic',lv:'16'},
@@ -233,7 +233,7 @@ const routes = [
                 meta: { title: '通知与公告详情',father:'/website/inform/notice',lv:'17' },
               },
               {
-                path: '/website/inform/notice/noticeAdd',
+                path: '/website/inform/notice/noticeadd',
                 name: '动态与公告-通知与公告编辑/新增',
                 component: () => import('@/views/layout/website/inform/articleAdd.vue'),
                 meta: { title: '通知与公告详情编辑/新增',father:'/website/inform/notice',lv:'17' },
