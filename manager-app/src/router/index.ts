@@ -55,6 +55,15 @@ import nav5_2_a_i from '@/assets/images/nav/nav5_2_a.png'
 import nav5_3_i from '@/assets/images/nav/nav5_3.png'
 import nav5_3_a_i from '@/assets/images/nav/nav5_3_a.png'
 
+import nav6_i from '@/assets/images/nav/nav6.png'
+import nav6_a_i from '@/assets/images/nav/nav6_a.png'
+
+import nav6_1_i from '@/assets/images/nav/nav6_1.png'
+import nav6_1_a_i from '@/assets/images/nav/nav6_1_a.png'
+
+import nav6_2_i from '@/assets/images/nav/nav6_2.png'
+import nav6_2_a_i from '@/assets/images/nav/nav6_2_a.png'
+
 
 // lv 当前路由权限id，clv 子路由权限id集合(不包括孙子)
 const routes = [
@@ -623,13 +632,13 @@ const routes = [
         name: 'System',
         redirect: '/system/staff',
         component: () => import('@/views/layout/rview.vue'),
-        meta: { title: '系统管理', lv:'5', clv:'24,39' },
+        meta: { title: '系统管理', lv:'5', clv:'24,39', icon:nav6_i, icon_a:nav6_a_i },
         children:[
           {
             path: '/system/staff',
             name: 'Staff',
             component: () => import('@/views/layout/system/staff.vue'),
-            meta: { title: '管理员设置', keepAlive:true, lv:'24' },
+            meta: { title: '管理员设置', keepAlive:true, lv:'24', icon:nav6_1_i, icon_a:nav6_1_a_i },
           },
           {
             path: '/system/addstaff',
@@ -648,7 +657,7 @@ const routes = [
             name: 'ResourcePool',
             redirect: '/system/resourcepool/imagepool',
             component: () => import('@/views/layout/rview.vue'),
-            meta: { title: '素材库', lv:'39', showTopNav:true },
+            meta: { title: '素材库', lv:'39', showTopNav:true, icon:nav6_2_i, icon_a:nav6_2_a_i },
             children:[
               {
                 path: '/system/resourcepool/imagepool',
