@@ -29,14 +29,14 @@
         </template>
       </el-table>
     </div>
-    <Mypage v-if="total" :total="total" v-model="page" @change="getList"/>
+    <Mypage v-if="total" :total="total" v-model:page="page" v-model:size="size" @change="getList"/>
     <Refuse v-model="refuseShow"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref ,reactive} from 'vue'
-import {businessDemand_api,businessDemandPass_api,businessDemandReject_api} from '@/api/dmp'
+import {businessDemand_api,businessDemandPass_api,businessDemandReject_api} from '@/api/dmp/findb'
 import Mypage from "@/components/Mypage.vue";
 import Search from '@/components/Search.vue';
 import MyDataTable from '@/components/MyDataTable.vue';

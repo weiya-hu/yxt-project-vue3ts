@@ -15,14 +15,14 @@
         </template>
       </el-table>
     </div>
-    <Mypage v-if="total" :total="total" v-model="page" @change="getList"/>
+    <Mypage v-if="total" :total="total" v-model:page="page" v-model:size="size" @change="getList"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import DetailsHeader from "@/components/DetailsHeader.vue";
-import {businessDemandDatail_api} from "@/api/dmp"
+import {businessDemandDatail_api} from "@/api/dmp/findb"
 import Mypage from "@/components/Mypage.vue";
 import MyDataTable from '@/components/MyDataTable.vue';
 import MyEmpty from '@/components/MyEmpty.vue';
