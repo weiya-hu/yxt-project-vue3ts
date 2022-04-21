@@ -29,7 +29,7 @@ body {
     --el-button-active-bg-color: #245BD6;
     --el-button-active-border-color: #245BD6;
   }
-  .colorbtn{
+  .bdc_btn{
     --el-button-text-color:#2D68EB;
     --el-button-border-color: #2D68EB;
     --el-button-hover-text-color: #245BD6;
