@@ -65,10 +65,7 @@ for (let i = 0; i < route.matched.length; i++) {
   }
   .dh_title{
     font-weight: 600;
-    :deep(.el-page-header__left:hover){
-      color: $dfcolor;
-      transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-    }
+    color: $dfcolor;
   }
 }
 </style>

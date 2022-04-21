@@ -16,6 +16,8 @@ body {
   width: 100%;
   --el-color-primary: #2D68EB;
   --el-color-danger: #E40000;
+  --el-color-success: #24BD13;
+  --el-color-warning: #FFB700;
   min-width: 1440px;
 }
 
@@ -40,6 +42,9 @@ body {
 }
 .f1{
   flex:1
+}
+.fww{
+  flex-wrap: wrap;
 }
 .fc{
   display: flex;

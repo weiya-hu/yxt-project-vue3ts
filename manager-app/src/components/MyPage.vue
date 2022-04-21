@@ -2,7 +2,7 @@
   <div class="mypage">
     <el-pagination 
       background
-      :layout="hideSizes ? 'total, prev, pager, next, jumper' : 'total, sizes, prev, pager, next, jumper' " 
+      :layout="hideSizes ? 'total, prev, pager, next, jumper' : 'total, sizes, prev, pager, next, jumper'" 
       :total="total" 
       :pager-count="9" 
       v-model:currentPage="page" 

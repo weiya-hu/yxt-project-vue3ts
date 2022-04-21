@@ -238,11 +238,12 @@ export function lookVideo(video:string){
 
 /**
  * 显示素材库组件以选择 
- * @callbackName emiter.on回调名 (内部emiter.emit为'kzPoolShow')
- * @type 1：图片，2：视频 不传默认1
+ * @callbackName 选择素材后emiter.on回调名 (内部显示emiter.emit为'kzPoolShow')
+ * @type 显示时默认展示的tab，1：图片，2：视频 不传默认1
+ * @disabled 传入type时另一个tab是否禁用
 */
-export function showKzPool(callbackName:string, type?:1|2) {
-  emiter.emit('kzPoolShow', { callbackName , type })
+export function showKzPool(callbackName:string, type?:1|2, disabled?:Boolean) {
+  emiter.emit('kzPoolShow', { callbackName , type, disabled })
 }
 
 /**

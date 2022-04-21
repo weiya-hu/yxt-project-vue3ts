@@ -267,8 +267,35 @@ const routes = [
           {
             path: '/website/service',
             name: 'Service',
-            component: () => import('@/views/layout/website/service.vue'),
-            meta: { title: '客服管理', icon:nav3_4_i, icon_a:nav3_4_a_i, lv:'19' },
+            redirect: '/website/service/tutorials',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '客服管理', icon:nav3_4_i, icon_a:nav3_4_a_i, lv:'19', showTopNav:true },
+            children:[
+              {
+                path: '/website/service/tutorials',
+                name: 'Tutorials',
+                component: () => import('@/views/layout/website/service/tutorials.vue'),
+                meta: { title: '视频教程', father:'/website/service', lv:'20', isTopNav:true },
+              },
+              {
+                path: '/website/service/problem',
+                name: 'Problem',
+                component: () => import('@/views/layout/website/service/problem.vue'),
+                meta: { title: '常见问题', father:'/website/service', lv:'23', isTopNav:true },
+              },
+              {
+                path: '/website/service/school',
+                name: 'School',
+                component: () => import('@/views/layout/website/service/school.vue'),
+                meta: { title: '营销学堂', father:'/website/service', lv:'21', isTopNav:true },
+              },
+              {
+                path: '/website/service/feedback',
+                name: 'Feedback',
+                component: () => import('@/views/layout/website/service/feedback.vue'),
+                meta: { title: '客户反馈', father:'/website/service', lv:'22', isTopNav:true },
+              },
+            ]
           },
         ]
       },

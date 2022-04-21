@@ -3,7 +3,7 @@
   <el-dialog v-model="show" title="资源库" @close="closeLib" custom-class="pool_box">
     <el-button type="primary" class="upbtn" @click="goUp">去上传</el-button>
     <el-tabs v-model="Tabtype" @tab-click="changeTabs">
-      <el-tab-pane label="图片" :name="1">
+      <el-tab-pane label="图片" :name="1" :disabled="tabDisabled == 1">
 
         <div class="imageslibrary images_sel">
           <div class="imgsel fcs">
@@ -32,7 +32,7 @@
         </div>
         
       </el-tab-pane>
-      <el-tab-pane label="视频" :name="2">
+      <el-tab-pane label="视频" :name="2" :disabled="tabDisabled == 2">
         
         <div class="imageslibrary images_sel">
           <div class="imgsel fcs">
@@ -163,10 +163,12 @@ const handTwo = (i:number) => {
 
 const show = ref(false)
 const Tabtype = ref(1)
+const tabDisabled = ref(0)
 const selEmitFnName = ref('')
-emiter.on('kzPoolShow', ({ callbackName, type } : { callbackName:string, type?:1 | 2 }) => {
+emiter.on('kzPoolShow', ({ callbackName, type, disabled } : { callbackName:string, type?:1 | 2, disabled?:Boolean }) => {
   selEmitFnName.value = callbackName
   Tabtype.value = type ? type : 1
+  tabDisabled.value = disabled ? type == 1 ? 2 : 1 : 0
   changeTabs()
   show.value = true
 })

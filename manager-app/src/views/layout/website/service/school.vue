@@ -1,6 +1,6 @@
 <template>
   <div>
-    会员中心
+    学堂
   </div>
 </template>
 

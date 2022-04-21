@@ -66,11 +66,11 @@ export function get(isBg:0|1, url: string, params?: any, showmsg?: boolean) {
     axios
       .get(isBg ? 'bgapi' + url : 'api' + url, { params })
       .then((res) => {
-        if (showmsg && res.data && res.data.errno != 10200) {
+        if (showmsg && res.data && res.data.status == 1) {
           ElMessage({
             showClose: true,
             message: res.data.message,
-            type: res.data.status == 1?'success':'error',
+            type: 'success',
             grouping: true,
           })
         }
@@ -89,11 +89,11 @@ export function post(isBg:0|1, url: string, params?: any, showmsg?: boolean) {
     axios
       .post(isBg ? 'bgapi' + url : 'api' + url, params)
       .then((res) => {
-        if (showmsg && res.data && res.data.errno != 10200) {
+        if (showmsg && res.data && res.data.status == 1) {
           ElMessage({
             showClose: true,
             message: res.data.message,
-            type: res.data.status == 1?'success':'error',
+            type: 'success',
             grouping: true,
           })
         }

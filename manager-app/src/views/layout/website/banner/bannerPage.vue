@@ -14,7 +14,7 @@
             <div class="lookicon fcc lookhover" @click="lookBanner(i)">
               <el-icon size="20px"><zoom-in/></el-icon>
             </div>
-            <div class="videoicon fcc lookhover" v-if="v.source_type == 2"  @click="lookVideo(v.source_url)">
+            <div class="videoicon fcc lookhover" v-if="v.source_type == 2" @click="lookVideo(v.source_url)">
               <el-icon size="40px"><caret-right/></el-icon>
             </div>
           </div>
@@ -29,7 +29,7 @@
                 <el-icon size="14px"><pointer /></el-icon>
                 <span>0</span>
               </div>
-              <div @click="setBanner(0, v.material_id)" class="chover">下架</div>
+              <div @click="setBanner(0, v.material_id)" class="chover dfcolor">下架</div>
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@
       
     </el-card>
 
-    <el-dialog v-model="addShow" title="上传图片" width="380px" @close="close">
+    <el-dialog v-model="addShow" title="新增banner" width="380px" @close="close">
       <el-form :model="addForm">
         <el-form-item label="选择素材" required label-width="90px">
           <div class="sel_pool fcc" @click="showKzPool('sel_banner')">
@@ -50,7 +50,7 @@
               <div class="lookicon fcc lookhover" @click.stop="lookImage([addPool.cover_url||addPool.source_url],0)">
                 <el-icon size="14px"><zoom-in/></el-icon>
               </div>
-              <div class="videoicon fcc lookhover" v-if="addPool.source_type == 2"  @click.stop="lookVideo(addPool.source_url)">
+              <div class="videoicon fcc lookhover" v-if="addPool.source_type == 2" @click.stop="lookVideo(addPool.source_url)">
                 <el-icon size="20px"><caret-right/></el-icon>
               </div>
             </div>
@@ -86,49 +86,24 @@ import { useRoute } from 'vue-router'
 
 const store = mainStore()
 const yxtUrl = computed(() => store.state.yxtUrl)
-const pageProps = ref({
-  type:1,
-  url:''
-})
-const route = useRoute()
-switch (route.name) {
-  case 'BannerProduct':
-    pageProps.value.type = 2
-    pageProps.value.url = '/product.html'
-    break;
-  case 'BannerSales':
-    pageProps.value.type = 3
-    pageProps.value.url = '/sales.html'
-    break;
-  case 'BannerVipdata':
-    pageProps.value.type = 4
-    pageProps.value.url = '/vipdata.html'
-    break;
-  case 'BannerAttract':
-    pageProps.value.type = 5
-    pageProps.value.url = '/attract.html'
-    break;
-  case 'BannerMember':
-    pageProps.value.type = 6
-    pageProps.value.url = '/member.html'
-    break;
-  case 'BannerHelp':
-    pageProps.value.type = 7
-    pageProps.value.url = '/help.html'
-    break;
-  case 'BannerNavigation':
-    pageProps.value.type = 8
-    pageProps.value.url = '/navigation.html'
-    break;
-  default:
-    pageProps.value.type = 1
-    pageProps.value.url = ''
-    break;
+
+const nameHash = {
+  "BannerIndex":{ type:1, url: ''},
+  "BannerProduct":{ type:2, url: '/product.html'},
+  "BannerSales":{ type:3, url: '/sales.html'},
+  "BannerVipdata":{ type:4, url: '/vipdata.html'},
+  "BannerAttract":{ type:5, url: '/attract.html'},
+  "BannerMember":{ type:6, url: '/member.html'},
+  "BannerHelp":{ type:7, url: '/help.html'},
+  "BannerNavigation":{ type:8, url: '/navigation.html'},
 }
+const route = useRoute()
+const rname = route.name as keyof typeof nameHash
+const pageProps = nameHash[rname]
 
 const list = ref<any[]>([])
 const getList = async () => {
-  const { status, body } = await getBannerList_api({ section_type : pageProps.value.type })
+  const { status, body } = await getBannerList_api({ section_type : pageProps.type })
   if(status == 1){
     list.value = body
   }
@@ -150,9 +125,9 @@ const close = () => {
   addShow.value = false
 }
 const setBanner = async (type:0|1, id?:number|string) => {
-  const { status, body } = await setBanner_api({
+  const { status } = await setBanner_api({
     id: id ? id : addPool.value.id,
-    section_type: pageProps.value.type,
+    section_type: pageProps.type,
     status: type,
     link_url:addForm.link
   })
