@@ -24,14 +24,14 @@ export const getStaffList_api = (data:PageParams): Promise<res> => {
 /**
  * @name 启用-禁用
 */
-export const setStaffStatus_api = (data:{ bg_uid:number, user_status:number }): Promise<res> => {
+export const setStaffStatus_api = (data:{ buid:number, user_status:number }): Promise<res> => {
   return post(1,'/manage/user/status.up', data, true)
 }
 
 /**
  * @name 删除用户
 */
-export const delStaff_api = (data:{ bg_uid:number }): Promise<res> => {
+export const delStaff_api = (data:{ buid:number }): Promise<res> => {
   return post(1,'/manage/user.del', data, true)
 }
 
@@ -52,7 +52,7 @@ export const getStaffInfo_api = (data:{ id:number|string }): Promise<res> => {
 /**
  * @name 修改用户权限列表
 */
-export const setStaffLv_api = (data:{ bg_uid:number|string, list:(number|string)[] }): Promise<res> => {
+export const setStaffLv_api = (data:{ buid:number|string, list:(number|string)[] }): Promise<res> => {
   return post(1,'/manage/per/user.up', data, true)
 }
 

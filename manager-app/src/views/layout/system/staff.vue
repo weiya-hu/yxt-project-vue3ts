@@ -47,9 +47,9 @@
           <el-table-column label="操作">
             <template #default="{row}">
               <div class="fcs">
-                <el-link type="primary" @click="$router.push('editstaff?id=' + row.bg_uid)">修改权限</el-link>
+                <el-link type="primary" @click="$router.push('editstaff?id=' + row.buid)">修改权限</el-link>
                 <span class="line"></span>
-                <el-link type="primary" @click="delStaff(row.bg_uid)">删除</el-link>
+                <el-link type="primary" @click="delStaff(row.buid)">删除</el-link>
               </div>
             </template>
           </el-table-column>
@@ -115,9 +115,9 @@ const getList = async () => {
 getList()
 
 const changeStaffStatus = async (val:any) => {
-  if(val.bg_uid){
+  if(val.buid){
     const res = await setStaffStatus_api({
-      bg_uid: val.bg_uid,
+      buid: val.buid,
       user_status: val.user_status
     })
   }
@@ -125,12 +125,12 @@ const changeStaffStatus = async (val:any) => {
 
 const delId = ref(0)
 const delShow = ref(false)
-const delStaff = (bg_uid:number) => {
-  delId.value = bg_uid
+const delStaff = (buid:number) => {
+  delId.value = buid
   delShow.value = true
 }
 const sureDel = async () => {
-  const res = await delStaff_api({ bg_uid:delId.value })
+  const res = await delStaff_api({ buid:delId.value })
   if(res.status == 1){
     delShow.value = false
     getList()

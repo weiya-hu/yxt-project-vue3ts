@@ -33,7 +33,7 @@ import { routerGuard } from '@/router'
 const store = mainStore()
 const route = useRoute()
 const router = useRouter()
-const bg_uid = route.query.id as string
+const buid = route.query.id as string
 
 const defaultProps = {
   children: 'children',
@@ -54,8 +54,8 @@ const uinfo = ref<any>({
   per_list: []
 })
 const getStaffLv = async () => {
-  if(!bg_uid) return
-  const res = await getStaffInfo_api({ id: bg_uid })
+  if(!buid) return
+  const res = await getStaffInfo_api({ id: buid })
   uinfo.value = res.body
   // uinfo.value.per_list = uinfo.value.per_list.filter((v:number|string) => !menuList.value.find(j => Number(v) == Number(j.permission_id))) // 剔除一级权限，setCheckedKeys方法会选中一级权限下所有子权限
   const lvList = ref<number[]>([])
@@ -80,16 +80,16 @@ const getStaffLv = async () => {
 }
 
 const setStaffLv = async () => {
-  if(!bg_uid) return
+  if(!buid) return
   const id = lvtree.value.getCheckedKeys() // 选中的
   const hid = lvtree.value.getHalfCheckedKeys() // 半选中
   const pidList = id.concat(hid)
   const res = await setStaffLv_api({
-    bg_uid,
+    buid,
     list: pidList,
   })
   if(res.status == 1){
-    if(store.state.userInfo.bg_uid == bg_uid){
+    if(store.state.userInfo.buid == buid){
       store.setUserLv().then((userLv:string[])=>{
         routerGuard(userLv)
         if(userLv.indexOf('24') == -1){
