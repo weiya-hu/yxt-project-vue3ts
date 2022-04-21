@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+ <script setup lang="ts">
 import { ref } from 'vue'
 import DetailsHeader from "@/components/DetailsHeader.vue";
 import {businessDemandDatail_api} from "@/api/dmp/findb"

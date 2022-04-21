@@ -1,8 +1,8 @@
 <template>
   <div class="specific_data">
-    <div class="flexl top-search inline_myform">
+    <!-- <div class="flexl top-search inline_myform"> -->
       <Search @search="searchword"  v-model="inputSearch" @reset="resetSearch"/>
-    </div>
+    <!-- </div> -->
     <div class="mytable-data">
       <el-table
         :data="tableList"
@@ -36,7 +36,8 @@
 
 <script setup lang="ts">
 import { ref ,reactive} from 'vue'
-import {businessDemand_api,businessDemandPass_api,businessDemandReject_api} from '@/api/dmp/findb'
+// import {businessDemand_api,businessDemandPass_api,businessDemandReject_api} from '@/api/dmp/findb'
+import {businessDemand_api,businessDemandPass_api} from '@/api/dmp/findb'
 import Mypage from "@/components/Mypage.vue";
 import Search from '@/components/Search.vue';
 import MyDataTable from '@/components/MyDataTable.vue';
@@ -50,7 +51,7 @@ let createTime= ref()
 let name = ref()
 let statuses = ref()
 let loading=ref(false)
-let refuseShow=ref(false)
+let refuseShow=ref(true)
 const inputSearch = reactive({
   userName:'',
   status:'',
@@ -162,6 +163,9 @@ export default { name:'SpecificData' }
         font-size: 14px;
         color: #2D68EB;
         cursor: pointer;
+      }
+      >div:hover{
+        color: #79bbff;
       }
     }
   }
