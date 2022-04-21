@@ -164,7 +164,7 @@ const resetSearch=()=>{
 }
 // 搜索
 const searchword = (val:any) => {
-  console.log(inputSearch.status);
+ page.value = 1
   getList()
 }
 // 通过

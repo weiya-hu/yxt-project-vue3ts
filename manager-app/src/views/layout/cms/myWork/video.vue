@@ -94,6 +94,7 @@ const inputSearch = reactive({
   
 })
 const searchword = () => {
+  page.value = 1
   getList()
 }
 // 重置

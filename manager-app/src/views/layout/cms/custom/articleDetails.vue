@@ -8,10 +8,12 @@
         </div>
       <div class="form_content" v-loading="upLoading">
         <div class="tip fcs">
-          <span><el-button type="text" disabled>请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</el-button></span>
+            <img :src="tip_i" alt="">
+            <span>请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</span>
         </div>
         <el-form ref="aFormRef" :model="aForm" :rules="aRules" size="large" @submit.prevent :label-position="labelPosition">
-          <el-form-item label="上传封面" prop="thumb_url">
+          <el-card >
+              <el-form-item label="上传封面" prop="thumb_url">
             <div class="upload fcs">
               <el-upload
                 :action="hostUrl"
@@ -38,12 +40,17 @@
               <div class="img_tip flex">仅支持 JPG、PNG 、JPEG等图片格式，大小不超过2M</div>
             </div>
           </el-form-item>
-          <el-form-item label="文章标题" prop="title">
+           </el-card>
+          <el-card class="mt20">
+              <el-form-item label="文章标题" prop="title">
             <el-input v-model="aForm.title" placeholder="请输入文章标题（5~30个字）"></el-input>
           </el-form-item>
-          <el-form-item label="文章内容" prop="content">
-            <Edit v-model="aForm.content" ref="editRef"/>
-          </el-form-item>
+          </el-card>
+          <el-card class="mt20">
+                <el-form-item label="文章内容" prop="content">
+                    <Edit v-model="aForm.content" ref="editRef"/>
+                </el-form-item>
+            </el-card>
         </el-form>
         
       </div>
@@ -57,6 +64,7 @@ import { useRoute, useRouter } from 'vue-router'
 import DetailsHeader from "@/components/DetailsHeader.vue";
 import type { UploadFile, UploadProgressEvent} from 'element-plus'
 import Edit from "@/components/Edit.vue";
+import tip_i from '@/assets/images/tip.png'
 import tp_i from '@/assets/images/tp.png'
 import { errMsg } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
@@ -157,7 +165,6 @@ const upError = (err:any, file:UploadFile, fileList:UploadFile[])=>{
 
 const submitAddForm = async ()=>{
   //提交表单
-  
     const res=await articleEditing_api({...aForm.value, order_id:id})
     console.log(res);
      if(res.status == 1 ){
@@ -213,11 +220,7 @@ const submit = async (type:number)=>{
 
 <style scoped lang="scss">
 .article_add{
-    .fjend{
-        justify-content: flex-start;
-
-        z-index: 20;
-    }
+   
     .el-button{
         margin-left: 40px;
         // color: blue;
@@ -227,8 +230,7 @@ const submit = async (type:number)=>{
     font-size: 12px;
   }
   .addform{
-    background-color: #fff;
-    margin-top: 20px;
+    // background-color: #fff;
     border-radius: 6px;
     .title{
       padding:21px 50px;
@@ -244,18 +246,21 @@ const submit = async (type:number)=>{
       }
     }
     .form_content{
-      padding: 24px 50px 30px;
+      padding: 0px 0px 30px;
     }
     .tip{
-      // background-color: #FFF8E5;
+      position: relative;
+      left: 115px;
+      top: 465px;
+      background-color: #FFF8E5;
       color:$color666;
-      // border: 1px solid rgba(255,191,0,1);
+      border: 1px solid rgba(255,191,0,1);
       border-radius: 2px;
       font-size: 12px;
       height: 30px;
+      width: 1056px;
       line-height: 14px;
-      // padding-left: 12px;
-      margin-bottom: 30px;
+      padding-left: 12px;
       .el-button{
         margin-left: 0;
       }
@@ -305,10 +310,6 @@ const submit = async (type:number)=>{
       align-items: flex-end;
       margin-left: 20px;
     }
-  }
-  .btns{
-    padding-top: 10px;
-    // border-top: 1px solid $coloreee
   }
 }
 </style>

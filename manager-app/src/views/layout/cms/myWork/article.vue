@@ -100,7 +100,7 @@ const inputSearch = reactive({
   create_time:'',
 })
 const searchword = () => {
-  console.log(inputSearch.create_time[0],inputSearch.create_time[1]);
+  page.value = 1
   getList()
 }
 // 重置

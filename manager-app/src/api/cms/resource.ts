@@ -31,3 +31,7 @@ export const articleDel_api = (data:{id:string}): Promise<res> => {
   export const articleUp_api = (data:{id:string}): Promise<res> => {
     return post(1,'/manage/cms/res/up.do',data,true)
   }
+  //获取行业分类
+  export const articleIndustry_api = (): Promise<res> => {
+    return get(1,'/manage/cms/industry.get')
+  }

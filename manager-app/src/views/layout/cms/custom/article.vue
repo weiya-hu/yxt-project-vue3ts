@@ -87,6 +87,7 @@ const resetSearch=()=>{
 }
 // 搜索
 const searchword = (val:any) => {
+  page.value = 1
   getList()
 }
 // 通过

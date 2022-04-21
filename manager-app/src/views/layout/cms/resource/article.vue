@@ -69,12 +69,12 @@
              <div class="fcs" v-if="row.status == 3">
               <el-link type="primary" @click="up(row.id)">上架</el-link>
               <div class="line"></div>
-              <el-link type="primary" >编辑</el-link>
+              <el-link type="primary" @click="$router.push('/cms/resourceedit?id='+row.id)">编辑</el-link>
               <div class="line"></div>
               <el-link type="primary" @click="del(row.id)">删除</el-link>
             </div>
             <div class="fcs" v-if="row.status == 1">
-              <el-link type="primary">编辑</el-link>
+              <el-link type="primary" @click="$router.push('/cms/resourceedit?id='+row.id)">编辑</el-link>
               <div class="line"></div>
               <el-link type="primary" @click="del(row.id)">删除</el-link>
             </div>
@@ -119,7 +119,7 @@ const inputSearch = reactive({
   time:''
 })
 const searchword = () => {
-  console.log(inputSearch.time);
+  page.value = 1
   getList()
 }
 // 重置

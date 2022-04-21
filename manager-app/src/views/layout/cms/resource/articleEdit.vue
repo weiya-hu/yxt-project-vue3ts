@@ -4,8 +4,8 @@
     <div class="addform">
         <div class="fjend btns">
           <el-button size="large" @click="$router.push('/cms/resource')">&ensp;返回&ensp;</el-button>
-          <el-button size="large">&ensp;保存&ensp;</el-button>
-          <el-button size="large" type="primary" @click="submit" :disabled="aForm.title.length==0">&ensp;发布&ensp;</el-button>
+          <el-button size="large" @click="submit(1)">&ensp;保存&ensp;</el-button>
+          <el-button size="large" type="primary" @click="submit(2)" :disabled="aForm.title.length==0">&ensp;发布&ensp;</el-button>
         </div>
       <div class="form_content" v-loading="upLoading">
          <div class="tip fcs">
@@ -42,11 +42,17 @@
                     </div>
             </el-form-item>
             </el-card>
+            <el-card class="mt20">
+              <el-form-item label="摘要" prop="digest">
+            <el-input v-model="aForm.digest" placeholder="请输入文章摘要（5~100个字）"></el-input>
+          </el-form-item>
+          </el-card>
           <el-card class="mt20">
               <el-form-item label="文章标题" prop="title">
             <el-input v-model="aForm.title" placeholder="请输入文章标题（5~30个字）"></el-input>
           </el-form-item>
           </el-card>
+          
             <el-card class="mt20">
                 <el-form-item label="文章内容" prop="content">
                     <Edit v-model="aForm.content" ref="editRef"/>
@@ -56,25 +62,21 @@
                 <el-form-item label="内容设置">
                   <div class="otherURL">
                     <span>第三方URL链接：</span>
-                    <el-input placeholder="请输入"></el-input>
+                    <el-input placeholder="请输入" v-model="aForm.url"></el-input>
                     <span>第三方URL秘钥：</span>
-                    <el-input placeholder="请输入"></el-input>
+                    <el-input placeholder="请输入" v-model="aForm.url_key"></el-input>
                   </div>
-                  <div class="otherURL">
+                  <div class="industry">
                     <span>行业分类：</span>
-                    <el-checkbox >卫生医疗</el-checkbox>
-                    <el-checkbox >零售服务</el-checkbox>
-                    <el-checkbox >企业服务</el-checkbox>
-                    <el-checkbox >汽车</el-checkbox>
-                    <el-checkbox >美容养生</el-checkbox>
-                    <el-checkbox >生活服务</el-checkbox>
-                    <el-checkbox >其他</el-checkbox>
+                    <el-radio-group v-model="aForm.industry_id" >
+                         <el-radio :label="item.id" v-for="(item) in industry" :key='item' >{{item.industry_name}}</el-radio>
+                      </el-radio-group>
                   </div>
-                  <div>
+                  <div class="download">
                     <span>下载设置：</span>
-                      <el-radio-group v-model="radio" >
-                         <el-radio :label="3">免费下载</el-radio>
-                          <el-radio :label="6">弹窗二维码</el-radio>
+                      <el-radio-group v-model="aForm.down_type" >
+                         <el-radio :label="1">免费下载</el-radio>
+                          <el-radio :label="2">弹窗二维码</el-radio>
                       </el-radio-group>
                   </div>
                 </el-form-item>
@@ -96,16 +98,15 @@ import tip_i from '@/assets/images/tip.png'
 import tp_i from '@/assets/images/tp.png'
 import { errMsg } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
-import { articleEditing_api,articleSaveedit_api,articleDetail_api} from '@/api/cms/custom'
+import { articleLook_api,articleRelease_api,articleIndustry_api,articleSave_api} from '@/api/cms/resource'
 import { mainStore } from '@/store/index'
 const labelPosition = ref('top')
 const store = mainStore()
 const route = useRoute()
 const router = useRouter()
-const radio = ref()
 const id = route.query.id //有id就是编辑
 if(id){
-  articleDetail_api({id:id as string}).then((res:res)=>{
+  articleLook_api({id:id as string}).then((res:res)=>{
     console.log(res);    
     aForm.value = res.body
     if(res.body.thumb_url){
@@ -119,12 +120,37 @@ interface AForm {
   thumb_url:string,
   title:string,
   content:string,
+  url:string,
+  url_key:string,
+  down_type:number,
+  industry_id:string,
+  digest:string,
+  id:string,
+  qr_code:string,
+  status:number,
 }
 const aForm = ref<AForm>({
+  id:'',
   thumb_url:'',
   title:'',
   content:'',
+  url:'',
+  url_key:'',
+  digest:'',
+  industry_id:'',
+  down_type:0,//1免费下载2不免费下载
+  qr_code:'',
+  status:1,// 1:保存,2提交
 })
+//获取行业分类
+const industry=ref()
+const getIndustry=async()=>{
+  const res =await articleIndustry_api()
+  industry.value= res.body
+  console.log(industry.value);
+  
+}
+getIndustry()
 const aFormRef = ref()
 const imgErrorType = ref('none')//封面图片错误类型
 const filePass = (rule:any, value:any, callback:Function)=>{
@@ -150,6 +176,10 @@ const aRules = {
   title:[
     { required: true, message: '请输入文章标题（5~30个字）', trigger: 'blur' },
     { min: 5, max: 30, message: '长度需要在 5 ~ 30 字之间', trigger: 'blur' }
+  ],
+  digest:[
+    { required: true, message: '请输入文章摘要（5~100个字）', trigger: 'blur' },
+    { min: 5, max: 100, message: '长度需要在 5 ~ 100 字之间', trigger: 'blur' }
   ],
   content:[
     { required: true, message: '请输入文章内容', trigger: 'blur' }
@@ -191,17 +221,26 @@ const upError = (err:any, file:UploadFile, fileList:UploadFile[])=>{
   upload.value.clearFiles()
   errMsg('封面图片上传失败')
 }
+const editId=ref('')
 
 const submitAddForm = async ()=>{
   //提交表单
-  
-    const res=await articleEditing_api({...aForm.value, order_id:id})
+    if(aForm.value.status == 1){
+    const res=await articleSave_api({...aForm.value, id})
+     if(res.status == 1 ){
+    store.setKeepList([])
+    router.replace('/cms/resource')
+  }
+  }else{
+    const res=await articleRelease_api({...aForm.value,id})
     console.log(res);
      if(res.status == 1 ){
     store.setKeepList([])
-    router.replace('/cms/custom/article')
-  
+    router.replace('/cms/resource')
   }
+  }
+  
+  
   
   upLoading.value = false
  
@@ -210,6 +249,7 @@ const hostUrl = ref('')//封面图片上传路径
 const upData = ref({})//封面图片上传参数
 const editRef = ref() // 富文本组件ref
 const submit = async (type:number)=>{
+  aForm.value.status = type
   //点击保存
   aFormRef.value.validate(async (valid: any) => {
     if (valid) {
@@ -352,6 +392,18 @@ const submit = async (type:number)=>{
       height: 32px;
       width: 180px;
     }
+  }
+  .industry{
+    display: flex;
+    position: relative;
+    top: 50px;
+    left: -628px;
+  }
+  .download{
+     display: flex;
+    position: relative;
+    top: 50px;
+    right: 2px;
   }
 }
 </style>

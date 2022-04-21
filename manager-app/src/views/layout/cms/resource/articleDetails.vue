@@ -7,7 +7,7 @@
             <div v-html="body.content"></div>
             <div class="fjend btns">
                 <el-button size="large" @click="$router.push('/cms/resource')">&ensp;返回&ensp;</el-button>
-                <el-button size="large" type="primary"  @click="$router.push(`/cms/resourceedit`)">&ensp;编辑&ensp;</el-button>
+                <el-button size="large" type="primary"  @click="$router.push(`/cms/resourceedit?id=${id}`)">&ensp;编辑&ensp;</el-button>
             </div>
         </div>
     </el-card>
@@ -18,9 +18,7 @@
 import { ref } from 'vue'
 import {useRoute} from 'vue-router'
 import DetailsHeader from "@/components/DetailsHeader.vue";
-import {articleDetail_api } from '@/api/cms/myWork'
-// import Mypage from "@/components/、Mypage.vue";
-// const page = ref(1)
+import {articleDetail_api } from '@/api/cms/resource'
 const route = useRoute()
 const id = route.query.id as string
 const body = ref<{title:string,content:string}>({

@@ -91,6 +91,7 @@ const inputSearch = reactive({
   create_time:''
 })
 const searchword = () => {
+  page.value = 1
   getList()
 }
 // 查看详情
