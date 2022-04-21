@@ -138,17 +138,19 @@ img{
 
 .mytable{
   .el-table{
+    --el-table-border-color: #eee;
+    --el-table-row-hover-bg-color:rgba(45,104,235,0.10);
     thead{
-      height: 60px;
+      height: 40px;
       font-size: 14px;
       color: $color333;
+      .el-table__cell{
+        background-color: $colorddd;
+      }
       .cell{
         font-weight: 600;
       }
     }
-  }
-  .el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell{
-    background-color: rgba(45,104,235,0.10);
   }
   .line{
     height: 14px;
@@ -359,5 +361,39 @@ img{
       }
     }
   } 
+}
+.status_dot{
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 10px;
+  &.sdot_g{
+    background-color: #24BD13;
+  }
+  &.sdot_y{
+    background-color: #FFB700;
+  }
+  &.sdot_b{
+    background-color: #51A1FC;
+  }
+  &.sdot_r{
+    background-color: #E40000;
+  }
+}
+.btn_tab{
+  .el-button{
+    z-index: 1!important;
+    --el-button-divide-border-color: #2D68EB;
+    --el-button-hover-text-color: #2D68EB;
+    --el-button-hover-border-color: #999999;
+    --el-button-hover-bg-color: #fff;
+  }
+  .el-button.btn_tab_active {
+    --el-button-hover-border-color: #2D68EB;
+    --el-button-border-color: #2D68EB;
+    --el-button-hover-bg-color: rgba(45, 104, 235, 0.08);
+    --el-button-bg-color: rgba(45, 104, 235, 0.08);
+    z-index: 11!important;
+  }
 }
 </style>
