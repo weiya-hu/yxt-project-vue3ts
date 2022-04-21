@@ -13,7 +13,7 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column property="id" label="ID" width="180"/>
+        <el-table-column property="id" label="ID" width="180" />
         <el-table-column property="uname" label="账户名" width="180"/>
         <el-table-column property="cname" label="客户名称" />
         <el-table-column property="thumb_url" label="海报" width="210" >
@@ -37,7 +37,7 @@
          <el-table-column label="操作"  >
           <template #default="{row}">
             <div class="fcs" v-if="row.status == 3">
-              <el-link type="primary" @click="$router.push('/cms/myworkdet?id='+row.id)">详情</el-link>
+              <el-link type="primary" @click="go(row.thumb_url,row.id)">详情</el-link>
             </div>
              <div class="fcs" v-if="row.status == 2">
               <el-link type="primary" @click="pass(row.id)">通过</el-link>
@@ -58,7 +58,7 @@
      </el-card>
     
      <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1"/>
-     
+     <el-image-viewer @close="imgShow=false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/>
   </div>
 </template>
 
@@ -69,7 +69,7 @@ import MyEmpty from "@/components/MyEmpty.vue";
 import search from'@/components/Search.vue'
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
-import { posterList_api,posterUpdate_api} from '@/api/myWork'
+import { posterList_api,posterUpdate_api,posterDetail_api} from '@/api/cms/myWork'
 import { ElMessage, ElMessageBox } from 'element-plus'
 interface SData {
   id: number|string,
@@ -107,7 +107,9 @@ const getList =async ()=>{
   const res = await posterList_api({
      size: size.value,
     current: page.value,
-    ...inputSearch
+    ...inputSearch,
+    startTime:inputSearch.create_time[0],
+    endTime:inputSearch.create_time[1],
   })
   console.log(res);
   
@@ -142,6 +144,19 @@ const open = (id:string|number) => {
 const pass =async(id:string|number)=>{
 await posterUpdate_api({ id,status:3,fail_reason:''})
  getList()
+}
+// 查看详情
+const imgShow = ref(false)//预览是否显示
+const showImgs = ref<string[]>([])//预览图片列表
+const showImgIndex = ref(0)//首张预览图片
+const go = async(url:string,id:string) => {
+  // window.open(url)
+  let arr:string[] = []
+  const res=await posterDetail_api({id})
+  arr.push(res.body.thumb_url)
+  showImgs.value  = arr
+  showImgIndex.value = showImgs.value.findIndex(v=>v==url)
+  imgShow.value = true
 }
 const multipleSelection = ref<SData[]>([])
 const handleSelectionChange = (val:SData[]) => {

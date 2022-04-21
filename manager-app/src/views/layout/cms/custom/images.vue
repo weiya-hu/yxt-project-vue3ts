@@ -100,7 +100,7 @@ import axios from 'axios'
 import { errMsg ,okMsg } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
 import { useRoute, useRouter } from 'vue-router'
-import { imagesList_api,articlePass_api,articleReject_api,articleAttach_api,articleImagsave_api,articleDetail_api } from '@/api/custom'
+import { imagesList_api,articlePass_api,articleReject_api,articleAttach_api,articleImagsave_api,articleDetail_api } from '@/api/cms/custom'
 import { log } from 'console'
 interface TableTitleProp{
   type:string,
@@ -321,7 +321,9 @@ const getList = async ()=>{
   const res = await imagesList_api({
      size: size.value,
     current: page.value,
-    ...inputSearch
+    ...inputSearch,
+    startTime:inputSearch.create_time[0],
+    endTime:inputSearch.create_time[1],
   })
   console.log(res);
   

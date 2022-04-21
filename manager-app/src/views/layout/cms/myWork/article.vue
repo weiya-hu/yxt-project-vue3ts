@@ -22,7 +22,7 @@
             <img :src="row.thumb_url" alt="" class="firstimg">
           </template>
         </el-table-column>
-        <el-table-column  label="标题" >
+        <el-table-column  label="标题" :show-overflow-tooltip="true">
         <template #default="{row}">
             <el-link type="primary" @click="$router.push('/cms/myworkdet?id='+row.id)" >{{row.title}}</el-link>
           </template>
@@ -69,14 +69,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref,reactive } from 'vue'
+import { ref,reactive, computed } from 'vue'
 import { formatDate } from '@/utils/date'
 import search from'@/components/Search.vue'
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { articleList_api,articleUpdate_api} from '@/api/myWork'
+import { articleList_api,articleUpdate_api} from '@/api/cms/myWork'
 interface SData {
   id: number|string,
   uname: string,
@@ -97,9 +97,10 @@ const errorMsg = ref('')
 const inputSearch = reactive({
   userName:'',
   status:'',
-  create_time:''
+  create_time:'',
 })
 const searchword = () => {
+  console.log(inputSearch.create_time[0],inputSearch.create_time[1]);
   getList()
 }
 // 重置
@@ -109,12 +110,15 @@ const resetSearch=()=>{
   inputSearch.create_time=''
   getList()
 }
+
 // 获取列表
 const getList =async ()=>{
   const res = await articleList_api({
     size: size.value,
     current: page.value,
-    ...inputSearch
+    ...inputSearch,
+    startTime:inputSearch.create_time[0],
+    endTime:inputSearch.create_time[1],
   })
   // console.log(res);
   

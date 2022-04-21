@@ -60,7 +60,7 @@ import Edit from "@/components/Edit.vue";
 import tp_i from '@/assets/images/tp.png'
 import { errMsg } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
-import { articleEditing_api,articleSaveedit_api,articleDetail_api} from '@/api/custom'
+import { articleEditing_api,articleSaveedit_api,articleDetail_api} from '@/api/cms/custom'
 import { mainStore } from '@/store/index'
 const labelPosition = ref('top')
 const store = mainStore()

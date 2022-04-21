@@ -46,7 +46,7 @@ import MyDataTable from '@/components/MyDataTable.vue'
 import MyDialog from "@/components/MyDialog.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { articleList_api,articlePass_api,articleAttach_api ,articleReject_api} from '@/api/custom'
+import { articleList_api,articlePass_api,articleAttach_api ,articleReject_api} from '@/api/cms/custom'
 interface TableTitleProp{
   type:string,
   lable?:string,
@@ -133,7 +133,9 @@ const getList = async ()=>{
   const res = await articleList_api({
     size: size.value,
     current: page.value,
-    ...inputSearch
+    ...inputSearch,
+    startTime:inputSearch.create_time[0],
+    endTime:inputSearch.create_time[1],
   })
   console.log(res);
   

@@ -70,7 +70,7 @@ import search from'@/components/Search.vue'
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { imagesList_api,imagesUpdate_api, imagesDetail_api} from '@/api/myWork'
+import { imagesList_api,imagesUpdate_api, imagesDetail_api} from '@/api/cms/myWork'
 interface SData {
   id: number|string,
   uname: string,
@@ -153,7 +153,9 @@ const getList =async ()=>{
   const res = await imagesList_api({
     size: size.value,
     current: page.value,
-    ...inputSearch
+    ...inputSearch,
+    startTime:inputSearch.create_time[0],
+    endTime:inputSearch.create_time[1],
   })
   
   if(res.status == 1){

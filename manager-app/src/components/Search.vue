@@ -13,10 +13,11 @@
       <el-form-item prop="date" label="创建日期 :">
         <el-date-picker
           v-model="modelValue.create_time"
-          type="date"
+          type="daterange"
           placeholder="请选择"
           format="YYYY-MM-DD"
-          value-format="YYYY/MM/DD"
+          value-format="x"
+          
         />
       </el-form-item>
       <el-form-item>

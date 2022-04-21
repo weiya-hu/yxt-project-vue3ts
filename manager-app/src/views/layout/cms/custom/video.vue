@@ -117,7 +117,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 import { errMsg ,okMsg ,kzConfirm } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
-import { videoList_api,articlePass_api,articleReject_api,articleAttach_api,articleVideosave_api,articleDetail_api } from '@/api/custom'
+import { videoList_api,articlePass_api,articleReject_api,articleAttach_api,articleVideosave_api,articleDetail_api } from '@/api/cms/custom'
 interface TableTitleProp{
   type:string,
   lable?:string,
@@ -391,7 +391,9 @@ const getList = async ()=>{
   const res = await videoList_api({
     size: size.value,
     current: page.value,
-    ...inputSearch
+    ...inputSearch,
+    startTime:inputSearch.create_time[0],
+    endTime:inputSearch.create_time[1],
   })
   console.log(res);
   

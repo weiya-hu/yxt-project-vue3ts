@@ -603,7 +603,18 @@ const routes = [
             // redirect: '/cms/resource/article.vue',
             component: () => import('@/views/layout/cms/resource/article.vue'),
             meta: { title: '资源内容库', lv:'37',icon:nav5_3_i, icon_a:nav5_3_a_i},
-            
+          },
+          {
+            path: '/cms/resourcedet',
+            name: 'Resourcedet',
+            component: () => import('@/views/layout/cms/resource/articleDetails.vue'),
+            meta: { title: '软文详情', father:'/cms/resource' },
+          },
+          {
+            path: '/cms/resourceedit',
+            name: 'Resourceedit',
+            component: () => import('@/views/layout/cms/resource/articleEdit.vue'),
+            meta: { title: '编辑', father:'/cms/resource' },
           },
         ]
       },

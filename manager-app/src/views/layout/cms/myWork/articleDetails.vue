@@ -1,10 +1,12 @@
 <template>
   <div class="article_details">
     <DetailsHeader/>
-    <div class="content">
+    <el-card>
+      <div class="content">
       <div class="title">{{body.title}}</div>
       <div v-html="body.content"></div>
     </div>
+    </el-card>
   </div>
 </template>
 
@@ -12,7 +14,7 @@
 import { ref } from 'vue'
 import {useRoute} from 'vue-router'
 import DetailsHeader from "@/components/DetailsHeader.vue";
-import {articleDetail_api } from '@/api/myWork'
+import {articleDetail_api } from '@/api/cms/myWork'
 // import Mypage from "@/components/、Mypage.vue";
 // const page = ref(1)
 const route = useRoute()

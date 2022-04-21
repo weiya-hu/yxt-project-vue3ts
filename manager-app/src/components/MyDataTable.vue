@@ -93,7 +93,7 @@
 import { toRefs,ref} from 'vue'
 import {Format} from '@/utils/date'
 import { getHash,getHashStr,strToArr } from '@/utils/index'
-import {getDimGeo_api,getDimIndustry_api} from '@/api/dmp'
+import {getDimGeo_api,getDimIndustry_api} from '@/api/dmp/findb'
 const props = withDefaults(defineProps<{
   type:string,
   lable?:string,

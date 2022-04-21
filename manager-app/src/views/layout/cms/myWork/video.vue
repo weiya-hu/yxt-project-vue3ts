@@ -12,12 +12,12 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column property="id" label="ID" width="180"/>
+        <el-table-column property="id" label="ID" width="180" />
         <el-table-column property="uname" label="账户名" width="180" />
         <el-table-column property="cname" label="客户名称"  />
         <el-table-column property="video" label="视频" width="210" >
           <template #default="{row}">
-            <video :src="row.video_url" alt="" class="firstimg" @click="look(row.video_url)"/>
+            <video :src="row.video_url" alt="" class="firstimg" @click="look(row.video_url,row.id)"/>
           </template>
         </el-table-column>
         <el-table-column property="create_time" label="创建日期" width="200" >
@@ -37,7 +37,7 @@
           <template #default="{row}">
             <div class="fcs" v-if="row.status == 3">
            
-              <el-link type="primary" @click="$router.push('/cms/myworkdet?id='+row.id)">详情</el-link>
+              <el-link type="primary" @click="look(row.video_url,row.id)">详情</el-link>
             </div>
              <div class="fcs" v-if="row.status == 2">
               <el-link type="primary" @click="pass(row.id)">通过</el-link>
@@ -72,7 +72,7 @@ import search from'@/components/Search.vue'
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { videoList_api,videoUpdate_api} from '@/api/myWork'
+import { videoList_api,videoUpdate_api,videoDetail_api} from '@/api/cms/myWork'
 interface SData {
   id: number|string,
   uname: string,
@@ -103,10 +103,11 @@ const resetSearch=()=>{
   inputSearch.create_time=''
   getList()
 }
-// 查看视频
+// 查看视频视频详情
 const lookShow = ref(false)
 const lookVideo = ref('')
-const look = (url:string)=>{
+const look = async(url:string,id:string)=>{
+  await videoDetail_api({id})
   lookVideo.value = url
   lookShow.value = true
 }
@@ -115,7 +116,9 @@ const getList =async ()=>{
   const res = await videoList_api({
     size: size.value,
     current: page.value,
-    ...inputSearch
+    ...inputSearch,
+    startTime:inputSearch.create_time[0],
+    endTime:inputSearch.create_time[1],
   })
   
   if(res.status == 1){
