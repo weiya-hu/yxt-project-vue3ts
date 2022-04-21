@@ -18,10 +18,10 @@
             </div>
             <p v-if="body.state==2">驳回原因：{{body.fail_reason}}</p>
           </div>
-          <el-button type="primary" class="tj" size="large" v-if="body.state == 1" @click="goExamine(id)">审核</el-button>
-          <el-button type="primary" class="tj" size="large" v-if="body.state == 3" @click="getNewsUp(id)">上线</el-button>
-          <el-button type="primary" class="tj" size="large" v-if="body.state == 4" @click="getNewsDown(id)">下线</el-button>
-          <el-button type="primary" class="tj" size="large" v-if="body.state == 2||body.state == 3|| body.state ==0" @click="getDel(id)">删除</el-button>
+          <el-button type="primary" class="tj"  v-if="body.state == 1" @click="goExamine(id)">审核</el-button>
+          <el-button type="primary" class="tj"  v-if="body.state == 3" @click="getNewsUp(id)">上线</el-button>
+          <el-button type="primary" class="tj"  v-if="body.state == 4" @click="getNewsDown(id)">下线</el-button>
+          <el-button type="primary" class="tj"  v-if="body.state == 2||body.state == 3|| body.state ==0" @click="getDel(id)">删除</el-button>
       </div>
       <div class="news-container">
         <el-tabs type="border-card">
@@ -66,14 +66,14 @@
               <li v-for="(v,i) in commentData" :key="v.id">
                 <el-card class="mycard ">
                   <div class="comment-card">
-                    <el-avatar class="avater" :icon="v.head_url" />
+                    <el-avatar class="avater" :src="v.head_url" />
                     <div class="userInfo">
                       <span class="name">{{v.name}}</span>
                       <span class="utime">{{formatDate(new Date(v.update_time),'yyyy-MM-dd hh:mm:ss')}}</span>
                       <span class="c-content">{{v.content}}</span>
                     </div>
                     <div class="shield">
-                      <el-switch v-if="v.id" :active-value="1" :inactive-value="0" v-model="v.status" @change="changeShieldStatus(v)"/>
+                      <el-switch v-if="v.id" :active-value="1" :inactive-value="0" v-model="v.del_flag" @change="changeShieldStatus(v)"/>
                     </div>
                   </div>
                 </el-card>
@@ -175,7 +175,6 @@ const shareList = async () =>{
   if(res.status==1){
     shareData.value=res.body.records
     navTxt.value[2].num = res.body.total
-      console.log(res);
   }
 }
 shareList()

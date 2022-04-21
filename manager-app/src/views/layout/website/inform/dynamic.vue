@@ -126,14 +126,7 @@ const getDelDate = async()=>{
 .line{
   margin-left: -3px;
 }
-.dynamic-container{
-  position: relative;
-  .btns{
-    position: absolute;
-    right: 24px;
-    top:8px;
-  }
-} 
+ 
 .ss{
   margin:20px 0;
   font-size: 14px;

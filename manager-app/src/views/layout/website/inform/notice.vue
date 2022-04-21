@@ -121,14 +121,7 @@ const getDelDate = async()=>{
 </script>
 
 <style scoped lang="scss">
-.notice-container{
-  position: relative;
-  .btns{
-    position: absolute;
-    right: 24px;
-    top:8px;
-  }
-} 
+ 
 .line{
   margin-left: -3px;
 }

@@ -2,7 +2,7 @@
   <div class="news-container">
     <div class="ftitle">资讯中心</div>
     <div class="news-handle">
-      <el-button type="primary" @click="drawer2 = true">分类管理</el-button>
+      <el-button color="#2D68EB" class="l_btn" plain @click="drawer2 = true">分类管理</el-button>
         <el-tooltip
           class="box-item"
           effect="dark"
@@ -303,12 +303,28 @@ const getDelDate = async()=>{
   flex-direction: row;
   justify-content: flex-end;
   margin:10px 20px;
+  .l_btn{
+    border-color:rgba(178,202,249,1);
+    margin-left: 20px;
+    background-color: #fff;
+    &:hover,&:active,&:focus{
+      border-color:$dfcolor;
+      color: $dfcolor;
+      background: rgba(45, 104, 235, 0.1);
+    }
+  }
   .update{
     width: 144px;
     height: 32px;
     border-radius: 4px;
-    border: 1px solid #2D68EB;
-    margin:0 10px;
+    border: 1px solid rgba(178,202,249,1);
+    margin:0 16px;
+    &:hover,&:active,&:focus{
+      border-color:$dfcolor;
+      color: $dfcolor;
+      background: rgba(45, 104, 235, 0.1);
+      cursor: pointer;
+    }
     .ntxts{
       display: inline;
       width: 70px;
@@ -393,8 +409,6 @@ const getDelDate = async()=>{
       line-height: 40px;
       display:flex;
       flex-direction: row;
-      
-     
       .txt{
        margin-left: 8px; 
       }

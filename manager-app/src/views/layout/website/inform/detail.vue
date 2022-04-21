@@ -12,10 +12,10 @@
             <span> {{body.status==2?'在线':'离线'}}</span>
           </div>
           <div class="btns">
-            <el-button type="primary" class="tj" size="large" v-if="body.status == 1" @click="getUp">上线</el-button>
-            <el-button type="primary" class="tj" size="large" v-if="body.status == 2" @click="getDown">下线</el-button>
-            <el-button type="primary" class="tj" size="large" v-if="body.status == 1 || body.status == 0" @click="">编辑</el-button>
-            <el-button type="primary" class="tj" size="large" v-if="body.status == 1 || body.status == 0" @click="getDel(id)">删除</el-button>
+            <el-button type="primary" class="tj" v-if="body.status == 1" @click="getUp">上线</el-button>
+            <el-button type="primary" class="tj" v-if="body.status == 2" @click="getDown">下线</el-button>
+            <el-button type="primary" class="tj" v-if="body.status == 1 || body.status == 0" @click="">编辑</el-button>
+            <el-button type="primary" class="tj" v-if="body.status == 1 || body.status == 0" @click="getDel(id)">删除</el-button>
           </div>
       </div>
       <el-card>
