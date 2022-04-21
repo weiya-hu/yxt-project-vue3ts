@@ -1,14 +1,139 @@
 <template>
   <div class="specific_data">
-    <div @click="$router.push('specificdatadetails')">去详情</div>
-    <Mypage :total="50" v-model="page"/>
+    <div class="flexl top-search inline_myform">
+      <Search @search="searchword"  v-model="inputSearch" @reset="resetSearch"/>
+    </div>
+    <div class="mytable-data">
+      <el-table
+        :data="tableList"
+        size="small"
+        row-class-name="my-data-table-row"
+        v-loading="loading"
+        :border="true"
+      >
+        <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
+        <el-table-column fixed="right" property="operate" label="操作" min-width="170" align="center">
+          <template #default="{row}">
+            <div class="operate-button-pre">
+              <div v-if="row.status===0" >下载附件</div>
+              <div v-if="row.status===0" @click="refuse(row)">驳回</div>
+              <div v-if="row.status===0" @click="pass(row)">通过</div>
+              <div v-if="row.status===1 || row.status===3">上传客户</div>
+              <div v-if="row.status===2" @click="reason(row)">驳回原因</div>
+              <div v-if="row.status===3" @click="$router.push('/dmp/findb/specificdatadetails?id='+row.id)">详情</div>
+            </div>
+          </template>
+        </el-table-column>
+        <template #empty>
+          <MyEmpty/>
+        </template>
+      </el-table>
+    </div>
+    <Mypage v-if="total" :total="total" v-model="page" @change="getList"/>
+    <Refuse v-model="refuseShow"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref ,reactive} from 'vue'
+import {businessDemand_api,businessDemandPass_api,businessDemandReject_api} from '@/api/dmp'
 import Mypage from "@/components/Mypage.vue";
-const page = ref(1)
+import Search from '@/components/Search.vue';
+import MyDataTable from '@/components/MyDataTable.vue';
+import MyEmpty from '@/components/MyEmpty.vue';
+import Refuse from '@/components/refuse.vue';
+import { ElMessageBox} from 'element-plus'
+let total=ref(0)
+let page = ref(1)
+let size = ref(10)
+let createTime= ref()
+let name = ref()
+let statuses = ref()
+let loading=ref(false)
+let refuseShow=ref(false)
+const inputSearch = reactive({
+  userName:'',
+  status:'',
+  create_time:''
+})
+const tableTitle = ref([
+  {type:'text',lable:'ID',prop:'id',width:100},
+  {type:'text',lable:'账户名',prop:'u_name',width:100},
+  {type:'text',lable:'客户名称',prop:'c_name',width:100},
+  {type:'industry_id',lable:'行业分类',prop:'industry_id',width:120},
+  {type:'city_id',lable:'地区',prop:'city',width:100},
+  {type:'text',lable:'人群名称',prop:'group_name',width:150},
+  {type:'text-tooltip',lable:'人群描述',prop:'group_desc',width:220},
+  {type:'date',lable:'创建日期',prop:'create_time',width:110},
+  {type:'status_do',lable:'状态',prop:'status',width:100}
+])
+// let tableList = ref([
+//   {id: 6,industry_id: "A,04,042",u_name:'123',c_name:'drer',city: 510100,province:510000,district:510117, group_name: "测试1",group_desc: "测试1测试1测试1测试1测试1",create_time:1646209666231,status:0},
+//   {id: 6,industry_id: "A,04,042",u_name:'',c_name:'ghgfh',city: 510100,province:510000,district:510117,group_name: "测试1",group_desc: "测试1测试1测试1测试1测试1",create_time:1646209666231,status:1},
+//   {id: 6,industry_id: "A,04,042",u_name:'',c_name:'vbcvb',city: 110000,province:110000,district:110101,group_name: "测试1",group_desc: "测试1测试1测试1测试1测试1",create_time:1646209666231,status:2},
+//   {id: 6,industry_id: "A,04,042",u_name:'',c_name:'bcvbcvb',city: 110000,province:110000,district:110101,group_name: "测试1",group_desc: "测试1测试1测试1测试1测试1",create_time:1646209666231,status:3},
+// ])
+  let tableList = ref([])
+
+const getList=async()=>{
+  loading.value=true
+  let data={
+    current:page.value,
+    size:size.value,
+    createTime:createTime.value,
+    name:name.value,
+    status:statuses.value
+  }
+  const {status,body} = await businessDemand_api(data)
+  loading.value=false
+  if(status){
+    tableList.value = body.records;
+    total.value = body.total
+  }
+}
+getList()
+// 重置
+const resetSearch=()=>{
+  inputSearch.userName='',
+  inputSearch.status='',
+  inputSearch.create_time=''
+}
+const searchword = (val:any) => {
+  console.log(inputSearch );
+  
+}
+//通过按钮
+const pass=async(row:any)=>{
+  ElMessageBox.confirm(
+    `是否确认通过(ID：${row.id})需求?`,
+    '操作提示',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'success',
+    }
+  ).then(async() => {
+    let data={id:row.id}
+    const {status} = await businessDemandPass_api(data)
+    status && getList()
+  })
+}
+//驳回原因按钮
+const reason=(row:any)=>{
+  ElMessageBox.confirm(
+    row.fail_reason,
+    '驳回原因',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      
+    }
+  )
+}
+//驳回
+const refuse=(row:any)=>{
+  refuseShow.value=true
+}
 </script>
 
 <script lang="ts">
@@ -16,5 +141,31 @@ export default { name:'SpecificData' }
 </script>
 
 <style scoped lang="scss">
+.specific_data{
+  .top-search{
+    width: 100%;
+    padding: 20px;
+    background: #FFFFFF;
+    border: 1px solid rgba(221,221,221,1);
+    border-radius: 4px;
+  }
+  .mytable-data{
+    margin-top: 16px;
+    background: #FFFFFF;
+    padding: 24px;
+    .operate-button-pre{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 5px;
+      >div{
+        font-size: 14px;
+        color: #2D68EB;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
 
 </style>

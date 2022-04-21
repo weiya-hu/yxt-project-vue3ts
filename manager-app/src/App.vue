@@ -79,7 +79,7 @@ body {
 .fleximg{
   display: flex;
   justify-content: center;
-  align-content: center;
+  align-items: center;
   img{
     width: 100%;
   }
@@ -320,5 +320,26 @@ img{
     padding-top: 10px;
     position: relative;
   }
+}
+.mytable-data{
+  .el-table{
+    thead{
+      height: 40px;
+      th{
+        background: #EEEEEE !important;
+        border-right: 1px solid rgba(221,221,221,1);
+        color: #333333;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
+    tr{
+      height: 40px;
+      td{
+        color: #666666;
+        font-size: 14px;
+      }
+    }
+  } 
 }
 </style>

@@ -1,63 +1,69 @@
 <template>
-  <el-table-column v-if="type==='text'" :property="prop" :label="lable" :min-width="width">
+  <el-table-column v-if="type==='text'" :property="prop" :label="lable" :min-width="width" align="center">
      <template #default="{row}">
-      <div class="flexl">
+      <div class="fleximg">
         <div >{{prop && row[prop]?row[prop]:'---'}}</div>
       </div>
     </template>
   </el-table-column>
-  <el-table-column v-if="type==='text-tooltip'" :property="prop" :label="lable" :min-width="width">
+  <el-table-column v-if="type==='text-tooltip'" :property="prop" :label="lable" :min-width="width" align="center">
      <template #default="{row}">
-      <div class="flexl">
+      <div class="fleximg">
         <el-tooltip
         class="box-item"
         effect="dark"
         placement="top-start"
       >
         <template #content><div class="text-tooltip-style">{{row[prop] || '---'}}</div></template>
-        <div class="text-style">{{prop && row[prop]?row[prop]:'---'}}</div>
+        <div class="text-style fleximg">{{prop && row[prop]?row[prop]:'---'}}</div>
       </el-tooltip>
       </div>
     </template>
   </el-table-column>
-  <el-table-column v-if="type==='num'" :property="prop" :label="lable" :min-width="width">
+  <el-table-column v-if="type==='num'" :label="lable" :min-width="width" align="center">
      <template #default="{row,$index}">
-      <div class="flexl">
+      <div class="fleximg">
         <div v-if="row">{{$index+1}}</div>
       </div>
     </template>
   </el-table-column>
-  <el-table-column v-if="type==='link'" :property="prop" :label="lable" :min-width="width">
+  <el-table-column v-if="type==='link'" :property="prop" :label="lable" :min-width="width" align="center">
      <template #default="{row}">
         <el-link type="primary" :href="row[prop]">{{ row[prop] }}</el-link>
       </template>
   </el-table-column>
   <el-table-column v-if="type==='select'" type="selection" :width="width" align="center" />
-  <el-table-column v-if="type==='status'" :property="prop" :label="lable" :min-width="width">
+  <el-table-column v-if="type==='status'" :property="prop" :label="lable" :min-width="width" align="center">
     <template #default="{row}">
-      <div class="flexl">
+      <div class="fleximg">
         <div :class="getStatus(row.status).className"></div>
         <div >{{getStatus(row.status).text}}</div>
       </div>
     </template>
   </el-table-column>
-  <el-table-column v-if="type==='date'" :property="prop" :label="lable" :min-width="width">
+  <el-table-column v-if="type==='status_do'" :property="prop" :label="lable" :min-width="width">
+    <template #default="{row}">
+      <div class="flexl">
+        <div :class="row.status === 0?'before-deal':row.status === 1?'dealing':row.status === 2?'deal-refuse':row.status === 3?'dealed':''"></div>
+        <div >{{row.status === 0?'待处理':row.status === 1?'处理中':row.status === 2?'被驳回':row.status === 3?'已完结':''}}</div>
+      </div>
+    </template>
+  </el-table-column>
+  <el-table-column v-if="type==='date'" :property="prop" :label="lable" :min-width="width" align="center">
     <template #default="{row}">
       <div>{{Format('yyyy-MM-dd',new Date(row[prop])) }}</div>
     </template>
   </el-table-column>
-  <el-table-column v-if="type==='city'" :property="prop" :label="lable" :min-width="width">
+  <el-table-column v-if="type==='city'" :property="prop" :label="lable" :min-width="width" align="center">
     <template #default="{row}">
       <div>{{row.province}}{{row.city}}{{row.district}}</div>
     </template>
   </el-table-column>
-  <el-table-column v-if="type==='operateLook'" :property="prop" :label="lable" :min-width="width">
+  <el-table-column v-if="type==='operateLook'" :property="prop" :label="lable" :min-width="width" align="center">
     <template #default="{row}">
       <div v-for="(item,index) in operatButton" :key="index" class="operate-button" @click="operate(index,row)">{{row.status===2?item:row.status===0?'失败原因':'---'}}</div>
-      <!-- <div v-for="(item,index) in operatButton" :key="index" class="operate-button" @click="operate(index,row)">失败原因</div> -->
       <el-dialog v-model="errorShow" title="失败原因" width="400px">
         <div class="fcc msg">{{row.fail_reason}}</div>
-        <!-- <div class="fcc msg">row.fail_reason</div> -->
         <template #footer>
           <div class="fcc">
             <el-button type="primary" @click="errorShow=false">我知道了</el-button>
@@ -66,63 +72,77 @@
       </el-dialog>
     </template>
   </el-table-column>
-  
+  <el-table-column v-if="type==='industry_id'" :property="prop" :label="lable" :min-width="width"  align="center">
+    <template #default="scope">
+      <div>{{getHashStr(scope.row.industry_id,typeHash,'last')}}</div>
+    </template>
+  </el-table-column>
+  <el-table-column  v-if="type==='city_id'" :property="prop" :label="lable" :min-width="width"  align="center">
+    <template #default="{row}">
+      <el-tooltip effect="dark" placement="top">
+        <template #content>
+          <div style="width:100px">{{ row.province >0 && getHashStr(strToArr(row.province,row.city,row.district),addressHash)}}</div>
+        </template>
+        <div >{{ row.province >0 && getHashStr(strToArr(row.province,row.city,row.district),addressHash)}}</div>
+      </el-tooltip>
+    </template>
+  </el-table-column>
 </template>
 
 <script setup lang="ts">
 import { toRefs,ref} from 'vue'
 import {Format} from '@/utils/date'
+import { getHash,getHashStr,strToArr } from '@/utils/index'
+import {getDimGeo_api,getDimIndustry_api} from '@/api/dmp'
 const props = withDefaults(defineProps<{
   type:string,
   lable?:string,
-  prop:string,
+  prop?:string,
   width:number,
   operatButton?:string[]
 }>(),{})
 
 const errorShow = ref(false)
+const typeHash = ref()
+const addressHash = ref()
 
-
+props.type === 'industry_id' && getDimIndustry_api().then(({status,body})=>{
+  status && (typeHash.value = getHash(body,'industry_id'))
+})
+props.type === 'city_id' && getDimGeo_api().then(({status,body})=>{
+  status && (addressHash.value = getHash(body,'code'))
+})
 const emit = defineEmits(['click'])
 const operate=(index:number,row:any)=>{
   (row.status===2) && emit('click',index,row);
-
   (row.status===0) && (errorShow.value = true)
-  //  errorShow.value = true
-
 }
 const {type,lable,prop,width,operatButton} =toRefs(props)
 
 const getStatus = (type:number)=>{
   const obj = ref<{text:string,className:string}>()
   switch (type) {
-    case 1:
-      obj.value = {
-        text:'待处理',
-        className:'calculating'
-      }
-      break;
     case 2:
       obj.value = {
         text:'已受理',
-        className:'calculat-false'
+        className:'calculating'
       }
       break;
     case 3:
       obj.value = {
         text:'被驳回',
-        className:'calculated'
+        className:'calculat-false'
       }
       break;
     case 4:
       obj.value = {
         text:'已完成',
-        className:'calculat-true'
+        className:'calculated'
       }
       break;
     default:
       obj.value = {
-        text:'草稿',
+        text:'待处理',
         className:'calcula_yellow'
       }
       break;
@@ -144,38 +164,31 @@ const getStatus = (type:number)=>{
     width: 150px !important;
     white-space: wrap;
   }
-  .calcula_yellow{
+  .calcula_yellow,.before-deal{
     width: 8px;
     height: 8px;
     border-radius: 50%;
     background-color: #FFBF00;
     margin-right: 8px;
   }
-  .calculating{
+  .calculating,.dealing{
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color:#f7c41b;
+    background-color: #2BD34E;
     margin-right: 8px;
   }
-  .calculated{
+  .calculated,.dealed{
     width: 8px;
     height: 8px;
-    background-color: #ff3b31;
+    background-color: $dfcolor;
     border-radius: 50%;
     margin-right: 8px;
   }
-  .calculat-true{
+  .calculat-false,.deal-refuse{
     width: 8px;
     height: 8px;
-    background-color: #3568de;
-    border-radius: 50%;
-    margin-right: 8px;
-  }
-  .calculat-false{
-    width: 8px;
-    height: 8px;
-    background-color: #35b225;
+    background-color: #e40000;
     border-radius: 50%;
     margin-right: 8px;
   }

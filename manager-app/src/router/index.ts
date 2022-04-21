@@ -314,10 +314,22 @@ const routes = [
                 meta: { title: '微信获客', keepAlive:true, father:'/dmp/findc',lv:'43', isTopNav:true },
               },
               {
+                path: '/dmp/findc/wxdatadetail',
+                name: 'WxDataDetail',
+                component: () => import('@/views/layout/dmp/findc/wxDataDetail.vue'),
+                meta: { title: '微信获客详情', father:'/dmp/findc/wxdata' },
+              },
+              {
                 path: '/dmp/findc/addata',
                 name: 'AdData',
                 component: () => import('@/views/layout/dmp/findc/adData.vue'),
                 meta: { title: '广告投放', keepAlive:true, father:'/dmp/findc',lv:'44', isTopNav:true },
+              },
+              {
+                path: '/dmp/findc/addatadetail',
+                name: 'AdDataDetail',
+                component: () => import('@/views/layout/dmp/findc/adDataDetail.vue'),
+                meta: { title: '广告投放详情', father:'/dmp/findc/addata' },
               },
               {
                 path: '/dmp/findc/baidudata',
@@ -326,10 +338,22 @@ const routes = [
                 meta: { title: '百度关键词获客', keepAlive:true, father:'/dmp/findc',lv:'45', isTopNav:true },
               },
               {
+                path: '/dmp/findc/baidudatadetail',
+                name: 'BaiduDataDetail',
+                component: () => import('@/views/layout/dmp/findc/baiduDataDetail.vue'),
+                meta: { title: '百度关键词获客详情', father:'/dmp/findc/baidudata' },
+              },
+              {
                 path: '/dmp/findc/bigdata',
                 name: 'BigData',
                 component: () => import('@/views/layout/dmp/findc/bigData.vue'),
                 meta: { title: '大数据获客', keepAlive:true, father:'/dmp/findc',lv:'46', isTopNav:true },
+              },
+              {
+                path: '/dmp/findc/bigdatadetail',
+                name: 'BigDataDetail',
+                component: () => import('@/views/layout/dmp/findc/bigDataDetail.vue'),
+                meta: { title: '大数据获客详情', father:'/dmp/findc/bigdata' },
               },
               {
                 path: '/dmp/findc/teldata',
@@ -338,16 +362,34 @@ const routes = [
                 meta: { title: '400获客', keepAlive:true, father:'/dmp/findc',lv:'47', isTopNav:true},
               },
               {
+                path: '/dmp/findc/teldatadetail',
+                name: 'TelDataDetail',
+                component: () => import('@/views/layout/dmp/findc/telDataDetail.vue'),
+                meta: { title: '400获客详情', father:'/dmp/findc/teldata' },
+              },
+              {
                 path: '/dmp/findc/biddingdata',
                 name: 'BiddingData',
                 component: () => import('@/views/layout/dmp/findc/biddingData.vue'),
                 meta: { title: '竞价获客', keepAlive:true, father:'/dmp/findc',lv:'48', isTopNav:true },
               },
               {
+                path: '/dmp/findc/biddingdatadetail',
+                name: 'BiddingDataDetail',
+                component: () => import('@/views/layout/dmp/findc/biddingDataDetail.vue'),
+                meta: { title: '竞价获客详情', father:'/dmp/findc/biddingdata' },
+              },
+              {
                 path: '/dmp/findc/msgdata',
                 name: 'MsgData',
                 component: () => import('@/views/layout/dmp/findc/msgData.vue'),
                 meta: { title: '短信获客', keepAlive:true, father:'/dmp/findc',lv:'49', isTopNav:true },
+              },
+              {
+                path: '/dmp/findc/msgdatadetail',
+                name: 'MsgDataDetail',
+                component: () => import('@/views/layout/dmp/findc/msgDataDetail.vue'),
+                meta: { title: '短信获客详情', father:'/dmp/findc/msgdata' },
               },
             ]
           },
@@ -365,10 +407,22 @@ const routes = [
                 meta: { title: '找渠道', keepAlive:true,father:'/dmp/seekpathpro',lv:'51', isTopNav:true },
               },
               {
+                path: '/dmp/seekpathpro/seekpathdetail',
+                name: 'SeekPathDetail',
+                component: () => import('@/views/layout/dmp/seekPathPro/seekPathDetail.vue'),
+                meta: { title: '找渠道详情', father:'/dmp/seekpathpro/seekpath' },
+              },
+              {
                 path: '/dmp/seekpathpro/seekpro',
                 name: 'SeekPro',
                 component: () => import('@/views/layout/dmp/seekPathPro/seekProject.vue'),
                 meta: { title: '找项目', keepAlive:true,father:'/dmp/seekpathpro',lv:'52', isTopNav:true },
+              },
+              {
+                path: '/dmp/seekpathpro/seekprodetail',
+                name: 'SeekProDetail',
+                component: () => import('@/views/layout/dmp/seekPathPro/seekProjectDetail.vue'),
+                meta: { title: '找项目详情', father:'/dmp/seekpathpro/seekpro' },
               },
             ]
           },
@@ -386,10 +440,22 @@ const routes = [
                 meta: { title: '找采购商', keepAlive:true,father:'/dmp/seekabroad',lv:'54', isTopNav:true },
               },
               {
+                path: '/dmp/seekabroad/buyerdetail',
+                name: 'BuyerDetail',
+                component: () => import('@/views/layout/dmp/seekAbroad/buyerDetail.vue'),
+                meta: { title: '找采购商详情', father:'/dmp/seekabroad/buyer' },
+              },
+              {
                 path: '/dmp/seekabroad/supplier',
                 name: 'Supplier',
                 component: () => import('@/views/layout/dmp/seekAbroad/supplier.vue'),
                 meta: { title: '找供应商', keepAlive:true,father:'/dmp/seekabroad',lv:'55', isTopNav:true },
+              },
+              {
+                path: '/dmp/seekabroad/supplierdetail',
+                name: 'SupplierDetail',
+                component: () => import('@/views/layout/dmp/seekAbroad/supplierDetail.vue'),
+                meta: { title: '找供应商详情', father:'/dmp/seekabroad/supplier' },
               },
             ]
           },
