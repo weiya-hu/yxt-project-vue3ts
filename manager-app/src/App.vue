@@ -20,14 +20,27 @@ body {
   --el-color-warning: #FFB700;
   min-width: 1440px;
 }
-
-.el-button--primary {
-  --el-button-bg-color: #2D68EB!important;
-  --el-button-border-color: #2D68EB!important;
-  --el-button-hover-bg-color: rgb(87, 134, 239)!important;
-  --el-button-hover-border-color: rgb(87, 134, 239)!important;
-  --el-button-active-bg-color: rgb(41, 94, 212)!important;
-  --el-button-active-border-color: rgb(41, 94, 212)!important;
+body {
+  .el-button--primary {
+    --el-button-bg-color: #2D68EB;
+    --el-button-border-color: #2D68EB;
+    --el-button-hover-bg-color: rgba(45, 104, 235, 0.85);
+    --el-button-hover-border-color: rgba(45, 104, 235, 0.85);
+    --el-button-active-bg-color: #245BD6;
+    --el-button-active-border-color: #245BD6;
+  }
+  .colorbtn{
+    --el-button-text-color:#2D68EB;
+    --el-button-border-color: #2D68EB;
+    --el-button-hover-text-color: #245BD6;
+    --el-button-hover-bg-color: rgba(45, 104, 235, 0.1);
+    --el-button-hover-border-color: #245BD6;
+    --el-button-active-bg-color: rgba(45, 104, 235, 0.2);
+    --el-button-active-border-color: #245BD6;
+    --el-button-disabled-bg-color: #fff;
+    --el-button-disabled-border-color: rgba(45, 104, 235, 0.35);
+    --el-disabled-text-color: rgba(45, 104, 235, 0.4);
+  }
 }
 
 #app {
