@@ -211,7 +211,7 @@ export const routerGuard = (userlv:number,url:any)=>{
         }
       )
       .then(() => {
-        window.open(to.meta.lv == 2?`//${url.domain_user}/app/user?componentId=611`:`//${url.domain_user}/benefits.html`)
+        window.open(to.meta.lv == 2?`//${url.user}/app/user?componentId=611`:`//${url.user}/benefits.html`)
       })
       .catch(() => {
         router.replace(from.fullPath)

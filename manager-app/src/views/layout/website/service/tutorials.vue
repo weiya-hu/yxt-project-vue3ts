@@ -125,9 +125,8 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { ZoomIn, CaretRight, Plus, Pointer, CollectionTag } from '@element-plus/icons-vue'
-import { showKzPool } from '@/utils/index'
 import emiter from '@/utils/bus'
-import { lookImage, lookVideo } from '@/utils/index'
+import { showKzPool, lookImage, lookVideo } from '@/utils/index'
 import { getTutorialsList_api, addTutorialsVideo_api, delTutorialsVideo_api, setTutorialsVideo_api, getTopTutorialsList_api } from '@/api/website/service'
 import Mypage from "@/components/Mypage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";

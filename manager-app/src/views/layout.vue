@@ -8,7 +8,7 @@
         <div class="nav_title">管理后台</div>
         <div class="fcs">
           <!-- <el-button type="primary" @click="showLib" class="mr20">资源库</el-button> -->
-          <el-link type="primary" target="_blank" :href="'//' + urlInfo.domain_index">官网</el-link>
+          <el-link type="primary" target="_blank" :href="'//' + urlInfo.offical">官网</el-link>
           <div class="sline"></div>
           <div class="userbox fcs" v-if="userInfo.name">
             <el-avatar :size="36" :src="userInfo.head||df_avatar_i"></el-avatar>

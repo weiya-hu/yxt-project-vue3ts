@@ -4,7 +4,7 @@
       <template #header>
         <div class="fsc f1">
           <div>使用中<span class="color999">（{{list.length}}）</span></div>
-          <el-link type="primary" v-if="list.length" target="_blank" :href="'//' + yxtUrl.domain + pageProps.url">查看效果<el-icon><arrow-right /></el-icon></el-link>
+          <el-link type="primary" v-if="list.length" target="_blank" :href="'//' + yxtUrl.offical + pageProps.url">查看效果<el-icon><arrow-right /></el-icon></el-link>
         </div>
       </template>
       <div class="imgs_list flex">

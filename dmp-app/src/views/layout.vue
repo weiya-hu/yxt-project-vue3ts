@@ -48,9 +48,9 @@
               </div>
             </div>
             <div class="loginbtn fcc" v-else>
-              <el-link type="primary" :href="'//' + urlInfo.domain_user + '/app/login'">登录</el-link>
+              <el-link type="primary" :href="'//' + urlInfo.user + '/app/login'">登录</el-link>
               &ensp;/&ensp;
-              <el-link type="primary" :href="'//' + urlInfo.domain_user + '/app/register/register'">注册</el-link>
+              <el-link type="primary" :href="'//' + urlInfo.user + '/app/register/register'">注册</el-link>
             </div>
           </div>
         </div>
@@ -103,7 +103,7 @@ const goOther = (href:string)=>{
 }
 
 const goCompany = ()=>{
-  window.open("//" +  urlInfo.value.domain_user + "/app/user?componentId=611")
+  window.open("//" +  urlInfo.value.user + "/app/user?componentId=611")
 }
 
 const store = mainStore()
@@ -179,7 +179,7 @@ const companyInfo = computed(()=>store.state.companyInfo)
 const loginout = ()=>{
   loginOut_api().then((res:res)=>{
     if(res.status == 1){
-      window.location.href = `//${urlInfo.value.domain_user}/app/login?url=${encodeURIComponent('//' + urlInfo.value.domain_dmp + '/index')}`
+      window.location.href = `//${urlInfo.value.user}/app/login?url=${encodeURIComponent('//' + urlInfo.value.dmp + '/index')}`
     }
   })
 }

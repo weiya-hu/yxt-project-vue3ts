@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { getFeedBackList_api, setFeedBackStatus_api, delFeedBackStatus_api, getFeedBackType_api } from '@/api/website/feedback'
+import { getFeedBackList_api, setFeedBackStatus_api, delFeedBackStatus_api, getFeedBackType_api } from '@/api/website/service'
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import MyPage from "@/components/MyPage.vue";
@@ -89,9 +89,9 @@ const setStatus = async (arr:[0|1,string|number]) => {
   }
 }
 
-const delId = ref(0)
+const delId = ref<string|number>('')
 const delShow = ref(false)
-const del = (id:number) => {
+const del = (id:number|string) => {
   delId.value = id
   delShow.value = true
 }

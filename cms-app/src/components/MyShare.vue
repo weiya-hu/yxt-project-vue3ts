@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<{
 const store = mainStore()
 
 const invite_code = store.state.userInfo.invite_code
-const cmsUrl=store.state.yxtUrl.domain_mobile
+const cmsUrl=store.state.yxtUrl.mobile
 
 const imgArr=ref([
   {

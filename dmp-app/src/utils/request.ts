@@ -42,7 +42,7 @@ axios.interceptors.response.use(
         if(response.errno == 10620){
           setTimeout(() => {
             const yxtUrl = JSON.parse(localStorage.getItem('yxtUrl') as string)
-            window.location.href = `//${yxtUrl.domain_user}/app/login?url=${encodeURIComponent('//' + yxtUrl.domain_dmp + '/index')}`
+            window.location.href = `//${yxtUrl.user}/app/login?url=${encodeURIComponent('//' + yxtUrl.dmp + '/index')}`
           }, 2000);
         }
       }
