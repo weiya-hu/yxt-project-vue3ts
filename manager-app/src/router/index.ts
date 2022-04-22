@@ -278,7 +278,7 @@ const routes = [
             name: 'Service',
             redirect: '/website/service/tutorials',
             component: () => import('@/views/layout/rview.vue'),
-            meta: { title: '客服管理', icon:nav3_4_i, icon_a:nav3_4_a_i, lv:'19', showTopNav:true },
+            meta: { title: '客服管理', icon:nav3_4_i, icon_a:nav3_4_a_i, keepAlive:true, lv:'19', showTopNav:true },
             children:[
               {
                 path: '/website/service/tutorials',
@@ -296,7 +296,13 @@ const routes = [
                 path: '/website/service/school',
                 name: 'School',
                 component: () => import('@/views/layout/website/service/school.vue'),
-                meta: { title: '营销学堂', father:'/website/service', lv:'21', isTopNav:true },
+                meta: { title: '营销学堂', father:'/website/service', keepAlive:true, lv:'21', isTopNav:true },
+              },
+              {
+                path: '/website/service/articledetails',
+                name: 'SchoolArticleDetails',
+                component: () => import('@/views/layout/website/service/articleDetails.vue'),
+                meta: { title: '文章详情', father:'/website/service/school', lv:'21',},
               },
               {
                 path: '/website/service/feedback',

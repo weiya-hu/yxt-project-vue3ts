@@ -31,10 +31,10 @@
             <el-table-column label="操作" fixed="right" width="240">
               <template #default="{ row }">
                 <div class="fcs">
-                  <el-link type="primary" v-if="row.status != 1">查看</el-link>
+                  <el-link type="primary" v-if="row.status != 1" @click="$router.push('articledetails?id=' + row.id)">查看</el-link>
                   <div class="line" v-if="row.status != 1"></div>
                   <el-link type="primary" v-if="row.status != 1" @click="setStatus(row.id, row.status == 2 ? 3 : 2)">{{row.status == 2 ? '上线' : '下线'}}</el-link>
-                  <div class="line" v-if="row.status != 1"></div>
+                  <div class="line" v-if="row.status == 2"></div>
                   <el-link type="primary" v-if="row.status != 3">编辑</el-link>
                   <div class="line" v-if="row.status != 3"></div>
                   <el-link type="primary" v-if="row.status != 3" @click="del(row.id)">删除</el-link>
@@ -336,6 +336,10 @@ const sureDelVideo = async () => {
   }
 }
 
+</script>
+
+<script lang="ts">
+export default { name:'School' }
 </script>
 
 <style scoped lang="scss">

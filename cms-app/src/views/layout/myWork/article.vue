@@ -19,7 +19,7 @@
         <el-table-column property="title" label="标题">
           <template #default="{row}">
             <el-link v-if="row.status != 4" type="primary" @click="$router.push(row.status == 1 ? '/myWork/articleAdd?id=' + row.id : '/myWork/articleDetails?id=' + row.id)">{{row.title}}</el-link>
-            <span v-else @click="errorMsg = row.fail_reason;errorShow=true">{{row.title}}</span>
+            <span v-if="row.status == 4" @click="errorMsg = row.fail_reason;errorShow=true">{{row.title}}</span>
           </template>
         </el-table-column>
         <el-table-column property="create_time" label="创建日期" width="200">

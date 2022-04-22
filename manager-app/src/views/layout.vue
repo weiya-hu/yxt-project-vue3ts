@@ -145,7 +145,7 @@ const topNavRef = ref()
 const getPath = (path:string)=>{
   nowPath.value = path
 }
-getPath(route.meta.father ? route.meta.father as string:route.path)
+getPath(route.path)
 
 topPath.value = route.path
 
@@ -160,7 +160,9 @@ getNavs(route.path, true)
 
 onBeforeRouteUpdate((to,from,next)=>{
 
-  getPath(to.meta.father ? to.meta.father as string:to.path)
+  if(from.path !== to.meta.father){
+    getPath(to.path)
+  }
 
   topPath.value = to.path
   if(to.meta.isTopNav && to.meta.father != from.meta.father) getNavs(to.path);

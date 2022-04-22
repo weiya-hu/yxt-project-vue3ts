@@ -307,6 +307,30 @@ img{
 .pr20{
   padding-right: 20px;
 }
+.mt16{
+  margin-top: 16px;
+}
+.mb16{
+  margin-bottom: 16px;
+}
+.ml16{
+  margin-left: 16px;
+}
+.mr16{
+  margin-right: 16px;
+}
+.pt16{
+  padding-top: 16px;
+}
+.pb16{
+  padding-bottom: 16px;
+}
+.pl16{
+  padding-left: 16px;
+}
+.pr16{
+  padding-right: 16px;
+}
 .mytabs{
   .el-tabs__header{
     .el-tabs__item{

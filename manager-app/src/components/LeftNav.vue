@@ -3,13 +3,13 @@
     active-text-color="#fff"
     background-color="#fff"
     text-color="#333333"
-    :default-active="modelValue"
+    :default-active="aPath"
     router
     class="yxtnav"
   >
     <el-menu-item index="/index">
       <div class="fcs">
-        <img :src="modelValue == '/index' ? nav1_a_i : nav1_i" alt="" class="left_nav_icon">
+        <img :src="aPath == '/index' ? nav1_a_i : nav1_i" alt="" class="left_nav_icon">
         <span class="fz16">首页</span>
       </div>
     </el-menu-item>
@@ -43,7 +43,7 @@
           <el-menu-item :index="value.path" v-if="!value.meta.father && (userlv.indexOf(value.meta.lv)>-1)">
           <!-- value : /users/user 用户管理 ... -->
             <div class="fcs">
-              <img :src="value.path == modelValue ? value.meta.icon_a : value.meta.icon" alt="" class="left_nav_icon">
+              <img :src="value.path == aPath ? value.meta.icon_a : value.meta.icon" alt="" class="left_nav_icon">
               <span>{{value.meta.title}}</span>
             </div>
           </el-menu-item>
@@ -74,6 +74,11 @@ const props = withDefaults(defineProps<{
 })
 const store = mainStore()
 const userlv = computed(() => store.state.userLv)
+
+const aPath = computed(()=>{
+  const arr = props.modelValue.split('/')
+  return arr[1] == 'index' ? '/index' : '/' + arr[1] + '/' + arr[2]
+})
 
 </script>
 
