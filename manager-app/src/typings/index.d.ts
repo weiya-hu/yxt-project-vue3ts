@@ -5,6 +5,9 @@ interface ajax {
   isError?: boolean
 }
 
+/**
+ * @name 接口返回数据类型
+*/
 interface res {
   status: number
   body: any
@@ -18,6 +21,9 @@ interface Navitem {
   [propName: string]: any
 }
 
+/**
+ * @name 分页类型
+*/
 interface PageParams {
   size:number,
   current:number,
@@ -25,6 +31,9 @@ interface PageParams {
   [propName: string]: any
 }
 
+/**
+ * @name 资源库类型
+*/
 interface KzPool {
   source_url:string,
   source_name:string,
