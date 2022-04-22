@@ -1,8 +1,6 @@
 <template>
   <div class="specific_data">
-    <!-- <div class="flexl top-search inline_myform"> -->
-      <Search @search="searchword"  v-model="inputSearch" @reset="resetSearch"/>
-    <!-- </div> -->
+    <Search @search="searchword"  v-model="inputSearch" @reset="resetSearch"/>
     <div class="mytable-data">
       <el-table
         :data="tableList"
@@ -15,12 +13,12 @@
         <el-table-column fixed="right" property="operate" label="操作" min-width="170" align="center">
           <template #default="{row}">
             <div class="operate-button-pre">
-              <div v-if="row.status===0" >下载附件</div>
-              <div v-if="row.status===0" @click="refuse(row)">驳回</div>
-              <div v-if="row.status===0" @click="pass(row)">通过</div>
-              <div v-if="row.status===1 || row.status===3">上传客户</div>
-              <div v-if="row.status===2" @click="reason(row)">驳回原因</div>
-              <div v-if="row.status===3" @click="$router.push('/dmp/findb/specificdatadetails?id='+row.id)">详情</div>
+              <el-link type="primary" v-if="row.status===0" :href="row.attachment" downLoad="附件.zip">下载附件</el-link>
+              <el-link type="primary" v-if="row.status===0" @click="refuse(row)">驳回</el-link>
+              <el-link type="primary" v-if="row.status===0" @click="pass(row)">通过</el-link>
+              <el-link type="primary" v-if="row.status===1 || row.status===3" @click="upUser(row)">上传客户</el-link>
+              <el-link type="primary" v-if="row.status===2" @click="reason(row)">驳回原因</el-link>
+              <el-link type="primary" v-if="row.status===3" @click="$router.push('/dmp/findb/specificdatadetails?id='+row.id)">详情</el-link>
             </div>
           </template>
         </el-table-column>
@@ -30,20 +28,24 @@
       </el-table>
     </div>
     <Mypage v-if="total" :total="total" v-model:page="page" v-model:size="size" @change="getList"/>
-    <Refuse v-model="refuseShow"/>
+    <Refuse v-model="refuseShow" @success='refuseSuccess'/>
+    <UpUser v-model="upUserShow" @success='refuseSuccess'/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref ,reactive} from 'vue'
-// import {businessDemand_api,businessDemandPass_api,businessDemandReject_api} from '@/api/dmp/findb'
-import {businessDemand_api,businessDemandPass_api} from '@/api/dmp/findb'
+import {businessDemand_api,businessDemandPass_api,businessDemandReject_api} from '@/api/dmp/findb'
 import Mypage from "@/components/Mypage.vue";
 import Search from '@/components/Search.vue';
 import MyDataTable from '@/components/MyDataTable.vue';
 import MyEmpty from '@/components/MyEmpty.vue';
 import Refuse from '@/components/refuse.vue';
+import UpUser from '@/components/UpUser.vue'
 import { ElMessageBox} from 'element-plus'
+import {useRouter} from 'vue-router'
+const router = useRouter();
+
 let total=ref(0)
 let page = ref(1)
 let size = ref(10)
@@ -51,7 +53,10 @@ let createTime= ref()
 let name = ref()
 let statuses = ref()
 let loading=ref(false)
-let refuseShow=ref(true)
+let refuseShow=ref(false)
+let upUserShow = ref(false)
+let refuseId = ref()
+let upUserId = ref()
 const inputSearch = reactive({
   userName:'',
   status:'',
@@ -127,13 +132,31 @@ const reason=(row:any)=>{
     {
       confirmButtonText: '确认',
       cancelButtonText: '取消',
-      
     }
   )
 }
-//驳回
+//驳回按钮
 const refuse=(row:any)=>{
   refuseShow.value=true
+  refuseId.value = row.id
+}
+//驳回组件点击确认后
+const refuseSuccess=async(val:string)=>{
+  let data={
+    id:refuseId.value,
+    fail_reason:val
+  }
+  const {status,body} = await businessDemandReject_api(data)
+  if(status){
+    refuseShow.value=false;
+    getList()
+  }
+}
+
+//上传客户按钮
+const upUser=(row:any)=>{
+  upUserShow.value=true
+  upUserId.value = row.id
 }
 </script>
 
@@ -159,14 +182,6 @@ export default { name:'SpecificData' }
       justify-content: space-between;
       align-items: center;
       padding: 0 5px;
-      >div{
-        font-size: 14px;
-        color: #2D68EB;
-        cursor: pointer;
-      }
-      >div:hover{
-        color: #79bbff;
-      }
     }
   }
 }

@@ -32,9 +32,14 @@
 </template>
 
 <script setup lang="ts">
-import { reactive,ref,onMounted} from 'vue'
+/**
+ * 驳回弹框组件
+ * @author hwy
+ * modelValue控制弹框显示与否，给父组件传success方法传驳回原因
+*/
+import { reactive,ref} from 'vue'
 import {useRoute} from 'vue-router'
-// import {businessDemandReject_api} from '@/api/'
+
 //父组件传的值 
 const props = withDefaults(defineProps<{
   modelValue:boolean,
@@ -65,9 +70,9 @@ const close=()=>{
   formRef.value.resetFields()
 }
 const sure=()=>{
-  formRef.value.validate((valid:any) => {
+  formRef.value.validate(async(valid:any) => {
     if (valid) {
-      // const {status,body} = await businessDemandReject_api(data)
+      emit('success',formValue.value.reason)
     } else {
       console.log('error submit!');
       return false

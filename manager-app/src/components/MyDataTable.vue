@@ -45,7 +45,7 @@
     <template #default="{row}">
       <div class="flexl">
         <div :class="row.status === 0?'before-deal':row.status === 1?'dealing':row.status === 2?'deal-refuse':row.status === 3?'dealed':''"></div>
-        <div >{{row.status === 0?'待处理':row.status === 1?'处理中':row.status === 2?'被驳回':row.status === 3?'已完结':''}}</div>
+        <div >{{row.status === 0?'待处理':row.status === 1?'已受理':row.status === 2?'被驳回':row.status === 3?'已完结':''}}</div>
       </div>
     </template>
   </el-table-column>
