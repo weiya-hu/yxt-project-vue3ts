@@ -7,8 +7,7 @@
         <el-button type="primary" @click="submit(2)">提交</el-button>
       </div>
     </div>
-
-    <KzAddArticle ref="addRef" needimg needtype needsource  @success="subSuccess"/>
+    <KzAddArticle ref="addRef" needimg needtype :needsource="1"  @success="subSuccess" :types="typeDate"/>
     
   </div>
 </template>
@@ -19,7 +18,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { mainStore } from '@/store/index'
 import DetailsHeader from "@/components/DetailsHeader.vue";
 import KzAddArticle from "@/components/KzAddArticle.vue";
-import { newsDetail_api, newsAdd_api, newsEdit_api } from '@/api/website'
+import { newsDetail_api, newsAdd_api, newsEdit_api,typeList_api } from '@/api/website'
 import { warnMsg } from '@/utils'
 
 const store = mainStore()
@@ -32,7 +31,7 @@ const getDetails = async () => {
   if(status == 1){
     if(body.status == 3){
       warnMsg('请下线文章后再编辑')
-      router.replace('/website/service/articledetails?id=' + id)
+      router.replace('/website/newsdetails?id=' + id)
       return
     }
     addRef.value.setForm({
@@ -40,6 +39,8 @@ const getDetails = async () => {
       article_type:body.article_type,
       text:body.text,
       thumb_url:body.thumb_url,
+      source:body.source
+      
     })
   }
 }
@@ -52,20 +53,36 @@ const submit = async (status:1|2) => {
   addRef.value.submit()
 }
 const subSuccess = async (val:AForm) => {
+  const data ={
+    content:val.text,
+    source_url:val.source_url,
+    type_id:val.article_type,
+    thumb_url:val.thumb_url,
+    title:val.title
+  }
   const { status } = id ? await newsEdit_api({
-    ...val,
+    ...data,
     status: aStatus.value,
     id
   }) : await newsAdd_api({
-    ...val,
+    ...data,
     status: aStatus.value
   })
   if(status == 1){
-    store.setKeepList([])
-    router.replace('/website/service/school')
+    router.replace('/website/news')
   }
 }
 
+const typeDate = ref<any>({})
+const typeList = async ()=>{
+  const res =await typeList_api()
+  if(res.status==1){
+    typeDate.value = res.body.map((v:any) => {
+      return { label:v.name, value:v.id }
+    })
+  }
+}
+typeList()
 </script>
 
 <style scoped lang="scss">

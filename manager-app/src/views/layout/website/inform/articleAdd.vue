@@ -7,8 +7,7 @@
         <el-button type="primary" @click="submit(2)">提交</el-button>
       </div>
     </div>
-
-    <KzAddArticle ref="addRef" needimg needtype needsource  @success="subSuccess"/>
+    <KzAddArticle ref="addRef" needimg needtype :needsource="1"  @success="subSuccess" :types="typeDate"/>
     
   </div>
 </template>
@@ -66,6 +65,28 @@ const subSuccess = async (val:AForm) => {
   }
 }
 
+const typeDate =ref([
+    {
+      value: 1,
+      label: '分类一',
+    },
+    {
+      value: 2,
+      label: '分类二',
+    },
+    {
+      value: 3,
+      label: '分类三',
+    },
+    {
+      value: 4,
+      label: '分类四',
+    },
+    {
+      value: 5,
+      label: '分类五',
+    },
+  ])
 </script>
 
 <style scoped lang="scss">

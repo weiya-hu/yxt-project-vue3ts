@@ -36,7 +36,7 @@
     <el-card class="mycard mt16">
       <div class="form_title">标题</div>
       <el-form-item prop="title" style="margin-bottom:4px">
-        <el-input v-model="aForm.title" placeholder="请输入文章标题（5~30个字）"></el-input>
+        <el-input v-model="aForm.title" placeholder="请输入文章标题（5 ~ 30个字）"></el-input>
       </el-form-item>
       <div class="form_title mt20" v-if="needtype">分类</div>
       <el-form-item prop="article_type" v-if="needtype" style="margin-bottom:4px">
@@ -48,10 +48,10 @@
       <div class="fcs" style="margin-bottom:4px" v-if="needsource">
         <el-radio v-model="source" :label="0">原创</el-radio>
         <el-radio v-model="source" :label="1">非原创</el-radio>
-        <el-form-item prop="creator" style="margin-bottom:0px">
+        <el-form-item prop="creator" style="margin-bottom:0px" v-if="needsource == 1">
           <el-input v-model="aForm.creator" placeholder="请输入来源" style="width:220px" v-if="source == 1"></el-input>
         </el-form-item>
-        <el-input v-model="aForm.source_url" placeholder="请输入原文链接（选填）" class="ml20 f1" v-if="source == 1"></el-input>
+        <el-input v-model="aForm.source_url" placeholder="请输入原文链接（选填）" class="ml20 f1" v-if="source == 1 && needsource == 1"></el-input>
       </div>
     </el-card>
     <el-card class="mycard mt16">
@@ -78,12 +78,12 @@ import img_add_i from '@/assets/images/img-add.png'
 const props = withDefaults(defineProps<{
   needimg?:boolean // 是否显示封面图片上传
   needtype?:boolean // 是否显示分类
-  needsource?:boolean // 是否显示来源
+  needsource?:0|1|2 // 是否显示来源 0：不显示来源，1：显示来源并且显示来源输入框，2：显示来源不显示来源输入框
   types?:any[] // 分类列表
 }>(),{
   needimg:false,
   needtype:false,
-  needsource:false,
+  needsource:0,
   types:() => ([
     {
       value: 1,
@@ -143,7 +143,7 @@ const filePass = (rule:any, value:any, callback:Function)=>{
   }
 }
 const creatorPass = (rule:any, value:any, callback:Function)=>{
-  if(source.value && !value){
+  if(source.value && props.needsource == 1 && !value){
     callback(new Error('请输入来源'))
     return
   }
@@ -154,11 +154,11 @@ const aRules = {
     { validator: filePass, trigger: 'change'  }
   ],
   title:[
-    { required: true, message: '请输入文章标题（5~30个字）', trigger: 'blur' },
+    { required: true, message: '请输入文章标题（5 ~ 30个字）', trigger: 'blur' },
     { min: 5, max: 30, message: '长度需要在 5 ~ 30 字之间', trigger: 'blur' }
   ],
   article_type:[
-    { required: props.needtype, message: '请选择文章分类', trigger: 'blur' }
+    { required: props.needtype, message: '请选择文章分类', trigger: 'change' }
   ],
   text:[
     { required: true, message: '请输入文章内容', trigger: 'blur' }

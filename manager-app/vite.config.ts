@@ -33,7 +33,7 @@ export default defineConfig({
     open: false,
     https: false,
     proxy: {
-      '/api': {
+      '/bgapi': {
         target: 'http://47.108.185.157:9000',//dev 前台接口
         // target: 'http://10.10.0.93:9000',//杨航
         // target: 'http://10.10.0.124:9000',//包季鑫
@@ -41,13 +41,13 @@ export default defineConfig({
         // target: 'http://10.10.0.123:9000',//杜飘
         // target: 'http://10.10.0.83:9000',//吴
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '')
+        rewrite: path => path.replace(/^\/bgapi/, '')
       },
-      '/bgapi': {
+      '/api': {
         target: 'http://47.108.185.157:9090',//dev 后台接口
         // target: 'http://10.10.0.124:9090',//dev 包季鑫
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/bgapi/, '')
+        rewrite: path => path.replace(/^\/api/, '')
       }
     },
   },
