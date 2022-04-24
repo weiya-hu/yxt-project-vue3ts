@@ -52,5 +52,5 @@ export const getAddreList_api = (): Promise<res> => {
 
 //获取跳转地址
 export const getYxtUrl_api = (): Promise<res> => {
-  return get(0,'/user/public/env.get')
+  return get(1,'/public/env.get')
 }

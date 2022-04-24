@@ -1,1 +1,0 @@
-import{o as a,c as e,w as r,a as t,r as o,T as s,b as n}from"./vue.89ed3d48.js";import{_ as d}from"./index.547c0c45.js";var u=d({},[["render",function(d,u){const f=n("router-view");return a(),e(f,{key:d.$route.path},{default:r((({Component:n})=>[t(s,{name:"fade"},{default:r((()=>[(a(),e(o(n)))])),_:2},1024)])),_:1})}]]);export{u as default};
