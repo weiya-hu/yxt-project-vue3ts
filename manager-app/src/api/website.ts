@@ -36,19 +36,19 @@ export const newsDetail_api = (data:{id:string}): Promise<res> => {
 }
 // 动态上线
 export const dyUp_api = (data:{id:string}): Promise<res> => {
-  return post(1,'/official/dynamic/upload.do',data)
+  return post(1,'/official/dynamic/upload.do',data,true)
 }
 // 动态下线
 export const dyDown_api = (data:{id:string}): Promise<res> => {
-  return post(1,'/official/dynamic/download.do',data)
+  return post(1,'/official/dynamic/download.do',data,true)
 }
 // 通知上线
 export const ntUp_api = (data:{id:string}): Promise<res> => {
-  return post(1,'/official/notice/upload.do',data)
+  return post(1,'/official/notice/upload.do',data,true)
 }
 // 通知下线
 export const ntDown_api = (data:{id:string}): Promise<res> => {
-  return post(1,'/official/notice/download.do',data)
+  return post(1,'/official/notice/download.do',data,true)
 }
 //删除动态
 export const dyDel_api = (data:{id:string}): Promise<res> => {
@@ -65,11 +65,11 @@ export const newsDel_api = (data:{id:string}): Promise<res> => {
 
 // 新闻上线
 export const newsUp_api = (data:{id:string}): Promise<res> => {
-  return post(1,'/news/info/upload.do',data)
+  return post(1,'/news/info/upload.do',data,true)
 }
 // 新闻下线
 export const newsDown_api = (data:{id:string}): Promise<res> => {
-  return post(1,'/news/info/download.do',data)
+  return post(1,'/news/info/download.do',data,true)
 }
 // 新闻审核通过
 export const newsPass_api = (data:{id:string}): Promise<res> => {

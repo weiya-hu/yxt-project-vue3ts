@@ -11,7 +11,7 @@
         <el-table :data="dynamicData"  border style="width: 100%">
         <el-table-column property="title" label="文章标题" width="230"/>
         <el-table-column property="type_name" label="分类" width="160"/>
-        <el-table-column property="source" label="来源"/>
+        <el-table-column property="creator" label="来源"/>
         <el-table-column property="time" label="发布时间" width="200">
             <template #default="{row}">
             <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>

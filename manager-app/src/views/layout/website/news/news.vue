@@ -2,17 +2,17 @@
   <div class="news-container">
     <div class="ftitle">资讯中心</div>
     <div class="news-handle">
-      <el-button color="#2D68EB" class="l_btn" plain @click="drawer2 = true">分类管理</el-button>
+      <el-button color="#2D68EB" class="bdc_btn" plain @click="drawer2 = true">分类管理</el-button>
         <el-tooltip
           class="box-item"
           effect="dark"
           content="点击将更新从第三方获取的资讯"
           placement="bottom-end"
         >
-          <div class="update">
-          <div class="ntxts">数据源更新</div>
-          <img :src="tips" alt="">
-        </div>
+          <el-button color="#2D68EB" class="bdc_btn update" plain  > 数据源更新
+            <img :src="tips" alt="" class="img-tips1">
+            <img :src="tips_w" alt="" class="img-tips2">
+          </el-button>
         </el-tooltip>
       <el-button type="primary" @click="$router.push('/website/news/newsadd')">添加</el-button>
     </div>
@@ -163,6 +163,7 @@ import MyDialog from "@/components/MyDialog.vue";
 import index_1 from '@/assets/images/index_1.png'
 import index_2 from '@/assets/images/index_2.png'
 import tips from '@/assets/images/news-tips.png'
+import tips_w from '@/assets/images/news-tips-w.png'
 import {news_api,statistics_api,typeList_api,newsUp_api,newsDown_api,newsDel_api} from '@/api/website';
 
 const page = ref(1)
@@ -180,6 +181,7 @@ const newsList= async ()=>{
   const res = await news_api({
     current:page.value,
     size:size.value,
+    ...newsForm,
   })
   if(res.status==1){
     newsData.value=res.body.records
@@ -217,6 +219,11 @@ const newsForm = reactive({
   reslut:''
 })
 
+const resetForm = () => {
+  console.log('重置')
+  manageRef.value.clearValidate()
+  manageRef.value.resetFields()
+};
 const drawer2 = ref(false)
 const direction = ref('rtl')
 const radio1 = ref('Option 1')
@@ -247,11 +254,7 @@ function confirmClick() {
     })
 }
 const manageRef= ref<any>({})
-const resetForm = () => {
-  console.log('重置')
-  manageRef.value.clearValidate()
-  manageRef.value.resetFields()
-};
+
 
 // 上下线操作
 const DownId = ref('')
@@ -303,42 +306,9 @@ const getDelDate = async()=>{
   flex-direction: row;
   justify-content: flex-end;
   margin:10px 20px;
-  .l_btn{
-    border-color:rgba(178,202,249,1);
-    margin-left: 20px;
-    background-color: #fff;
-    &:hover,&:active,&:focus{
-      border-color:$dfcolor;
-      color: $dfcolor;
-      background: rgba(45, 104, 235, 0.1);
-    }
-  }
-  .update{
-    width: 144px;
-    height: 32px;
-    border-radius: 4px;
-    border: 1px solid rgba(178,202,249,1);
-    margin:0 16px;
-    &:hover,&:active,&:focus{
-      border-color:$dfcolor;
-      color: $dfcolor;
-      background: rgba(45, 104, 235, 0.1);
-      cursor: pointer;
-    }
-    .ntxts{
-      display: inline;
-      width: 70px;
-      height: 20px;
-      font-size: 14px;
-      font-family: PingFangSC-Regular, PingFang SC;
-      font-weight: 400;
-      color: #2D68EB;
-      line-height: 30px;
-      margin-left: 28px;
-    }
-    img{
-      margin-left: 2px;
-    }
+  img{
+    margin-left: 5px;
+    // background-color: ;
   }
 }
 
@@ -438,5 +408,21 @@ const getDelDate = async()=>{
     margin: 7px 15px 3px 0;
   }
 }
-
+.update{
+  position: relative;
+  width: 120px;
+  .img-tips1,.img-tips2{
+    position: absolute;
+    top:7px;
+    right:7px
+  }
+  .img-tips2{
+    opacity: 0;
+  }
+  &:hover{
+    .img-tips2{
+      opacity: 1;
+    }
+  }
+}
 </style>

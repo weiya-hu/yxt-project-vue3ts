@@ -78,9 +78,6 @@ const getData = async ()=>{
 }
 getData()
 
-
-
-
 // 审核操作
 
 const tipShow=ref(false)
@@ -104,7 +101,6 @@ const newsReject=async()=>{
     if(res.status==1){
       window.location.href = '/website/news'
     }
-  
 }
 </script>
 

@@ -18,10 +18,10 @@
             </div>
             <p v-if="body.state==2">驳回原因：{{body.fail_reason}}</p>
           </div>
-          <el-button type="primary" class="tj"  v-if="body.state == 1" @click="goExamine(id)">审核</el-button>
-          <el-button type="primary" class="tj"  v-if="body.state == 3" @click="getNewsUp(id)">上线</el-button>
-          <el-button type="primary" class="tj"  v-if="body.state == 4" @click="getNewsDown(id)">下线</el-button>
-          <el-button type="primary" class="tj"  v-if="body.state == 2||body.state == 3|| body.state ==0" @click="getDel(id)">删除</el-button>
+          <el-button color="#2D68EB" class="bdc_btn" plain  v-if="body.state == 1" @click="goExamine(id)">审核</el-button>
+          <el-button color="#2D68EB" class="bdc_btn" plain  v-if="body.state == 3" @click="getNewsUp(id)">上线</el-button>
+          <el-button color="#2D68EB" class="bdc_btn" plain  v-if="body.state == 4" @click="getNewsDown(id)">下线</el-button>
+          <el-button color="#2D68EB" class="bdc_btn" plain  v-if="body.state == 2||body.state == 3|| body.state ==0" @click="getDel(id)">删除</el-button>
       </div>
       <div class="news-container">
         <el-tabs type="border-card">
@@ -38,7 +38,7 @@
                   <el-table-column property="mobile" label="电话" width="230"/>
                   <el-table-column property="create_time" label="收藏时间" width="200">
                     <template #default="{row}">
-                      <div>{{formatDate(new Date(Number(row.create_time)),'yyyy-MM-dd')}}</div>
+                      <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -54,7 +54,7 @@
                   <el-table-column property="shareMode" label="分享方式" width="200">微信</el-table-column>
                   <el-table-column property="time" label="分享时间" width="230">
                     <template #default="{row}">
-                      <div v-if="row.create_time">{{formatDate(new Date(Number(row.create_time)),'yyyy-MM-dd')}}</div>
+                      <div v-if="row.create_time">{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
                     </template>
                 </el-table-column>
                 </el-table>
