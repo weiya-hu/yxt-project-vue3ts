@@ -125,7 +125,7 @@ export const noticeEdit_api = (data:any): Promise<res> => {
 }
 // 添加新闻
 export const newsAdd_api = (data:any): Promise<res> => {
-  return post(1,'/official/news.in',data,true)
+  return post(1,'/news/info.in',data,true)
 }
 // 编辑新闻
 export const newsEdit_api = (data:any): Promise<res> => {

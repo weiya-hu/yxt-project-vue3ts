@@ -7,8 +7,7 @@
         <el-button type="primary" @click="submit(2)">提交</el-button>
       </div>
     </div>
-
-    <KzAddArticle ref="addRef" needimg needtype needsource  @success="subSuccess"/>
+    <KzAddArticle ref="addRef" needimg needtype :needsource="1"  @success="subSuccess"/>
     
   </div>
 </template>
