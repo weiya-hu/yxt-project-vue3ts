@@ -51,4 +51,5 @@ interface AForm {
   article_type:string|number,
   text:string,
   thumb_url?:string,
+  [propName: string]: any
 }

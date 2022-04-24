@@ -35,15 +35,24 @@
     </el-card>
     <el-card class="mycard mt16">
       <div class="form_title">标题</div>
-      <el-form-item prop="title">
-        <el-input v-model="aForm.title" placeholder="请输入文章标题（5~30个字）" style="width:70%"></el-input>
+      <el-form-item prop="title" style="margin-bottom:4px">
+        <el-input v-model="aForm.title" placeholder="请输入文章标题（5~30个字）"></el-input>
       </el-form-item>
-      <div class="form_title" v-if="needtype">分类</div>
-      <el-form-item prop="title" style="margin-bottom:4px" v-if="needtype">
+      <div class="form_title mt20" v-if="needtype">分类</div>
+      <el-form-item prop="article_type" v-if="needtype" style="margin-bottom:4px">
         <el-select v-model="aForm.article_type" placeholder="请选择文章分类">
           <el-option v-for="item in types" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
       </el-form-item>
+      <div class="form_title mt20" v-if="needsource">来源</div>
+      <div class="fcs" style="margin-bottom:4px" v-if="needsource">
+        <el-radio v-model="source" :label="0">原创</el-radio>
+        <el-radio v-model="source" :label="1">非原创</el-radio>
+        <el-form-item prop="creator" style="margin-bottom:0px">
+          <el-input v-model="aForm.creator" placeholder="请输入来源" style="width:220px" v-if="source == 1"></el-input>
+        </el-form-item>
+        <el-input v-model="aForm.source_url" placeholder="请输入原文链接（选填）" class="ml20 f1" v-if="source == 1"></el-input>
+      </div>
     </el-card>
     <el-card class="mycard mt16">
       <div class="form_title">正文内容</div>
@@ -69,10 +78,12 @@ import img_add_i from '@/assets/images/img-add.png'
 const props = withDefaults(defineProps<{
   needimg?:boolean // 是否显示封面图片上传
   needtype?:boolean // 是否显示分类
+  needsource?:boolean // 是否显示来源
   types?:any[] // 分类列表
 }>(),{
   needimg:false,
   needtype:false,
+  needsource:false,
   types:() => ([
     {
       value: 1,
@@ -97,13 +108,17 @@ const props = withDefaults(defineProps<{
   ])
 })
 
+// success 上传成功后触发，返回表单内容
 const emit = defineEmits(['success'])
 
+const source = ref(0) // 0：原创 1：非原创
 const aForm = ref<AForm>({
-  thumb_url:'',
-  title:'',
-  article_type:'',
-  text:'',
+  thumb_url:'', // 封面图片
+  title:'', // 标题
+  article_type:'', // 文章分类
+  text:'',  // 内容
+  creator:'', // 来源名称（原创不传）
+  source_url:'', // 原文链接（原创不传）
 })
 const aFormRef = ref()
 const imgErrorType = ref('none')//封面图片错误类型
@@ -127,6 +142,13 @@ const filePass = (rule:any, value:any, callback:Function)=>{
       break;
   }
 }
+const creatorPass = (rule:any, value:any, callback:Function)=>{
+  if(source.value && !value){
+    callback(new Error('请输入来源'))
+    return
+  }
+  callback()
+}
 const aRules = {
   thumb_url:[
     { validator: filePass, trigger: 'change'  }
@@ -140,6 +162,9 @@ const aRules = {
   ],
   text:[
     { required: true, message: '请输入文章内容', trigger: 'blur' }
+  ],
+  creator:[
+    { validator: creatorPass, trigger: 'blur'  }
   ],
 }
 

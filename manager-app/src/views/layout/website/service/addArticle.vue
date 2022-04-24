@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <KzAddArticle ref="addRef" @success="subSuccess"/>
+    <KzAddArticle ref="addRef" needtype @success="subSuccess"/>
     
   </div>
 </template>
