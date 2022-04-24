@@ -1,6 +1,12 @@
 <template>
   <div class="specific_data">
-    <Search @search="searchword"  v-model="inputSearch" @reset="resetSearch"/>
+    <Search @search="getList"  v-model="inputSearch" @reset="resetSearch">
+      <el-option label="全部" :value='null' />
+      <el-option label="待处理" value=0 />
+      <el-option label="已受理" value=1 />
+      <el-option label="被驳回" value=2 />
+      <el-option label="已完成" value=3 />
+    </Search>
     <div class="mytable-data">
       <el-table
         :data="tableList"
@@ -29,7 +35,7 @@
     </div>
     <Mypage v-if="total" :total="total" v-model:page="page" v-model:size="size" @change="getList"/>
     <Refuse v-model="refuseShow" @success='refuseSuccess'/>
-    <UpUser v-model="upUserShow" @success='refuseSuccess'/>
+    <UpUser v-model="upUserShow" @success='upUserSuccess'/>
   </div>
 </template>
 
@@ -50,8 +56,6 @@ let total=ref(0)
 let page = ref(1)
 let size = ref(10)
 let createTime= ref()
-let name = ref()
-let statuses = ref()
 let loading=ref(false)
 let refuseShow=ref(false)
 let upUserShow = ref(false)
@@ -60,7 +64,7 @@ let upUserId = ref()
 const inputSearch = reactive({
   userName:'',
   status:'',
-  create_time:''
+  create_time:[]
 })
 const tableTitle = ref([
   {type:'text',lable:'ID',prop:'id',width:100},
@@ -79,7 +83,7 @@ const tableTitle = ref([
 //   {id: 6,industry_id: "A,04,042",u_name:'',c_name:'vbcvb',city: 110000,province:110000,district:110101,group_name: "测试1",group_desc: "测试1测试1测试1测试1测试1",create_time:1646209666231,status:2},
 //   {id: 6,industry_id: "A,04,042",u_name:'',c_name:'bcvbcvb',city: 110000,province:110000,district:110101,group_name: "测试1",group_desc: "测试1测试1测试1测试1测试1",create_time:1646209666231,status:3},
 // ])
-  let tableList = ref([])
+let tableList = ref([])
 
 const getList=async()=>{
   loading.value=true
@@ -87,8 +91,10 @@ const getList=async()=>{
     current:page.value,
     size:size.value,
     createTime:createTime.value,
-    name:name.value,
-    status:statuses.value
+    name:inputSearch.userName,
+    status:inputSearch.status,
+    startTime:inputSearch.create_time[0],
+    endTiem:inputSearch.create_time[1],
   }
   const {status,body} = await businessDemand_api(data)
   loading.value=false
@@ -102,11 +108,7 @@ getList()
 const resetSearch=()=>{
   inputSearch.userName='',
   inputSearch.status='',
-  inputSearch.create_time=''
-}
-const searchword = (val:any) => {
-  console.log(inputSearch );
-  
+  inputSearch.create_time=[]
 }
 //通过按钮
 const pass=async(row:any)=>{
@@ -157,6 +159,11 @@ const refuseSuccess=async(val:string)=>{
 const upUser=(row:any)=>{
   upUserShow.value=true
   upUserId.value = row.id
+}
+
+//上传客户点击确认，附件上传成功后
+const upUserSuccess = async (val:any)=>{
+  console.log(val)
 }
 </script>
 

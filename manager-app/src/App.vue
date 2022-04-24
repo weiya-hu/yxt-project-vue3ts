@@ -415,4 +415,9 @@ img{
     z-index: 11!important;
   }
 }
+.up-user-hwy{
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{
+      -webkit-appearance: none;
+    }
+}
 </style>

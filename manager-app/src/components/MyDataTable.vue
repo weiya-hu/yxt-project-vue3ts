@@ -74,17 +74,23 @@
   </el-table-column>
   <el-table-column v-if="type==='industry_id'" :property="prop" :label="lable" :min-width="width"  align="center">
     <template #default="scope">
-      <div>{{getHashStr(scope.row.industry_id,typeHash,'last')}}</div>
+      <!-- <div>{{getHashStr(scope.row.industry_id,typeHash,'last')}}</div> -->
+      <div>{{getHashStr(scope.row.industry_id,store.state.typeHash,'last')}}</div>
     </template>
   </el-table-column>
   <el-table-column  v-if="type==='city_id'" :property="prop" :label="lable" :min-width="width"  align="center">
     <template #default="{row}">
       <el-tooltip effect="dark" placement="top">
         <template #content>
-          <div style="width:100px">{{ row.province >0 && getHashStr(strToArr(row.province,row.city,row.district),addressHash)}}</div>
+          <div style="width:100px">{{ row.province >0 && getHashStr(strToArr(row.province,row.city,row.district),store.state.addressHash)}}</div>
         </template>
-        <div >{{ row.province >0 && getHashStr(strToArr(row.province,row.city,row.district),addressHash)}}</div>
+        <div >{{ row.province >0 && getHashStr(strToArr(row.province,row.city,row.district),store.state.addressHash)}}</div>
       </el-tooltip>
+    </template>
+  </el-table-column>
+  <el-table-column v-if="type==='source'" :property="prop" :label="lable" :min-width="width">
+    <template #default="{row}">
+      <div>{{getSource(row[prop])}}</div>
     </template>
   </el-table-column>
 </template>
@@ -92,8 +98,10 @@
 <script setup lang="ts">
 import { toRefs,ref} from 'vue'
 import {Format} from '@/utils/date'
-import { getHash,getHashStr,strToArr } from '@/utils/index'
-import {getDimGeo_api,getDimIndustry_api} from '@/api/dmp/findb'
+import {getHashStr,strToArr,getSource } from '@/utils/index'
+// import {getDimGeo_api,getDimIndustry_api} from '@/api/dmp/findb'
+import { mainStore } from '@/store/index'
+const store = mainStore()
 const props = withDefaults(defineProps<{
   type:string,
   lable?:string,
@@ -103,15 +111,15 @@ const props = withDefaults(defineProps<{
 }>(),{})
 
 const errorShow = ref(false)
-const typeHash = ref()
-const addressHash = ref()
+// const typeHash = ref()
+// const addressHash = ref()
 
-props.type === 'industry_id' && getDimIndustry_api().then(({status,body})=>{
-  status && (typeHash.value = getHash(body,'industry_id'))
-})
-props.type === 'city_id' && getDimGeo_api().then(({status,body})=>{
-  status && (addressHash.value = getHash(body,'code'))
-})
+// props.type === 'industry_id' && getDimIndustry_api().then(({status,body})=>{
+//   status && (typeHash.value = getHash(body,'industry_id'))
+// })
+// props.type === 'city_id' && getDimGeo_api().then(({status,body})=>{
+//   status && (addressHash.value = getHash(body,'code'))
+// })
 const emit = defineEmits(['click'])
 const operate=(index:number,row:any)=>{
   (row.status===2) && emit('click',index,row);
@@ -148,6 +156,12 @@ const getStatus = (type:number)=>{
       break;
   }
   return obj.value
+}
+const statuses={
+  1:{text:'待处理',className:'calcula_yellow'},
+  2:{text:'已受理',className:'calculating'},
+  3:{text:'被驳回',className:'calculat-false'},
+  4:{text:'已完成',className:'calculated'}
 }
 
 </script>

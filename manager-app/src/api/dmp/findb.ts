@@ -1,15 +1,5 @@
 import { get, post } from '@/utils/request'
 
-//获取地区列表
-export const getDimGeo_api = (): Promise<res> => {
-  return get(1,'/common/dim/geo/tree.list')
-}
-
-//获取行业列表
-export const getDimIndustry_api = (): Promise<res> => {
-  return get(1,'/common/dim/industry/tree.list')
-}
-
 //找B端个性化数据表单列表
 export const businessDemand_api = (data:any): Promise<res> => {
   return get(1,'/dmp/business/demand/condition.page',data)
@@ -28,4 +18,64 @@ export const businessDemandPass_api = (data:any): Promise<res> => {
 //找B端个性化驳回需求
 export const businessDemandReject_api = (data:any): Promise<res> => {
   return post(1,'/dmp/business/demand/reject.do', data, true)
+}
+
+//搜索渠道需求列表
+export const channelPage_api = (data:any): Promise<res> => {
+  return get(1,'/dmp/channel/condition.page',data)
+}
+
+//渠道表单详情
+export const channelDetail_api = (data:any): Promise<res> => {
+  return get(1,'/dmp/channel/detail.page',data)
+}
+
+//渠道通过需求
+export const channelPass_api = (data:any): Promise<res> => {
+  return post(1,'/dmp/channel/pass.do', data, true)
+}
+
+//渠道驳回需求
+export const channelReject_api = (data:any): Promise<res> => {
+  return post(1,'/dmp/channel/reject.do', data, true)
+}
+
+//搜索项目需求列表
+export const itemPage_api = (data:any): Promise<res> => {
+  return get(1,'/dmp/item/condition.page',data)
+}
+
+//项目表单详情
+export const itemDetail_api = (data:any): Promise<res> => {
+  return get(1,'/dmp/item/detail.page',data)
+}
+
+//搜索采购商列表
+export const overseasPurchasePage_api = (data:any): Promise<res> => {
+  return get(1,'/dmp/overseas/purchase/condition.page',data)
+}
+
+//采购商表单详情
+export const overseasPurchaseDetail_api = (data:any): Promise<res> => {
+  return get(1,'/dmp/overseas/purchase/detail.page',data)
+}
+
+//海外审核通过操作
+export const overseasPass_api = (data:any): Promise<res> => {
+  return post(1,'/dmp/overseas/pass.do', data, true)
+}
+
+//海外驳回需求
+export const overseasReject_api = (data:any): Promise<res> => {
+  return post(1,'/dmp/overseas/reject.do', data, true)
+}
+
+//搜索供应商列表
+export const overseasSupplyPage_api = (data:any): Promise<res> => {
+  return get(1,'/dmp/overseas/supply/condition.page',data)
+}
+
+//采购商表单详情
+export const overseasSupplyDetail_api = (data:any): Promise<res> => {
+  return get(1,'/dmp/overseas/supply/detail.page',data)
 }

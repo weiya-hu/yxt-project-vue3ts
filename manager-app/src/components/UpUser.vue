@@ -1,5 +1,5 @@
 <template>
-  <div class="up-user"> 
+  <div class="up-user up-user-hwy"> 
     <el-dialog v-model="modelValue" :width="500" draggable @close="close">
       <template #title>
         <div class="up-user-title">上传客户</div>
@@ -7,59 +7,72 @@
       <div>
         <el-form :model="formValue" v-loading="loading" ref="formRef" :rules="upUserRule">
           <el-form-item
+            v-if="props.type==='money'"
             required
             prop="money"
             label="消耗金额"
+            class="use-money"
           >
             <el-input 
               placeholder="请输入"
               v-model="formValue.money"
-              clearable
+              type="number"
             ></el-input>
-            元
+            <div class="money-pexl">元</div>
           </el-form-item> 
-          <el-form-item
-            label="上传方式"
-            required
-          >
-            <el-radio-group v-model="formValue.type">
+          <el-form-item>
+            <el-radio-group v-model="formValue.uploadType">
               <el-radio :label="1">覆盖原客户</el-radio> />
               <el-radio :label="2">新增客户</el-radio>/>
             </el-radio-group>
+            <template #label>
+              <div class="up-type">上传方式</div>
+            </template>
           </el-form-item>
-          <el-form-item
-            label="显示数据"
-            required
-          >
-            <el-radio-group v-model="formValue.showData">
+          <el-form-item>
+            <el-radio-group v-model="formValue.show">
               <el-radio :label="1">全部</el-radio> />
               <el-radio :label="2">自定义</el-radio>/>
             </el-radio-group>
+            <template #label>
+              <div class="up-type">显示数据</div>
+            </template>
           </el-form-item>
-          <div v-if="formValue.showData===2" class="flexl">
-            每隔
-            <el-form-item
-            >
-              <el-input 
-                v-model="formValue.day"
-              ></el-input>
-            </el-form-item>
-            日显示数据，直到第
-            <el-form-item
-            >
-              <el-input 
-                v-model="formValue.num"
-              ></el-input>
-            </el-form-item>
-            批次显示结束
+          <div v-if="formValue.show===2" class="flexr">
+            <div class="flexl up-batch">
+              每隔
+              <el-form-item
+                :required="formValue.show == 2"
+                prop="day"
+              >
+                <el-input 
+                  v-model="formValue.days"
+                  type="number"
+                ></el-input>
+              </el-form-item>
+              日显示数据，直到第
+              <el-form-item
+                :required="formValue.show == 2"
+                prop="day"
+              >
+                <el-input 
+                  v-model="formValue.batch"
+                  type="number"
+                ></el-input>
+              </el-form-item>
+              批次显示结束
+            </div>
           </div>
           <el-form-item
-            required
-            label="客户上传"
+            prop="url"
           >
             <MyUpload 
-              v-model="formValue.url"
+              v-model="formValue.attachment"
               :exnameList="['.xlsx']"
+              @change="upFileChange"
+              ref="fileUpRef"
+              @error="fileUpError"
+              @success="fileUpSuccess"
             >
             <template v-slot>
               <div class="upload-slot">
@@ -69,13 +82,16 @@
               </div>
             </template>
             </MyUpload>
+            <template #label>
+              <div class="up-type">客户上传</div>
+            </template>
           </el-form-item>
         </el-form>
       </div>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="close">取消</el-button>
-          <el-button type="primary" @click="sure" :disabled="!formValue.url">确认</el-button>
+          <el-button type="primary" @click="sure" :disabled="!formValue.attachment">确认</el-button>
         </span>
       </template>
     </el-dialog>
@@ -91,6 +107,8 @@
 import { reactive,ref} from 'vue'
 import {useRoute} from 'vue-router'
 import MyUpload from '@/components/MyUpload.vue'
+import { ElMessage } from 'element-plus'
+import axios from 'axios'
 
 //父组件传的值 
 const props = withDefaults(defineProps<{
@@ -102,47 +120,123 @@ const props = withDefaults(defineProps<{
 
 //变量
 const route = useRoute()
+const upfileErrorType= ref()
+const fileVali=(rule:any,value:any,callback:any)=>{
+  switch (upfileErrorType.value) {
+    case 'size':
+      callback(new Error('请添加大小不超过4M的文件'))
+      break;
+    case 'type':
+      callback(new Error('.xlsx 格式的文件'))
+      break;
+    case 'none':
+      callback(new Error('请添加文件'))
+      break;
+    default:
+      callback()
+      break;
+  }
+}
 const upUserRule= reactive({
-  reason:[{
+  money:[{
     required: true,
-    message: '请输入不通过原因',
+    message: '请输入消耗金额',
     trigger: 'change',
   },{
     required: true,
-    message: '请输入不通过原因',
+    message: '请输入消耗金额',
     trigger: 'blur',}
   ],
+  day:[{
+    required: true,
+    message: '必填项',
+    trigger: 'change',
+  },{
+    required: true,
+    message: '必填项',
+    trigger: 'blur',}
+  ],
+  url:[{
+    validator:fileVali,
+    trigger: 'change',}
+  ]
 })
 const formValue=ref({
-  type:1,
-  showData:1,
-  money:'',
-  day:'',
-  num:'',
-  url:''
+  uploadType:1,
+  show:1,
+  money:null,
+  days:null,
+  batch:null,
+  attachment:''
 })
-const myUploadmsg= ref(
-  "<div>dskfjdsklf </div>"
-)
+const templateUrl={
+  '/dmp/findb/specificdata':'/bgapi/dmp/business/template/download.do',
+  '/dmp/findc/wxdata':'/bgapi/dmp/customer/template/download.do?type=5',
+  '/dmp/findc/addata':'/bgapi/dmp/customer/template/download.do?type=4',
+  '/dmp/findc/baidudata':'/bgapi/dmp/customer/template/download.do?type=6',
+  '/dmp/findc/bigdata':'/bgapi/dmp/customer/template/download.do?type=7',
+  '/dmp/findc/teldata':'/bgapi/dmp/customer/template/download.do?type=8',
+  '/dmp/findc/biddingdata':'/bgapi/dmp/customer/template/download.do?type=9',
+  '/dmp/findc/msgdata':'/bgapi/dmp/customer/template/download.do?type=10',
+  '/dmp/seekpathpro/seekpath':'/bgapi/dmp/channel/template/download.do',
+  '/dmp/seekpathpro/seekpro':'/bgapi/dmp/item/template/download.do',
+  '/dmp/seekabroad/buyer':'/bgapi/dmp/overseas/template/download.do',
+  '/dmp/seekabroad/supplier':'/bgapi/dmp/overseas/template/download.do'
+}
 const templateLink= ref('hjghj')
 const formRef = ref()
+const fileUpRef = ref()
 const loading = ref(false)
 const refuseDisabled = ref(true)
 const emit = defineEmits(['update:modelValue','success'])
+const templeteUrl = ()=>{
+let path:string=route.path
+  //下载模板要设置返回类型，不然文件会损坏
+  axios({
+    url:templateUrl[path as keyof typeof templateUrl],
+    method:'get',
+    headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+    }, 
+    responseType: 'blob'
+  }).then((res)=>{
+    templateLink.value=URL.createObjectURL(res.data);
+  })
+}
+templeteUrl()
 const close=()=>{
   emit('update:modelValue',false)
+   URL.revokeObjectURL(templateLink.value)
   formRef.value.resetFields()
 }
 const sure=()=>{
   console.log(formValue.value)
   formRef.value.validate(async(valid:any) => {
     if (valid) {
-      emit('success',formValue.value)
+      console.log(fileUpRef.value)
+      fileUpRef.value!.submit()
+      
     } else {
       console.log('error submit!');
       return false
     }
   })
+}
+const upFileChange=(val:string)=>{
+ upfileErrorType.value=val
+  formRef.value.validateField('attachment')
+}
+const fileUpError=(val:any)=>{
+  ElMessage({
+    showClose: true,
+    message: '附件上传失败，请稍后再试',
+    type: 'error',
+    grouping: true,
+  })
+}
+const fileUpSuccess=(val:any)=>{
+  emit('success',{...formValue.value,attachment:val})
+  close()
 }
 </script>
 
@@ -190,14 +284,55 @@ const sure=()=>{
     border: none  ;
     box-shadow: none;
   }
-  // :deep(.el-form-item){
-  //   margin: 0;
-  // }
   :deep(.el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before){
     margin-right: 8px;
   }
   :deep(.el-form-item__label){
     padding-right: 20px;
+  }
+  .use-money{
+    :deep(.el-input__inner){
+      width: 336px;
+    }
+    .money-pexl{
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+  .up-type::before{
+    content: "*";
+    color: var(--el-color-danger);
+    margin-right: 8px;
+  }
+  .up-batch{
+    width: 362px;
+    height: 48px;
+    background: #F7F8FA;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    padding-left: 8px;
+    :deep(.el-form-item){
+      margin-bottom: 0;
+    }
+    :deep(.el-input__inner){
+      width: 32px;
+      height: 32px;
+      background: #FFFFFF;
+      border: 1px solid rgba(221,221,221,1);
+      border-radius: 4px;
+      font-size: 14px;
+      color: #333333;
+      margin: 0 8px;
+    }
+    :deep(.el-form-item__error){
+      padding-left: 7px;
+    }
+    
+  }
+  :deep(input[type="number"]){
+    -moz-appearance: textfield;
   }
 }
 </style>

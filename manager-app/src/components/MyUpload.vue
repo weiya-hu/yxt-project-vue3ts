@@ -107,7 +107,7 @@ const upChange = (file: UploadFile, list: UploadFile[])=>{
 }
 
 const submit = ()=>{
-  getAliToken_api({site:props.type=='video'?'official_video':'official_img'}).then((res:res)=>{
+  getAliToken_api({site:props.type=='video'?'official_video':'dmp_excel'}).then((res:res)=>{
     return new Promise<string>((resolve, reject) => {
       if(res.status == 1){
         hostUrl.value = res.body.host
