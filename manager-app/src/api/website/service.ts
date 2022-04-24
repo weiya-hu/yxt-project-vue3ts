@@ -78,6 +78,13 @@ export const addArt_api = (data:{ article_type:string|number, status:1|2|3, text
 }
 
 /**
+ * @name 营销学堂文章编辑
+*/
+export const editArt_api = (data:{ id:string|number, article_type:string|number, status:1|2|3, text:string, title:string }): Promise<res> => {
+  return post(1,'/manage/customer/article.up', data, true)
+}
+
+/**
  * @name 营销学堂文章根据id删除
 */
 export const delArt_api = (data:{ id:string|number }): Promise<res> => {

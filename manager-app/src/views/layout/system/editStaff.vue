@@ -95,13 +95,13 @@ const setStaffLv = async () => {
         if(userLv.indexOf('24') == -1){
           // 24 管理员设置
           router.replace('/index')
-        }else{
-          router.back()
+          return
         }
+        router.back()
       })
-    }else{
-      router.back()
+      return
     }
+    router.back()
   }
 }
 </script>

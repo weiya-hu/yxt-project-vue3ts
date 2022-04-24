@@ -44,5 +44,9 @@ const changeSize = (size: number) => {
 </script>
 
 <style scoped lang="scss">
-
+.mypage{
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 30px;
+}
 </style>

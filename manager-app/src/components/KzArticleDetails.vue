@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<{
     status:number,
     text:string,
   },
-  statusObj?:any
+  statusObj?:any // status 对应obj
 }>(),{
   statusObj : () => ({
     1:{ className:'sdot_b', text:'草稿' },

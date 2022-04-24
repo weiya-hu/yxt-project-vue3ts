@@ -9,7 +9,7 @@
       <div v-show="tab == 1">
         <div class="fsc mycard">
           <div class="el-card__header">文章列表</div>
-          <el-button type="primary">添加</el-button>
+          <el-button type="primary" @click="$router.push('addarticle')">添加</el-button>
         </div>
         <div class="mytable">
           <el-table :data="tableData" border draggable>
@@ -35,7 +35,7 @@
                   <div class="line" v-if="row.status != 1"></div>
                   <el-link type="primary" v-if="row.status != 1" @click="setStatus(row.id, row.status == 2 ? 3 : 2)">{{row.status == 2 ? '上线' : '下线'}}</el-link>
                   <div class="line" v-if="row.status == 2"></div>
-                  <el-link type="primary" v-if="row.status != 3">编辑</el-link>
+                  <el-link type="primary" v-if="row.status != 3" @click="$router.push('addarticle?id=' + row.id)">编辑</el-link>
                   <div class="line" v-if="row.status != 3"></div>
                   <el-link type="primary" v-if="row.status != 3" @click="del(row.id)">删除</el-link>
                 </div>

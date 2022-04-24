@@ -302,7 +302,13 @@ const routes = [
                 path: '/website/service/articledetails',
                 name: 'SchoolArticleDetails',
                 component: () => import('@/views/layout/website/service/articleDetails.vue'),
-                meta: { title: '文章详情', father:'/website/service/school', lv:'21',},
+                meta: { title: '文章详情', father:'/website/service/school', lv:'21' },
+              },
+              {
+                path: '/website/service/addarticle',
+                name: 'SchoolAddArticle',
+                component: () => import('@/views/layout/website/service/addArticle.vue'),
+                meta: { title: '添加文章', father:'/website/service/school', lv:'21' },
               },
               {
                 path: '/website/service/feedback',

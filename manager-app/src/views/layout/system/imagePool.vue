@@ -136,7 +136,7 @@ const close = () => {
   addShow.value = false
 }
 
-const sizeHash = ref<any>({}) // 专门用另外的对象是因为每次getList()会重新赋值整个list，但为了节约性能dom是绑定了:key="v.id"的，有key那vue就会根据key对比dom是否改变而更新dom，不会更新整个列表，没有改变的dom就不会再次触发img的onload事件，如果宽高直接添加在list上，getList()更新整个list，id不变的dom又不触发img的onload，导致宽高丢失
+const sizeHash = ref<any>({}) // 专门用另外的对象是因为每次getList()会重新赋值整个list，但为了节约性能dom是绑定了:key="v.id"的，有key那vue就会根据key对比dom是否改变而更新dom，不会更新整个列表，没有改变的dom即id相同的dom就不会再次触发img的onload事件，如果宽高直接添加在list上，getList()更新整个list，id不变的dom又不触发img的onload，导致宽高丢失
 const getImageSize = (id:string|number,e:any) => {
   // 图片加载后获取图片真实宽高
   const a = e.path[0] as HTMLImageElement

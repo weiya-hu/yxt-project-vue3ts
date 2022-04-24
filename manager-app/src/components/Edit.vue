@@ -93,11 +93,9 @@ const emit = defineEmits(['update:modelValue'])
 const editvalue = ref('') // 打包到线上绑定值会失效 所以用了这个蠢办法
 onUpdated(()=>{
   editvalue.value = props.modelValue
-  console.log('onUpdated',props.modelValue);
 })
 watch(editvalue,(newValue)=>{
   emit('update:modelValue',newValue)
-  console.log('watch',newValue);
 })
 
 const upImages = async ()=>{
@@ -119,7 +117,7 @@ const upImages = async ()=>{
       })
       const j = contentImgs.value.findIndex(v=>v.blobUrl == oneImgBlobUrl)
       if(j > -1){
-        const res = await getAliToken_api({site:'cms_article'})
+        const res = await getAliToken_api({site:'official_img'})
         if(res.status == 1){
           const fileObj = contentImgs.value[j]
           const exname = fileObj.fileName.substring(fileObj.fileName.lastIndexOf("."))
@@ -167,7 +165,7 @@ const upImages = async ()=>{
     if(imgArr[i]){
       await upFn(imgArr[i])
     }
-    console.log(t,123);
+    console.log(t,'edit');
     // emit('update:modelValue',t)
     editvalue.value = t
   }

@@ -165,11 +165,6 @@ img{
   color: #666666;
   line-height: 22px;
 }
-.mypage{
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 30px;
-}
 
 .myform{
   .el-form-item--default{

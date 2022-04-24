@@ -1,7 +1,6 @@
 <template>
   <div class="company_page">
     <div @click="$router.push('companydetails')">去详情</div>
-    <Mypage :total="50" v-model="page"/>
 
     <el-card class="mycard">
       <template #header>

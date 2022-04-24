@@ -42,3 +42,13 @@ interface KzPool {
   cover_url?:string,
   [propName: string]: any
 }
+
+/**
+ * @name 添加文章类型类型
+*/
+interface AForm {
+  title:string,
+  article_type:string|number,
+  text:string,
+  thumb_url?:string,
+}

@@ -2,8 +2,6 @@ import { ElMessage , ElMessageBox } from 'element-plus'
 
 import emiter from '@/utils/bus'
 
-import { ref } from 'vue'
-
 export const getUrlParams = (search: string, name: string) => {
   //search方式跳转获取参数
   const paramsString = search.substring(1)
@@ -32,12 +30,12 @@ export function errMsg(msg: string, time?: number) {
   })
 }
 
-export function infoMsg(msg: string, time?: number) {
+export function warnMsg(msg: string, time?: number) {
   ElMessage({
     showClose: true,
     message: msg,
     grouping: true,
-    type: 'info',
+    type: 'warning',
     duration: time||3000,
   })
 }
@@ -238,7 +236,7 @@ export function lookVideo(video:string){
 
 /**
  * 显示素材库组件以选择 
- * @callbackName 选择素材后emiter.on回调名 (内部显示emiter.emit为'kzPoolShow')
+ * @callbackName 选择素材后emiter.on回调名，此参数尽量全局唯一，即不要有同样的回调名 (内部显示emiter.emit为'kzPoolShow')
  * @type 显示时默认展示的tab，1：图片，2：视频 不传默认1
  * @disabled 传入type时另一个tab是否禁用
 */
