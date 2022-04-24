@@ -139,7 +139,7 @@
           <div class="sel_pool fcc" @click="showKzPool('sel_tutorials', 2, true)">
             <div class="poolbox" v-if="addPool.id">
               <img :src="addPool.cover_url" alt="">
-              <div class="lookicon fcc lookhover" @click.stop="lookImage([addPool.cover_url],0)">
+              <div class="lookicon fcc lookhover" @click.stop="lookImage([addPool.cover_url!],0)">
                 <el-icon size="14px"><zoom-in/></el-icon>
               </div>
               <div class="videoicon fcc lookhover" @click.stop="lookVideo(addPool.video_url)">

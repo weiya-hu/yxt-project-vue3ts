@@ -1,7 +1,7 @@
 <template>
   <div class="data_data">
     <!-- <div @click="$router.push('teldatadetails')">去详情</div> -->
-    <Mypage :total="50" v-model="page"/>
+    <!-- <Mypage :total="50" v-model="page"/> -->
   </div>
 </template>
 

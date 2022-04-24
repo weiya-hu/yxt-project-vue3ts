@@ -33,7 +33,7 @@ interface Params {
   source:number,
 }
 const searchParams = ref<Params>({
-  size:10,
+  size:50,
   current:1,
   source:1
 })
@@ -100,6 +100,7 @@ const changePage =()=>{
 
 <style scoped lang="scss">
 .kzdata_page{
+  height: 100%;
   .topbtns{
     padding-top: 30px;
   }

@@ -18,5 +18,7 @@ const keepList = computed(() => store.state.keepList)
 </script>
 
 <style scoped>
-
+.findb_page{
+  height: 100%;
+}
 </style>

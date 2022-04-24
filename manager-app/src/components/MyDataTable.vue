@@ -14,7 +14,7 @@
         effect="dark"
         placement="top-start"
       >
-        <template #content><div class="text-tooltip-style">{{row[prop] || '---'}}</div></template>
+        <template #content><div class="text-tooltip-style">{{(prop && row[prop]) || '---'}}</div></template>
         <div class="text-style fleximg">{{prop && row[prop]?row[prop]:'---'}}</div>
       </el-tooltip>
       </div>
@@ -29,7 +29,7 @@
   </el-table-column>
   <el-table-column v-if="type==='link'" :property="prop" :label="lable" :min-width="width" align="center">
      <template #default="{row}">
-        <el-link type="primary" :href="row[prop]">{{ row[prop] }}</el-link>
+        <el-link type="primary" :href="prop && row[prop]">{{ prop && row[prop] }}</el-link>
       </template>
   </el-table-column>
   <el-table-column v-if="type==='select'" type="selection" :width="width" align="center" />
@@ -51,7 +51,7 @@
   </el-table-column>
   <el-table-column v-if="type==='date'" :property="prop" :label="lable" :min-width="width" align="center">
     <template #default="{row}">
-      <div>{{Format('yyyy-MM-dd',new Date(row[prop])) }}</div>
+      <div>{{Format('yyyy-MM-dd',new Date(prop && row[prop])) }}</div>
     </template>
   </el-table-column>
   <el-table-column v-if="type==='city'" :property="prop" :label="lable" :min-width="width" align="center">
@@ -90,7 +90,7 @@
   </el-table-column>
   <el-table-column v-if="type==='source'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
-      <div>{{getSource(row[prop])}}</div>
+      <div>{{prop && getSource(row[prop])}}</div>
     </template>
   </el-table-column>
 </template>

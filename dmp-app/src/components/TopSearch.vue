@@ -138,8 +138,8 @@ import { Gajax } from '@/utils/request'
 import {errMsg} from '@/utils/index'
 import MyCascader from "@/components/MyCascader.vue";
 const props = withDefaults(defineProps<{
-  words:{id:number,keyword:string}[],
-  hasHeight:boolean,
+  words:{id:number,keyword:string}[], // 历史搜索
+  hasHeight:boolean, // 是否显示高级查询
   placeholder:string
 }>(),{
   hasHeight:false
@@ -311,6 +311,7 @@ const showLables = reactive({
   contact:'',
   ctype:'',
 })
+// heightSearch 高级搜索，返回高级搜索参数；search，返回搜索框内容
 const emit = defineEmits(['heightSearch','search'])
 const searchWord = ref<string>('')
 const wordSearch = ()=>{

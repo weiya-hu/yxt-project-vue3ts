@@ -27,5 +27,10 @@ const change = (page:number)=>{
 </script>
 
 <style scoped lang="scss">
-
+.mypage{
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
 </style>

@@ -45,7 +45,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="审核结果：" prop="reslut">
-            <el-select v-model="newsForm.reslut" placeholder="请选择"  :disabled="newsForm.status!=3">
+            <el-select v-model="newsForm.reslut" placeholder="请选择" :disabled="Number(newsForm.status) != 3">
               <el-option label="离线" value="3" />
               <el-option label="在线" value="4" />
             </el-select>
