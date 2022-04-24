@@ -7,33 +7,37 @@
       <el-option label="被驳回" value=2 />
       <el-option label="已完成" value=3 />
     </Search>
-    <div class="mytable-data">
-      <el-table
-        :data="tableList"
-        size="small"
-        row-class-name="my-data-table-row"
-        v-loading="loading"
-        :border="true"
-      >
-        <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
-        <el-table-column fixed="right" property="operate" label="操作" min-width="170" align="center">
-          <template #default="{row}">
-            <div class="operate-button-pre">
-              <el-link type="primary" v-if="row.status===0" :href="row.attachment" downLoad="附件.zip">下载附件</el-link>
-              <el-link type="primary" v-if="row.status===0" @click="refuse(row)">驳回</el-link>
-              <el-link type="primary" v-if="row.status===0" @click="pass(row)">通过</el-link>
-              <el-link type="primary" v-if="row.status===1 || row.status===3" @click="upUser(row)">上传客户</el-link>
-              <el-link type="primary" v-if="row.status===2" @click="reason(row)">驳回原因</el-link>
-              <el-link type="primary" v-if="row.status===3" @click="$router.push('/dmp/seekabroad/buyerdetail?id='+row.id)">详情</el-link>
-            </div>
+    <div class="specific_data-content">
+      <div class="mytable-data">
+        <el-table
+          :data="tableList"
+          size="small"
+          row-class-name="my-data-table-row"
+          v-loading="loading"
+          :border="true"
+        >
+          <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
+          <el-table-column fixed="right" property="operate" label="操作" min-width="170" align="center">
+            <template #default="{row}">
+              <div class="operate-button-pre">
+                <el-link type="primary" v-if="row.status===0" :href="row.attachment" downLoad="附件.zip">下载附件</el-link>
+                <el-link type="primary" v-if="row.status===0" @click="refuse(row)">驳回</el-link>
+                <el-link type="primary" v-if="row.status===0" @click="pass(row)">通过</el-link>
+                <el-link type="primary" v-if="row.status===1 || row.status===3" @click="upUser(row)">上传客户</el-link>
+                <el-link type="primary" v-if="row.status===2" @click="reason(row)">驳回原因</el-link>
+                <el-link type="primary" v-if="row.status===3" @click="$router.push('/dmp/findb/specificdatadetails?id='+row.id)">详情</el-link>
+              </div>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <MyEmpty/>
           </template>
-        </el-table-column>
-        <template #empty>
-          <MyEmpty/>
-        </template>
-      </el-table>
+        </el-table>
+      </div>
+      <div class="flexr">
+        <Mypage v-if="total" :total="total" v-model:page="page" v-model:size="size" @change="getList"/>
+      </div>
     </div>
-    <Mypage v-if="total" :total="total" v-model:page="page" v-model:size="size" @change="getList"/>
     <Refuse v-model="refuseShow" @success='refuseSuccess'/>
     <UpUser v-model="upUserShow" @success='upUserSuccess'/>
   </div>
@@ -173,15 +177,19 @@ export default { name:'SeekPath' }
     border-radius: 4px;
   }
   .mytable-data{
-    margin-top: 16px;
-    background: #FFFFFF;
-    padding: 24px;
+    margin-bottom: 24px;
     .operate-button-pre{
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 5px;
     }
+  }
+  .specific_data-content{
+    margin-top: 16px;
+    background: #FFFFFF;
+    padding: 24px;
+    border: 1px solid rgba(221,221,221,1);
   }
 }
 

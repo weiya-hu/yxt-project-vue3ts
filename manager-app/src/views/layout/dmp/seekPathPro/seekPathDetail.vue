@@ -1,21 +1,25 @@
 <template>
   <div class="specific_data_details_page">
     <DetailsHeader/>
-     <div class="mytable-data">
-      <el-table
-        :data="tableList"
-        size="small"
-        row-class-name="my-data-table-row"
-        v-loading="loading"
-        :border="true"
-      >
-        <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
-        <template #empty>
-          <MyEmpty/>
-        </template>
-      </el-table>
+    <div class="specific_data-content">
+      <div class="mytable-data">
+        <el-table
+          :data="tableList"
+          size="small"
+          row-class-name="my-data-table-row"
+          v-loading="loading"
+          :border="true"
+        >
+          <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
+          <template #empty>
+            <MyEmpty/>
+          </template>
+        </el-table>
+      </div>
+      <div class="flexr">
+        <Mypage v-if="total" :total="total" v-model:page="page" v-model:size="size" @change="getList"/>
+      </div>
     </div>
-    <Mypage v-if="total" :total="total" v-model:page="page" v-model:size="size" @change="getList"/>
   </div>
 </template>
 
@@ -72,9 +76,13 @@ getList()
 </script>
 
 <style scoped lang="scss">
-.mytable-data{
+.specific_data-content{
   margin-top: 16px;
   background: #FFFFFF;
   padding: 24px;
+  border: 1px solid rgba(221,221,221,1);
+  .mytable-data{
+    margin-bottom: 24px;
+  }
 }
 </style>

@@ -190,7 +190,7 @@ const loading = ref(false)
 const refuseDisabled = ref(true)
 const emit = defineEmits(['update:modelValue','success'])
 const templeteUrl = ()=>{
-let path:string=route.path
+  let path:string=route.path
   //下载模板要设置返回类型，不然文件会损坏
   axios({
     url:templateUrl[path as keyof typeof templateUrl],

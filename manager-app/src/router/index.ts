@@ -344,7 +344,7 @@ const routes = [
                 path: '/dmp/findb/specificdatadetails',
                 name: 'SpecificDataDetails',
                 component: () => import('@/views/layout/dmp/findb/specificDataDetails.vue'),
-                meta: { title: '个性化数据详情', father:'/dmp/findb/specificdata' },
+                meta: { title: '个性化数据详情', lv:'41',father:'/dmp/findb/specificdata' },
               },
             ]
           },
@@ -365,7 +365,7 @@ const routes = [
                 path: '/dmp/findc/wxdatadetail',
                 name: 'WxDataDetail',
                 component: () => import('@/views/layout/dmp/findc/wxDataDetail.vue'),
-                meta: { title: '微信获客详情', father:'/dmp/findc/wxdata' },
+                meta: { title: '微信获客详情', lv:'43',father:'/dmp/findc/wxdata' },
               },
               {
                 path: '/dmp/findc/addata',
@@ -377,7 +377,7 @@ const routes = [
                 path: '/dmp/findc/addatadetail',
                 name: 'AdDataDetail',
                 component: () => import('@/views/layout/dmp/findc/adDataDetail.vue'),
-                meta: { title: '广告投放详情', father:'/dmp/findc/addata' },
+                meta: { title: '广告投放详情', lv:'44',father:'/dmp/findc/addata' },
               },
               {
                 path: '/dmp/findc/baidudata',
@@ -389,7 +389,7 @@ const routes = [
                 path: '/dmp/findc/baidudatadetail',
                 name: 'BaiduDataDetail',
                 component: () => import('@/views/layout/dmp/findc/baiduDataDetail.vue'),
-                meta: { title: '百度关键词获客详情', father:'/dmp/findc/baidudata' },
+                meta: { title: '百度关键词获客详情', lv:'45',father:'/dmp/findc/baidudata' },
               },
               {
                 path: '/dmp/findc/bigdata',
@@ -401,7 +401,7 @@ const routes = [
                 path: '/dmp/findc/bigdatadetail',
                 name: 'BigDataDetail',
                 component: () => import('@/views/layout/dmp/findc/bigDataDetail.vue'),
-                meta: { title: '大数据获客详情', father:'/dmp/findc/bigdata' },
+                meta: { title: '大数据获客详情',lv:'46', father:'/dmp/findc/bigdata' },
               },
               {
                 path: '/dmp/findc/teldata',
@@ -413,7 +413,7 @@ const routes = [
                 path: '/dmp/findc/teldatadetail',
                 name: 'TelDataDetail',
                 component: () => import('@/views/layout/dmp/findc/telDataDetail.vue'),
-                meta: { title: '400获客详情', father:'/dmp/findc/teldata' },
+                meta: { title: '400获客详情', lv:'47',father:'/dmp/findc/teldata' },
               },
               {
                 path: '/dmp/findc/biddingdata',
@@ -425,7 +425,7 @@ const routes = [
                 path: '/dmp/findc/biddingdatadetail',
                 name: 'BiddingDataDetail',
                 component: () => import('@/views/layout/dmp/findc/biddingDataDetail.vue'),
-                meta: { title: '竞价获客详情', father:'/dmp/findc/biddingdata' },
+                meta: { title: '竞价获客详情',lv:'48', father:'/dmp/findc/biddingdata' },
               },
               {
                 path: '/dmp/findc/msgdata',
@@ -437,7 +437,7 @@ const routes = [
                 path: '/dmp/findc/msgdatadetail',
                 name: 'MsgDataDetail',
                 component: () => import('@/views/layout/dmp/findc/msgDataDetail.vue'),
-                meta: { title: '短信获客详情', father:'/dmp/findc/msgdata' },
+                meta: { title: '短信获客详情',lv:'49', father:'/dmp/findc/msgdata' },
               },
             ]
           },
@@ -458,7 +458,7 @@ const routes = [
                 path: '/dmp/seekpathpro/seekpathdetail',
                 name: 'SeekPathDetail',
                 component: () => import('@/views/layout/dmp/seekPathPro/seekPathDetail.vue'),
-                meta: { title: '找渠道详情', father:'/dmp/seekpathpro/seekpath' },
+                meta: { title: '找渠道详情', lv:'51',father:'/dmp/seekpathpro/seekpath' },
               },
               {
                 path: '/dmp/seekpathpro/seekpro',
@@ -470,7 +470,7 @@ const routes = [
                 path: '/dmp/seekpathpro/seekprodetail',
                 name: 'SeekProDetail',
                 component: () => import('@/views/layout/dmp/seekPathPro/seekProjectDetail.vue'),
-                meta: { title: '找项目详情', father:'/dmp/seekpathpro/seekpro' },
+                meta: { title: '找项目详情', lv:'52',father:'/dmp/seekpathpro/seekpro' },
               },
             ]
           },
@@ -491,7 +491,7 @@ const routes = [
                 path: '/dmp/seekabroad/buyerdetail',
                 name: 'BuyerDetail',
                 component: () => import('@/views/layout/dmp/seekAbroad/buyerDetail.vue'),
-                meta: { title: '找采购商详情', father:'/dmp/seekabroad/buyer' },
+                meta: { title: '找采购商详情',lv:'54', father:'/dmp/seekabroad/buyer' },
               },
               {
                 path: '/dmp/seekabroad/supplier',
@@ -503,14 +503,14 @@ const routes = [
                 path: '/dmp/seekabroad/supplierdetail',
                 name: 'SupplierDetail',
                 component: () => import('@/views/layout/dmp/seekAbroad/supplierDetail.vue'),
-                meta: { title: '找供应商详情', father:'/dmp/seekabroad/supplier' },
+                meta: { title: '找供应商详情',lv:'55', father:'/dmp/seekabroad/supplier' },
               },
             ]
           },
           {
             path: '/dmp/dmpset',
             name: 'DmpSet',
-            redirect: '/dmp/dmpSet/dataset',
+            redirect: '/dmp/dmpset/dataset',
             component: () => import('@/views/layout/rview.vue'),
             meta: { title: 'DMP设置', icon:nav4_5_i, icon_a:nav4_5_a_i, lv:'56',clv:'57' ,showTopNav:true},
             children:[
