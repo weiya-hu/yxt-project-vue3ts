@@ -17,7 +17,7 @@
           :border="true"
         >
           <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
-          <el-table-column fixed="right" property="operate" label="操作" min-width="170" align="center">
+          <el-table-column fixed="right" property="operate" label="操作" width="200" align="center">
             <template #default="{row}">
               <div class="operate-button-pre">
                 <el-link type="primary" v-if="row.status===0" :href="row.attachment" downLoad="附件.zip">下载附件</el-link>
@@ -72,7 +72,7 @@ const inputSearch = reactive({
 const tableTitle = ref([
   {type:'text',lable:'ID',prop:'id',width:100},
   {type:'text',lable:'账户名',prop:'u_name',width:100},
-  {type:'text',lable:'客户名称',prop:'c_name',width:100},
+  {type:'text-tooltip',lable:'客户名称',prop:'c_name',width:150},
   {type:'industry_id',lable:'行业分类',prop:'industry_id',width:120},
   // {type:'',lable:'地区',prop:'',width:100},
   {type:'text',lable:'采购商品',prop:'product_name',width:150},
@@ -180,9 +180,15 @@ export default { name:'SeekPath' }
     margin-bottom: 24px;
     .operate-button-pre{
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
-      padding: 0 5px;
+      padding: 0 0 0 15px;
+      :deep(.el-link){
+        margin-right: 20px;
+      }
+    }
+    .operate-button-pre>:deep(.el-link):last-child{
+      margin-right: 0;
     }
   }
   .specific_data-content{

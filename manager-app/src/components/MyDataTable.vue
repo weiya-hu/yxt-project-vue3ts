@@ -83,7 +83,7 @@
         <template #content>
           <div style="width:100px">{{ row.province >0 && getHashStr(strToArr(row.province,row.city,row.district),store.state.addressHash)}}</div>
         </template>
-        <div >{{ row.province >0 && getHashStr(strToArr(row.province,row.city,row.district),store.state.addressHash)}}</div>
+        <div class="text-style">{{ row.province >0 && getHashStr(strToArr(row.province,row.city,row.district),store.state.addressHash)}}</div>
       </el-tooltip>
     </template>
   </el-table-column>
