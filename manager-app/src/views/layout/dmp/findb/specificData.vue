@@ -40,6 +40,7 @@
     </div>
     <Refuse v-model="refuseShow" @success='refuseSuccess'/>
     <UpUser v-model="upUserShow" @success='upUserSuccess'/>
+    
   </div>
 </template>
 
