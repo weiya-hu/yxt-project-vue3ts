@@ -98,7 +98,6 @@ import { formatDate } from '@/utils/date'
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
-import { ElMessage, ElMessageBox } from 'element-plus'
 import { articleList_api,articleDown_api,articleUp_api,articleDel_api} from '@/api/cms/resource'
 interface SData {
   id: number|string,

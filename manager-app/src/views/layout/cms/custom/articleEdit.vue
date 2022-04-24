@@ -5,7 +5,7 @@
         <div class="fjend btns">
           <el-button size="large" @click="$router.push('/cms/custom')">&ensp;返回&ensp;</el-button>
           <el-button size="large" @click="submit(1)">&ensp;保存&ensp;</el-button>
-          <el-button size="large" type="primary" @click="submit(2)" :disabled="!aForm.title.length">&ensp;完成&ensp;</el-button>
+          <el-button size="large" type="primary" @click="submit(2)" :disabled="!aForm.content||!aForm.title">&ensp;完成&ensp;</el-button>
         </div>
       <div class="form_content" v-loading="upLoading">
          <div class="tip fcs">
@@ -14,33 +14,37 @@
         </div>
         <el-form ref="aFormRef" :model="aForm" :rules="aRules" size="large" @submit.prevent :label-position="labelPosition">
            <el-card >
-              <el-form-item label="上传封面" prop="thumb_url">
-            <div class="upload fcs">
-              <el-upload
-                :action="hostUrl"
-                :auto-upload="false"
-                :limit="1"
-                :multiple="false"
-                :show-file-list="false"
-                :data="upData"
-                list-type="picture"
-                :on-change="upChange"
-                :on-exceed="handleExceed"
-                :on-success="upSuccess"
-                :on-error="upError"
-                
-                accept=".jpg,.png,.jpeg,.JPG,.PNG,.JPEG"
-                ref="upload"
-                class="flex"
-              >
-                <div class="upbox fcc">
-                  <img :src="titleImg||aForm.thumb_url" class="title_img" alt="" v-if="titleImg||aForm.thumb_url">
-                  <img :src="tp_i" alt="" v-else>
-                </div>
-              </el-upload>
-              <div class="img_tip flex">仅支持 JPG、PNG 、JPEG等图片格式，大小不超过2M</div>
-            </div>
-          </el-form-item>
+             <el-form-item label="上传封面" prop="thumb_url">
+                    <div class="img_upbox flex">
+                        <el-upload
+                            drag
+                            :action="hostUrl"
+                            :auto-upload="false"
+                            :limit="1"
+                            :multiple="false"
+                            :show-file-list="false"
+                            :data="upData"
+                            list-type="picture"
+                            :on-change="upChange"
+                            :on-exceed="handleExceed"
+                            :on-success="upSuccess"
+                            :on-error="upError"
+                            
+                            accept=".jpg,.png,.jpeg,.JPG,.PNG,.JPEG"
+                            ref="upload"
+                            class="flex"
+                        >
+                            <div class="upbox fcc">
+                            <img :src="titleImg||aForm.thumb_url" class="title_img" alt="" v-if="titleImg||aForm.thumb_url">
+                            <div class="fc fcc title_text"  v-else>
+                                <img :src="img_add_i" alt="">
+                                <div class="fcc">将文件拖到此处，或<span>点击上传</span></div>
+                              </div>
+                            </div>
+                        </el-upload>
+                        <div class="img_tip flex">仅支持 JPG、PNG 、JPEG等图片格式，大小不超过2M</div>
+                    </div>
+            </el-form-item>
            </el-card>
          
            <el-card class="mt20">
@@ -67,7 +71,7 @@ import DetailsHeader from "@/components/DetailsHeader.vue";
 import type { UploadFile, UploadProgressEvent} from 'element-plus'
 import Edit from "@/components/Edit.vue";
 import tip_i from '@/assets/images/tip.png'
-import tp_i from '@/assets/images/tp.png'
+import img_add_i from '@/assets/images/img-add.png'
 import { errMsg } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
 import { articleEditing_api,articleSaveedit_api,articleDetail_api} from '@/api/cms/custom'
@@ -293,25 +297,35 @@ const submit = async (type:number)=>{
         display: none;
       }
     }
+     :deep(.el-upload-dragger){
+    width: 230px;
+    height: 128px;
+  }
     .upbox{
-      width: 250px;
-      height: 140px;
-      border-radius: 4px;
-      border: 1px dashed rgba(221,221,221,1);
+    width: 230px;
+    height: 128px;
+    border-radius: 4px;
+    .title_text{
+      font-size: 12px;
+      color: $color999;
+      line-height: 1.1;
+      span{
+        color: $dfcolor;
+      }
       img{
-        background-color: #DDDDDD;
+        margin-bottom: 5px;
         width: 50px;
         height: 50px;
       }
-      .title_img{
-        background-color: #fff;
-        width: 100%;
-        height: 100%;
-      }
-      &:hover{
-        border-color: $dfcolor;
-      }
     }
+    .title_img{
+      width: 100%;
+      height: 100%;
+    }
+    &:hover{
+      border-color: $dfcolor;
+    }
+  }
     .is-error{
       .upbox{
         border-color: $colorred;

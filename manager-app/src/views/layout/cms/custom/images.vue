@@ -39,7 +39,7 @@
           <el-dialog
             v-model="dialogVisible"
             title="详情图片"
-            width="500px" 
+            width="510px" 
             >
             <div class="img-dialog" v-if="showImgs ">
               <el-image style="width: 125px; height: 135px"  fit  v-for="url in showImgs" :key="url" :src="url">
@@ -56,8 +56,7 @@
             </span>
           </template>
       </el-dialog>
-        <el-dialog v-model="addShow" title="编辑图片" width="500px" @close="close" custom-class="upimgs" >
-           <span class="uptext">图片上传：</span>
+        <el-dialog v-model="addShow" title="编辑图片" width="510px" @close="close" custom-class="upimgs" >
           <el-upload
             action="#"
             :auto-upload="false"
@@ -99,9 +98,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import axios from 'axios'
 import { errMsg ,okMsg } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
-import { useRoute, useRouter } from 'vue-router'
 import { imagesList_api,articlePass_api,articleReject_api,articleAttach_api,articleImagsave_api,articleDetail_api } from '@/api/cms/custom'
-import { log } from 'console'
 interface TableTitleProp{
   type:string,
   lable?:string,
@@ -293,7 +290,6 @@ const goSubmit =async (order_id:string,urls:any[])=>{
       }).then(()=>{
         if(filePath.length == imgs.value.length){
           articleImagsave_api({urls: filePath,order_id:editId.value}).then((res:res)=>{
-
           })
         }
       });
@@ -363,5 +359,8 @@ export default { name:'个性化内容库-软文' }
       display: block;
       width: 110px;
       height: 50px;
+    }
+    :deep(.el-dialog__body){
+      width: 510px;
     }
 </style>

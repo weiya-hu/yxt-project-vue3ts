@@ -5,7 +5,7 @@
         <div class="fjend btns">
           <el-button size="large" @click="$router.push('/cms/resource')">&ensp;返回&ensp;</el-button>
           <el-button size="large" @click="submit(1)">&ensp;保存&ensp;</el-button>
-          <el-button size="large" type="primary" @click="submit(2)" :disabled="aForm.title.length==0">&ensp;发布&ensp;</el-button>
+          <el-button size="large" type="primary" @click="submit(2)" :disabled="!aForm.content||!aForm.title">&ensp;发布&ensp;</el-button>
         </div>
       <div class="form_content" v-loading="upLoading">
          <div class="tip fcs">
@@ -15,8 +15,9 @@
         <el-form ref="aFormRef" :model="aForm" :rules="aRules" size="large" @submit.prevent :label-position="labelPosition">
             <el-card >
                 <el-form-item label="上传封面" prop="thumb_url">
-                    <div class="upload fcs">
+                    <div class="img_upbox flex">
                         <el-upload
+                            drag
                             :action="hostUrl"
                             :auto-upload="false"
                             :limit="1"
@@ -35,7 +36,10 @@
                         >
                             <div class="upbox fcc">
                             <img :src="titleImg||aForm.thumb_url" class="title_img" alt="" v-if="titleImg||aForm.thumb_url">
-                            <img :src="tp_i" alt="" v-else>
+                            <div class="fc fcc title_text"  v-else>
+                                <img :src="img_add_i" alt="">
+                                <div class="fcc">将文件拖到此处，或<span>点击上传</span></div>
+                              </div>
                             </div>
                         </el-upload>
                         <div class="img_tip flex">仅支持 JPG、PNG 、JPEG等图片格式，大小不超过2M</div>
@@ -60,24 +64,35 @@
             </el-card>
             <el-card class="mt20">
                 <el-form-item label="内容设置">
-                  <div class="otherURL">
+                  <div >
+                      <div class="otherURL">
                     <span>第三方URL链接：</span>
                     <el-input placeholder="请输入" v-model="aForm.url"></el-input>
                     <span>第三方URL秘钥：</span>
                     <el-input placeholder="请输入" v-model="aForm.url_key"></el-input>
                   </div>
-                  <div class="industry">
-                    <span>行业分类：</span>
-                    <el-radio-group v-model="aForm.industry_id" >
-                         <el-radio :label="item.id" v-for="(item) in industry" :key='item' >{{item.industry_name}}</el-radio>
-                      </el-radio-group>
-                  </div>
-                  <div class="download">
+                  <el-form-item>
+                           <span>行业分类：</span>
+                            <el-radio-group v-model="aForm.industry_id" >
+                                <el-radio :label="item.id" v-for="(item) in industry" :key='item' >{{item.industry_name}}</el-radio>
+                            </el-radio-group>
+                  </el-form-item>
                     <span>下载设置：</span>
-                      <el-radio-group v-model="aForm.down_type" >
+                      <el-radio-group v-model="aForm.down_type" @change="code">
                          <el-radio :label="1">免费下载</el-radio>
                           <el-radio :label="2">弹窗二维码</el-radio>
                       </el-radio-group>
+                        <MediaUpload
+                          :max="1"
+                          v-if="codeShow"
+                          @upOneSuccess="upCode"
+                          @error="upError"
+                          @change="changeCode"
+                          @del="aForm.qr_code = ''"
+                          :exnameList="exnameList"
+                          ref="upload"
+                          class="codeClass"
+                        />
                   </div>
                 </el-form-item>
             </el-card>
@@ -93,9 +108,10 @@ import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DetailsHeader from "@/components/DetailsHeader.vue";
 import type { UploadFile, UploadProgressEvent} from 'element-plus'
+import MediaUpload from "@/components/MediaUpload.vue";
 import Edit from "@/components/Edit.vue";
 import tip_i from '@/assets/images/tip.png'
-import tp_i from '@/assets/images/tp.png'
+import img_add_i from '@/assets/images/img-add.png'
 import { errMsg } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
 import { articleLook_api,articleRelease_api,articleIndustry_api,articleSave_api} from '@/api/cms/resource'
@@ -113,6 +129,9 @@ if(id){
       // titleImg.value = res.body.thumb_url
       imgErrorType.value = ''
     }
+    if (res.body.down_type==2) {
+      codeShow.value=true
+    }
   })
 }
 
@@ -129,6 +148,8 @@ interface AForm {
   qr_code:string,
   status:number,
 }
+const codeShow=ref(true)//二维码显示
+const exnameList = ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG']
 const aForm = ref<AForm>({
   id:'',
   thumb_url:'',
@@ -151,8 +172,25 @@ const getIndustry=async()=>{
   
 }
 getIndustry()
+// 二维码
+const codeUrl = ref('')//二维码图片
+const changeCode = (fileName:string) => {
+  aForm.value.qr_code = fileName
+}
+const upCode = async (url:string) => {
+  console.log(url,123);
+  
+  codeUrl.value=url
+}
 const aFormRef = ref()
 const imgErrorType = ref('none')//封面图片错误类型
+const code=()=>{
+  if (aForm.value.down_type==2) {
+    codeShow.value=true
+  }else{
+    codeShow.value=false
+  }
+}
 const filePass = (rule:any, value:any, callback:Function)=>{
   switch (imgErrorType.value) {
     case 'size':
@@ -188,6 +226,7 @@ const aRules = {
 const upLoading = ref(false)
 const upload = ref()//上传组件ref
 const titleImg = ref<string>()//封面图片blob路径
+const codeImg = ref<string>()//封面图片blob路径
 const imgType = ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG']
 const timg_exname = ref('')//封面图片后缀名
 const upChange = (file: UploadFile, list: UploadFile[])=>{
@@ -210,29 +249,32 @@ const handleExceed = (files:UploadFile[])=>{
   upload.value.handleStart(files[0])
 }
 
+
 const upSuccess = (res: UploadProgressEvent, file: UploadFile)=>{
   //封面图片上传成功
   titleImg.value = ''
   submitAddForm()
 }
+
 const upError = (err:any, file:UploadFile, fileList:UploadFile[])=>{
   titleImg.value = ''
   aForm.value.thumb_url = ''
   upload.value.clearFiles()
   errMsg('封面图片上传失败')
 }
+
 const editId=ref('')
 
 const submitAddForm = async ()=>{
   //提交表单
     if(aForm.value.status == 1){
-    const res=await articleSave_api({...aForm.value, id})
+    const res=await articleSave_api({...aForm.value, id,qr_code:codeUrl.value})
      if(res.status == 1 ){
     store.setKeepList([])
     router.replace('/cms/resource')
   }
   }else{
-    const res=await articleRelease_api({...aForm.value,id})
+    const res=await articleRelease_api({...aForm.value,id,qr_code:codeUrl.value})
     console.log(res);
      if(res.status == 1 ){
     store.setKeepList([])
@@ -253,7 +295,7 @@ const submit = async (type:number)=>{
   //点击保存
   aFormRef.value.validate(async (valid: any) => {
     if (valid) {
-      console.log('submit!',titleImg.value)
+      console.log('submit!',codeImg.value)
       upLoading.value = true
       await editRef.value.upImages()
       editRef.value.clearImgs()
@@ -280,6 +322,7 @@ const submit = async (type:number)=>{
           errMsg('上传参数获取失败')
         }
       })
+
     } else {
       console.log('error submit!');
       return false
@@ -349,9 +392,39 @@ const submit = async (type:number)=>{
         display: none;
       }
     }
+    :deep(.el-upload-dragger){
+    width: 230px;
+    height: 128px;
+  }
     .upbox{
-      width: 250px;
-      height: 140px;
+    width: 230px;
+    height: 128px;
+    border-radius: 4px;
+    .title_text{
+      font-size: 12px;
+      color: $color999;
+      line-height: 1.1;
+      span{
+        color: $dfcolor;
+      }
+      img{
+        margin-bottom: 5px;
+        width: 50px;
+        height: 50px;
+      }
+    }
+    .title_img{
+      width: 100%;
+      height: 100%;
+    }
+    &:hover{
+      border-color: $dfcolor;
+    }
+  }
+    .codebox{
+      width: 100px;
+      height: 100px;
+      margin-left: 100px;
       border-radius: 4px;
       border: 1px dashed rgba(221,221,221,1);
       img{
@@ -393,17 +466,8 @@ const submit = async (type:number)=>{
       width: 180px;
     }
   }
-  .industry{
-    display: flex;
-    position: relative;
-    top: 50px;
-    left: -628px;
-  }
-  .download{
-     display: flex;
-    position: relative;
-    top: 50px;
-    right: 2px;
+  .codeClass{
+    margin-left: 100px;
   }
 }
 </style>

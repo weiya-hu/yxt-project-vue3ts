@@ -18,7 +18,7 @@
         <el-table-column width="150" label="操作" >
           <template #default="{row}">
             <div class="fcs">
-              <el-link type="primary"  v-if="row.status == 2" @click="imageEit(row.id)">编辑</el-link>
+              <el-link type="primary"  v-if="row.status == 2" @click="videoEdit(row.id)">编辑</el-link>
               <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true" v-if="row.status == 3">驳回原因</el-link>
               <el-link type="primary" v-if="row.status == 4" @click="look(row.id)">详情</el-link>
               <div v-if="row.status == 1" >
@@ -51,55 +51,33 @@
             </span>
           </template>
       </el-dialog>
-        <!-- <el-dialog v-model="addShow" title="编辑视频" width="500px" @close="close" custom-class="upimgs">
-          <span class="uptext">图片上传：</span>
-          <el-upload
-            action="#"
-            :auto-upload="false"
-            :limit="9"
-            :multiple="true"
-            list-type="picture-card"
-            :on-change="upChange"
-            :on-preview="lookimgs"
-            :on-remove="upRemove"
-            :accept="imgTypes.join(',')"
-            ref="upload"
-            class="upbox"
-            
-          >
-            <div class="fc fcc">
-              <el-icon><Plus /></el-icon>
-              <div class="file_name">点击上传</div>
-            </div>
-          </el-upload>
-          <div class="tips">图片尺寸16:9，建议尺寸：220*160≤尺寸≤1920*890；支持JPG、PNG 、JPEG等格式；一次最多上传9张</div>
-          <div class="fcs btns fjend">
-          <el-button @click="close">取消</el-button>
-          <el-button type="primary" @click="goSubmit" :disabled="!imgs.length">提交</el-button>
-      </div>
-        </el-dialog> -->
-        <el-dialog v-model="addShow" title="上传视频" width="500px" @close="close" custom-class="upimgs" :before-close="beforeCloseAdd">
-      <div v-loading="loading">
-        <MyUpload
-          type="video"
-          v-model="fileUrls"
-          :max-size="200"
-          @error="upError"
-          @success="upSuccess" 
-          @change="upChange"
-          :exnameList="exnameList"
-          :msg="'视频尺寸：宽高16:9或9:16；<br/>不超过200M；<br/>支持'+exnameList.join('、')+'格式'"
-          ref="upload"
-        />
-        <div class="fcs btns fjend">
-          <el-button @click="close">取消</el-button>
-          <el-button v-if="upload" type="primary" @click="goSubmit" :disabled="!fileUrls">提交</el-button>
-        </div>
-      </div>
+    <el-dialog v-model="lookShow" title="查看视频" fullscreen @close="videoSrc = ''" custom-class="videobox">
+      <video :src="videoSrc" controls class="show_video"></video>
     </el-dialog>
-    <!-- <el-image-viewer @close="imgShow=false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/> -->
-    <el-dialog v-model="lookShow" title="查看视频" fullscreen @close="lookVideo = ''" custom-class="videobox">
-      <video :src="lookVideo" controls class="show_video"></video>
+    <el-dialog v-model="addShow" title="编辑视频" width="380px" @close="close">
+      <el-form :model="addForm">
+        <el-form-item label="选择素材" required label-width="90px">
+          <div class="sel_pool fcc" @click="showKzPool('video_custom',2)">
+            <div class="poolbox" v-if="addPool.id">
+              <img :src="addPool.cover_url||addPool.source_url" alt="">
+              <div class="lookicon fcc lookhover" @click.stop="lookImage([addPool.cover_url||addPool.source_url],0)">
+                <el-icon size="14px"><zoom-in/></el-icon>
+              </div>
+              <div class="videoicon fcc lookhover" v-if="addPool.source_type == 2" @click.stop="lookVideo(addPool.source_url)">
+                <el-icon size="20px"><caret-right/></el-icon>
+              </div>
+            </div>
+            <div class="fc fcc" v-else>
+              <el-icon><plus/></el-icon>
+              <div class="file_name">点击添加</div>
+            </div>
+          </div>
+        </el-form-item>
+        <div class="fcs btns fjend mt20">
+          <el-button @click="close">取消</el-button>
+          <el-button type="primary" @click="setBanner(1)" :disabled="!addPool.id">提交</el-button>
+        </div>
+      </el-form>
     </el-dialog>
     </div>
 </template>
@@ -110,13 +88,11 @@ import MyPage from '@/components/MyPage.vue'
 import MyDataTable from '@/components/MyDataTable.vue'
 import MyDialog from "@/components/MyDialog.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
-import MyUpload from "@/components/MyUpload.vue";
-import { Plus,Picture as IconPicture } from '@element-plus/icons-vue'
-import type { UploadFile, UploadUserFile, } from 'element-plus'
+import { ZoomIn, CaretRight, Plus } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import axios from 'axios'
-import { errMsg ,okMsg ,kzConfirm } from '@/utils/index'
-import { getAliToken_api } from '@/api/login'
+import { showKzPool } from '@/utils/index'
+import { lookImage, lookVideo } from '@/utils/index'
+import emiter from '@/utils/bus'
 import { videoList_api,articlePass_api,articleReject_api,articleAttach_api,articleVideosave_api,articleDetail_api } from '@/api/cms/custom'
 interface TableTitleProp{
   type:string,
@@ -205,7 +181,7 @@ const showImgs = ref<string[]>([])//预览图片列表
 const look = async(id:string)=>{
   const res = await articleDetail_api({ id})
   console.log(res);
-  let arr:string[] = []
+  // let arr:string[] = []
    if(res.status == 1){
        showImgs.value  = res.body.list
   }
@@ -213,175 +189,45 @@ const look = async(id:string)=>{
 }
 // 查看视频
 const lookShow = ref(false)
-const lookVideo = ref('')
+const videoSrc = ref('')//视频地址
 const watchVideo = (url:string)=>{
-  lookVideo.value = url
+  videoSrc.value = url
   lookShow.value = true
 }
 // 编辑视频
 const editId=ref('')
-const imageEit=(id:string)=>{
-  addShow.value =true
-  editId.value=id
-}
 const addShow = ref(false)
-const exnameList = ['.mp4']
-const upload = ref()//上传组件ref
-const close = ()=>{
-  fileUrls.value = ''
-  upload.value.clear()
+const addForm = reactive({
+})
+const videoEdit=(id:string)=>{
+  addShow.value =true
+  editId.value =id
+}
+const close = () => {
+  addPool.value = {} as KzPool
   addShow.value = false
-  loading.value = false
 }
+const addPool = ref({} as KzPool)
 
-const goSubmit = ()=>{
-  loading.value = true
-  upload.value.submit()
-}
-
-const fileUrls = ref('')
-const upChange = (errorType:string)=>{
-  //上传组件状态改变时
-  console.log(errorType);
-}
-const upSuccess = async (videoUrl:string[] = [])=>{
-  //上传成功
-  const res = await articleVideosave_api({urls:videoUrl,order_id:editId.value})
-  if(res.status == 1){
-    okMsg('上传成功')
+emiter.on('video_custom', (val:KzPool) => {
+  addPool.value = val
+})
+const setBanner = async (type:0|1, order_id?:number|string) => {
+  let videoPool: string[] =[]
+videoPool.push(addPool.value.source_url)
+  const { status } = await articleVideosave_api({
+     order_id:editId.value,
+    urls:videoPool
+  })
+  console.log(editId.value);
+  
+  console.log(addPool.value);
+  
+  if(status == 1){
     close()
     getList()
   }
 }
-const upError = (err:string)=>{
-  //上传失败时
-  errMsg(err,0)
-  loading.value = false
-}
-
-const beforeCloseAdd = (done:Function)=>{
-  if(loading.value){
-    kzConfirm().then(() => {})
-    .catch(() => {
-      upload.value.doAbort()
-      done()
-    })
-  }else{
-    done()
-  }
-}
-// 编辑图片
-// const addShow = ref(false)
-// const imgs = ref<UploadFile[]>([])
-// const upload = ref()//上传组件ref
-const imgShow = ref(false)//预览是否显示
-// const showImgIndex = ref(0)//首张预览图片
-// let filePath: string[] = []//上传成功后的文件地址
-// const imageEit=(id:string,urls:any[])=>{
-//   addShow.value =true
-//   goSubmit(id,urls)
-//   console.log(id);
-// }
-// const imgTypes = ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG']
-// const upChange = (file: UploadFile, fileList: UploadFile[])=>{
-//   const exname=file.name.substring(file.name.lastIndexOf("."))
-//   if(imgTypes.indexOf(exname) == -1){
-//     upload.value.handleRemove(file)
-//     errMsg('图片格式错误！')
-//     return
-//   }
-//   imgs.value = fileList
-//   if(imgs.value.length>=9){
-//     (document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'none'
-//   }
-//   console.log(imgs.value);
-// }
-// const upRemove = (file: UploadFile, fileList: UploadFile[])=>{
-//   imgs.value = fileList;
-//   (document.querySelector('.el-upload--picture-card') as HTMLElement).style.display = 'inline-flex'
-//   console.log(imgs.value);
-// }
-// const lookimgs = (file: UploadFile)=>{
-//   let arr:string[] = []
-//   imgs.value.forEach(v=>{
-//     arr.push(v.url!)
-//   })
-//   showImgs.value  = arr
-//   showImgIndex.value = showImgs.value.findIndex(v=>v==file.url)
-//   imgShow.value = true
-// }
-// const close = ()=>{
-//   upload.value.clearFiles()
-//   addShow.value = false
-//   loading.value = false
-//   imgs.value = []
-//   showImgs.value = []
-//   imgShow.value = false
-//   showImgIndex.value = 0
-//   filePath = []
-// }
-// const route = useRoute()
-// const id = route.query.id
-// const upOneImg = async (file:UploadFile,order_id:string,urls:any[])=>{
-//   //上传单张图片
-//   const res:res = await getAliToken_api({site:'official_img'})
-//   if(res.status == 1){
-//     const exname=file.name.substring(file.name.lastIndexOf("."))
-//     const fd = new FormData();
-//     const upData = {
-//       key: res.body.dir + '/' + res.body.uuid + exname,
-//       OSSAccessKeyId: res.body.accessid,
-//       success_action_status: 200,
-//       policy: res.body.policy,
-//       signature: res.body.signature,
-//     };
-//     for (const [key, value] of Object.entries(upData)) {
-//       fd.append(key, value as string);
-//     }
-//     fd.append("file", file.raw as Blob);
-//     const response = await axios({
-//       url: res.body.host,
-//       method: 'post',
-//       headers: {
-//         "Content-Type": "multipart/form-data;",
-//       },
-//       data: fd,
-//     })
-//     if(response.status == 200){
-//       const oneUrl = res.body.host + '/' + res.body.dir + '/' + res.body.uuid + exname
-//       filePath.push(oneUrl)
-//       const id = route.query.id
-//       const oneRes:res = await articleVideosave_api({urls: oneUrl,order_id:id})
-//       return Promise.resolve(oneUrl)
-//     }else{
-//       return Promise.reject(file.name+'上传失败')
-//     }
-//   }else{
-//     return Promise.reject('获取上传配置失败')
-//   }
-// }
-// const goSubmit =async (order_id:string,urls:any[])=>{
-//   loading.value = true
-//   try {
-//     for (let i = 0; i < imgs.value.length; i++) {
-//       const v = imgs.value[i];
-//       const url = await upOneImg(v,order_id,urls).catch(err=>{
-//         throw new Error(err)
-//       });
-//       if(filePath.length == imgs.value.length){
-//         okMsg('上传成功')
-//         close()
-//         getList()
-//         break
-//       }
-//     }
-    
-//   } catch (error:any) {
-//     errMsg(error,0)
-//     close()
-//     getList()
-//   }
-// }
 defineExpose({
   getData
 })
@@ -444,4 +290,65 @@ export default { name:'个性化内容库-视频库' }
       width: 100%;
       height: 100%;
     }
+     .sel_pool{
+    width: 100px;
+    height: 100px;
+    border:1px dashed $colorddd;
+    border-radius: 3px;
+    .file_name{
+      color: var(--el-text-color-regular);
+      font-size: 12px;
+      line-height: 12px;
+      margin-top: 12px;
+    }
+    .fc{
+      .el-icon{
+        font-size: 28px;
+        color: $colorddd;
+      }
+    }
+    &:hover{
+      border-color: $dfcolor;
+      color: $dfcolor;
+      cursor: pointer;
+      .fc{
+        .el-icon{
+          color: $dfcolor;
+        }
+      }
+      .file_name{
+        color: $dfcolor;
+      }
+    }
+    .poolbox{
+      width: 100%;
+      height: 100%;
+      position: relative;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+      .el-icon{
+        color: #fff;
+      }
+      .lookicon{
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 20px;
+        height: 20px;
+        background-color: rgba(0,0,0,0.5);
+      }
+      .videoicon{
+        position: absolute;
+        bottom: 50%;
+        right: 50%;
+        transform: translate(50%,50%);
+        width: 30px; 
+        height: 30px;
+        border-radius: 50%;
+        background-color: rgba(0,0,0,0.5);
+      }
+    }
+  }
 </style>

@@ -562,15 +562,15 @@ const routes = [
                 component: () => import('@/views/layout/cms/myWork/video.vue'),
                 meta: { title: '视频库', father:'/cms/mywork',isTopNav:true,lv:'31' },
               },
-              
+              {
+                path: '/cms/myworkdet',
+                name: 'Myworkdet',
+                component: () => import('@/views/layout/cms/myWork/articleDetails.vue'),
+                meta: { title: '软文详情', father:'/cms/mywork' },
+              },
             ]
           },
-          {
-            path: '/cms/myworkdet',
-            name: 'Myworkdet',
-            component: () => import('@/views/layout/cms/myWork/articleDetails.vue'),
-            meta: { title: '软文详情', father:'/cms/mywork' },
-          },
+         
           {
             path: '/cms/custom',
             name: 'Custom',
@@ -602,41 +602,51 @@ const routes = [
                 component: () => import('@/views/layout/cms/custom/video.vue'),
                 meta: { title: '视频', father:'/cms/custom',isTopNav:true,lv:'36' },
               },
+              {
+                path: '/cms/customdet',
+                name: 'Customdet',
+                component: () => import('@/views/layout/cms/custom/articleDetails.vue'),
+                meta: { title: '软文详情', father:'/cms/custom' },
+              },
+              {
+                path: '/cms/customedit',
+                name: 'Customedit',
+                component: () => import('@/views/layout/cms/custom/articleEdit.vue'),
+                meta: { title: '编辑', father:'/cms/custom' },
+              },
               
             ]
            
           },
-          {
-            path: '/cms/customdet',
-            name: 'Customdet',
-            component: () => import('@/views/layout/cms/custom/articleDetails.vue'),
-            meta: { title: '软文详情', father:'/cms/custom' },
-          },
-          {
-            path: '/cms/customedit',
-            name: 'Customedit',
-            component: () => import('@/views/layout/cms/custom/articleEdit.vue'),
-            meta: { title: '编辑', father:'/cms/custom' },
-          },
+          
           {
             path: '/cms/resource',
             name: 'Resource',
-            // redirect: '/cms/resource/article.vue',
-            component: () => import('@/views/layout/cms/resource/article.vue'),
-            meta: { title: '资源内容库', lv:'37',icon:nav5_3_i, icon_a:nav5_3_a_i},
+            redirect: '/cms/resourceart',
+            component: () => import('@/views/layout/rview.vue'),
+            meta: { title: '资源内容库', lv:'37',icon:nav5_3_i, icon_a:nav5_3_a_i,clv:'38'},
+            children:[
+              {
+                path: '/cms/resourceart',
+                name: 'Resourceart',
+                component: () => import('@/views/layout/cms/resource/article.vue'),
+                meta: { title: '资源内容',lv:'38' },
+              },
+              {
+                path: '/cms/resourcedet',
+                name: 'Resourcedet',
+                component: () => import('@/views/layout/cms/resource/articleDetails.vue'),
+                meta: { title: '软文详情', father:'/cms/resource' },
+              },
+              {
+                path: '/cms/resourceedit',
+                name: 'Resourceedit',
+                component: () => import('@/views/layout/cms/resource/articleEdit.vue'),
+                meta: { title: '编辑', father:'/cms/resource' },
+              },
+            ]
           },
-          {
-            path: '/cms/resourcedet',
-            name: 'Resourcedet',
-            component: () => import('@/views/layout/cms/resource/articleDetails.vue'),
-            meta: { title: '软文详情', father:'/cms/resource' },
-          },
-          {
-            path: '/cms/resourceedit',
-            name: 'Resourceedit',
-            component: () => import('@/views/layout/cms/resource/articleEdit.vue'),
-            meta: { title: '编辑', father:'/cms/resource' },
-          },
+          
         ]
       },
       {
