@@ -21,7 +21,18 @@ export const statistics_api = (): Promise<res> => {
 export const typeList_api = (): Promise<res> => {
   return get(1,'/news/type.list')
 }
-
+//添加新闻分类
+export const newsTypeAdd_api = (data:{name:number}): Promise<res> => {
+  return post(1,'/news/type.in',data,true)
+}
+//删除新闻分类
+export const newsTypeDel_api = (data:{id:number}): Promise<res> => {
+  return post(1,'/news/type.del',data,true)
+}
+// 修改分类名称
+export const newsNameEdit_api = (data:{id:number,name:string}): Promise<res> => {
+  return post(1,'/news/type/name.up',data,true)
+}
 // 获取动态详情
 export const dynamicDetail_api = (data:{id:string}): Promise<res> => {
   return get(1,'/official/dynamic/detail.get',data)
@@ -100,8 +111,23 @@ export const newsShield_api = (data:{id:string}): Promise<res> => {
 export const dynamicAdd_api = (data:any): Promise<res> => {
   return post(1,'/official/dynamic.in',data,true)
 }
+// 编辑动态
+export const dynamicEdit_api = (data:any): Promise<res> => {
+  return post(1,'/official/dynamic.up',data,true)
+}
 // 添加通知
 export const noticeAdd_api = (data:any): Promise<res> => {
   return post(1,'/official/notice.in',data,true)
 }
-
+// 编辑通知
+export const noticeEdit_api = (data:any): Promise<res> => {
+  return post(1,'/official/notice.up',data,true)
+}
+// 添加新闻
+export const newsAdd_api = (data:any): Promise<res> => {
+  return post(1,'/official/news.in',data,true)
+}
+// 编辑新闻
+export const newsEdit_api = (data:any): Promise<res> => {
+  return post(1,'/news/info.up',data,true)
+}

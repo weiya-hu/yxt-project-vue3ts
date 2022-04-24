@@ -37,7 +37,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="状态：" prop="status">
-            <el-select v-model="newsForm.status" placeholder="请选择">
+            <el-select v-model="newsForm.status" placeholder="请选择" @change="getPass">
               <el-option label="草稿" value="0" />
               <el-option label="审核中" value="1" />
               <el-option label="驳回" value="2" />
@@ -45,7 +45,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="审核结果：" prop="reslut">
-            <el-select v-model="newsForm.reslut" placeholder="请选择">
+            <el-select v-model="newsForm.reslut" placeholder="请选择"  :disabled="newsForm.status!=3">
               <el-option label="离线" value="3" />
               <el-option label="在线" value="4" />
             </el-select>
@@ -119,6 +119,14 @@
       </div> 
         <MyPage :total="total" v-model:page="page" @change="newsList" v-model:size="size"/>
         <MyDialog v-model="delShow" :msg="'确认删除这条数据吗?'" @sure="getDelDate"/>
+        <MyDialog v-model="newsDelShow" :msg="'确认删除分类 “ ' + typeName +' ” ?'" @sure="newsDel"/>
+        <el-dialog v-model="editShow" title="修改名称" width="380px" @close="typeName = ''">
+          <el-input v-model="typeName" placeholder="请输入新闻分类名称"/>
+          <div class="fcs btns fjend mt20">
+            <el-button @click="editShow = false">取消</el-button>
+            <el-button type="primary" @click="sureEdit" :disabled="!typeName">提交</el-button>
+          </div>
+        </el-dialog>
       </el-card>
     </div>
     <div class="type-tips">
@@ -129,19 +137,48 @@
           </div>
         </template>
         <template #default>
-          <ul>
-            <div class="btns">
-              <el-button type="primary"  class="typeAdd">添加</el-button>
-            </div>
-            <li v-for="(v,i) in typeDate" :key="v.id">
-              <div class="txt">{{v.name}}</div>
-              <div class="handle">
-                <div class="iconImg" v-for="(v,i) in typeImg" :key="v.icon">
-                  <img :src="v.icon" alt="">
-                </div>
+          <div class="bbtns">
+            <el-button type="primary" class="bdc_btn type-add" plain @click="typeAdd">添加</el-button>
+          </div>
+          <div class="dragbox">
+            <div class="typeAdd" v-if="addBox">
+              <el-input class="type-input" v-model="typeName" clearable="true"/>
+              <div class="cz">
+                <el-button type="primary" class="bdc_btn" plain @click="remove">取消</el-button>
+              <el-button type="primary"  class="" @click="typeComfirm">确认</el-button>
               </div>
-            </li>
-          </ul>
+            </div>
+            <div class="items" v-for="v in typeDate.filter((v:any) => v.top == 1)">
+              <div class="txt" >{{v.name}}</div>
+            </div>
+            <draggable 
+              v-model="draTypeDate" 
+              @start="drag=true" 
+              @end="drag=false"
+              tag="transition-group" 
+              item-key="id"
+              v-bind="dragOptions"
+            >
+              <template #item="{element}">
+                <div class="items">
+                  <div class="txt">{{element.name}}</div>
+                  <div class="handle">
+                    <div class="fcs fjend imgicon" >
+                      <el-tooltip effect="dark" content="修改名称" placement="bottom" >
+                        <el-icon class="chover" size="18px" margin-right="5px" @click="editName(element)"><edit /></el-icon>
+                      </el-tooltip>
+                      <el-tooltip effect="dark" content="删除" placement="bottom">
+                        <el-icon class="chover" size="18px" margin-right="5px" @click="delName(element)"><delete /></el-icon>
+                      </el-tooltip>
+                      <el-tooltip effect="dark" content="拖拽" placement="bottom">
+                        <el-icon class="chover" size="18px" margin-right="5px"  @change="changeDrag"><img :src="drag_a" alt=""></el-icon>
+                      </el-tooltip>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </draggable>
+          </div>
         </template>
         <template #footer>
           <div style="flex: auto">
@@ -160,11 +197,13 @@ import { formatDate } from '@/utils/date';
 import { ElMessageBox } from 'element-plus'
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
-import index_1 from '@/assets/images/index_1.png'
-import index_2 from '@/assets/images/index_2.png'
+import { Edit, Delete,  } from '@element-plus/icons-vue'
+import drag_a from '@/assets/images/drag.png'
 import tips from '@/assets/images/news-tips.png'
 import tips_w from '@/assets/images/news-tips-w.png'
-import {news_api,statistics_api,typeList_api,newsUp_api,newsDown_api,newsDel_api} from '@/api/website';
+import draggable from 'vuedraggable'
+import {news_api,statistics_api,typeList_api,newsUp_api,newsDown_api,newsDel_api,newsTypeAdd_api,newsTypeDel_api,newsNameEdit_api} from '@/api/website';
+import { log } from 'console';
 
 const page = ref(1)
 const total = ref(0)
@@ -175,6 +214,16 @@ interface SData {
   author:string,
   keyword:string,
   state:number,
+}
+const newsForm = reactive({
+  keyword: '',
+  author: '',
+  itemize:'',
+  status:'',
+  reslut:''
+})
+const getPass=()=>{
+  newsForm.reslut=''
 }
 const newsData = ref<SData[]>([])
 const newsList= async ()=>{
@@ -197,63 +246,102 @@ const statisticsList = async ()=>{
   const res =await statistics_api()
   if(res.status==1){
     statisticsDate.value = res.body
-    console.log(res);
+    // console.log(res);
   }
 }
 statisticsList()
+const typeId= ref<any>({})
+const typeName = ref<any>({})
 const typeDate = ref<any>({})
+const draTypeDate = ref<any>({})
 const typeList = async ()=>{
   const res =await typeList_api()
   if(res.status==1){
     typeDate.value = res.body
-    console.log(res);
+    draTypeDate.value = typeDate.value.filter((v:any) => v.top == 2)    
   }
 }
+
 typeList()
 
-const newsForm = reactive({
-  keyword: '',
-  author: '',
-  itemize:'',
-  status:'',
-  reslut:''
-})
-
+const manageRef= ref<any>({})
 const resetForm = () => {
   console.log('重置')
   manageRef.value.clearValidate()
   manageRef.value.resetFields()
 };
+
+// 分类管理
 const drawer2 = ref(false)
 const direction = ref('rtl')
-const radio1 = ref('Option 1')
-const typeImg=ref([
-  {
-    name:'编辑',
-    icon:index_1
-  },
-   {
-    name:'删除',
-    icon:index_1
-  },
-   {
-    name:'详情',
-    icon:index_2
-  }
-])
+const radio1 = ref('fl')
+
 function cancelClick() {
   drawer2.value = false
 }
 function confirmClick() {
-  ElMessageBox.confirm(`Are you confirm to chose ${radio1.value} ?`)
-    .then(() => {
+  // ElMessageBox.confirm(`Are you confirm to chose ${radio1.value} ?`)
+    // .then(() => {
       drawer2.value = false
-    })
-    .catch(() => {
-      // catch error
-    })
+    // })
 }
-const manageRef= ref<any>({})
+// 分类管理拖拽
+const drag = ref(false)
+const dragOptions ={
+  animation: 200,
+  ghostClass: "ghost",
+  disabled:false
+}
+const changeDrag = ()=>{
+}
+const addBox=ref(false)
+//添加按钮
+const typeAdd = ()=>{
+  addBox.value=true
+}
+const remove =()=>{
+  addBox.value=false
+}
+const typeComfirm =async()=>{
+  const res = await newsTypeAdd_api({name:typeName.value})
+  if(res && res.status == 1){
+    typeList()
+    addBox.value=false
+  }
+}
+
+
+const newsDelShow = ref(false)
+const delName= (newsType:any) => {
+  typeId.value=newsType.id
+  typeName.value=newsType.name
+  newsDelShow.value = true  
+}
+const newsDel = async () => {
+  const res = await newsTypeDel_api({id: typeId.value})
+  if(res.status == 1){
+    newsDelShow.value = false
+    typeList()
+  }
+}
+
+const editShow = ref(false)
+const editName = (newsType:any) => {
+  typeId.value=newsType.id
+  typeName.value=newsType.name
+  editShow.value = true
+}
+const sureEdit = async () => {
+  const { status } = await newsNameEdit_api({
+    id: typeId.value,
+    name:typeName.value
+  })
+  if(status == 1){
+    editShow.value = false
+    typeList()
+  }
+}
+
 
 
 // 上下线操作
@@ -297,6 +385,7 @@ const getDelDate = async()=>{
     }
   })
 }
+
 
 </script>
 
@@ -355,47 +444,81 @@ const getDelDate = async()=>{
 }
 //侧边分类弹窗
 .type-tips{
+  position: relative;
   :deep(.el-drawer){
-    width: 20% !important;;
+    width: 25% !important;;
   }
   .el-drawer--header{
     background-color: #333!important;;
     color: #fff!important;;
   }
-  ul{
-    padding: 10px;
-    width:300px;
-    .btns{
-      display: flex;
-      justify-content: flex-end;
-      margin:0 18px 15px 0;
+}
+.bbtns{
+ position: absolute;
+ top:55px;
+ right:30px;
+ .type-add{
+  width:80px;
+ }
+}
+.dragbox{
+  padding: 10px;
+  width:300px;
+ .typeAdd{
+    width:150%;
+    height: 56px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    border: 1px solid #2D68EB;
+    margin-bottom: 8px;
+    line-height: 56px;
+    display:flex;
+    flex-direction: row;
+    .type-input{
+      margin:13px;
+      width: 240px;
+      height: 40px;
+      background: #FFFFFF;
+      border-radius: 2px;
     }
-    li{
-      border:1px solid #999;
-      border-radius: 4px;
-      margin-bottom: 8px;
-      width:260px;
-      height:40px;
-      line-height: 40px;
+  }
+  .items{
+    // width: 372px;
+    width:150%;
+    height: 56px;
+    background: #FFFFFF;
+    border-radius: 8px;
+    border: 1px solid #DDDDDD;
+    margin-bottom: 8px;
+    line-height: 56px;
+    display:flex;
+    flex-direction: row;
+    &:hover{
+      border: 1px solid #2D68EB;
+    }
+    .txt{
+      margin-left: 8px; 
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #333333;
+    }
+    .handle{
       display:flex;
       flex-direction: row;
-      .txt{
-       margin-left: 8px; 
+      flex: 1;
+      justify-content: flex-end;
+      :deep(.el-icon){
+        margin-right:8px ;
       }
-      .handle{
-        display:flex;
-        flex-direction: row;
-        flex: 1;
-        justify-content: flex-end;
-        img{
-          width:20px;
-          height:20px;
-          margin-right: 5px;
-        }
+      img{
+        width:16px;
+        height:16px;
       }
     }
   }
 }
+
 .ss{
   margin:20px 0;
   font-size: 14px;

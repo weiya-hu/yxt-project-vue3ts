@@ -19,7 +19,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { mainStore } from '@/store/index'
 import DetailsHeader from "@/components/DetailsHeader.vue";
 import KzAddArticle from "@/components/KzAddArticle.vue";
-import { dynamicDetail_api, dynamicAdd_api, dynamicEdit_api } from '@/api/website'
+import { newsDetail_api, newsAdd_api, newsEdit_api } from '@/api/website'
 import { warnMsg } from '@/utils'
 
 const store = mainStore()
@@ -28,7 +28,7 @@ const router = useRouter()
 const id = route.query.id as string
 
 const getDetails = async () => {
-  const { status, body } = await dynamicDetail_api({ id })
+  const { status, body } = await newsDetail_api({ id })
   if(status == 1){
     if(body.status == 3){
       warnMsg('请下线文章后再编辑')
@@ -52,11 +52,11 @@ const submit = async (status:1|2) => {
   addRef.value.submit()
 }
 const subSuccess = async (val:AForm) => {
-  const { status } = id ? await dynamicEdit_api({
+  const { status } = id ? await newsEdit_api({
     ...val,
     status: aStatus.value,
     id
-  }) : await dynamicAdd_api({
+  }) : await newsAdd_api({
     ...val,
     status: aStatus.value
   })

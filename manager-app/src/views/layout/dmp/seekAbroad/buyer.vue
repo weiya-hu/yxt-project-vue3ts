@@ -1,7 +1,7 @@
 <template>
   <div class="buyer">
     <!-- <div @click="$router.push('teldatadetails')">去详情</div> -->
-    <Mypage :total="50" v-model="page"/>
+     <MyPage :total="total" v-model:page="page" @change="" v-model:size="size"/>
   </div>
 </template>
 
@@ -9,6 +9,8 @@
 import { ref } from 'vue'
 import Mypage from "@/components/Mypage.vue";
 const page = ref(1)
+const total =ref(1)
+const size=ref(10)
 </script>
 
 <script lang="ts">

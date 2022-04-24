@@ -244,7 +244,7 @@ const routes = [
               {
                 path: '/website/inform/notice/noticeadd',
                 name: 'NoticeAdd',
-                component: () => import('@/views/layout/website/inform/articleAdd.vue'),
+                component: () => import('@/views/layout/website/inform/noticeAdd.vue'),
                 meta: { title: '通知与公告详情编辑/新增',father:'/website/inform/notice',lv:'17' },
               },
             ]
@@ -270,7 +270,7 @@ const routes = [
           {
             path: '/website/news/newsadd',
             name: 'NewsAdd',
-            component: () => import('@/views/layout/website/inform/articleAdd.vue'),
+            component: () => import('@/views/layout/website/news/newsAdd.vue'),
             meta: { title: '添加资讯',father:'/website/news',lv:'18' },
           },
           {
