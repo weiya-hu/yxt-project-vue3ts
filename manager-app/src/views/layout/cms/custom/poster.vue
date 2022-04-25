@@ -42,7 +42,7 @@
             width="500px" 
             >
             <div class="img-dialog" v-if="showImgs ">
-              <el-image style="width: 125px; height: 135px; margin-top: 10px"  fit  v-for="url in showImgs" :key="url" :src="url">
+              <el-image style="width: 125px; height: 135px; margin-top: 10px"  fit  v-for="url in showImgs" :key="url" :src="url" :preview-src-list="showImgs">
                   <template #error>
                     <div class="image-slot">
                       <h3>暂无数据</h3>
@@ -115,7 +115,7 @@ const tableTitle = ref(<TableTitleProp[]>[
   {type:'text',lable:'账户名',prop:'user_name',width:120},
   {type:'text',lable:'客户名称',prop:'company_name',width:180},
   {type:'text',lable:'标题',prop:'title',width:150},
-  {type:'text',lable:'描述',prop:'detail',width:120},
+  {type:'text-tooltip',lable:'描述',prop:'detail',width:120},
   {type:'date',lable:'创建日期',prop:'create_time',width:110},
   {type:'status',lable:'状态',prop:'status',width:100},    
 ]) 
