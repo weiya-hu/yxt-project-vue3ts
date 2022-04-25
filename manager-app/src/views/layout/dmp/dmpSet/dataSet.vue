@@ -7,14 +7,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import Mypage from "@/components/Mypage.vue";
+import Mypage from '@/components/Mypage.vue'
 const page = ref(1)
 </script>
 
 <script lang="ts">
-export default { name:'DataSet' }
+export default { name: 'DataSet' }
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

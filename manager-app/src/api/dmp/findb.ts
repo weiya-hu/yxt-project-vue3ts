@@ -1,4 +1,6 @@
-import { get, post } from '@/utils/request'
+import { get, post,getWithResponsetype } from '@/utils/request'
+import { keysOf } from 'element-plus/lib/utils'
+import { has, indexOf } from 'lodash-es'
 
 //找B端个性化数据表单列表
 export const businessDemand_api = (data:any): Promise<res> => {
@@ -78,4 +80,19 @@ export const overseasSupplyPage_api = (data:any): Promise<res> => {
 //采购商表单详情
 export const overseasSupplyDetail_api = (data:any): Promise<res> => {
   return get(1,'/dmp/overseas/supply/detail.page',data)
+}
+
+//DMP下载模板
+export const templeteDownload_api=(mode:string,type?:number)=>{
+  let urlHash = {
+    "business":"/dmp/business/template/download.do",
+    "customer":"/dmp/customer/template/download.do",
+    "channel":"/dmp/channel/template/download.do",
+    "item":"/dmp/item/template/download.do",
+    "overseas":"/dmp/overseas/template/download.do"
+  }
+  let data = type?{type}:{}
+  return ():Promise<res> =>{
+    return getWithResponsetype(1, urlHash[mode as keyof typeof urlHash], 'blob', data)
+  }
 }

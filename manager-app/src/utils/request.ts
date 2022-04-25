@@ -106,6 +106,35 @@ export function post(isBg:0|1, url: string, params?: any, showmsg?: boolean) {
   })
 }
 
+// 封装get请求 isBg 1:后台接口 0:前台接口,接收返回类型参数responseType
+// eslint-disable-next-line max-params
+export function getWithResponsetype(
+  isBg: 0 | 1,
+  url: string,
+  responseType: any,
+  params?: any,
+  showmsg?: boolean
+) {
+  return new Promise<res>((resolve, reject) => {
+    axios
+      .get(isBg ? 'api' + url : 'bgapi' + url, { params, responseType })
+      .then((res) => {
+        if (showmsg && res.data && res.data.status === 1) {
+          ElMessage({
+            showClose: true,
+            message: res.data.message,
+            type: 'success',
+            grouping: true,
+          })
+        }
+        resolve(res.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 // 想要创建一个通用的调用模板的尝试，返回isLoading，isError，data，getData，但是使用顶层await会导致页面空白
 export const Gajax = (ajax: Function) => {
   const isLoading = ref(false)
