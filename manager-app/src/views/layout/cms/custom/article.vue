@@ -23,7 +23,7 @@
               <div v-if="row.status == 1" >
                   <el-link type="primary" class="fcss" @click="getData(row.id) ">下载附件</el-link>                  
                   <el-link type="primary" class="fcss" @click="pass(row.id)">通过</el-link>                  
-                  <el-link type="primary" @click="open(row.id)">驳回</el-link>
+                  <el-link type="primary" @click="refuse(row.id)">驳回</el-link>
               </div>
             </div>
           </template>
@@ -34,8 +34,8 @@
       </el-table>
       <MyPage :total="totle" v-model:page="page" @change="getList" v-model:size="size"/>
         </el-card>
-
       <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1"/>
+      <Refuse v-model="refuseShow" @success='refuseSuccess'/>
     </div>
 </template>
 <script setup  lang="ts">
@@ -45,6 +45,7 @@ import MyPage from '@/components/MyPage.vue'
 import MyDataTable from '@/components/MyDataTable.vue'
 import MyDialog from "@/components/MyDialog.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
+import Refuse from '@/components/Refuse.vue';
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { articleList_api,articlePass_api,articleAttach_api ,articleReject_api} from '@/api/cms/custom'
 interface TableTitleProp{
@@ -96,24 +97,23 @@ await articlePass_api({ id})
  getList()
 }
 // 驳回弹出框
-const open = (id:string|number) => {
-  ElMessageBox.prompt('驳回原因', '提示', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-  })
-    .then(async ({ value }) => {
-      await articleReject_api({
-          fail_reason:value,
-          id
-  })
-     getList()
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消驳回',
-      })
-    })
+let refuseShow=ref(false)
+let refuseId = ref()
+const refuse=(id:string)=>{
+  refuseShow.value=true
+  refuseId.value = id
+}
+const refuseSuccess=async(val:string)=>{
+  let data={
+    id:refuseId.value,
+    fail_reason:val,
+    status:4
+  }
+  const {status,body} = await  articleReject_api(data)
+  if(status){
+    refuseShow.value=false;
+    getList()
+  }
 }
 // 下载附件
 const getData = async (id:string)=>{

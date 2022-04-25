@@ -12,22 +12,23 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column property="id" label="ID" width="180" />
-        <el-table-column property="uname" label="账户名" width="180" />
-        <el-table-column property="cname" label="客户名称"  />
-        <el-table-column property="video" label="视频" width="210" >
+        <el-table-column property="id" label="ID" width="180" align="center" />
+        <el-table-column property="uname" label="账户名" width="180" align="center" />
+        <el-table-column property="cname" label="客户名称" align="center" />
+        <el-table-column property="video" label="视频" width="210" align="center" >
           <template #default="{row}">
+            <!-- <img :src="row.video_url" alt="" class="firstimg" @click="look(row.video_url,row.id)"/> -->
             <video :src="row.video_url" alt="" class="firstimg" @click="look(row.video_url,row.id)"/>
           </template>
         </el-table-column>
-        <el-table-column property="create_time" label="创建日期" width="200" >
+        <el-table-column property="create_time" label="创建日期" width="200" align="center">
           <template #default="{row}">
             <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
           </template>
         </el-table-column>
-        <el-table-column property="status" label="状态" width="200">
+        <el-table-column property="status" label="状态" width="200" align="center">
           <template #default="{row}">
-            <div class="fcs">
+            <div class="fcs fleximg">
               <div class="dot" :class="getStatus(row.status).className"></div>
               <div class="staus">{{getStatus(row.status).text}}</div>
             </div>
@@ -42,7 +43,7 @@
              <div class="fcs" v-if="row.status == 2">
               <el-link type="primary" @click="pass(row.id)">通过</el-link>
               <div class="line"></div>
-              <el-link type="primary" @click="open(row.id)">驳回</el-link>
+              <el-link type="primary" @click="refuse(row.id)">驳回</el-link>
             </div>
             <div class="fcs" v-if="row.status == 4">
               <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true">驳回原因</el-link>
@@ -61,6 +62,7 @@
     <el-dialog v-model="lookShow" title="查看视频" fullscreen @close="lookVideo = ''" custom-class="videobox">
       <video :src="lookVideo" controls class="show_video"></video>
     </el-dialog>
+    <Refuse v-model="refuseShow" @success='refuseSuccess'/>
   </div>
 </template>
 
@@ -69,6 +71,7 @@ import { ref ,reactive} from 'vue'
 import { formatDate } from '@/utils/date'
 import MyEmpty from "@/components/MyEmpty.vue";
 import search from'@/components/Search.vue'
+import Refuse from '@/components/Refuse.vue';
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -121,6 +124,7 @@ const getList =async ()=>{
     startTime:inputSearch.create_time[0],
     endTime:inputSearch.create_time[1],
   })
+  console.log(res);
   
   if(res.status == 1){
     tableData.value = res.body.records
@@ -129,26 +133,25 @@ const getList =async ()=>{
 }
 getList()
 // 驳回弹出框
-const open = (id:string|number) => {
-  ElMessageBox.prompt('驳回原因', '提示', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-  })
-    .then(async ({ value }) => {
-      await videoUpdate_api({
-          fail_reason:value,
-          status:4,
-          id
-  })
-     getList()
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消驳回',
-      })
-    })
+let refuseShow=ref(false)
+let refuseId = ref()
+const refuse=(id:string)=>{
+  refuseShow.value=true
+  refuseId.value = id
 }
+const refuseSuccess=async(val:string)=>{
+  let data={
+    id:refuseId.value,
+    fail_reason:val,
+    status:4
+  }
+  const {status,body} = await  videoUpdate_api(data)
+  if(status){
+    refuseShow.value=false;
+    getList()
+  }
+}
+
 // 通过
 const pass =async(id:string|number)=>{
 await videoUpdate_api({ id,status:3,fail_reason:''})

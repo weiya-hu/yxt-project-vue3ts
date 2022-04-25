@@ -24,7 +24,7 @@
               <div v-if="row.status == 1" >
                   <el-link type="primary" class="fcss" @click="getData(row.id) " >下载附件</el-link>                  
                   <el-link type="primary" class="fcss" @click="pass(row.id)">通过</el-link>                  
-                  <el-link type="primary" @click="open(row.id)">驳回</el-link>
+                  <el-link type="primary" @click="refuse(row.id)">驳回</el-link>
               </div>
             </div>
           </template>
@@ -79,6 +79,7 @@
         </div>
       </el-form>
     </el-dialog>
+    <Refuse v-model="refuseShow" @success='refuseSuccess'/>
     </div>
 </template>
 <script setup  lang="ts">
@@ -89,7 +90,7 @@ import MyDataTable from '@/components/MyDataTable.vue'
 import MyDialog from "@/components/MyDialog.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import { ZoomIn, CaretRight, Plus } from '@element-plus/icons-vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import Refuse from '@/components/Refuse.vue';
 import { showKzPool } from '@/utils/index'
 import { lookImage, lookVideo } from '@/utils/index'
 import emiter from '@/utils/bus'
@@ -149,25 +150,24 @@ await articlePass_api({ id})
  getList()
 }
 // 驳回弹出框
-const open = (id:string|number) => {
-  ElMessageBox.prompt('驳回原因', '提示', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-  })
-    .then(async ({ value }) => {
-      await articleReject_api({
-          fail_reason:value,
-          id
-  })
-     getList()
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消驳回',
-      })
-    })
+let refuseShow=ref(false)
+let refuseId = ref()
+const refuse=(id:string)=>{
+  refuseShow.value=true
+  refuseId.value = id
 }
+const refuseSuccess=async(val:string)=>{
+  let data={
+    id:refuseId.value,
+    fail_reason:val,
+  }
+  const {status,body} = await  articleReject_api(data)
+  if(status){
+    refuseShow.value=false;
+    getList()
+  }
+}
+
 // 下载附件
 const getData = async (id:string)=>{
   const res = await articleAttach_api({ id})

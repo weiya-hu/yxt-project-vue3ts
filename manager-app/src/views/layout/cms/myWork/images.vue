@@ -13,22 +13,22 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column property="id" label="ID" width="200" />
-        <el-table-column property="uname" label="账户名" width="180" />
-        <el-table-column property="cname" label="客户名称" width="300" />
-        <el-table-column property="thumb_url" label="图片" width="150" >
+        <el-table-column property="id" label="ID" width="178" align="center"/>
+        <el-table-column property="uname" label="账户名" width="152"  align="center" />
+        <el-table-column property="cname" label="客户名称" width="300" align="center"/>
+        <el-table-column property="thumb_url" label="图片" width="124" align="center">
           <template #default="{row}">
             <img :src="row.thumb_url" alt="" class="firstimg">
           </template>
         </el-table-column>
-        <el-table-column property="create_time" label="创建日期" width="230" >
+        <el-table-column property="create_time" label="创建日期" width="230" align="center">
           <template #default="{row}">
             <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
           </template>
         </el-table-column>
-        <el-table-column property="status" label="状态" width="220" >
+        <el-table-column property="status" label="状态" width="220" align="center">
           <template #default="{row}">
-            <div class="fcs">
+            <div class="fcs fleximg">
               <div class="dot" :class="getStatus(row.status).className"></div>
               <div class="staus">{{getStatus(row.status).text}}</div>
             </div>
@@ -42,7 +42,7 @@
              <div class="fcs" v-if="row.status == 2">
               <el-link type="primary" @click="pass(row.id)">通过</el-link>
               <div class="line"></div>
-              <el-link type="primary" @click="open(row.id)">驳回</el-link>
+              <el-link type="primary" @click="refuse(row.id)">驳回</el-link>
             </div>
             <div class="fcs" v-if="row.status == 4">
               <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true">驳回原因</el-link>
@@ -59,6 +59,7 @@
     
      <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1"/>
      <el-image-viewer @close="imgShow=false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/>
+      <Refuse v-model="refuseShow" @success='refuseSuccess'/>
   </div>
 </template>
 
@@ -70,6 +71,7 @@ import search from'@/components/Search.vue'
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import { ElMessage, ElMessageBox } from 'element-plus'
+import Refuse from '@/components/Refuse.vue';
 import { imagesList_api,imagesUpdate_api, imagesDetail_api} from '@/api/cms/myWork'
 interface SData {
   id: number|string,
@@ -98,11 +100,6 @@ const searchword = () => {
 const imgShow = ref(false)//预览是否显示
 const showImgs = ref<string[]>([])//预览图片列表
 const showImgIndex = ref(0)//首张预览图片
-// const go = async(id:string) => {
-//   const res=await imagesDetail_api({id})
-//   console.log(res);
-  
-// }
 const go = async(url:string,id:string) => {
   // window.open(url)
   let arr:string[] = []
@@ -119,26 +116,26 @@ const resetSearch=()=>{
   inputSearch.create_time=''
    getList()
 }
-const open = (id:string|number) => {
-  ElMessageBox.prompt('驳回原因', '提示', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-  })
-    .then(async ({ value }) => {
- const res= await imagesUpdate_api({
-    fail_reason:value,
-    status:4,
-    id
-  })
-     getList()
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消驳回',
-      })
-    })
+//驳回组件
+let refuseShow=ref(false)
+let refuseId = ref()
+const refuse=(id:string)=>{
+  refuseShow.value=true
+  refuseId.value = id
 }
+const refuseSuccess=async(val:string)=>{
+  let data={
+    id:refuseId.value,
+    fail_reason:val,
+    status:4
+  }
+  const {status,body} = await  imagesUpdate_api(data)
+  if(status){
+    refuseShow.value=false;
+    getList()
+  }
+}
+
 // 通过
 const pass =async(id:string|number)=>{
 await imagesUpdate_api({ id,status:3,fail_reason:''})

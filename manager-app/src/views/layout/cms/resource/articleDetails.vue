@@ -5,7 +5,7 @@
         <div class="content">
             <div class="title">{{body.title}}</div>
             <div v-html="body.content"></div>
-            <div class="fjend btns">
+            <div class="fjend btns twos">
                 <el-button size="large" @click="$router.push('/cms/resource')">&ensp;返回&ensp;</el-button>
                 <el-button size="large" type="primary"  @click="$router.push(`/cms/resourceedit?id=${id}`)">&ensp;编辑&ensp;</el-button>
             </div>
@@ -44,11 +44,15 @@ export default { name:'资源内容库软文详情' }
     border-radius: 6px;
     padding: 32px 50px;
     margin-top: 20px;
+    overflow: hidden;
     .title{
       font-size: 28px;
       font-weight: 600;
       margin-bottom: 30px;
       color: $color333;
+    }
+    .twos{
+      margin-top: 20px;
     }
   }
 }

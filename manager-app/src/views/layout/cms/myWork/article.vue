@@ -13,28 +13,28 @@
          border
         @selection-change="handleSelectionChange"
       >
-        <el-table-column property="id" label="ID" />
-        <el-table-column property="uname" label="账户名"  />
-        <el-table-column property="cname" label="客户名称">
+        <el-table-column property="id" label="ID" align="center" />
+        <el-table-column property="uname" label="账户名" width="120" align="center" />
+        <el-table-column property="cname" label="客户名称" width="250" align="center">
         </el-table-column>
-        <el-table-column property="thumb_url" label="封面图片">
+        <el-table-column property="thumb_url" label="封面图片" width="104" align="center">
           <template #default="{row}">
             <img :src="row.thumb_url" alt="" class="firstimg">
           </template>
         </el-table-column>
-        <el-table-column  label="标题" :show-overflow-tooltip="true">
+        <el-table-column  label="标题" :show-overflow-tooltip="true" width="350" align="center">
         <template #default="{row}">
             <el-link type="primary" @click="$router.push('/cms/myworkdet?id='+row.id)" >{{row.title}}</el-link>
           </template>
           </el-table-column>
-        <el-table-column property="create_time" label="创建日期" >
+        <el-table-column property="create_time" label="创建日期" align="center">
           <template #default="{row}">
             <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
           </template>
         </el-table-column>
-        <el-table-column property="status" label="状态"  >
+        <el-table-column property="status" label="状态" align="center" >
           <template #default="{row}">
-            <div class="fcs">
+            <div class="fcs fleximg">
               <div class="dot" :class="getStatus(row.status).className"></div>
               <div class="staus">{{getStatus(row.status).text}}</div>
             </div>
@@ -48,7 +48,7 @@
              <div class="fcs" v-if="row.status == 2">
               <el-link type="primary" @click="pass(row.id)">通过</el-link>
               <div class="line"></div>
-              <el-link type="primary" @click="open(row.id)">驳回</el-link>
+              <el-link type="primary" @click="refuse(row.id)">驳回</el-link>
             </div>
             <div class="fcs" v-if="row.status == 4">
               <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true">驳回原因</el-link>
@@ -64,7 +64,7 @@
     </el-card>
     
     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1"/>
-    
+    <Refuse v-model="refuseShow" @success='refuseSuccess'/>
   </div>
 </template>
 
@@ -75,7 +75,7 @@ import search from'@/components/Search.vue'
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
-import { ElMessage, ElMessageBox } from 'element-plus'
+import Refuse from '@/components/Refuse.vue';
 import { articleList_api,articleUpdate_api} from '@/api/cms/myWork'
 interface SData {
   id: number|string,
@@ -132,26 +132,25 @@ const changePage =()=>{
   getList()
 }
 // 驳回弹出框
-const open = (id:string|number) => {
-  ElMessageBox.prompt('驳回原因', '提示', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-  })
-    .then(async ({ value }) => {
-      await articleUpdate_api({
-          fail_reason:value,
-          status:4,
-          id
-  })
-     getList()
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消驳回',
-      })
-    })
+let refuseShow=ref(false)
+let refuseId = ref()
+const refuse=(id:string)=>{
+  refuseShow.value=true
+  refuseId.value = id
 }
+const refuseSuccess=async(val:string)=>{
+  let data={
+    id:refuseId.value,
+    fail_reason:val,
+    status:4
+  }
+  const {status,body} = await  articleUpdate_api(data)
+  if(status){
+    refuseShow.value=false;
+    getList()
+  }
+}
+
 // 通过
 const pass =async(id:string|number)=>{
 await articleUpdate_api({ id,status:3,fail_reason:''})
@@ -203,6 +202,7 @@ export default { name:'我的作品库——软文' }
  .firstimg{
     width: 48px;
     height: 48px;
+    // object-fit: scale-down;
     border-radius: 4px;
   }
   .dot{

@@ -24,7 +24,7 @@
               <div v-if="row.status == 1" >
                   <el-link type="primary" class="fcss" @click="getData(row.id) " >下载附件</el-link>                  
                   <el-link type="primary" class="fcss" @click="pass(row.id)">通过</el-link>                  
-                  <el-link type="primary" @click="open(row.id)">驳回</el-link>
+                  <el-link type="primary" @click="refuse(row.id)">驳回</el-link>
               </div>
             </div>
           </template>
@@ -42,7 +42,7 @@
             width="500px" 
             >
             <div class="img-dialog" v-if="showImgs ">
-              <el-image style="width: 125px; height: 135px"  fit  v-for="url in showImgs" :key="url" :src="url">
+              <el-image style="width: 125px; height: 135px; margin-top: 10px"  fit  v-for="url in showImgs" :key="url" :src="url">
                   <template #error>
                     <div class="image-slot">
                       <h3>暂无数据</h3>
@@ -56,9 +56,10 @@
             </span>
           </template>
       </el-dialog>
-        <el-dialog v-model="addShow" title="编辑图片" width="500px" @close="close" custom-class="upimgs" >
-          <span class="uptext">图片上传：</span>
-            <el-upload
+        <el-dialog v-model="addShow" title="编辑海报" width="510px" @close="close" custom-class="upimgs" >
+          <el-form :model="addForm">
+            <el-form-item label="海报上传" label-width="90px">
+              <el-upload
             action="#"
             :auto-upload="false"
             :limit="9"
@@ -76,13 +77,16 @@
               <div class="file_name">点击上传</div>
             </div>
           </el-upload>
-          <div class="tips">图片尺寸16:9，建议尺寸：220*160≤尺寸≤1920*890；支持JPG、PNG 、JPEG等格式；一次最多上传9张</div>
+            </el-form-item>
+          </el-form>
+          <div class="uptext">图片尺寸16:9，建议尺寸：220*160≤尺寸≤1920*890；支持JPG、PNG 、JPEG等格式；一次最多上传9张</div>
           <div class="fcs btns fjend">
           <el-button @click="close">取消</el-button>
           <el-button type="primary" @click="goSubmit" :disabled="!imgs.length">提交</el-button>
       </div>
     </el-dialog>
     <el-image-viewer @close="imgShow=false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/>
+    <Refuse v-model="refuseShow" @success='refuseSuccess'/>
     </div>
 </template>
 <script setup  lang="ts">
@@ -94,7 +98,7 @@ import MyDialog from "@/components/MyDialog.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import { Plus,Picture as IconPicture } from '@element-plus/icons-vue'
 import type { UploadFile, UploadUserFile, } from 'element-plus'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import Refuse from '@/components/Refuse.vue';
 import axios from 'axios'
 import { errMsg ,okMsg } from '@/utils/index'
 import { getAliToken_api } from '@/api/login'
@@ -115,6 +119,8 @@ const tableTitle = ref(<TableTitleProp[]>[
   {type:'date',lable:'创建日期',prop:'create_time',width:110},
   {type:'status',lable:'状态',prop:'status',width:100},    
 ]) 
+const addForm = reactive({
+})
 const loading = ref(false)
 const size = ref(10)
 const totle = ref(0)
@@ -153,25 +159,25 @@ await articlePass_api({ id})
  getList()
 }
 // 驳回弹出框
-const open = (id:string|number) => {
-  ElMessageBox.prompt('驳回原因', '提示', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-  })
-    .then(async ({ value }) => {
-      await articleReject_api({
-          fail_reason:value,
-          id
-  })
-     getList()
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消驳回',
-      })
-    })
+let refuseShow=ref(false)
+let refuseId = ref()
+const refuse=(id:string)=>{
+  refuseShow.value=true
+  refuseId.value = id
 }
+const refuseSuccess=async(val:string)=>{
+  let data={
+    id:refuseId.value,
+    fail_reason:val,
+    status:4
+  }
+  const {status,body} = await  articleReject_api(data)
+  if(status){
+    refuseShow.value=false;
+    getList()
+  }
+}
+
 // 下载附件
 const getData = async (id:string)=>{
   const res = await articleAttach_api({ id})
@@ -299,7 +305,7 @@ const goSubmit =async (order_id:string,urls:any[])=>{
         break
       }
     }
-    
+    getList()
   } catch (error:any) {
     errMsg(error,0)
     close()
@@ -355,17 +361,20 @@ export default { name:'个性化内容库-软文' }
     }
     .uptext{
       display: block;
-      width: 110px;
-      height: 50px;
+      width: 112px;
+      margin-left: 90px;
     }
-  //   .tips{
-  //     padding-top: 10px;
-  //     height: 145px;
-  //     width: 145px;
-  //   color:$color999;
-  //   font-size: 14px;
-  //   height: 100px;
-  //   display: flex;
-  //   align-items: flex-end;
-  // }
+    :deep(.el-upload-list__item  ) {
+      width: 115px;
+      height: 115px;
+    }
+    :deep(.el-upload--picture-card  ) {
+      width: 115px;
+      height: 115px;
+    }
+  :deep(.el-form-item__label){
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 </style>

@@ -50,6 +50,6 @@ export const videoList_api = (data:PageParams): Promise<res> => {
 }
 // 视频上传
 export const articleVideosave_api = (data:any): Promise<res> => {
-  return post(1,'/manage/diy/poster.save',data,true)
+  return post(1,'/manage/diy/video.save',data,true)
 }
 

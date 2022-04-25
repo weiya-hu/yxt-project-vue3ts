@@ -2,10 +2,7 @@
   <div class="article_add">
     <DetailsHeader/>
     <div class="addform">
-        <div class="fjend btns">
-          <el-button size="large" @click="$router.push('/cms/custom')">&ensp;返回&ensp;</el-button>
-          <el-button size="large" type="primary" @click="submit">&ensp;提交&ensp;</el-button>
-        </div>
+        
       <div class="form_content" v-loading="upLoading">
         <div class="tip fcs">
             <img :src="tip_i" alt="">
@@ -54,6 +51,10 @@
                 <el-form-item label="文章内容" prop="content">
                     <Edit v-model="aForm.content" ref="editRef"/>
                 </el-form-item>
+                <div class="fjend btns">
+          <el-button size="large" @click="$router.push('/cms/custom')">&ensp;返回&ensp;</el-button>
+          <el-button size="large" type="primary" @click="submit">&ensp;提交&ensp;</el-button>
+        </div>
             </el-card>
         </el-form>
         

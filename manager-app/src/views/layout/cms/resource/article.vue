@@ -18,10 +18,10 @@
           value-format="x"
         />
       </el-form-item>
-      <el-form-item>
+      <el-form-item class="btns">
         <el-button type="primary" @click="$router.push('/cms/resourceedit')">新建</el-button>
-        <el-button type="primary" @click="searchword" >查询</el-button>
-        <el-button @click="resetSearch" >重置</el-button>
+        <el-button type="primary" @click="searchword" class="search-query">查询</el-button>
+        <el-button @click="resetSearch" class="search-query" >重置</el-button>
       </el-form-item>
     </el-form>
     </el-card>
@@ -34,34 +34,34 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column property="id" label="ID" width="180"/>
-        <el-table-column property="thumb_url" label="封面图片" width="180">
+        <el-table-column property="id" label="ID" width="180" align="center"/>
+        <el-table-column property="thumb_url" label="封面图片" width="124" align="center">
            <template #default="{row}">
             <img :src="row.thumb_url" alt="" class="firstimg">
           </template>
         </el-table-column>
-        <el-table-column property="title" label="标题">
+        <el-table-column property="title" label="标题" :show-overflow-tooltip="true" width="250" align="center">
           <template #default="{row}">
             <el-link type="primary" @click="$router.push('/cms/resourcedet?id='+row.id)" >{{row.title}}</el-link>
           </template>
         </el-table-column>
-        <el-table-column property="industry_name" label="行业分类" width="210" >
+        <el-table-column property="industry_name" label="行业分类" width="210" align="center">
           
         </el-table-column>
-        <el-table-column property="create_time" label="创建日期" width="200" >
+        <el-table-column property="create_time" label="创建日期" width="200" align="center" >
           <template #default="{row}">
             <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
           </template>
         </el-table-column>
-        <el-table-column property="status" label="状态" width="200" >
+        <el-table-column property="status" label="状态" width="200" align="center">
           <template #default="{row}">
-            <div class="fcs">
+            <div class="fcs fleximg">
               <div class="dot" :class="getStatus(row.status).className"></div>
               <div class="staus">{{getStatus(row.status).text}}</div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" >
+        <el-table-column label="操作"  >
           <template #default="{row}">
             <div class="fcs" v-if="row.status == 2">
               <el-link type="primary" @click="down(row.id)">下架</el-link>
@@ -272,5 +272,21 @@ export default { name:'我的作品库——视频库' }
 }
 .mycard{
       padding-top: 20px;
+    }
+    .btns{
+          display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    flex: 1;
+    line-height: 32px;
+    position: relative;
+    font-size: var(--font-size);
+    min-width: 0;
+    .el-button{
+      margin-top: 24px;
+    }
+    .search-quer{
+      margin-left: 14px;
+    }
     }
 </style>

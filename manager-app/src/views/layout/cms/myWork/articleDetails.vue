@@ -42,6 +42,7 @@ export default { name:'我的作品库软文详情' }
     border-radius: 6px;
     padding: 32px 50px;
     margin-top: 20px;
+    overflow: hidden;
     .title{
       font-size: 28px;
       font-weight: 600;
