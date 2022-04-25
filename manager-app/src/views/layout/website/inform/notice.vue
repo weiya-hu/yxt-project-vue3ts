@@ -33,7 +33,7 @@
                 <el-link type="primary"  @click="getNtDown(row.id)" v-if="row.status == 2">下线</el-link>
                 <el-link type="primary" @click="getNtUp(row.id)" v-if="row.status == 1">上线</el-link>
                 <div class="line" v-if="row.status == 1||row.status == 2"></div>
-                <el-link type="primary" v-if="row.status == 1||row.status == 0" @click=" ">编辑</el-link>
+                <el-link type="primary" v-if="row.status == 1||row.status == 0" @click="$router.push('/website/inform/notice/noticeadd?id='+row.id)">编辑</el-link>
                 <div class="line"></div>
                 <el-link type="primary"  v-if="row.status == 1||row.status == 0" @click="getDel(row.id)">删除</el-link>
               </div>

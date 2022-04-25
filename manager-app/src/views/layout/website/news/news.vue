@@ -2,16 +2,15 @@
   <div class="news-container">
     <div class="ftitle">资讯中心</div>
     <div class="news-handle">
-      <el-button color="#2D68EB" class="bdc_btn" plain @click="drawer2 = true">分类管理</el-button>
+      <el-button  class="bdc_btn" @click="drawer2 = true">分类管理</el-button>
         <el-tooltip
           class="box-item"
           effect="dark"
           content="点击将更新从第三方获取的资讯"
           placement="bottom-end"
         >
-          <el-button color="#2D68EB" class="bdc_btn update" plain  > 数据源更新
+          <el-button  class="bdc_btn update"> 数据源更新
             <img :src="tips" alt="" class="img-tips1">
-            <img :src="tips_w" alt="" class="img-tips2">
           </el-button>
         </el-tooltip>
       <el-button type="primary" @click="$router.push('/website/news/newsadd')">添加</el-button>
@@ -105,11 +104,14 @@
           <el-table-column label="操作" width="200" fixed="right">
             <template #default="{row}">
               <div class="fcs" >
-                <el-link type="primary" @click="row.state == 0 ? $router.push('/website/news/newsadd?id='+row.id) :$router.push('/website/newsdetails?id='+row.id)">查看</el-link>
+                <el-link type="primary" v-if="row.state != 0" @click="$router.push('/website/newsdetails?id='+row.id)">查看</el-link>
+                 
                 <div class="line"></div>
                 <el-link type="primary" v-if="row.state == 4" @click="getNewsDown(row.id)">下线</el-link>
                 <el-link type="primary" v-if="row.state == 3" @click="getNewsUp(row.id)">上线</el-link>
                 <el-link type="primary" v-if="row.state == 1" @click="$router.push('/website/examine?id='+row.id)">审核</el-link>
+                <div class="line"></div>
+                <el-link type="primary" v-if="row.state == 0|| row.state ==3" @click=" $router.push('/website/news/newsadd?id='+row.id)">编辑</el-link>
                 <div class="line"></div>
                 <el-link type="primary" v-if="row.state == 2||row.state == 3|| row.state ==0"  @click="getDel(row.id)">删除</el-link>
               </div>
@@ -192,18 +194,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref,reactive } from 'vue'
+import { ref,reactive } from 'vue';
 import { formatDate } from '@/utils/date';
-import { ElMessageBox } from 'element-plus'
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
-import { Edit, Delete,  } from '@element-plus/icons-vue'
+import { Edit, Delete,  } from '@element-plus/icons-vue';
 import drag_a from '@/assets/images/drag.png'
-import tips from '@/assets/images/news-tips.png'
-import tips_w from '@/assets/images/news-tips-w.png'
-import draggable from 'vuedraggable'
+import tips from '@/assets/images/news-tips.png';
+import draggable from 'vuedraggable';
 import {news_api,statistics_api,typeList_api,newsUp_api,newsDown_api,newsDel_api,newsTypeAdd_api,newsTypeDel_api,newsNameEdit_api} from '@/api/website';
-import { log } from 'console';
+
 
 const page = ref(1)
 const total = ref(0)
@@ -534,18 +534,9 @@ const getDelDate = async()=>{
 .update{
   position: relative;
   width: 120px;
-  .img-tips1,.img-tips2{
-    position: absolute;
+  .img-tips1{
     top:7px;
     right:7px
-  }
-  .img-tips2{
-    opacity: 0;
-  }
-  &:hover{
-    .img-tips2{
-      opacity: 1;
-    }
   }
 }
 </style>

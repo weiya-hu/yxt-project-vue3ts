@@ -31,14 +31,16 @@ const getDetails = async () => {
   if(status == 1){
     if(body.status == 3){
       warnMsg('请下线文章后再编辑')
-      router.replace('/website/service/articledetails?id=' + id)
+      router.replace('/website/inform/dynamic/dynamicdetails?id=' + id)
       return
     }
     addRef.value.setForm({
       title:body.title,
-      article_type:body.article_type,
-      text:body.text,
+      article_type:body.type_name,
+      text:body.content,
       thumb_url:body.thumb_url,
+      creator:body.creator,
+      source_url:body.source_url
     })
   }
 }
@@ -51,40 +53,45 @@ const submit = async (status:1|2) => {
   addRef.value.submit()
 }
 const subSuccess = async (val:AForm) => {
+   const data ={
+    content:val.text,
+    type_id:val.article_type,
+    thumb_url:val.thumb_url,
+    title:val.title,
+  }
   const { status } = id ? await dynamicEdit_api({
-    ...val,
-    status: aStatus.value,
+    ...data,
     id
   }) : await dynamicAdd_api({
-    ...val,
-    status: aStatus.value
+    ...data,
+
   })
   if(status == 1){
     store.setKeepList([])
-    router.replace('/website/service/school')
+    router.replace('/website/inform/dynamic')
   }
 }
 
 const typeDate =ref([
     {
       value: 1,
-      label: '分类一',
+      label: '动态分类一',
     },
     {
       value: 2,
-      label: '分类二',
+      label: '动态分类二',
     },
     {
       value: 3,
-      label: '分类三',
+      label: '动态分类三',
     },
     {
       value: 4,
-      label: '分类四',
+      label: '动态分类四',
     },
     {
       value: 5,
-      label: '分类五',
+      label: '动态分类五',
     },
   ])
 </script>

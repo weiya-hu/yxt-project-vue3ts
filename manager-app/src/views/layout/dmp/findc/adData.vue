@@ -61,7 +61,7 @@
       </div>
       <MyPage :total="total" v-model:page="page" @change="adList" v-model:size="size"/>
       <Refuse v-model="refuseShow" @success='refuseSuccess'/>
-      <UpUser v-model="upUserShow" @success='upUserSuccess' type='money'/>
+      <UpUser v-model="upUserShow" @success='upUserSuccess' type='money' />
     </el-card>
   </div>
 </template>
@@ -166,8 +166,7 @@ let upUserId = ref('')
 const upUser=(id:string)=>{
   upUserShow.value=true
   upUserId.value = id
-  console.log(upUserId.value);
-  
+  console.log(upUserId.value);  
 }
 
 //上传客户点击确认，附件上传成功后

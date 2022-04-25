@@ -7,7 +7,7 @@
         <el-button type="primary" @click="submit(2)">提交</el-button>
       </div>
     </div>
-    <KzAddArticle ref="addRef" needimg needtype :needsource="1"  @success="subSuccess"/>
+    <KzAddArticle ref="addRef" needimg needtype :needsource="0"  @success="subSuccess"/>
     
   </div>
 </template>
@@ -36,8 +36,8 @@ const getDetails = async () => {
     }
     addRef.value.setForm({
       title:body.title,
-      article_type:body.article_type,
-      text:body.text,
+      article_type:body.type_name,
+      text:body.content,
       thumb_url:body.thumb_url,
     })
   }
@@ -51,17 +51,22 @@ const submit = async (status:1|2) => {
   addRef.value.submit()
 }
 const subSuccess = async (val:AForm) => {
+  const data ={
+    content:val.text,
+    type_id:val.article_type,
+    thumb_url:val.thumb_url,
+    title:val.title,
+  }
   const { status } = id ? await noticeEdit_api({
-    ...val,
-    status: aStatus.value,
+    ...data,
     id
   }) : await noticeAdd_api({
-    ...val,
-    status: aStatus.value
+    ...data,
+
   })
   if(status == 1){
     store.setKeepList([])
-    router.replace('/website/service/school')
+    router.replace('/website/inform/notice')
   }
 }
 

@@ -36,11 +36,11 @@ const getDetails = async () => {
     }
     addRef.value.setForm({
       title:body.title,
-      article_type:1,
+      article_type:body.type_name,
       text:body.content,
       thumb_url:body.thumb_url,
-      source:body.source,
-    
+      creator:body.creator,
+      source_url:body.source_url
     })
   }
 }
@@ -62,11 +62,9 @@ const subSuccess = async (val:AForm) => {
   }
   const { status } = id ? await newsEdit_api({
     ...data,
-    state:aStatus.value,
     id
   }) : await newsAdd_api({
     ...data,
-    state:aStatus.value,
   })
   if(status == 1){
     store.setKeepList([])     

@@ -24,7 +24,7 @@
               v-model="failTips"
               :rows="5"
               type="textarea"
-              placeholder="Please input"
+              placeholder="请简要描述不通过原因"
               maxlength="300"
               show-word-limit
             />
