@@ -128,7 +128,7 @@ const aForm = ref<AForm>({
 })
 const aFormRef = ref()
 const imgErrorType = ref('none')//封面图片错误类型
-const filePass = (rule:any, value:any, callback:Function)=>{
+const filePass = (rule:any, value:any, callback:Function) => {
   if(!props.needimg){
     callback()
     return
@@ -148,7 +148,7 @@ const filePass = (rule:any, value:any, callback:Function)=>{
       break;
   }
 }
-const creatorPass = (rule:any, value:any, callback:Function)=>{
+const creatorPass = (rule:any, value:any, callback:Function) => {
   if(aForm.value.source && props.needsource == 1 && !value){
     callback(new Error('请输入来源'))
     return

@@ -13,6 +13,7 @@
       :accept="exnameList.join(',')"
       ref="upload"
       class="upbox"
+      :file-list="imgList.map(v => ({ name:'', url:v }))"
     >
       <div class="fc fcc">
         <el-icon><Plus /></el-icon>
@@ -28,8 +29,8 @@
  * 图片上传组件
  * @author chn 
 */
-import { ref } from 'vue'
-import { Plus  } from '@element-plus/icons-vue'
+import { ref, onMounted, nextTick } from 'vue'
+import { Plus } from '@element-plus/icons-vue'
 import type { UploadFile } from 'element-plus'
 import { getAliToken_api } from '@/api/login'
 import { errMsg } from '@/utils/index'
@@ -40,10 +41,21 @@ const props = withDefaults(defineProps<{
   max?:number,//最大上传数
   msg?:string,//描述文字
   maxSize?:number,//最大尺寸 单位M
+  imgList?:string[],// 默认上传文件
 }>(),{
   exnameList:()=>['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG'],
   max:1,
-  maxSize:2
+  maxSize:2,
+  imgList:()=>([])
+})
+
+onMounted(() => {
+  nextTick(() => {
+    if(props.imgList.length && props.max == 1){
+      const el = document.querySelector('.el-upload--picture-card') as HTMLElement
+      el.style.display = 'none'
+    }
+  })
 })
 
 //upOneSuccess：上传单个图片成功后，返回文件地址和添加图片的个数；error：上传发生错误，返回错误；look：点击预览图片，返回图片blob地址数组和点击的图片下标；change：图片改变时，返回图片名；del：删除图片时触发
@@ -196,6 +208,9 @@ defineExpose({
           color: $dfcolor;
         }
       }
+    }
+    :deep(.el-upload-list__item-status-label){
+      display: none;
     }
     .file_name{
       font-size: 12px;

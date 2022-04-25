@@ -65,7 +65,7 @@ import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
 import { loginOut_api } from '@/api/login'
-import { routerGuard } from '@/router'
+import { routerGuard } from '@/main'
 import { errMsg } from '@/utils/index'
 import KzResourcePool from '@/components/KzResourcePool.vue'
 import emiter from '@/utils/bus'
@@ -183,6 +183,7 @@ onBeforeRouteUpdate((to,from,next)=>{
 const loginout = ()=>{
   loginOut_api().then((res:res)=>{
     if(res.status == 1){
+      localStorage.removeItem('islogin')
       router.replace('/login')
     }
   })

@@ -93,9 +93,9 @@ const operate=(index:number,row:any)=>{
 }
 const {type,lable,prop,width,operatButton} =toRefs(props)
 
-const getStatus = (type:number)=>{
+const getStatus = (type:number|string)=>{
   const obj = ref<{text:string,className:string}>()
-  switch (type) {
+  switch (Number(type)) {
     case 2:
       obj.value = {
         text:'已授理',

@@ -96,9 +96,9 @@ const handleSelectionChange = (val:SData[]) => {
   //表格选择
   multipleSelection.value = val
 }
-const getStatus = (type:number)=>{
+const getStatus = (type:number|string)=>{
   const obj = ref<{text:string,className:string}>()
-  switch (type) {
+  switch (Number(type)) {
     case 2:
       obj.value = {
         text:'待审核',

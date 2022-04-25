@@ -108,7 +108,7 @@ const upImages = async ()=>{
   if(imgArr){
     let i = 0
     const upFn = async (imgItem:string)=>{
-      let url = ''
+      let url = 'scr=""'
       let oneImgBlobUrl = ''
       imgItem.replace(srcReg,function(match: string, capture: any){
         //match匹配的子串 capture 代表第n个括号匹配的字符串 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/replace
@@ -143,14 +143,8 @@ const upImages = async ()=>{
           })
           if(response.status == 200){
             url = 'src="' + res.body.host + '/' + res.body.dir + '/' + res.body.uuid + exname + '"'
-          }else{
-            url = 'scr=""'
           }
-        }else{
-          url = 'scr=""'
         }
-      }else{
-        url = 'scr=""'
       }
       const newImg = imgItem.replace(srcReg,url) // 替换当前blob地址为上传后地址
       t = t.replace(imgItem,newImg) // 整个内容中替换当前这张图片

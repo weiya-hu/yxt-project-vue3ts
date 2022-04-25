@@ -7,8 +7,6 @@ import axios from 'axios'
 //引入ui框架的弹窗组件
 import { ElMessage } from 'element-plus'
 
-//引入路由用于设置响应拦截器
-import router from '@/router'
 import { reactive, ref } from 'vue'
 
 // 设置默认地址
@@ -40,9 +38,13 @@ axios.interceptors.response.use(
           grouping: true,
         })
         if(response.errno == 10620){
-          setTimeout(() => {
-            router.replace('/login')
-          }, 2000);
+          const isLogin = localStorage.getItem('islogin')
+          if(isLogin){
+            setTimeout(() => {
+              window.location.replace('/login')
+            }, 2000);
+            localStorage.removeItem('islogin')
+          }
         }
       }
     }

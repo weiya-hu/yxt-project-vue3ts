@@ -50,14 +50,23 @@ export const mainStore = defineStore('mainStore', () => {
   }
   const setUserinfo = ()=>{
     return new Promise<any>((resolve, reject) => {
+      if(state.userInfo.buid){
+        resolve(state.userInfo)
+        return
+      }
       getUserInfo().then((res:res)=>{
         if(res.status == 1){
           state.userInfo = res.body
+          localStorage.setItem('islogin', '1')
           resolve(state.userInfo)
         }else{
+          state.userInfo = {}
+          localStorage.removeItem('islogin')
           reject(res.message)
         }
       }).catch(err=>{
+        state.userInfo = {}
+        localStorage.removeItem('islogin')
         reject(err)
       })
     })
