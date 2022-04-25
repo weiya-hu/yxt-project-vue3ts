@@ -1,10 +1,12 @@
 <template>
   <div class="sms_data">
-    <search @search="searchword" @reset="resetSearch" v-model="inputSearch">
-      <el-option label="待审核" value=2 />
-        <el-option label="已通过" value=3 />
-        <el-option label="被驳回" value=4 />
-    </search>
+    <Search @search="searchword"  v-model="inputSearch" @reset="resetSearch">
+      <el-option label="全部" :value='null' />
+      <el-option label="待处理" value=0 />
+      <el-option label="已受理" value=1 />
+      <el-option label="已完成" value=2 />
+      <el-option label="被驳回" value=3 />
+    </Search>
     <el-card class="mycard">
       <div class="mytable">
         <el-table :data="smsData" border>
@@ -45,7 +47,7 @@
              <template #default="{row}">
               <div class="fcc" >
                 <el-link type="primary" v-if="row.status == 2" @click="$router.push('/dmp/findc/msgdatadetail?id='+row.id)">详情</el-link>
-                <el-link type="primary"  v-if="row.status == 0" @click="">下载附件</el-link>
+                <el-link type="primary"  v-if="row.status == 0" :href="row.attachment" downLoad="附件.zip">下载附件</el-link>
                 <div class="line" v-if="row.status == 0||row.status == 2"></div>
                 <el-link type="primary" @click="refuse(row.id)" v-if="row.status == 0">驳回</el-link>
                 <div class="line" v-if="row.status == 0"></div>
@@ -65,7 +67,7 @@
 
 <script setup lang="ts">
 import { ref,reactive } from 'vue'
-import search from'@/components/Search.vue'
+import Search from'@/components/Search.vue'
 import { formatDate } from '@/utils/date';
 import MyPage from "@/components/MyPage.vue";
 import { smsList_api,smsPass_api,smsReject_api} from '@/api/dmp/findc'
@@ -102,8 +104,9 @@ const smsList = async ()=>{
     current:page.value,
     size:size.value,
     ...inputSearch,
-    // startTime:inputSearch.create_time[0],
-    // endTime:inputSearch.create_time[1],
+    name:inputSearch.userName,
+    startTime:inputSearch.create_time[0],
+    endTime:inputSearch.create_time[1],
   })
   if(res.status==1){
     smsData.value=res.body.records

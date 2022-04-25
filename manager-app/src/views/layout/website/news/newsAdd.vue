@@ -7,7 +7,7 @@
         <el-button type="primary" @click="submit(2)">提交</el-button>
       </div>
     </div>
-    <KzAddArticle ref="addRef" needimg needtype :needsource="1"  @success="subSuccess" :types="typeDate"/>
+    <KzAddArticle ref="addRef" needimg needtype :needsource="1" @success="subSuccess" :types="typeDate"/>
     
   </div>
 </template>
@@ -36,15 +36,14 @@ const getDetails = async () => {
     }
     addRef.value.setForm({
       title:body.title,
-      article_type:body.article_type,
-      text:body.text,
+      article_type:1,
+      text:body.content,
       thumb_url:body.thumb_url,
-      source:body.source
-      
+      source:body.source,
+    
     })
   }
 }
-id && getDetails()
 
 const addRef = ref()
 const aStatus = ref<1|2>(1)
@@ -58,28 +57,31 @@ const subSuccess = async (val:AForm) => {
     source_url:val.source_url,
     type_id:val.article_type,
     thumb_url:val.thumb_url,
-    title:val.title
+    title:val.title,
+    creator_name:val.creator
   }
   const { status } = id ? await newsEdit_api({
     ...data,
-    status: aStatus.value,
+    state:aStatus.value,
     id
   }) : await newsAdd_api({
     ...data,
-    status: aStatus.value
+    state:aStatus.value,
   })
   if(status == 1){
+    store.setKeepList([])     
     router.replace('/website/news')
   }
 }
 
-const typeDate = ref<any>({})
+const typeDate = ref<any[]>([])
 const typeList = async ()=>{
-  const res =await typeList_api()
+  const res = await typeList_api()
   if(res.status==1){
     typeDate.value = res.body.map((v:any) => {
       return { label:v.name, value:v.id }
     })
+    id && getDetails()
   }
 }
 typeList()

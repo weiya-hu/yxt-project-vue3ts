@@ -1,10 +1,12 @@
 <template>
   <div class="ad_data">
-    <search @search="searchword" @reset="resetSearch" v-model="inputSearch">
-      <el-option label="待审核" value=2 />
-        <el-option label="已通过" value=3 />
-        <el-option label="被驳回" value=4 />
-    </search>
+    <Search @search="searchword"  v-model="inputSearch" @reset="resetSearch">
+      <el-option label="全部" :value='null' />
+      <el-option label="待处理" value=0 />
+      <el-option label="已受理" value=1 />
+      <el-option label="已完成" value=2 />
+      <el-option label="被驳回" value=3 />
+    </Search>
     <el-card class="mycard">
       <div class="mytable">
         <el-table :data="adData" border>
@@ -45,12 +47,12 @@
              <template #default="{row}">
               <div class="fcc" >
                 <el-link type="primary" v-if="row.status == 2" @click="$router.push('/dmp/findc/addatadetail?id='+row.id)">详情</el-link>
-                <el-link type="primary"  v-if="row.status == 0" @click="">下载附件</el-link>
+                <el-link type="primary"  v-if="row.status == 0" :href="row.attachment" downLoad="附件.zip">下载附件</el-link>
                 <div class="line" v-if="row.status == 0||row.status == 2"></div>
                 <el-link type="primary" @click="refuse(row.id)" v-if="row.status == 0">驳回</el-link>
                 <div class="line" v-if="row.status == 0"></div>
                 <el-link type="primary" v-if="row.status == 0" @click="goPass(row.id)">通过</el-link>
-                <el-link type="primary"  @click="" v-if="row.status == 1||row.status==2">上传客户</el-link>
+                <el-link type="primary"  @click="upUser(row.id)" v-if="row.status == 1||row.status==2">上传客户</el-link>
                 <el-link type="primary"  v-if="row.status == 3" @click="goFail(row)">驳回原因</el-link>
               </div>
             </template>
@@ -58,19 +60,21 @@
         </el-table>
       </div>
       <MyPage :total="total" v-model:page="page" @change="adList" v-model:size="size"/>
-     <Refuse v-model="refuseShow" @success='refuseSuccess'/>
+      <Refuse v-model="refuseShow" @success='refuseSuccess'/>
+      <UpUser v-model="upUserShow" @success='upUserSuccess' type='money'/>
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref,reactive } from 'vue'
-import search from'@/components/Search.vue'
+import { ref,reactive } from 'vue';
+import Search from'@/components/Search.vue';
 import { formatDate } from '@/utils/date';
 import MyPage from "@/components/MyPage.vue";
-import { adList_api,adPass_api,adReject_api} from '@/api/dmp/findc'
-import { ElMessageBox} from 'element-plus'
+import { adList_api,adPass_api,adReject_api,adUp_api} from '@/api/dmp/findc';
+import { ElMessageBox} from 'element-plus';
 import Refuse from '@/components/Refuse.vue';
+import UpUser from '@/components/UpUser.vue';
 const page = ref(1)
 const total = ref(0)
 const size = ref(10)
@@ -102,8 +106,9 @@ const adList = async ()=>{
     current:page.value,
     size:size.value,
     ...inputSearch,
-    // startTime:inputSearch.create_time[0],
-    // endTime:inputSearch.create_time[1],
+    name:inputSearch.userName,
+    startTime:inputSearch.create_time[0],
+    endTime:inputSearch.create_time[1],
   })
   if(res.status==1){
     adData.value=res.body.records
@@ -155,6 +160,25 @@ const goFail=(row:any)=>{
     }
   )
 }
+
+//上传客户按钮
+let upUserId = ref('')
+const upUser=(id:string)=>{
+  upUserShow.value=true
+  upUserId.value = id
+  console.log(upUserId.value);
+  
+}
+
+//上传客户点击确认，附件上传成功后
+const upUserSuccess = async (val:any)=>{
+  const res = await adUp_api({...val,id:upUserId.value})
+  if(res.status==1){
+    console.log(res)
+    adList()
+  }
+}
+
 </script>
 
 <style scoped lang="scss">

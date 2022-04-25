@@ -21,7 +21,7 @@
             <div class="money-pexl">元</div>
           </el-form-item> 
           <el-form-item>
-            <el-radio-group v-model="formValue.uploadType">
+            <el-radio-group v-model="formValue.upload_type">
               <el-radio :label="1">覆盖原客户</el-radio> />
               <el-radio :label="2">新增客户</el-radio>/>
             </el-radio-group>
@@ -30,7 +30,7 @@
             </template>
           </el-form-item>
           <el-form-item>
-            <el-radio-group v-model="formValue.show">
+            <el-radio-group v-model="formValue.show_type">
               <el-radio :label="1">全部</el-radio> />
               <el-radio :label="2">自定义</el-radio>/>
             </el-radio-group>
@@ -38,11 +38,11 @@
               <div class="up-type">显示数据</div>
             </template>
           </el-form-item>
-          <div v-if="formValue.show===2" class="flexr">
+          <div v-if="formValue.show_type===2" class="flexr">
             <div class="flexl up-batch">
               每隔
               <el-form-item
-                :required="formValue.show == 2"
+                :required="formValue.show_type == 2"
                 prop="day"
               >
                 <el-input 
@@ -52,7 +52,7 @@
               </el-form-item>
               日显示数据，直到第
               <el-form-item
-                :required="formValue.show == 2"
+                :required="formValue.show_type == 2"
                 prop="day"
               >
                 <el-input 
@@ -162,26 +162,26 @@ const upUserRule= reactive({
   ]
 })
 const formValue=ref({
-  uploadType:1,
-  show:1,
+  upload_type:1,
+  show_type:1,
   money:null,
   days:null,
   batch:null,
   attachment:''
 })
 const templateUrl={
-  '/dmp/findb/specificdata':'/bgapi/dmp/business/template/download.do',
-  '/dmp/findc/wxdata':'/bgapi/dmp/customer/template/download.do?type=5',
-  '/dmp/findc/addata':'/bgapi/dmp/customer/template/download.do?type=4',
-  '/dmp/findc/baidudata':'/bgapi/dmp/customer/template/download.do?type=6',
-  '/dmp/findc/bigdata':'/bgapi/dmp/customer/template/download.do?type=7',
-  '/dmp/findc/teldata':'/bgapi/dmp/customer/template/download.do?type=8',
-  '/dmp/findc/biddingdata':'/bgapi/dmp/customer/template/download.do?type=9',
-  '/dmp/findc/msgdata':'/bgapi/dmp/customer/template/download.do?type=10',
-  '/dmp/seekpathpro/seekpath':'/bgapi/dmp/channel/template/download.do',
-  '/dmp/seekpathpro/seekpro':'/bgapi/dmp/item/template/download.do',
-  '/dmp/seekabroad/buyer':'/bgapi/dmp/overseas/template/download.do',
-  '/dmp/seekabroad/supplier':'/bgapi/dmp/overseas/template/download.do'
+  '/dmp/findb/specificdata':'/api/dmp/business/template/download.do',
+  '/dmp/findc/wxdata':'/api/dmp/customer/template/download.do?type=5',
+  '/dmp/findc/addata':'/api/dmp/customer/template/download.do?type=4',
+  '/dmp/findc/baidudata':'/api/dmp/customer/template/download.do?type=6',
+  '/dmp/findc/bigdata':'/api/dmp/customer/template/download.do?type=7',
+  '/dmp/findc/teldata':'/api/dmp/customer/template/download.do?type=8',
+  '/dmp/findc/biddingdata':'/api/dmp/customer/template/download.do?type=9',
+  '/dmp/findc/msgdata':'/api/dmp/customer/template/download.do?type=10',
+  '/dmp/seekpathpro/seekpath':'/api/dmp/channel/template/download.do',
+  '/dmp/seekpathpro/seekpro':'/api/dmp/item/template/download.do',
+  '/dmp/seekabroad/buyer':'/api/dmp/overseas/template/download.do',
+  '/dmp/seekabroad/supplier':'/api/dmp/overseas/template/download.do'
 }
 const templateLink= ref('hjghj')
 const formRef = ref()

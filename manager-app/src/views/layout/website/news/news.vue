@@ -105,7 +105,7 @@
           <el-table-column label="操作" width="200" fixed="right">
             <template #default="{row}">
               <div class="fcs" >
-                <el-link type="primary" @click="$router.push('/website/newsdetails?id='+row.id)">查看</el-link>
+                <el-link type="primary" @click="row.state == 0 ? $router.push('/website/news/newsadd?id='+row.id) :$router.push('/website/newsdetails?id='+row.id)">查看</el-link>
                 <div class="line"></div>
                 <el-link type="primary" v-if="row.state == 4" @click="getNewsDown(row.id)">下线</el-link>
                 <el-link type="primary" v-if="row.state == 3" @click="getNewsUp(row.id)">上线</el-link>

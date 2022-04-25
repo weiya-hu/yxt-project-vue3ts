@@ -16,6 +16,10 @@ export const wxDetail_api = (data:PageParams): Promise<res> => {
 export const wxReject_api = (data:{id:string,fail_reason:string}): Promise<res> => {
   return post(1,'/dmp/customer/wechat/demand/reject.do',data)
 }
+// 上传微信获客客户
+export const wxUp_api = (data:any): Promise<res> => {
+  return post(1,'/dmp/customer/wechat/upload.do',data)
+}
 //获取广告投放分页列表
 export const adList_api = (data:PageParams): Promise<res> => {
   return get(1,'/dmp/customer/advert/demand.page',data)
@@ -31,6 +35,10 @@ export const adDetail_api = (data:PageParams): Promise<res> => {
 // 驳回广告投放
 export const adReject_api = (data:{id:string,fail_reason:string}): Promise<res> => {
   return post(1,'/dmp/customer/advert/demand/reject.do',data)
+}
+// 上传广告投放客户
+export const adUp_api = (data:any): Promise<res> => {
+  return post(1,'/dmp/customer/advert/upload.do',data)
 }
 //获取百度关键词获客分页列表
 export const baiduList_api = (data:PageParams): Promise<res> => {
@@ -48,6 +56,7 @@ export const baiduDetail_api = (data:PageParams): Promise<res> => {
 export const baiduReject_api = (data:{id:string,fail_reason:string}): Promise<res> => {
   return post(1,'/dmp/customer/baidu/demand/reject.do',data)
 }
+
 //获取大数据获客分页列表
 export const bigdataList_api = (data:PageParams): Promise<res> => {
   return get(1,'/dmp/customer/bigdata/demand.page',data)
