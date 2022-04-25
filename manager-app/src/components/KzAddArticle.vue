@@ -38,6 +38,10 @@
       <el-form-item prop="title" style="margin-bottom:4px">
         <el-input v-model="aForm.title" placeholder="请输入文章标题（5 ~ 30个字）"></el-input>
       </el-form-item>
+      <div class="form_title mt20" v-if="needdigest">摘要</div>
+      <el-form-item prop="digest" v-if="needdigest" style="margin-bottom:4px">
+        <el-input v-model="aForm.digest" placeholder="请输入摘要"></el-input>
+      </el-form-item>
       <div class="form_title mt20" v-if="needtype">分类</div>
       <el-form-item prop="article_type" v-if="needtype" style="margin-bottom:4px">
         <el-select v-model="aForm.article_type" placeholder="请选择文章分类">
@@ -46,12 +50,12 @@
       </el-form-item>
       <div class="form_title mt20" v-if="needsource">来源</div>
       <div class="fcs" style="margin-bottom:4px" v-if="needsource">
-        <el-radio v-model="source" :label="0">原创</el-radio>
-        <el-radio v-model="source" :label="1">非原创</el-radio>
+        <el-radio v-model="aForm.source" :label="0">原创</el-radio>
+        <el-radio v-model="aForm.source" :label="1">非原创</el-radio>
         <el-form-item prop="creator" style="margin-bottom:0px" v-if="needsource == 1">
-          <el-input v-model="aForm.creator" placeholder="请输入来源" style="width:220px" v-if="source == 1"></el-input>
+          <el-input v-model="aForm.creator" placeholder="请输入来源" style="width:220px" v-if="aForm.source == 1"></el-input>
         </el-form-item>
-        <el-input v-model="aForm.source_url" placeholder="请输入原文链接（选填）" class="ml20 f1" v-if="source == 1 && needsource == 1"></el-input>
+        <el-input v-model="aForm.source_url" placeholder="请输入原文链接（选填）" class="ml20 f1" v-if="aForm.source == 1 && needsource == 1"></el-input>
       </div>
     </el-card>
     <el-card class="mycard mt16">
@@ -77,11 +81,13 @@ import img_add_i from '@/assets/images/img-add.png'
 
 const props = withDefaults(defineProps<{
   needimg?:boolean // 是否显示封面图片上传
+  needdigest?:boolean // 是否显示摘要
   needtype?:boolean // 是否显示分类
   needsource?:0|1|2 // 是否显示来源 0：不显示来源，1：显示来源并且显示来源输入框，2：显示来源不显示来源输入框
   types?:any[] // 分类列表
 }>(),{
   needimg:false,
+  needdigest:false,
   needtype:false,
   needsource:0,
   types:() => ([
@@ -111,12 +117,12 @@ const props = withDefaults(defineProps<{
 // success 上传成功后触发，返回表单内容
 const emit = defineEmits(['success'])
 
-const source = ref(0) // 0：原创 1：非原创
 const aForm = ref<AForm>({
   thumb_url:'', // 封面图片
   title:'', // 标题
   article_type:'', // 文章分类
   text:'',  // 内容
+  source: 0, // 0：原创 1：非原创
   creator:'', // 来源名称（原创不传）
   source_url:'', // 原文链接（原创不传）
 })
@@ -143,7 +149,7 @@ const filePass = (rule:any, value:any, callback:Function)=>{
   }
 }
 const creatorPass = (rule:any, value:any, callback:Function)=>{
-  if(source.value && props.needsource == 1 && !value){
+  if(aForm.value.source && props.needsource == 1 && !value){
     callback(new Error('请输入来源'))
     return
   }
@@ -253,11 +259,23 @@ const submit = async ()=>{
 
 const setForm = (val:AForm) => {
   aForm.value = val
+  if(aForm.value.thumb_url){
+    imgErrorType.value = ''
+  }
+}
+
+const validate = () => {
+  return new Promise<boolean>((resolve, reject) => {
+    aFormRef.value.validate((valid: boolean) => {
+      resolve(valid)
+    })
+  })
 }
 
 defineExpose({
   submit, // 上传 返回表单内容或者err
-  setForm // 设置表单内容
+  setForm, // 设置表单内容
+  validate // 验证表单
 })
 
 </script>
