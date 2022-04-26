@@ -20,9 +20,9 @@ axios.interceptors.request.use((config) => {
   if (token) {
     // config.headers.Authorization = token;
     config.headers = {
+      ...config.headers,
       'Content-Type': 'application/json', //'application/x-www-form-urlencoded';
       Authorization: token,
-      ...config.headers,
     }
   }
   return config
@@ -56,10 +56,10 @@ axios.interceptors.response.use(
 )
 
 // 封装get请求
-export function get(url: string, params?: any, showmsg?: boolean) {
+export function get(module:string, url: string, params?: any, showmsg?: boolean) {
   return new Promise<res>((resolve, reject) => {
     axios
-      .get(url, { params })
+      .get(url, { headers:{ MODULE: module }, params })
       .then((res) => {
         if (showmsg && res.data.errno != 10200) {
           ElMessage({
@@ -79,10 +79,10 @@ export function get(url: string, params?: any, showmsg?: boolean) {
 }
 
 // 封装post请求
-export function post(url: string, params?: any, showmsg?: boolean) {
+export function post(module:string, url: string, params?: any, showmsg?: boolean) {
   return new Promise<res>((resolve, reject) => {
     axios
-      .post(url, params)
+      .post(url, params, { headers:{ MODULE: module } })
       .then((res) => {
         if (showmsg && res.data.errno != 10200) {
           ElMessage({

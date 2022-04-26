@@ -304,7 +304,7 @@ const routes = [
                 path: '/website/service/addarticle',
                 name: 'SchoolAddArticle',
                 component: () => import('@/views/layout/website/service/addArticle.vue'),
-                meta: { title: '添加文章', father:'/website/service/school', lv:'21' },
+                meta: { title: '添加/编辑文章', father:'/website/service/school', lv:'21' },
               },
               {
                 path: '/website/service/feedback',
@@ -626,7 +626,7 @@ const routes = [
                 path: '/cms/resourceart',
                 name: 'Resourceart',
                 component: () => import('@/views/layout/cms/resource/article.vue'),
-                meta: { title: '资源内容',lv:'38' },
+                meta: { title: '资源内容',lv:'38', father:'/cms/resource' },
               },
               {
                 path: '/cms/resourcedet',
@@ -638,7 +638,7 @@ const routes = [
                 path: '/cms/resourceedit',
                 name: 'Resourceedit',
                 component: () => import('@/views/layout/cms/resource/articleEdit.vue'),
-                meta: { title: '编辑', father:'/cms/resource' },
+                meta: { title: '新增/编辑', father:'/cms/resource' },
               },
             ]
           },

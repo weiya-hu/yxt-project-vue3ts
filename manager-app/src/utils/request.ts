@@ -16,11 +16,13 @@ axios.defaults.baseURL = '/'
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('firstToken')
   if (token) {
+    console.log(config);
+    
     // config.headers.Authorization = token;
     config.headers = {
+      ...config.headers,
       'Content-Type': 'application/json', //'application/x-www-form-urlencoded';
       Authorization: token,
-      ...config.headers,
     }
   }
   return config

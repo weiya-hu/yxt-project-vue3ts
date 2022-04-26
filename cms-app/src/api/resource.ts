@@ -5,7 +5,7 @@ import { get, post } from '@/utils/request'
  * @name 资源分页数据 
 */
 export const articlesList_api = (data:PageParams): Promise<res> => {
-  return get('/cms/res.page',data)
+  return get('cms', '/cms/res.page',data)
 }
 
 /**
@@ -13,19 +13,19 @@ export const articlesList_api = (data:PageParams): Promise<res> => {
 */
 
 export const resourceDetail_api = (data:{id:string}): Promise<res> => {
-  return get('/cms/public/res.get',data)
+  return get('user', '/public/res.get',data)
 }
 
 /**
  * @name 下载资源内容详情
 */
 export const downList_api =(data:{id:string}): Promise<res> => {
-  return get('/cms/res/download.do',data)
+  return get('cms', '/cms/res/download.do',data)
 }
 
 /**
  * @name 行业分类
 */
 export const industryList_api =(): Promise<res> => {
-  return get('/cms/industry.list')
+  return get('cms', '/cms/industry.list')
 }

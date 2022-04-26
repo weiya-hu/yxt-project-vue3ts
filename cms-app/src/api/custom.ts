@@ -24,26 +24,26 @@ const getPath = (type:number) =>{
  * @name 获取个性化分页数据
 */
 export const customList_api = (data:PageParams,type:number): Promise<res> => {
-  return get(`/cms/${getPath(type)}/diy.page`,data)
+  return get('cms', `/cms/${getPath(type)}/diy.page`,data)
 }
 
 /**
  * @name 创建个性化数据
 */
 export const customAdd_api = (data:any,type:number): Promise<res> => {
-  return post(`/cms/${getPath(type)}/diy.in`,data,true)
+  return post('cms', `/cms/${getPath(type)}/diy.in`,data,true)
 }
 
 /**
  * @name 删除个性化数据
 */
 export const customDel_api = (data:{id:string},type:number): Promise<res> => {
-  return post(`/cms/${getPath(type)}/diy.del`,data,true)
+  return post('cms', `/cms/${getPath(type)}/diy.del`,data,true)
 }
 
 /**
  * @name 查看已完结
 */
 export const customDetails_api = (data:{id:string},type:number): Promise<res> => {
-  return get(`/cms/${getPath(type)}/diy/detail.get`,data)
+  return get('cms', `/cms/${getPath(type)}/diy/detail.get`,data)
 }
