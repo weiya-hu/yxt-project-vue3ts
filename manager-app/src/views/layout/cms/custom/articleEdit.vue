@@ -2,7 +2,7 @@
   <div class="article_add">
     <DetailsHeader />
     <div class="addform">
-      <div class="form_content" v-loading="upLoading">
+      <div v-loading="upLoading" class="form_content">
         <div class="tip fcs">
           <img :src="tip_i" alt="" />
           <span
@@ -14,13 +14,14 @@
           :model="aForm"
           :rules="aRules"
           size="large"
-          @submit.prevent
           :label-position="labelPosition"
+          @submit.prevent
         >
           <el-card>
             <el-form-item label="上传封面" prop="thumb_url">
               <div class="img_upbox flex">
                 <el-upload
+                  ref="upload"
                   drag
                   :action="hostUrl"
                   :auto-upload="false"
@@ -34,17 +35,16 @@
                   :on-success="upSuccess"
                   :on-error="upError"
                   accept=".jpg,.png,.jpeg,.JPG,.PNG,.JPEG"
-                  ref="upload"
                   class="flex"
                 >
                   <div class="upbox fcc">
                     <img
+                      v-if="titleImg || aForm.thumb_url"
                       :src="titleImg || aForm.thumb_url"
                       class="title_img"
                       alt=""
-                      v-if="titleImg || aForm.thumb_url"
                     />
-                    <div class="fc fcc title_text" v-else>
+                    <div v-else class="fc fcc title_text">
                       <img :src="img_add_i" alt="" />
                       <div class="fcc">将文件拖到此处，或<span>点击上传</span></div>
                     </div>
@@ -62,7 +62,7 @@
           </el-card>
           <el-card class="mt20">
             <el-form-item label="文章内容" prop="content">
-              <Edit v-model="aForm.content" ref="editRef" />
+              <Edit ref="editRef" v-model="aForm.content" />
             </el-form-item>
             <div class="fjend btns">
               <el-button class="bdc_btn" @click="$router.push('/cms/custom')"
@@ -71,8 +71,8 @@
               <el-button class="bdc_btn" @click="submit(1)">&ensp;保存&ensp;</el-button>
               <el-button
                 type="primary"
-                @click="submit(2)"
                 :disabled="!aForm.content || !aForm.title"
+                @click="submit(2)"
                 >&ensp;完成&ensp;</el-button
               >
             </div>

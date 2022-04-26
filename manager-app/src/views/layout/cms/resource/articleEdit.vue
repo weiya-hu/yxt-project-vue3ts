@@ -78,7 +78,7 @@ const router = useRouter()
 const id = route.query.id //有id就是编辑
 const qrShow = ref(false)
 if (id) {
-  articleLook_api({ id: id as string }).then((res: res) => {
+  articleLook_api({ id: id as string }).then((res) => {
     aForm.value = {
       url: res.body.url,
       url_key: res.body.url_key,
