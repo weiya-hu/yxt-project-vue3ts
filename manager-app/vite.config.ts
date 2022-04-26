@@ -46,6 +46,7 @@ export default defineConfig({
       '/api': {
         target: 'http://47.108.185.157:9090',//dev 后台接口
         // target: 'http://10.10.0.124:9090',//dev 包季鑫
+        // target: 'http://10.10.0.71:9090',//dev 包季鑫
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       }
