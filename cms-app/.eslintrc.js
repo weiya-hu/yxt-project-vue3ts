@@ -138,7 +138,6 @@ module.exports = {
     'switch-colon-spacing': 'warn',
     // 强制箭头函数的箭头前后使用一致的空格
     'arrow-spacing': 'warn',
-    'no-var': 'warn',
     'prefer-const': 'warn',
     'prefer-rest-params': 'warn',
     'no-useless-escape': 'warn',
@@ -148,6 +147,8 @@ module.exports = {
     'no-extra-boolean-cast': 'warn',
     'no-case-declarations': 'warn',
     'no-async-promise-executor': 'warn',
+    // 关闭后由ts检查
+    'no-undef': 'off',
   },
   globals: {
     defineProps: 'readonly',

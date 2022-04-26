@@ -117,7 +117,7 @@ const props = withDefaults(defineProps<{
 // success 上传成功后触发，返回表单内容
 const emit = defineEmits(['success'])
 
-const aForm = ref<AForm>({
+const aForm = ref<IArticleForm>({
   thumb_url:'', // 封面图片
   title:'', // 标题
   article_type:'', // 文章分类
@@ -257,7 +257,7 @@ const submit = async ()=>{
   })
 }
 
-const setForm = (val:AForm) => {
+const setForm = (val:IArticleForm) => {
   aForm.value = val
   if(aForm.value.thumb_url){
     imgErrorType.value = ''

@@ -6,6 +6,7 @@ import axios from 'axios'
 
 //引入ui框架的弹窗组件
 import { ElMessage } from 'element-plus'
+import router from '@/router'
 
 import { reactive, ref } from 'vue'
 
@@ -16,8 +17,6 @@ axios.defaults.baseURL = '/'
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('firstToken')
   if (token) {
-    console.log(config);
-    
     // config.headers.Authorization = token;
     config.headers = {
       ...config.headers,
@@ -43,7 +42,7 @@ axios.interceptors.response.use(
           const isLogin = localStorage.getItem('islogin')
           if(isLogin){
             setTimeout(() => {
-              window.location.replace('/login')
+              router.replace('/login')
             }, 2000);
             localStorage.removeItem('islogin')
           }

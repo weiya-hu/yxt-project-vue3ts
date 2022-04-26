@@ -230,3 +230,17 @@ export const getMsgList_api = (data:PageParams): Promise<res> => {
 export const getMsgUserList_api = (data:PageParams): Promise<res> => {
   return get('dmp', '/dmp/customer/sms.page',data)
 }
+
+/**
+ * @name 数据同步
+*/
+export const SetSync_api = (data:{ list:(string|number)[] }): Promise<res> => {
+  return post('dmp', '/dmp/customer/sync.do', data, true)
+}
+
+/**
+ * @name 数据同步今日剩余条数
+*/
+export const getSyncInfo_api = (): Promise<res> => {
+  return get('dmp', '/dmp/customer/sync.get')
+}

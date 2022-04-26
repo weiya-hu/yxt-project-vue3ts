@@ -119,7 +119,7 @@ const submit = (status: 1 | 2) => {
     })
   })
 }
-const subSuccess = async (val: AForm) => {
+const subSuccess = async (val: IArticleForm) => {
   // 文章提交成功
   loading.value = false
   const rData = {

@@ -24,3 +24,8 @@ export const loginOut_api = (): Promise<any> => {
 export const getYxtUrl_api = (): Promise<any> => {
   return get('user', '/public/env.get')
 }
+
+// //获取DMP用户角色
+// export const getDmpUserRole_api = (): Promise<any> => {
+//   return get('dmp', '/dmp/permission/get-role')
+// }

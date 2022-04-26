@@ -1,15 +1,16 @@
 <template>
-  <div class="kzdata_page_c">
+  <div class="kzdata_page_c" v-loading="loading">
     <TopSearch @height-search="heightSearch" @search="wordSearch" :words="words" :hasHeight="false" placeholder="请输入电话号码、姓名查询"/>
     
-    <TopBtns :total="total" class="topbtns"/>
+    <TopBtns :total="total" @sync="setSync" ref="topBtnRef" :sync-api="getSyncInfo_api" :sync-disabled="syncDisabled" class="topbtns"/>
 
     <div class="mytable">
       <el-table
         :data="tableData"
         style="width: 100%"
+        height="100%"
         @selection-change="handleSelectionChange"
-        v-loading="loading"
+        ref="tableRef"
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="name" label="姓名" width="150"/>
@@ -47,8 +48,8 @@ import TopBtns from "@/components/TopBtns.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import { mainStore } from '@/store/index'
 import { getHashStr,strToArr,getSource} from '@/utils/index'
-import { getSearchWord_api ,wordSearchList_api } from '@/api/findC'
-import {okMsg,errMsg} from '@/utils/index'
+import { getSearchWord_api ,wordSearchList_api, SetSync_api, getSyncInfo_api } from '@/api/findC'
+import { errMsg } from '@/utils/index'
 
 const store = mainStore()
 const addressHash = computed(() => store.state.addressHash)
@@ -78,9 +79,9 @@ interface IData {
 }
 const total = ref(0)
 const loading = ref(false)
-const tableData = ref<IData[]>()
+const tableData = ref<IData[]>([])
 const searchParams = ref({
-  size:10,
+  size:50,
   current:1,
   source:1
 })
@@ -125,21 +126,41 @@ const goheightSearch = ()=>{
   
 }
 
-const multipleSelection = ref<IData[]>([])
+const multipleSelection = ref<(string|number)[]>([])
 const handleSelectionChange = (val:IData[]) => {
-  multipleSelection.value = val
+  multipleSelection.value = val.map(v => v.id)
 }
 
 const changePage =()=>{
   searchType.value == 1?goSearch():goheightSearch()
 }
 
+const tableRef = ref()
+const clear = () => {
+  multipleSelection.value = []
+  tableRef.value.clearSelection()
+}
+
+const topBtnRef = ref()
+const syncDisabled =  computed(() => !Boolean(multipleSelection.value.length))
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await SetSync_api({
+    list: multipleSelection.value
+  })
+  topBtnRef.value.close()
+  clear()
+}
 </script>
 
 <style scoped lang="scss">
 .kzdata_page_c{
+  height: 100%;
   .topbtns{
     padding-top: 30px;
+  }
+  .mytable{
+    height: calc( 100% - 126px )
   }
 }
 </style>

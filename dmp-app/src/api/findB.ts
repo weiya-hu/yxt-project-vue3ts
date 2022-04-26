@@ -69,3 +69,13 @@ export const delDemand_api = (data:any): Promise<res> => {
 export const demandDetail_api = (data:any): Promise<res> => {
   return get('dmp', '/dmp/business/demand/detail.page',data)
 }
+
+//数据同步
+export const SetSync_api = (data:{ list:(string|number)[] }): Promise<res> => {
+  return post('dmp', '/dmp/business/sync.do', data, true)
+}
+
+//数据同步今日剩余条数
+export const getSyncInfo_api = (): Promise<res> => {
+  return get('dmp', '/dmp/business/sync.get')
+}

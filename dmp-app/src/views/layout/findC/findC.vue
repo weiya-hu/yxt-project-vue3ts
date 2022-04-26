@@ -18,10 +18,10 @@ import {computed} from 'vue'
 import { mainStore } from '@/store/index'
 const store = mainStore()
 const keepList = computed(() => store.state.keepList)
-console.log(keepList.value,'keepList');
-
 </script>
 
 <style scoped>
-
+.findc_page{
+  height: 100%;
+}
 </style>

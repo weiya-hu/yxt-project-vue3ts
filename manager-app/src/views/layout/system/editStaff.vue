@@ -28,7 +28,7 @@ import DetailsHeader from "@/components/DetailsHeader.vue";
 import { useRoute, useRouter } from 'vue-router'
 import { getLvList_api, getStaffInfo_api, setStaffLv_api } from '@/api/system'
 import { mainStore } from '@/store/index'
-import { routerGuard } from '@/main'
+import { routerGuard } from '@/router'
 
 const store = mainStore()
 const route = useRoute()

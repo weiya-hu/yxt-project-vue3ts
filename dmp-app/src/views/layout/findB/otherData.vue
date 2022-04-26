@@ -1,23 +1,22 @@
 <template>
-  <div class="otherdata_page">
+  <div class="otherdata_page" v-loading="loading">
     <TopSearch @height-search="heightSearch" @search="wordSearch" :words="words" :hasHeight="true" placeholder="请输入企业名称、联系人、经营范围关键词"/>
     
-    <TopBtns :total="total" class="topbtns"/>
+    <TopBtns :total="total" @sync="setSync" ref="topBtnRef" :sync-api="getSyncInfo_api" :sync-disabled="syncDisabled" class="topbtns"/>
 
-    <CompanyTable :data="tableData" v-loading="loading"/>
+    <CompanyTable :data="tableData" ref="tableRef"/>
     <MyPage :total="total" v-model="searchParams.current" @change="changePage"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref  } from 'vue'
+import { ref, computed } from 'vue'
 import TopSearch from '@/components/TopSearch.vue'
 import MyPage from "@/components/MyPage.vue";
 import TopBtns from "@/components/TopBtns.vue";
 import CompanyTable from "@/components/CompanyTable.vue";
-import { searchByConditions_api,wordSearchList_api,getSearchWord_api } from '@/api/findB'
-import { Gajax } from '@/utils/request'
-import {okMsg,errMsg} from '@/utils/index'
+import { searchByConditions_api,wordSearchList_api,getSearchWord_api, SetSync_api, getSyncInfo_api } from '@/api/findB'
+import { errMsg } from '@/utils/index'
 
 const words = ref([])
 const getWord = ()=>{
@@ -95,6 +94,18 @@ const goHSearch = async ()=>{
 }
 const changePage =()=>{
   searchType.value == 1?goSearch():goHSearch()
+}
+
+const topBtnRef = ref()
+const tableRef = ref()
+const syncDisabled =  computed(() => tableRef.value && !tableRef.value.selIdList.length)
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await SetSync_api({
+    list: tableRef.value.selIdList
+  })
+  topBtnRef.value.close()
+  tableRef.value.clear()
 }
 </script>
 

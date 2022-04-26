@@ -46,7 +46,7 @@ interface KzPool {
 /**
  * @name 添加文章类型类型
 */
-interface AForm {
+interface IArticleForm {
   title:string,
   article_type:string|number,
   text:string,

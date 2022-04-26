@@ -51,7 +51,7 @@ const submit = async (status:1|2) => {
   aStatus.value = status
   addRef.value.submit()
 }
-const subSuccess = async (val:AForm) => {
+const subSuccess = async (val:IArticleForm) => {
   const { status } = id ? await editArt_api({
     ...val,
     status: aStatus.value,

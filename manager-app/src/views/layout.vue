@@ -65,7 +65,7 @@ import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
 import { loginOut_api } from '@/api/login'
-import { routerGuard } from '@/main'
+import { routerGuard } from '@/router'
 import { errMsg } from '@/utils/index'
 import KzResourcePool from '@/components/KzResourcePool.vue'
 import emiter from '@/utils/bus'
@@ -84,6 +84,12 @@ const urlInfo = ref<any>({})
 store.getYxtUrl().then((url:any)=>{
   urlInfo.value = url
 })
+
+const LoginError = () => {
+  routerGuard([])
+  router.replace('/login')
+  errMsg('获取用户权限失败，请重新登录或联系管理员')
+}
 
 const isGetLv = ref(false) // 是否加载路由出口layout_content
 // 获取用户信息及权限
@@ -109,9 +115,7 @@ store.setUserinfo().then((res:any) => {
         isGetLv.value = true
       }
     }).catch((err)=>{
-      routerGuard([])
-      router.replace('/login')
-      errMsg('获取用户权限失败，请重新登录或联系管理员')
+      LoginError()
     })
   }else{
     ElMessageBox.alert(
@@ -129,9 +133,7 @@ store.setUserinfo().then((res:any) => {
     isGetLv.value = true
   }
 }).catch((error: boolean) => {
-  routerGuard([])
-  router.replace('/login')
-  errMsg('获取用户信息失败，请重新登录或联系管理员')
+  LoginError()
 })
 const userInfo = computed(()=>store.state.userInfo)
 

@@ -90,7 +90,7 @@ import {useRouter, useRoute,onBeforeRouteUpdate} from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import MyDialog from "@/components/MyDialog.vue";
 import { mainStore } from '@/store/index'
-import {loginOut_api} from '@/api/login'
+import { loginOut_api } from '@/api/login'
 
 const topRightNav = ref([
   {img:jqr_i,name:'智能机器人',href:''},
