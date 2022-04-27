@@ -37,11 +37,12 @@ const getDetails = async () => {
   if (status === 1) {
     addRef.value.setForm({
       title: body.title,
-      article_type: body.type_name,
+      article_type: Number(body.type_id),
       text: body.content,
       thumb_url: body.thumb_url,
-      creator: body.creator,
+      creator: body.creator_name,
       source_url: body.source_url,
+      source: body.source, //0：原创 1：非原创
     })
   }
 }
@@ -61,6 +62,7 @@ const subSuccess = async (val: IArticleForm) => {
     thumb_url: val.thumb_url,
     title: val.title,
     creator_name: val.creator,
+    source: val.source,
   }
   const { status } =
     aStatus.value === 1

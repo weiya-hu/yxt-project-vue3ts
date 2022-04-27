@@ -38,23 +38,15 @@
           </div>
           <p v-if="body.state == 2">驳回原因：{{ body.fail_reason }}</p>
         </div>
-        <el-button
-          color="#2D68EB"
-          class="bdc_btn"
-          plain
-          v-if="body.state == 1"
-          @click="goExamine(id)"
-          >审核</el-button
-        >
-        <el-button
-          color="#2D68EB"
-          class="bdc_btn"
-          plain
-          v-if="body.state == 3"
-          @click="getNewsUp(id)"
-          >上线</el-button
-        >
+        <el-button v-if="body.state == 1" class="bdc_btn" @click="goExamine(id)">审核</el-button>
+        <el-button v-if="body.state == 3" class="bdc_btn" @click="getNewsUp(id)">上线</el-button>
         <el-button v-if="body.state == 4" class="bdc_btn" @click="getNewsDown(id)">下线</el-button>
+        <el-button
+          v-if="body.state == 0 || body.state == 3"
+          class="bdc_btn"
+          @click="$router.push('/website/news/newsadd?id=' + id)"
+          >编辑</el-button
+        >
         <el-button
           v-if="body.state == 2 || body.state == 3 || body.state == 0"
           class="bdc_btn"
@@ -66,16 +58,16 @@
         <el-tabs type="border-card">
           <el-tab-pane label="文章正文">
             <el-card class="mycard">
-              <div v-html="body.content"></div>
+              <div class="news-txt" v-html="body.content"></div>
             </el-card>
           </el-tab-pane>
           <el-tab-pane :label="'收藏用户' + '(' + navTxt[1].num + ')'">
             <el-card class="mycard">
-              <div>
+              <div class="mytable">
                 <el-table :data="collectionData" border>
-                  <el-table-column property="name" label="用户名" width="230" />
-                  <el-table-column property="mobile" label="电话" width="230" />
-                  <el-table-column property="create_time" label="收藏时间" width="200">
+                  <el-table-column property="name" label="用户名" />
+                  <el-table-column property="mobile" label="电话" />
+                  <el-table-column property="create_time" label="收藏时间">
                     <template #default="{ row }">
                       <div>{{ formatDate(new Date(Number(row.create_time)), 'yyyy-MM-dd') }}</div>
                     </template>
@@ -86,14 +78,12 @@
           </el-tab-pane>
           <el-tab-pane :label="'分享用户' + '(' + navTxt[2].num + ')'">
             <el-card class="mycard">
-              <div>
+              <div class="mytable">
                 <el-table :data="shareData" border>
-                  <el-table-column property="name" label="用户名" width="200" />
-                  <el-table-column property="mobile" label="电话" width="200" />
-                  <el-table-column property="shareMode" label="分享方式" width="200"
-                    >微信</el-table-column
-                  >
-                  <el-table-column property="time" label="分享时间" width="230">
+                  <el-table-column property="name" label="用户名" />
+                  <el-table-column property="mobile" label="电话" />
+                  <el-table-column property="shareMode" label="分享方式">微信</el-table-column>
+                  <el-table-column property="time" label="分享时间">
                     <template #default="{ row }">
                       <div v-if="row.create_time">
                         {{ formatDate(new Date(Number(row.create_time)), 'yyyy-MM-dd') }}
@@ -363,6 +353,13 @@ const getDelDate = async () => {
       }
     }
   }
+}
+.news-txt {
+  font-size: 14px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #999999;
+  line-height: 26px;
 }
 .ss {
   margin: 20px 0;

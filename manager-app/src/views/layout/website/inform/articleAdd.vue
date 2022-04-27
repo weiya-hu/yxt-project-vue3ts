@@ -72,7 +72,7 @@ const subSuccess = async (val: IArticleForm) => {
     type_id: val.article_type,
     thumb_url: val.thumb_url,
     title: val.title,
-    creator_name: val.creator,
+    creator: val.creator,
   }
   const { status } =
     aStatus.value === 1

@@ -1,11 +1,11 @@
 <template>
   <div class="wx_data">
     <Search v-model="inputSearch" @search="searchword" @reset="resetSearch">
-      <el-option label="全部" :value="null" />
-      <el-option label="待处理" value="0" />
-      <el-option label="已受理" value="1" />
-      <el-option label="已完成" value="2" />
+      <el-option label="全部" value="" />
+      <el-option label="待处理" value="1" />
+      <el-option label="已受理" value="2" />
       <el-option label="被驳回" value="3" />
+      <el-option label="已完成" value="4" />
     </Search>
     <el-card class="mycard">
       <div class="mytable">
@@ -25,22 +25,22 @@
                 <div
                   class="point"
                   :style="
-                    row.status == 0
+                    row.status == 1
                       ? 'background:#FFBF00'
-                      : row.status == 1
-                      ? 'background:#24BD13'
                       : row.status == 2
+                      ? 'background:#24BD13'
+                      : row.status == 4
                       ? 'background:#2D68EB'
                       : 'background:#E40000'
                   "
                 ></div>
                 <div>
                   {{
-                    row.status == 0
+                    row.status == 1
                       ? '待处理'
-                      : row.status == 1
-                      ? '已受理'
                       : row.status == 2
+                      ? '已受理'
+                      : row.status == 4
                       ? '已完结'
                       : '被驳回'
                   }}
@@ -64,21 +64,21 @@
             <template #default="{ row }">
               <div class="fcc">
                 <el-link
-                  v-if="row.status == 2"
+                  v-if="row.status == 4"
                   type="primary"
                   @click="$router.push('/dmp/findc/wxdatadetail?id=' + row.id)"
                   >详情</el-link
                 >
-                <div v-if="row.status == 0 || row.status == 2" class="line"></div>
-                <el-link v-if="row.status == 0" type="primary" @click="refuse(row.id)"
+                <div v-if="row.status == 1 || row.status == 4" class="line"></div>
+                <el-link v-if="row.status == 1" type="primary" @click="refuse(row.id)"
                   >驳回</el-link
                 >
-                <div v-if="row.status == 0" class="line"></div>
-                <el-link v-if="row.status == 0" type="primary" @click="goPass(row.id)"
+                <div v-if="row.status == 1" class="line"></div>
+                <el-link v-if="row.status == 1" type="primary" @click="goPass(row.id)"
                   >通过</el-link
                 >
                 <el-link
-                  v-if="row.status == 1 || row.status == 2"
+                  v-if="row.status == 2 || row.status == 4"
                   type="primary"
                   @click="upUser(row.id)"
                   >上传客户</el-link

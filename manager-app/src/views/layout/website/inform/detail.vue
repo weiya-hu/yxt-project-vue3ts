@@ -7,10 +7,10 @@
         <span>分类：{{ body.type_name }}</span>
         <span>查看量：{{ body.readed }}</span>
         <span>{{ formatDate(new Date(Number(body.create_time)), 'yyyy-MM-dd hh:mm:ss') }}</span>
-        <div class="ss" v-if="body.status != 0">
+        <div v-if="body.status != 0" class="ss">
           <div
             class="point"
-            :style="body.status == 2 ? 'background: #E40000;' : 'background:#24BD13;'"
+            :style="body.status == 1 ? 'background: #E40000;' : 'background:#24BD13;'"
           ></div>
           <span> {{ body.status == 2 ? '在线' : '离线' }}</span>
         </div>
@@ -27,7 +27,7 @@
             "
             >编辑</el-button
           >
-          <el-button class="bdc_btn" v-if="body.status == 1 || body.status == 0" @click="getDel(id)"
+          <el-button v-if="body.status == 1 || body.status == 0" class="bdc_btn" @click="getDel(id)"
             >删除</el-button
           >
         </div>
@@ -160,6 +160,13 @@ const getDelDate = async () => {
         margin: 20px 0;
       }
     }
+  }
+  .txt {
+    font-size: 14px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #999999;
+    line-height: 26px;
   }
 }
 </style>

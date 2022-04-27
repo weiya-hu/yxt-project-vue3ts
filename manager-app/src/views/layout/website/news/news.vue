@@ -64,8 +64,8 @@
             </el-form-item>
             <el-form-item>
               <div class="check-btns">
-                <el-button type="primary" size="large" @click="wordSearch">查询</el-button>
-                <el-button type="primary" size="large" @click="resetForm()">重置</el-button>
+                <el-button type="primary" class="btns" @click="wordSearch">查询</el-button>
+                <el-button class="bdc_btn" @click="resetForm()">重置</el-button>
               </div>
             </el-form-item>
           </div>
@@ -136,7 +136,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="200" fixed="right">
+            <el-table-column fixed="right" label="操作" width="200" align="center">
               <template #default="{ row }">
                 <div class="fcs">
                   <el-link
@@ -482,7 +482,7 @@ const getDelDate = async () => {
 }
 
 .news-content {
-  padding: 20px;
+  // padding: 20px;
   .news-tips {
     display: flex;
     justify-content: flex-end;
@@ -498,14 +498,12 @@ const getDelDate = async () => {
   margin-left: -3px;
 }
 .news-search {
-  padding: 20px;
+  // padding: 20px;
+  margin-bottom: 16px;
 }
 .topitems {
   margin-top: 25px;
-  width: 1250px;
-  .el-form-item {
-    margin-right: 40px;
-  }
+  // width: 1250px;
   .el-input {
     width: 250px;
   }
@@ -518,7 +516,7 @@ const getDelDate = async () => {
   }
   .check-btns {
     display: flex;
-    justify-content: flex-end;
+    margin-left: 50px;
     width: 1200px;
   }
 }
@@ -528,10 +526,6 @@ const getDelDate = async () => {
   position: relative;
   :deep(.el-drawer) {
     width: 25% !important;
-  }
-  .el-drawer--header {
-    background-color: #333 !important;
-    color: #fff !important;
   }
 }
 .bbtns {
