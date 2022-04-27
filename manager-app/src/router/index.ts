@@ -510,21 +510,6 @@ const routes = [
               },
             ]
           },
-          {
-            path: '/dmp/dmpset',
-            name: 'DmpSet',
-            redirect: '/dmp/dmpset/dataset',
-            component: () => import('@/views/layout/rview.vue'),
-            meta: { title: 'DMP设置', icon:nav4_5_i, icon_a:nav4_5_a_i, lv:'56',clv:'57' ,showTopNav:true},
-            children:[
-              {
-                path: '/dmp/dmpset/dataset',
-                name: 'DataSet',
-                component: () => import('@/views/layout/dmp/dmpSet/dataSet.vue'),
-                meta: { title: '数据设置', keepAlive:true,father:'/dmp/dmpset',lv:'57', isTopNav:true },
-              },
-            ]
-          },
         ]
       },
       {
