@@ -53,7 +53,7 @@ const tableTitle = ref([
   { type: 'text', lable: '联系人', prop: 'contact', width: 100 },
   { type: 'text', lable: '联系方式', prop: 'mobiles', width: 110 },
   { type: 'text', lable: '邮箱', prop: 'email', width: 140 },
-  // {type:'',lable:'地区',prop:'',width:130},
+  { type: 'country', lable: '地区', prop: 'country_id', width: 130 },
   { type: 'text-tooltip', lable: '公司地址', prop: 'address', width: 150 },
   { type: 'link', lable: '企业官网', prop: 'url', width: 160 },
   { type: 'text', lable: 'HS编码', prop: 'code', width: 130 },

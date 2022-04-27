@@ -48,7 +48,7 @@
                 <el-link
                   v-if="row.status === 3"
                   type="primary"
-                  @click="$router.push('/dmp/findb/specificdatadetails?id=' + row.id)"
+                  @click="$router.push('/dmp/seekabroad/supplierdetail?id=' + row.id)"
                   >详情</el-link
                 >
               </div>
@@ -105,9 +105,9 @@ const inputSearch = reactive({
 const tableTitle = ref([
   { type: 'text', lable: 'ID', prop: 'id', width: 100 },
   { type: 'text', lable: '账户名', prop: 'u_name', width: 100 },
-  { type: 'text-tooltip', lable: '客户名称', prop: 'c_name', width: 150 },
+  { type: 'text', lable: '客户名称', prop: 'c_name', width: 150 },
   { type: 'industry_id', lable: '行业分类', prop: 'industry_id', width: 120 },
-  // {type:'',lable:'地区',prop:'',width:100},
+  { type: 'country', lable: '地区', prop: 'country_id', width: 130 },
   { type: 'text', lable: '采购商品', prop: 'product_name', width: 150 },
   { type: 'text-tooltip', lable: '描述', prop: 'demand_desc', width: 220 },
   { type: 'date', lable: '发起时间', prop: 'create_time', width: 110 },

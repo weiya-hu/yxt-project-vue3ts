@@ -6,7 +6,13 @@
       </template>
       <div>
         <el-form ref="formRef" v-loading="loading" :model="formValue" :rules="upUserRule">
-          <el-form-item required prop="money" label="消耗金额" class="use-money">
+          <el-form-item
+            v-if="props.type === 'money'"
+            required
+            prop="money"
+            label="消耗金额"
+            class="use-money"
+          >
             <el-input v-model="formValue.money" placeholder="请输入" type="number"></el-input>
             <div class="money-pexl">元</div>
           </el-form-item>
@@ -89,7 +95,6 @@ import { ElMessage } from 'element-plus'
 // eslint-disable-next-line camelcase
 import { templeteDownload_api } from '@/api/dmp/findb'
 
-
 //父组件传的值
 const props = withDefaults(
   defineProps<{
@@ -133,21 +138,25 @@ const upUserRule = reactive({
       trigger: 'blur',
     },
   ],
-  days: [{
+  days: [
+    {
       required: true,
       message: '必填项',
       trigger: 'change',
-    },{
+    },
+    {
       required: true,
       message: '必填项',
       trigger: 'blur',
     },
   ],
-  batch: [{
+  batch: [
+    {
       required: true,
       message: '必填项',
       trigger: 'change',
-    },{
+    },
+    {
       required: true,
       message: '必填项',
       trigger: 'blur',
@@ -227,7 +236,13 @@ const fileUpError = (val: any) => {
   })
 }
 const fileUpSuccess = (val: any) => {
-  emit('success', { ...formValue.value, attachment: val })
+  emit('success', {
+    ...formValue.value,
+    attachment: val,
+    batch: formValue.value.batch !== null ? Number(formValue.value.batch) : null,
+    days: Number(formValue.value.days) || null,
+    money: Number(formValue.value.money) || null,
+  })
   close()
 }
 </script>

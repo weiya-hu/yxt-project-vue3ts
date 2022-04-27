@@ -551,7 +551,7 @@ const routes = [
                 path: '/cms/myWork/images',
                 name: 'MyworkImage',
                 component: () => import('@/views/layout/cms/myWork/images.vue'),
-                meta: { title: '图片库', father:'/cms/mywork',isTopNav:true,lv:'29'},
+                meta: { title: '图片库', father: '/cms/mywork', isTopNav: true, lv: '29' },
               },
               {
                 path: '/cms/myWork/poster',
