@@ -41,9 +41,7 @@ axios.interceptors.response.use(
         if(response.errno == 10620){
           const isLogin = localStorage.getItem('islogin')
           if(isLogin){
-            setTimeout(() => {
-              router.replace('/login')
-            }, 2000);
+            router.replace('/login')
             localStorage.removeItem('islogin')
           }
         }

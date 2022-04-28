@@ -31,8 +31,8 @@
         <el-table-column property="status" label="状态" width="100">
           <template #default="scope">
             <div class="fcs">
-              <div class="dot" :class="getState(scope.row.status).class"></div>
-              <div>{{getState(scope.row.status).text}}</div>
+              <div class="status_dot" :class="getKzStatus(scope.row.status).className"></div>
+              <div>{{getKzStatus(scope.row.status).text}}</div>
             </div>
           </template>
         </el-table-column>
@@ -40,20 +40,23 @@
         <el-table-column label="操作" width="150">
 
           <template #default="scope">
-            <div class="fcs" v-if="scope.row.status === 0">
-              <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
-              <div class="line" v-if="scope.row.attachment"></div>
+            <div class="fcs" v-if="scope.row.status == 1">
               <el-link type="primary" v-if="scope.row.attachment" :href="scope.row.attachment">下载附件</el-link>
-            </div>
-            <div class="fcs" v-if="scope.row.status === 1">
-              <el-link type="primary" @click="goDetails(scope.row.id)">详情</el-link>
-              <div class="line"></div>
+              <div class="line" v-if="scope.row.attachment"></div>
               <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
             </div>
-            <div class="fcs" v-if="scope.row.status === 2">
-              <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
-              <div class="line"></div>
+            <div class="fcs" v-if="scope.row.status == 2">
+              ---
+            </div>
+            <div class="fcs" v-if="scope.row.status == 3">
               <el-link type="primary" @click="errorMsg = scope.row.fail_reason;errorShow=true">拒绝原因</el-link>
+              <div class="line"></div>
+              <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
+            </div>
+            <div class="fcs" v-if="scope.row.status == 4">
+              <el-link type="primary" @click="goDetails(scope.row.id)">查看</el-link>
+              <div class="line"></div>
+              <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
             </div>
           </template>
 
@@ -121,7 +124,7 @@ import MyUpload from "@/components/MyUpload.vue";
 import MyCascader from "@/components/MyCascader.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import { mainStore } from '@/store/index'
-import { errMsg,getHashStr,strToArr} from '@/utils/index'
+import { errMsg, getHashStr, strToArr, getKzStatus } from '@/utils/index'
 import { ElMessageBox } from 'element-plus'
 import { addDemand_api ,demandList_api,delDemand_api } from '@/api/findB'
 import { formatDate } from '@/utils/date'
@@ -167,36 +170,7 @@ const handleSelectionChange = (val:SData[]) => {
   //表格选择
   multipleSelection.value = val
 }
-const getState = (status:string|number)=>{
-  //返回需求状态及颜色类名
-  const obj = ref({
-    class:'',
-    text:'-'
-  })
-  switch (Number(status)) {
-    case 0:
-      obj.value = {
-        class:'bgc_green',
-        text:'审核中'
-      }
-      break;
-    case 1:
-      obj.value = {
-        class:'bgc_df',
-        text:'已通过'
-      }
-      break;
-    case 2:
-      obj.value = {
-        class:'bgc_red',
-        text:'已拒绝'
-      }
-      break;
-    default:
-      break;
-  }
-  return obj.value
-}
+
 const errorShow = ref(false)
 const errorMsg = ref('')
 
@@ -402,21 +376,6 @@ export default { name:'个性化数据' }
     }
   }
   .mytable{
-    .dot{
-      width: 8px;
-      height: 8px;
-      margin-right: 8px;
-      border-radius: 50%;
-    }
-    .bgc_df{
-      background-color: $dfcolor;
-    }
-    .bgc_green{
-      background-color: #2BD34E;
-    }
-    .bgc_red{
-      background-color: $colorred;
-    }
     .line{
       height: 14px;
       width: 1px;

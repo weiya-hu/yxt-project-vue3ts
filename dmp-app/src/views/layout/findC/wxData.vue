@@ -14,8 +14,8 @@
         <el-table-column property="status" label="处理状态">
           <template #default="scope">
             <div class="fcs">
-              <div class="dot" :class="scope.row.status == 0?'dot_ing':scope.row.status == 1?'dot_ok':'dot_err'"></div>
-              <div>{{scope.row.status == 0?'审核中':scope.row.status == 1?'已通过':'已拒绝'}}</div>
+              <div class="status_dot" :class="getKzStatus(scope.row.status).className"></div>
+              <div>{{getKzStatus(scope.row.status).text}}</div>
             </div>
           </template>
         </el-table-column>
@@ -29,16 +29,16 @@
             <div>{{getSource(scope.row.source)}}</div>
           </template>
         </el-table-column>
-        <el-table-column property="create_time" label="来源">
+        <el-table-column property="create_time" label="创建日期">
           <template #default="scope">
             <div>{{formatDate(new Date(scope.row.create_time),'yyyy-MM-dd')}}</div>
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template #default="scope">
-            <el-link type="primary" @click="goDetails(scope.row.id)" v-if="scope.row.status == 1">查看</el-link>
-            <el-link type="primary" @click="errorMsg = scope.row.fail_reason;errorShow=true" v-if="scope.row.status == 2">拒绝原因</el-link>
-            <div v-if="scope.row.status == 0 ">---</div>
+            <el-link type="primary" @click="goDetails(scope.row.id)" v-if="scope.row.status == 4">查看</el-link>
+            <el-link type="primary" @click="errorMsg = scope.row.fail_reason;errorShow=true" v-if="scope.row.status == 3">拒绝原因</el-link>
+            <div v-if="scope.row.status == 1 || scope.row.status == 2 ">---</div>
           </template>
         </el-table-column>
         
@@ -89,7 +89,7 @@ import TopBtns from "@/components/TopBtns.vue";
 import {useRouter} from 'vue-router'
 import warning_i from '@/assets/images/warning.png'
 import { getWxList_api ,addWx_api} from '@/api/findC'
-import {getSource} from '@/utils/index'
+import { getSource, getKzStatus } from '@/utils/index'
 
 interface SData {
   wechat_id:string,
@@ -179,19 +179,6 @@ export default { name:'微信获客C' }
 .wx_data{
   .topbtns{
     margin-bottom: 20px;
-  }
-  .dot{
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-right: 8px;
-    background-color: #2BD34E;
-  }
-  .dot_err{
-    background-color: $colorred;
-  }
-  .dot_ok{
-    background-color: $dfcolor;
   }
 }
 .no_margin{

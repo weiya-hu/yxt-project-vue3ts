@@ -15,3 +15,17 @@ export const upRecordDetail = (data:any): Promise<any> => {
 export const upRecordAdd = (data:any): Promise<res> => {
   return post('dmp', '/dmp/source/upload.in',data,true)
 }
+
+/**
+ * @name 数据同步
+*/
+export const setSync_api = (data:{ list:(string|number)[], type: 1 | 2 }): Promise<res> => {
+  return post('dmp', data.type == 1 ? '/dmp/source/sync/business.do' : '/dmp/source/sync/customer.do', data.list)
+}
+
+/**
+ * @name 数据同步今日剩余条数
+*/
+export const getSyncInfo_api = (): Promise<res> => {
+  return get('dmp', '/dmp/source/sync.get')
+}

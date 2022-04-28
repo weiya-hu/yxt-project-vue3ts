@@ -1,9 +1,11 @@
 <template>
-  <div class="mytable user_table">
+  <div class="mytable user_table" :style="{ height: `calc( 100% - ${oheight}px )` }">
     <el-table
       :data="data"
       style="width: 100%"
+      height="100%"
       @selection-change="handleSelectionChange"
+      ref="tableRef"
     >
       <el-table-column type="selection" width="50" />
       <el-table-column property="name" label="姓名" />
@@ -12,7 +14,11 @@
           <div>{{ scope.row.sex == 1?'男':'女' }}</div>
         </template>
       </el-table-column>
-      <el-table-column property="mobiles" label="联系方式" />
+      <el-table-column property="mobiles" label="联系方式">
+        <template #default="scope">
+          <div v-html="scope.row.mobiles"></div>
+        </template>
+      </el-table-column>
       <el-table-column property="email" label="邮箱" />
       <el-table-column property="type" label="从事行业">
         <template #default="scope">
@@ -48,11 +54,14 @@ import {getHashStr,strToArr,getSource} from '@/utils/index'
 const store = mainStore()
 const typeHash = computed(() => store.state.typeHash)
 const addressHash = computed(() => store.state.addressHash)
-const props = defineProps({
-  data: Array,
+const props = withDefaults(defineProps<{
+  data:any[]
+  oheight?:number,
+}>(),{
+  oheight:126
 })
 const emit = defineEmits(['select'])
-// select 选择时触发，返回选择数据；del 确认删除时触发，返回id
+// select 选择时触发，返回选择数据
 
 interface IData {
   city: number
@@ -67,9 +76,22 @@ interface IData {
   sex: number
   source: number
 }
+
+const multipleSelection = ref<(string|number)[]>([])
 const handleSelectionChange = (val:IData[]) => {
-  emit('select',val)
+  multipleSelection.value = val.map(v => v.id)
 }
+
+const tableRef = ref()
+const clear = () => {
+  multipleSelection.value = []
+  tableRef.value.clearSelection()
+}
+
+defineExpose({
+  selIdList : multipleSelection, // 选中的id数组
+  clear // 清空选中及id数组
+})
 
 </script>
 

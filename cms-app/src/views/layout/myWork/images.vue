@@ -16,6 +16,11 @@
             <img :src="row.thumb_url" alt="" class="firstimg lookhover" @click="look(row.thumb_url)">
           </template>
         </el-table-column>
+        <el-table-column property="source_name" label="图片名" width="250">
+          <template #default="{row}">
+            <div class="els">{{row.source_name}}</div>
+          </template>
+        </el-table-column>
         <el-table-column property="create_time" label="创建日期" width="200">
           <template #default="{row}">
             <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
@@ -24,19 +29,23 @@
         <el-table-column property="status" label="状态" width="180">
           <template #default="{row}">
             <div class="fcs">
-              <div class="dot" :class="getStatus(row.status).className"></div>
-              <div class="staus">{{getStatus(row.status).text}}</div>
+              <div class="status_dot" :class="KZ_MY_STATUS[row.status].className"></div>
+              <div>{{KZ_MY_STATUS[row.status].text}}</div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150">
+        <el-table-column label="操作" fixed="right" width="240">
           <template #default="{row}">
             <div class="fcs" v-if="row.status == 4">
+              <el-link type="primary" @click="showEdit(row.id, row.source_name)">修改名称</el-link>
+              <div class="line"></div>
               <el-link type="primary" @click="goDel(row.id)">删除</el-link>
               <div class="line"></div>
               <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true">拒绝原因</el-link>
             </div>
             <div class="fcs" v-else>
+              <el-link type="primary" @click="showEdit(row.id, row.source_name)">修改名称</el-link>
+              <div class="line"></div>
               <el-link type="primary" @click="goDel(row.id)">删除</el-link>
               <div class="line"></div>
               <el-link type="primary" @click="look(row.thumb_url)">查看</el-link>
@@ -78,6 +87,16 @@
         </div>
       </div>
     </el-dialog>
+    <el-dialog v-model="editShow" title="修改名称" width="380px">
+      <el-form>
+        <el-form-item label="输入名称">
+          <el-input v-model="editName" placeholder="请输入名称"/>
+        </el-form-item>
+      </el-form>
+      <div class="flex fjend">
+        <el-button type="primary" :disabled="!editName" @click="sureEdit">确定</el-button>
+      </div>
+    </el-dialog>
     <el-image-viewer @close="imgShow=false" v-if="imgShow" :url-list="showImgs" :initial-index="showImgIndex"/>
   </div>
 </template>
@@ -94,7 +113,8 @@ import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import TopBtns from "@/components/TopBtns.vue";
 import { errMsg ,okMsg } from '@/utils/index'
-import { imagesList_api, imagesAdd_api, imagesDel_api } from '@/api/myWork'
+import { imagesList_api, imagesAdd_api, imagesDel_api, imagesEdit_api } from '@/api/myWork'
+import { KZ_MY_STATUS } from '@/utils/index'
 
 interface SData {
   id: number|string,
@@ -124,30 +144,6 @@ const multipleSelection = ref<SData[]>([])
 const handleSelectionChange = (val:SData[]) => {
   //表格选择
   multipleSelection.value = val
-}
-const getStatus = (type:number|string)=>{
-  const obj = ref<{text:string,className:string}>()
-  switch (Number(type)) {
-    case 3:
-      obj.value = {
-        text:'已通过',
-        className:'cdf'
-      }
-      break;
-    case 4:
-      obj.value = {
-        text:'已拒绝',
-        className:'cred'
-      }
-      break;
-    default:
-      obj.value = {
-        text:'待审核',
-        className:'cyellow'
-      }
-      break;
-  }
-  return obj.value
 }
 
 const delId = ref('')
@@ -200,7 +196,8 @@ const upOneImg = async (file:UploadFile)=>{
   //上传单张图片
   const res:res = await getAliToken_api({site:'cms_image'})
   if(res.status == 1){
-    const exname=file.name.substring(file.name.lastIndexOf("."))
+    const exname=file.name.substring(file.name.lastIndexOf(".")) // 后缀名
+    const fxname = file.name.substring(0, file.name.indexOf(".")) // 图片名
     const fd = new FormData();
     const upData = {
       key: res.body.dir + '/' + res.body.uuid + exname,
@@ -224,11 +221,12 @@ const upOneImg = async (file:UploadFile)=>{
     if(response.status == 200){
       const oneUrl = res.body.host + '/' + res.body.dir + '/' + res.body.uuid + exname
       filePath.push(oneUrl)
-      const oneRes:res = await imagesAdd_api({thumb_url: oneUrl})
-      return Promise.resolve(oneUrl)
-    }else{
-      return Promise.reject(file.name+'上传失败')
+      const oneRes:res = await imagesAdd_api({ thumb_url: oneUrl, source_name: fxname.slice(0,30) })
+      if(oneRes.status == 1){
+        return Promise.resolve(oneUrl)
+      }
     }
+    return Promise.reject(file.name+'上传失败')
   }else{
     return Promise.reject('获取上传配置失败')
   }
@@ -288,6 +286,25 @@ const lookimgs = (file: UploadFile)=>{
   imgShow.value = true
 }
 
+const editShow = ref(false)
+const editId = ref<number|string>('')
+const editName = ref('')
+const showEdit = (id:number|string, name:string) => {
+  editId.value = id
+  editName.value = name
+  editShow.value = true
+}
+const sureEdit = async () => {
+  const { status } = await imagesEdit_api({
+    id: editId.value,
+    source_name: editName.value
+  })
+  if(status == 1){
+    editShow.value = false
+    getList()
+  }
+}
+
 </script>
 
 <script lang="ts">
@@ -303,21 +320,6 @@ export default { name:'我的作品库-图片库' }
     width: 48px;
     height: 48px;
     border-radius: 4px;
-  }
-  .dot{
-    width: 8px;
-    height: 8px;
-    margin-right: 8px;
-    border-radius: 50%;
-  }
-  .cyellow{
-    background-color: $coloryellow;
-  }
-  .cdf{
-    background-color: $dfcolor;
-  }
-  .cred{
-    background-color: $colorred;
   }
 }
 .upimgs{

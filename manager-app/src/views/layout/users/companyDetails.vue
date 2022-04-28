@@ -29,9 +29,12 @@
           <el-descriptions-item label="所属行业" v-if="info.industry_id">{{getHashStr(info.industry_id.split(','),typeHash)}}</el-descriptions-item>
           <el-descriptions-item label="统一社会信用代码" label-class-name="icode">{{info.code}}</el-descriptions-item>
           <el-descriptions-item label="资质照片">
-            <img :src="info.license" alt="" class="zzimg lookhover" @click="lookImage([info.license],0)">
+            <img :src="info.license[0]" alt="" v-if="info.license && info.license[0]" class="zzimg lookhover" @click="lookImage(info.license,0)">
+            <img :src="info.license[1]" alt="" v-if="info.license && info.license[1]" class="zzimg lookhover ml20" @click="lookImage(info.license,1)">
           </el-descriptions-item>
-          <el-descriptions-item label="证照有效期">{{formatDate(new Date(info.left_time),'yyyy-MM-dd')}}</el-descriptions-item>
+          <el-descriptions-item label="证照有效期">
+            {{info.left_time == 4102415999 ? '永久' : formatDate(new Date(info.left_time * 1000),'yyyy-MM-dd')}}
+          </el-descriptions-item>
           <el-descriptions-item label="联系人">{{info.legal_person}}</el-descriptions-item>
           <el-descriptions-item label="联系电话">{{info.contact}}</el-descriptions-item>
           <el-descriptions-item label="注册地址">{{info.address}}</el-descriptions-item>
@@ -110,6 +113,7 @@ const info = ref<any>({})
 const getInfo = async () => {
   const res = await getCompanyInfo_api({ cid })
   if(res.status == 1){
+    res.body.license = res.body.license.split(',')
     info.value = res.body
   }
 }

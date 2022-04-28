@@ -6,9 +6,6 @@
           <component :is="Component"/>
         </keep-alive>
       </transition>
-      <!-- <transition name="fade">
-        <component :is="Component" v-if="!$route.meta.keepAlive"/>
-      </transition> -->
     </router-view>
   </div>
 </template>

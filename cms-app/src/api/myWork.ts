@@ -45,8 +45,15 @@ export const imagesList_api = (data:PageParams): Promise<res> => {
 /**
  * @name 我的内容库新增接口(图片)
 */
-export const imagesAdd_api = (data:{thumb_url:string}): Promise<res> => {
-  return post('cms', '/cms/images.in',data)
+export const imagesAdd_api = (data:{ thumb_url:string, source_name?:string }): Promise<res> => {
+  return post('cms', '/cms/images.in', data)
+}
+
+/**
+ * @name 我的内容库修改图片名称接口
+*/
+export const imagesEdit_api = (data:{ id:string|number, source_name:string }): Promise<res> => {
+  return post('cms', '/cms/images.up', data, true)
 }
 
 /**
@@ -66,8 +73,15 @@ export const posterList_api = (data:PageParams): Promise<res> => {
 /**
  * @name 我的内容库新增接口(海报)
 */
-export const posterAdd_api = (data:{thumb_url:string}): Promise<res> => {
+export const posterAdd_api = (data:{ thumb_url:string, source_name?:string }): Promise<res> => {
   return post('cms', '/cms/posters.in',data)
+}
+
+/**
+ * @name 我的内容库修改海报名称接口
+*/
+export const posterEdit_api = (data:{ id:string|number, source_name:string }): Promise<res> => {
+  return post('cms', '/cms/posters.up', data, true)
 }
 
 /**
@@ -85,10 +99,17 @@ export const videoList_api = (data:PageParams): Promise<res> => {
 }
 
 /**
- * @name 我的内容库新增接口(海报)
+ * @name 我的内容库新增接口(视频)
 */
-export const videoAdd_api = (data:{thumb_url:string}): Promise<res> => {
+export const videoAdd_api = (data:{ thumb_url:string, source_name?:string }): Promise<res> => {
   return post('cms', '/cms/videos.in',data)
+}
+
+/**
+ * @name 我的内容库修改海报名称接口
+*/
+export const videoEdit_api = (data:{ id:string|number, source_name:string }): Promise<res> => {
+  return post('cms', '/cms/videos.up', data, true)
 }
 
 /**

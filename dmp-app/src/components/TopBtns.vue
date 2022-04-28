@@ -38,6 +38,7 @@
  * @author chn 
 */
 import { ref } from 'vue'
+import { ElMessageBox } from 'element-plus'
 const props = withDefaults(defineProps<{
   total?:number|string, // 总数 显示总数则不会显示新增按钮
   syncbtn?:boolean, // 是否显示同步按钮
@@ -45,7 +46,7 @@ const props = withDefaults(defineProps<{
   syncApi?:Function // 同步条数接口
 }>(),{
   total: '',
-  syncbtn:true,
+  syncbtn:false,
   syncDisabled:true,
 })
 
@@ -66,10 +67,16 @@ const setLoading = (val?:boolean) => {
   loading.value = Boolean(val)
 }
 
-const close = () => {
+const close = (msg?:string) => {
   active.value = 0
   show.value = false
   loading.value = false
+  if(msg){
+    ElMessageBox.alert(msg, '同步结果', {
+      confirmButtonText: '确定',
+      callback: () => {},
+    })
+  }
 }
 const show = ref(false)
 const list = ref([

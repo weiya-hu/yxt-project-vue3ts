@@ -71,8 +71,8 @@ export const demandDetail_api = (data:any): Promise<res> => {
 }
 
 //数据同步
-export const SetSync_api = (data:{ list:(string|number)[] }): Promise<res> => {
-  return post('dmp', '/dmp/business/sync.do', data, true)
+export const setSync_api = (data:{ list:(string|number)[] }): Promise<res> => {
+  return post('dmp', '/dmp/business/sync.do', data)
 }
 
 //数据同步今日剩余条数

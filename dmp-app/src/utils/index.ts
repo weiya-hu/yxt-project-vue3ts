@@ -43,9 +43,11 @@ export function infoMsg(msg: string, time?: number) {
  * @arr ['A','2'] 要查找的值组成的数组
  * @listArr 带有children的数组，层级和arr的长度一致
  * @key arr在listArr中的字段名称
+ * @nameKey 对应字符的键名，默认值'name'
+ * @childrenKey arr中children数组键名，默认值'children'
  * @return 'xx,xx'
 */
-export function get_Str(arr:any[],listArr:any[],key:string){
+export function get_Str(arr:Array<number|string>, listArr:any[], key:string, nameKey:string = 'name', childrenKey:string = 'children'){
   // 递归循环查找字符
   console.time('getStr');
   let i = 0
@@ -53,11 +55,11 @@ export function get_Str(arr:any[],listArr:any[],key:string){
   const dg = (list:any)=>{
     for (let j = 0; j < list.length; j++) {
       if(arr[i] == list[j][key]){
-        str += list[j].name + '，'
+        str += list[j][nameKey] + '，'
         if(i<arr.length-1){
           i++
-          if(list[j].children){
-            dg(list[j].children)
+          if(list[j][childrenKey]){
+            dg(list[j][childrenKey])
           }
         }else{
           break
@@ -193,4 +195,30 @@ export function getSource(source:number){
       return '---'
       break;
   }
+}
+
+/**
+ * 全局状态
+*/
+export const KZ_STATUS = {
+  0: { text: '---', className: '' },
+  1: { text: '待处理', className: 'status_yellow' },
+  2: { text: '已受理', className: 'status_green' },
+  3: { text: '被驳回', className: 'status_red' },
+  4: { text: '已完结', className: 'status_blue' }
+}
+
+/**
+ * 获取状态
+*/
+export function getKzStatus(key:any) {
+  const obj = { text: '---', className: '' }
+  try {
+    if(KZ_STATUS[key as keyof typeof KZ_STATUS]){
+      return KZ_STATUS[key as keyof typeof KZ_STATUS]
+    }
+  } catch (error) {
+    return obj
+  }
+  return obj
 }

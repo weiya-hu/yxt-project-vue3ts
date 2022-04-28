@@ -1,6 +1,6 @@
 <template>
   <div class="mypage">
-    <el-pagination background layout="prev, pager, next ,jumper" :total="total" :pager-count="9" v-model:currentPage="modelValue" @current-change="change">
+    <el-pagination background layout="prev, pager, next ,jumper" :page-size="size" :total="total" :pager-count="9" v-model:currentPage="modelValue" @current-change="change">
     </el-pagination>
   </div>
 </template>
@@ -14,8 +14,10 @@ import { ref } from 'vue'
 const props = withDefaults(defineProps<{
   modelValue:number,
   total:number,
+  size?:number,
 }>(),{
-  total:0
+  total:0,
+  size:10
 })
 const emit = defineEmits(['update:modelValue','change'])
 

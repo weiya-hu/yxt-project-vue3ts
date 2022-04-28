@@ -43,9 +43,9 @@
   </el-table-column>
   <el-table-column v-if="type==='status_do'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
-      <div class="flexl">
-        <div :class="row.status === 0?'before-deal':row.status === 1?'dealing':row.status === 2?'deal-refuse':row.status === 3?'dealed':''"></div>
-        <div >{{row.status === 0?'待处理':row.status === 1?'处理中':row.status === 2?'被驳回':row.status === 3?'已完结':''}}</div>
+      <div class="fcs">
+        <div class="status_dot" :class="getKzStatus(row.status).className"></div>
+        <div>{{getKzStatus(row.status).text}}</div>
       </div>
     </template>
   </el-table-column>
@@ -108,7 +108,7 @@
   import { toRefs,ref,computed} from 'vue'
   import {Format} from '@/utils/date'
   import { mainStore } from '@/store/index'
-  import { getHashStr,strToArr,getSource} from '@/utils/index'
+  import { getHashStr, strToArr, getSource, getKzStatus } from '@/utils/index'
 
   const store = mainStore()
   const typeHash = computed(() => store.state.typeHash)

@@ -20,3 +20,17 @@ export const channelDel = (data:any): Promise<res> => {
 export const channelIn = (data:any): Promise<res> => {
   return post('dmp', '/dmp/channel/demand.in',data,true)
 }
+
+/**
+ * @name 数据同步
+*/
+export const setSync_api = (data:{ list:(string|number)[], type:1|2 }): Promise<res> => {
+  return post('dmp', data.type == 1 ? '/dmp/channel/sync/channel.do' : '/dmp/channel/sync/project.do', data)
+}
+
+/**
+ * @name 数据同步今日剩余条数
+*/
+export const getSyncInfo_api = (): Promise<res> => {
+  return get('dmp', '/dmp/channel/sync.get')
+}

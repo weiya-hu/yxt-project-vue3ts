@@ -23,5 +23,19 @@ export const overseasIn = (data:any): Promise<res> => {
 
 //获取国家名称
 export const countryList = (): Promise<res> => {
-    return get('dmp', '/dmp/overseas/country.list')
-  }
+  return get('dmp', '/dmp/overseas/country.list')
+}
+
+/**
+ * @name 数据同步
+*/
+export const setSync_api = (data:{ list:(string|number)[] }): Promise<res> => {
+  return post('dmp', '/dmp/overseas/sync.do', data)
+}
+
+/**
+ * @name 数据同步今日剩余条数
+*/
+export const getSyncInfo_api = (): Promise<res> => {
+  return get('dmp', '/dmp/overseas/sync.get')
+}

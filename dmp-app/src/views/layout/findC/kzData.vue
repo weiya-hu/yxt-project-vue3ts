@@ -2,7 +2,7 @@
   <div class="kzdata_page_c" v-loading="loading">
     <TopSearch @height-search="heightSearch" @search="wordSearch" :words="words" :hasHeight="false" placeholder="请输入电话号码、姓名查询"/>
     
-    <TopBtns :total="total" @sync="setSync" ref="topBtnRef" :sync-api="getSyncInfo_api" :sync-disabled="syncDisabled" class="topbtns"/>
+    <TopBtns :total="total" syncbtn @sync="setSync" ref="topBtnRef" :sync-api="getSyncInfo_api" :sync-disabled="syncDisabled" class="topbtns"/>
 
     <div class="mytable">
       <el-table
@@ -19,7 +19,11 @@
             <div>{{ scope.row.sex == 0?'男':'女' }}</div>
           </template>
         </el-table-column>
-        <el-table-column property="mobiles" label="联系方式"  width="210"/>
+        <el-table-column property="mobiles" label="联系方式"  width="210">
+          <template #default="scope">
+            <div v-html="scope.row.mobiles"></div>
+          </template>
+        </el-table-column>
         <el-table-column property="email" label="邮箱" width="210"/>
         <el-table-column property="address" label="地区">
           <template #default="scope">
@@ -36,7 +40,7 @@
         </template>
       </el-table>
     </div>
-    <MyPage :total="total" v-model="searchParams.current" @change="changePage"/>
+    <MyPage :total="total" :size="50" v-model="searchParams.current" @change="changePage"/>
   </div>
 </template>
 
@@ -48,7 +52,7 @@ import TopBtns from "@/components/TopBtns.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import { mainStore } from '@/store/index'
 import { getHashStr,strToArr,getSource} from '@/utils/index'
-import { getSearchWord_api ,wordSearchList_api, SetSync_api, getSyncInfo_api } from '@/api/findC'
+import { getSearchWord_api ,wordSearchList_api, setSync_api, getSyncInfo_api } from '@/api/findC'
 import { errMsg } from '@/utils/index'
 
 const store = mainStore()
@@ -142,13 +146,13 @@ const clear = () => {
 }
 
 const topBtnRef = ref()
-const syncDisabled =  computed(() => !Boolean(multipleSelection.value.length))
+const syncDisabled = computed(() => !multipleSelection.value.length)
 const setSync = async () => {
   topBtnRef.value.setLoading(true)
-  const res = await SetSync_api({
+  const res = await setSync_api({
     list: multipleSelection.value
   })
-  topBtnRef.value.close()
+  topBtnRef.value.close(res.message)
   clear()
 }
 </script>

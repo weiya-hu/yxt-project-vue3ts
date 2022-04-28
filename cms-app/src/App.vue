@@ -224,4 +224,26 @@ img{
 .lookhover{
   cursor: url('@/assets/images/imagelook.cur'),pointer;
 }
+
+.status_dot{
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+}
+.status_yellow{
+  background-color: $coloryellow;
+}
+.status_green{
+  background-color: #2BD34E;
+}
+.status_blue{
+  background-color: $dfcolor;
+}
+.status_red{
+  background-color: $colorred;
+}
+.status_df{
+  background-color: $color999;
+}
 </style>

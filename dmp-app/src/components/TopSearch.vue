@@ -27,13 +27,13 @@
       <el-form class="myform" ref="formRef" :model="form">
         <div class="topitems fcs">
           <el-form-item label="经营范围" prop="business_scope">
-            <el-input v-model="form.business_scope" placeholder="请输入经营范围" maxlength="36" @change="changeLables"></el-input>
+            <el-input v-model="form.business_scope" placeholder="请输入经营范围" maxlength="36" @change="changeItemLables('business_scope')"></el-input>
           </el-form-item>
           <el-form-item label="行业分类" prop="industry_id">
-            <MyCascader v-model="form.industry_id" type="type" ref="typeCRef" @change="changeLables"/>
+            <MyCascader v-model="form.industry_id" type="type" ref="typeCRef" @change="changeItemLables('industry_id')"/>
           </el-form-item>
           <el-form-item label="省份地区" prop="addr">
-            <MyCascader v-model="form.addr" type="address" ref="addrCRef" @change="changeLables"/>
+            <MyCascader v-model="form.addr" type="address" ref="addrCRef" @change="changeItemLables('addr')"/>
           </el-form-item>
         </div>
         <div class="contact_mode fcs">
@@ -59,13 +59,13 @@
             </el-select>
           </el-form-item> -->
           <el-form-item label="联系方式" prop="contact">
-            <el-checkbox-group v-model="form.contact" @change="changeLables">
+            <el-checkbox-group v-model="form.contact" @change="changeItemLables('contact')">
               <el-checkbox :label="v.value" v-for="v in contactArr" :key="v.id">{{v.name}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </div>
         <el-form-item label="企业类型" prop="ctype">
-          <el-checkbox-group v-model="form.ctype" @change="changeLables">
+          <el-checkbox-group v-model="form.ctype" @change="changeItemLables('ctype')">
             <el-checkbox :label="v.value" v-for="v in ctypeArr" :key="v.id">{{v.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
@@ -273,8 +273,7 @@ const delCondition = (v:any,i:number)=>{
 
 const changeDrop = (v:any)=>{
   //切换条件组
-  console.log(v);
-  resetForm(formRef.value)
+  reset()
   nowCondition.value = v.conditions_name;
   // form.mobile = (v.contact & 1) > 0 ? 1 : ''
   // form.phone = (v.contact & 2) > 0 ? 2 : ''
@@ -294,7 +293,6 @@ const changeDrop = (v:any)=>{
     (v.company_type & value.value) && form.ctype.push(value.value);
   });
   changeLables()
-  console.log(form);
 }
 
 const getTagName = {
@@ -336,9 +334,37 @@ const changeLables = () => {
   form.ctype.forEach(v=>{
     ctype_str += ctypeArr.value.find(j=>j.value == v)?.name + '，'
   })
-  showLables.ctype = ctype_str.substring(0, ctype_str.length - 1);  
-  showLables.industry_id = typeCRef.value.getText()
-  showLables.addr = addrCRef.value.getText()
+  showLables.ctype = ctype_str.substring(0, ctype_str.length - 1);
+  showLables.industry_id = typeCRef.value.getText(form.industry_id)
+  showLables.addr = addrCRef.value.getText(form.addr)
+  conditionShow.value = true
+}
+const changeItemLables = (val:keyof typeof showLables) => {
+  switch (val) {
+    case 'contact':
+      let contact_str = ''
+      form.contact.forEach(v=>{
+        contact_str += contactArr.value.find(j=>j.value == v)?.name + '，'
+      })
+      showLables.contact = contact_str.substring(0, contact_str.length - 1);  
+      break;
+    case 'ctype':
+      let ctype_str = ''
+      form.ctype.forEach(v=>{
+        ctype_str += ctypeArr.value.find(j=>j.value == v)?.name + '，'
+      })
+      showLables.ctype = ctype_str.substring(0, ctype_str.length - 1); 
+      break;
+    case 'industry_id':
+      showLables.industry_id = typeCRef.value.getText(form.industry_id)
+      break;
+    case 'addr':
+      showLables.addr = addrCRef.value.getText(form.addr)
+      break;
+    default:
+      showLables[val] = form[val]
+      break;
+  }
   conditionShow.value = true
 }
 

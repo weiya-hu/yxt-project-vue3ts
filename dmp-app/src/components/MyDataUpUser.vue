@@ -138,7 +138,8 @@ onMounted(()=>{
     url:url,
     method:'get',
     headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
+      'Content-Type': 'application/json;charset=UTF-8',
+      MODULE: 'dmp'
     }, 
     responseType: 'blob'
   }).then((res)=>{

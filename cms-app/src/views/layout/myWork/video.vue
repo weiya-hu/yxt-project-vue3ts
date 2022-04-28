@@ -16,6 +16,11 @@
             <video :src="row.video_url" alt="" class="firstimg lookhover" @click="look(row.video_url)"/>
           </template>
         </el-table-column>
+        <el-table-column property="source_name" label="视频名" width="250">
+          <template #default="{row}">
+            <div class="els">{{row.source_name}}</div>
+          </template>
+        </el-table-column>
         <el-table-column property="create_time" label="创建日期" width="200">
           <template #default="{row}">
             <div>{{formatDate(new Date(row.create_time),'yyyy-MM-dd')}}</div>
@@ -24,19 +29,23 @@
         <el-table-column property="status" label="状态" width="180">
           <template #default="{row}">
             <div class="fcs">
-              <div class="dot" :class="getStatus(row.status).className"></div>
-              <div class="staus">{{getStatus(row.status).text}}</div>
+              <div class="status_dot" :class="KZ_MY_STATUS[row.status].className"></div>
+              <div>{{KZ_MY_STATUS[row.status].text}}</div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150">
+        <el-table-column label="操作" fixed="right" width="240">
           <template #default="{row}">
             <div class="fcs" v-if="row.status == 4">
+              <el-link type="primary" @click="showEdit(row.id, row.source_name)">修改名称</el-link>
+              <div class="line"></div>
               <el-link type="primary" @click="goDel(row.id)">删除</el-link>
               <div class="line"></div>
               <el-link type="primary" @click="errorMsg = row.fail_reason;errorShow=true">拒绝原因</el-link>
             </div>
             <div class="fcs" v-else>
+              <el-link type="primary" @click="showEdit(row.id, row.source_name)">修改名称</el-link>
+              <div class="line"></div>
               <el-link type="primary" @click="goDel(row.id)">删除</el-link>
               <div class="line"></div>
               <el-link type="primary" @click="look(row.video_url)">查看</el-link>
@@ -70,6 +79,16 @@
         </div>
       </div>
     </el-dialog>
+    <el-dialog v-model="editShow" title="修改名称" width="380px">
+      <el-form>
+        <el-form-item label="输入名称">
+          <el-input v-model="editName" placeholder="请输入名称"/>
+        </el-form-item>
+      </el-form>
+      <div class="flex fjend">
+        <el-button type="primary" :disabled="!editName" @click="sureEdit">确定</el-button>
+      </div>
+    </el-dialog>
     <el-dialog v-model="lookShow" title="查看视频" fullscreen @close="lookVideo = ''" custom-class="videobox">
       <video :src="lookVideo" controls class="show_video"></video>
     </el-dialog>
@@ -86,7 +105,8 @@ import MyDialog from "@/components/MyDialog.vue";
 import MyUpload from "@/components/MyUpload.vue";
 import TopBtns from "@/components/TopBtns.vue";
 import { errMsg ,okMsg ,confirm } from '@/utils/index'
-import { videoList_api, videoAdd_api, videoDel_api } from '@/api/myWork'
+import { videoList_api, videoAdd_api, videoDel_api, videoEdit_api } from '@/api/myWork'
+import { KZ_MY_STATUS } from '@/utils/index'
 
 interface SData {
   id: number|string,
@@ -116,30 +136,6 @@ const multipleSelection = ref<SData[]>([])
 const handleSelectionChange = (val:SData[]) => {
   //表格选择
   multipleSelection.value = val
-}
-const getStatus = (type:number|string)=>{
-  const obj = ref<{text:string,className:string}>()
-  switch (Number(type)) {
-    case 3:
-      obj.value = {
-        text:'已通过',
-        className:'cdf'
-      }
-      break;
-    case 4:
-      obj.value = {
-        text:'已拒绝',
-        className:'cred'
-      }
-      break;
-    default:
-      obj.value = {
-        text:'待审核',
-        className:'cyellow'
-      }
-      break;
-  }
-  return obj.value
 }
 
 const delId = ref('')
@@ -189,7 +185,8 @@ const upChange = (errorType:string)=>{
 }
 const upSuccess = async (videoUrl:string)=>{
   //上传成功
-  const res = await videoAdd_api({thumb_url:videoUrl})
+  const fxname = fileUrls.value.substring(0, fileUrls.value.indexOf(".")) // 文件名
+  const res = await videoAdd_api({ thumb_url:videoUrl, source_name:fxname })
   if(res.status == 1){
     okMsg('上传成功')
     close()
@@ -214,6 +211,24 @@ const beforeCloseAdd = (done:Function)=>{
   }
 }
 
+const editShow = ref(false)
+const editId = ref<number|string>('')
+const editName = ref('')
+const showEdit = (id:number|string, name:string) => {
+  editId.value = id
+  editName.value = name
+  editShow.value = true
+}
+const sureEdit = async () => {
+  const { status } = await videoEdit_api({
+    id: editId.value,
+    source_name: editName.value
+  })
+  if(status == 1){
+    editShow.value = false
+    getList()
+  }
+}
 </script>
 
 <script lang="ts">
@@ -226,21 +241,6 @@ export default { name:'我的作品库-视频库' }
     width: 48px;
     height: 48px;
     border-radius: 4px;
-  }
-  .dot{
-    width: 8px;
-    height: 8px;
-    margin-right: 8px;
-    border-radius: 50%;
-  }
-  .cyellow{
-    background-color: $coloryellow;
-  }
-  .cdf{
-    background-color: $dfcolor;
-  }
-  .cred{
-    background-color: $colorred;
   }
 }
 .upimgs{

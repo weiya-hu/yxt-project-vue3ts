@@ -2,10 +2,10 @@
   <div class="kzdata_page" v-loading="loading">
     <TopSearch @height-search="heightSearch" @search="wordSearch" :words="words" :hasHeight="true" placeholder="请输入企业名称、联系人、经营范围关键词"/>
     
-    <TopBtns :total="total" @sync="setSync" ref="topBtnRef" :sync-api="getSyncInfo_api" :sync-disabled="syncDisabled" class="topbtns"/>
+    <TopBtns :total="total" syncbtn @sync="setSync" ref="topBtnRef" :sync-api="getSyncInfo_api" :sync-disabled="syncDisabled" class="topbtns"/>
 
     <CompanyTable :data="tableData" ref="tableRef"/>
-    <MyPage :total="total" v-model="searchParams.current" @change="changePage"/>
+    <MyPage :total="total" :size="50" v-model="searchParams.current" @change="changePage"/>
   </div>
 </template>
 
@@ -15,7 +15,7 @@ import TopSearch from '@/components/TopSearch.vue'
 import MyPage from "@/components/MyPage.vue";
 import TopBtns from "@/components/TopBtns.vue";
 import CompanyTable from "@/components/CompanyTable.vue";
-import { searchByConditions_api,wordSearchList_api,getSearchWord_api, SetSync_api, getSyncInfo_api } from '@/api/findB'
+import { searchByConditions_api,wordSearchList_api,getSearchWord_api, setSync_api, getSyncInfo_api } from '@/api/findB'
 import { errMsg } from '@/utils/index'
 
 const words = ref([])
@@ -101,10 +101,10 @@ const tableRef = ref()
 const syncDisabled =  computed(() => tableRef.value && !tableRef.value.selIdList.length)
 const setSync = async () => {
   topBtnRef.value.setLoading(true)
-  const res = await SetSync_api({
+  const res = await setSync_api({
     list: tableRef.value.selIdList
   })
-  topBtnRef.value.close()
+  topBtnRef.value.close(res.message)
   tableRef.value.clear()
 }
 </script>

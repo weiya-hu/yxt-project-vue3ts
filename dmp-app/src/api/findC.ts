@@ -18,7 +18,7 @@ export const wordSearchList_api = (data:PageParams): Promise<res> => {
  * @name 获取运营商
 */
 export const getTelList_api = (): Promise<res> => {
-  return get('dmp', '/dim/provider.list')
+  return get('user', '/dim/provider.list')
 }
 
 /**
@@ -234,8 +234,8 @@ export const getMsgUserList_api = (data:PageParams): Promise<res> => {
 /**
  * @name 数据同步
 */
-export const SetSync_api = (data:{ list:(string|number)[] }): Promise<res> => {
-  return post('dmp', '/dmp/customer/sync.do', data, true)
+export const setSync_api = (data:{ list:(string|number)[] }): Promise<res> => {
+  return post('dmp', '/dmp/customer/sync.do', data)
 }
 
 /**

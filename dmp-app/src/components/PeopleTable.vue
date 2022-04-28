@@ -12,8 +12,8 @@
       <el-table-column property="status" label="状态" width="130">
         <template #default="scope">
           <div class="fcs">
-            <div class="dot" :class="getState(scope.row.status).class"></div>
-            <div>{{ getState(scope.row.status).text }}</div>
+            <div class="status_dot" :class="getKzStatus(scope.row.status).className"></div>
+            <div>{{getKzStatus(scope.row.status).text}}</div>
           </div>
         </template>
       </el-table-column>
@@ -42,27 +42,26 @@
           <div>{{ getSource(scope.row.source) }}</div>
         </template>
       </el-table-column>
-      <el-table-column property="source" label="操作" width="150">
+      <el-table-column property="source" label="操作" width="150" fixed="right">
         <template #default="scope">
-          <div class="fcs" v-if="scope.row.status === 0">
-            <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
-            <div class="line" v-if="scope.row.attachment"></div>
+          <div class="fcs" v-if="scope.row.status == 1">
             <el-link type="primary" v-if="scope.row.attachment" :href="scope.row.attachment">下载附件</el-link>
-          </div>
-          <div class="fcs" v-if="scope.row.status === 1">
-            <el-link type="primary" @click="goDetails(scope.row.id)">查看</el-link>
-            <div class="line"></div>
-            <el-link type="primary" :href="scope.row.plan_url">下载方案</el-link>
-          </div>
-          <div class="fcs" v-if="scope.row.status === 2">
-            <el-link type="primary" @click="goDetails(scope.row.id)">查看</el-link>
-            <div class="line"></div>
-            <el-link type="primary" :href="scope.row.plan_url">下载方案</el-link>
-          </div>
-          <div class="fcs" v-if="scope.row.status === 3">
+            <div class="line" v-if="scope.row.attachment"></div>
             <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
-            <div class="line"></div>
+          </div>
+          <div class="fcs" v-if="scope.row.status == 2">
+            ---
+          </div>
+          <div class="fcs" v-if="scope.row.status == 3">
             <el-link type="primary" @click="errorMsg = scope.row.fail_reason;errorShow=true">拒绝原因</el-link>
+            <div class="line"></div>
+            <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
+          </div>
+          <div class="fcs" v-if="scope.row.status == 4">
+            <el-link type="primary" @click="goDetails(scope.row.id)">查看</el-link>
+            <div class="line"></div>
+            <el-link type="primary" @click="goDel(scope.row.id)">删除</el-link>
+            <!-- <el-link type="primary" :href="scope.row.plan_url">下载方案</el-link> -->
           </div>
         </template>
       </el-table-column>
@@ -96,7 +95,7 @@ import { formatDate } from '@/utils/date'
 import MyDialog from "@/components/MyDialog.vue";
 import {useRouter} from 'vue-router'
 import { mainStore } from '@/store/index'
-import { getHashStr,strToArr,getSource} from '@/utils/index'
+import { getHashStr, strToArr, getSource, getKzStatus } from '@/utils/index'
 
 const store = mainStore()
 const addressHash = computed(() => store.state.addressHash)
@@ -148,65 +147,10 @@ const goDetails = (id:string)=>{
   // router.push({path:props.details as string,query: { id }})
 }
 
-const getState = (status:string|number)=>{
-  //返回需求状态及颜色类名
-  const obj = ref({
-    class:'',
-    text:'-'
-  })
-  switch (Number(status)) {
-    case 0:
-      obj.value = {
-        class:'bgc_green',
-        text:'审核中'
-      }
-      break;
-    case 1:
-      obj.value = {
-        class:'bgc_df',
-        text:'已通过'
-      }
-      break;
-    case 2:
-      obj.value = {
-        class:'bgc_999',
-        text:'已完成'
-      }
-      break;
-    case 3:
-      obj.value = {
-        class:'bgc_red',
-        text:'已拒绝'
-      }
-      break;
-    default:
-      break;
-  }
-  return obj.value
-}
-
 </script>
 
 <style scoped lang="scss">
 .people_table{
-  .dot{
-    width: 8px;
-    height: 8px;
-    margin-right: 8px;
-    border-radius: 50%;
-  }
-  .bgc_df{
-    background-color: $dfcolor;
-  }
-  .bgc_green{
-    background-color: #2BD34E;
-  }
-  .bgc_red{
-    background-color: $colorred;
-  }
-  .bgc_999{
-    background-color: $color999;
-  }
   .line{
     height: 14px;
     width: 1px;

@@ -28,6 +28,7 @@
 */
 import { mainStore } from '@/store/index'
 import { ref ,computed } from 'vue'
+import { get_Str } from '@/utils/index'
 const props = withDefaults(defineProps<{
   modelValue:any[],
   type:string
@@ -58,12 +59,12 @@ const change = (value:any) => {
 }
 
 const cRef = ref()
-const getText = ()=>{
-  if(cRef.value.getCheckedNodes().length){
-    return cRef.value.getCheckedNodes()[0].text
-  }else{
-    return ''
-  }
+const getText = (arr: (string | number)[])=>{
+  // if(cRef.value.getCheckedNodes().length){
+  //   return cRef.value.getCheckedNodes()[0].text
+  // }
+  const str = props.type == 'type' ? get_Str(arr, typeList.value, 'industry_id') : get_Str(arr, addressList.value, 'code')
+  return str
 }
 defineExpose({
   getText

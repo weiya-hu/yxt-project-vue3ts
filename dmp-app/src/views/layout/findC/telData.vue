@@ -16,8 +16,8 @@
         <el-table-column property="status" label="状态" width="160">
           <template #default="scope">
             <div class="fcs">
-              <div class="dot" :class="scope.row.status == 0?'dot_ing':scope.row.status == 1?'dot_ok':'dot_err'"></div>
-              <div>{{ scope.row.status == 0?'计算中':scope.row.status == 1?'计算完成':'计算失败' }}</div>
+              <div class="status_dot" :class="getKzStatus(scope.row.status).className"></div>
+              <div>{{getKzStatus(scope.row.status).text}}</div>
             </div>
           </template>
         </el-table-column>
@@ -41,9 +41,9 @@
             <div>{{ getSource(scope.row.source) }}</div>
           </template>
         </el-table-column>
-        <el-table-column property="source" label="操作" width="150">
+        <el-table-column property="source" label="操作" width="150" fixed="right">
           <template #default="scope">
-            <el-link type="primary" @click="goDetails(scope.row.id)" v-if="scope.row.status != 0">查看</el-link>
+            <el-link type="primary" @click="goDetails(scope.row.id)" v-if="scope.row.status == 4">查看</el-link>
             <div v-else>---</div>
           </template>
         </el-table-column>
@@ -117,7 +117,7 @@ import MyCascader from "@/components/MyCascader.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import TopBtns from "@/components/TopBtns.vue";
 import { mainStore } from '@/store/index'
-import { getHashStr,strToArr,getSource} from '@/utils/index'
+import { getHashStr, strToArr, getSource, getKzStatus } from '@/utils/index'
 import { addInset_api ,getInsetList_api,getTelList_api} from '@/api/findC'
 
 const store = mainStore()
@@ -243,19 +243,6 @@ export default { name:'号码段获客C' }
   }
   :deep(.el-form-item__label){
     width: 90px;
-  }
-  .dot{
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-right: 8px;
-    background-color: #2BD34E;
-  }
-  .dot_err{
-    background-color: $colorred;
-  }
-  .dot_ok{
-    background-color: $dfcolor;
   }
 }
 </style>

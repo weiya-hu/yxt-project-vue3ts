@@ -1,33 +1,37 @@
 <template>
-  <div class="up2b-detail mytable">
-    <FindNumber class="lt" :total="total"/>
-    <el-table
-      :data="tableList"
-      size="large"
-      row-class-name="my-data-table-row"
-      class="table"
-      v-loading="loading"
-    >
-      <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
-      <template #empty v-if="total">
-        <MyEmpty/>
-      </template>
-    </el-table>
-    <MyPage v-if="total" :total="total" v-model="page" @change="getDetailList"/>
+  <div class="up2b-detail" v-loading="loading">
+    <TopBtns :total="total" syncbtn @sync="setSync" ref="topBtnRef" :sync-api="getSyncInfo_api" :sync-disabled="syncDisabled"/>
+
+    <div class="mytable">
+      <el-table
+        :data="tableList"
+        size="large"
+        row-class-name="my-data-table-row"
+        height="100%"
+        @selection-change="handleSelectionChange"
+        ref="tableRef"
+      >
+        <MyDataTable v-for="(item,index) in tableTitle" :key="index" :type='item.type' :width='item.width' :lable='item.lable' :prop='item.prop'/>
+        <template #empty>
+          <MyEmpty/>
+        </template>
+      </el-table>
+    </div>
+
+    <MyPage v-if="total" :size="50" :total="total" v-model="page" @change="getDetailList"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
+import { ref, computed } from 'vue'
 import MyDataTable from '@/components/MyDataTable.vue'
 import MyPage from '@/components/MyPage.vue'
-import {channelDetailPage} from '@/api/seekPathPro'
+import { channelDetailPage, setSync_api, getSyncInfo_api } from '@/api/seekPathPro'
 import {useRoute} from 'vue-router'
 import MyEmpty from "@/components/MyEmpty.vue";
-import FindNumber from "@/components/FindNumber.vue";
+import TopBtns from "@/components/TopBtns.vue";
 
 const route = useRoute()
-
 
 let total=ref(0)
 let page = ref(1)
@@ -54,13 +58,11 @@ const tableTitle=ref([
 ])
 const tableList=ref([])
 
-
-
 const getDetailList=async()=>{
   loading.value=true
   let data={
     current:page.value,
-    size:10,
+    size:50,
     id:route.query.id
   }
   const {status,body}=await channelDetailPage(data)
@@ -71,20 +73,36 @@ const getDetailList=async()=>{
   }
 }
 getDetailList()
+
+const multipleSelection = ref<(string|number)[]>([])
+const handleSelectionChange = (val:any[]) => {
+  multipleSelection.value = val.map(v => v.id)
+}
+
+const tableRef = ref()
+const clear = () => {
+  multipleSelection.value = []
+  tableRef.value.clearSelection()
+}
+
+const topBtnRef = ref()
+const syncDisabled = computed(() => !multipleSelection.value.length)
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await setSync_api({
+    list: multipleSelection.value,
+    type: 2
+  })
+  topBtnRef.value.close(res.message)
+  clear()
+}
 </script>
 
 <style scoped lang="scss">
   .up2b-detail{
-    .top-tip{
-      font-size: 14px;
-      color: #363636;
-      line-height: 14px;
-      .red-color{
-        color:$colorred ;
-      }
-    }
-    .table{
-      margin-top: 30px;
+    height: 100%;
+    .mytable{
+      height: calc( 100% - 126px )
     }
   }
 </style>

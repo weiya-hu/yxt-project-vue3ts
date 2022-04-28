@@ -139,7 +139,7 @@ img{
 .mytable{
   .el-table{
     --el-table-border-color: #eee;
-    --el-table-row-hover-bg-color:rgba(45,104,235,0.10);
+    --el-table-row-hover-bg-color:#EAF0FD;
     thead{
       height: 40px;
       font-size: 14px;
@@ -397,6 +397,9 @@ img{
   }
   &.sdot_r{
     background-color: #E40000;
+  }
+  &.sdot_9{
+    background-color: #999;
   }
 }
 .btn_tab{

@@ -220,9 +220,9 @@ export const passReg = /^[A-Za-z0-9]*$/ // 数字或者字母
 /**
  * 预览图片
  * @imgs 图片数组
- * @index 要展示的图片在imgs里对应的索引
+ * @index 要展示的图片在imgs里对应的索引，默认0
 */
-export function lookImage(imgs:string[], index:number){
+export function lookImage(imgs:string[], index = 0){
   emiter.emit('lookImage', {imgs, index})
 }
 
@@ -304,4 +304,15 @@ export const downLoadVideo = (videoSrc:string, videoName?:string) => {
     a.remove()
     window.URL.revokeObjectURL(url);
   });
+}
+
+/**
+ * 获取状态
+*/
+export const KZ_STATUS = {
+  0: { text: '---', className: '' },
+  1: { text: '待处理', className: 'sdot_y' },
+  2: { text: '已受理', className: 'sdot_g' },
+  3: { text: '被驳回', className: 'sdot_r' },
+  4: { text: '已完结', className: 'sdot_b' }
 }

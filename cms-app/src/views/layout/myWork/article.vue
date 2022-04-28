@@ -30,12 +30,12 @@
         <el-table-column property="status" label="状态" width="180">
           <template #default="{row}">
             <div class="fcs">
-              <div class="dot" :class="getStatus(row.status).className"></div>
-              <div class="staus">{{getStatus(row.status).text}}</div>
+              <div class="status_dot" :class="KZ_MY_STATUS[row.status].className"></div>
+              <div>{{KZ_MY_STATUS[row.status].text}}</div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="150">
+        <el-table-column label="操作" fixed="right" width="150">
           <template #default="{row}">
             <div class="fcs">
               <el-link type="primary" @click="goDel(row.id)">删除</el-link>
@@ -66,6 +66,7 @@ import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import TopBtns from "@/components/TopBtns.vue";
 import { articleList_api, articleDel_api } from '@/api/myWork'
+import { KZ_MY_STATUS } from '@/utils/index'
 interface SData {
   id: number|string,
   thumb_url:string,
@@ -95,36 +96,6 @@ const multipleSelection = ref<SData[]>([])
 const handleSelectionChange = (val:SData[]) => {
   //表格选择
   multipleSelection.value = val
-}
-const getStatus = (type:number|string)=>{
-  const obj = ref<{text:string,className:string}>()
-  switch (Number(type)) {
-    case 2:
-      obj.value = {
-        text:'待审核',
-        className:'cyellow'
-      }
-      break;
-    case 3:
-      obj.value = {
-        text:'已通过',
-        className:'cdf'
-      }
-      break;
-    case 4:
-      obj.value = {
-        text:'已拒绝',
-        className:'cred'
-      }
-      break;
-    default:
-      obj.value = {
-        text:'草稿',
-        className:'cbbb'
-      }
-      break;
-  }
-  return obj.value
 }
 
 const delId = ref('')
@@ -173,24 +144,6 @@ export default { name:'我的作品库-软文' }
     width: 48px;
     height: 48px;
     border-radius: 4px;
-  }
-  .dot{
-    width: 8px;
-    height: 8px;
-    margin-right: 8px;
-    border-radius: 50%;
-  }
-  .cbbb{
-    background-color: $colorbbb;
-  }
-  .cyellow{
-    background-color: $coloryellow;
-  }
-  .cdf{
-    background-color: $dfcolor;
-  }
-  .cred{
-    background-color: $colorred;
   }
 }
 </style>

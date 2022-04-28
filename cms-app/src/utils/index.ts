@@ -206,3 +206,25 @@ export function getSource(source:number){
       break;
   }
 }
+
+/**
+ * 获取我的作品库状态
+*/
+export const KZ_MY_STATUS = {
+  0:{ text: '---', className: '' },
+  1:{ text: '草稿', className: 'status_df' },
+  2:{ text: '待处理', className: 'status_yellow' },
+  3:{ text: '已完结', className: 'status_blue' },
+  4:{ text: '被驳回', className: 'status_red' }
+}
+
+/**
+ * 获取状态
+*/
+export const KZ_STATUS = {
+  0:{ text: '---', className: '' },
+  1:{ text: '待处理', className: 'status_yellow' },
+  2:{ text: '已受理', className: 'status_green' },
+  3:{ text: '被驳回', className: 'status_red' },
+  4:{ text: '已完结', className: 'status_blue' }
+}

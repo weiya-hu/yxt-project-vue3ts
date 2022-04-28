@@ -1,11 +1,13 @@
 <template>
-  <div class="teldata_details_c">
-    <FindNumber :total="total"/>
+  <div class="teldata_details_c" v-loading="loading">
+    <TopBtns :total="total" syncbtn @sync="setSync" ref="topBtnRef" :sync-api="getSyncInfo_api" :sync-disabled="syncDisabled" class="topbtns"/>
     <div class="mytable">
       <el-table
         :data="tableData"
         style="width: 100%"
+        height="100%"
         @selection-change="handleSelectionChange"
+        ref="tableRef"
       >
         <el-table-column type="selection" width="50" />
         <el-table-column property="id" label="ID" />
@@ -30,17 +32,17 @@
         </template>
       </el-table>
     </div>
-    <MyPage :total="total" v-model="page" @change="changePage"/>
+    <MyPage :total="total" :size="50" v-model="page" @change="changePage"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref ,computed } from 'vue'
 import { formatDate } from '@/utils/date'
-import FindNumber from "@/components/FindNumber.vue";
+import TopBtns from "@/components/TopBtns.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
-import { getInsetUserList_api } from '@/api/findC'
+import { getInsetUserList_api, setSync_api, getSyncInfo_api } from '@/api/findC'
 import {useRoute} from 'vue-router'
 import { mainStore } from '@/store/index'
 import { getHashStr,strToArr,getSource} from '@/utils/index'
@@ -62,9 +64,11 @@ const tableData = ref<IData[]>([])
 const route = useRoute()
 const total = ref(0)
 const page = ref(1)
+const loading = ref(false)
 const getList = ()=>{
+  loading.value = true
   getInsetUserList_api({
-    size: 10,
+    size: 50,
     current: page.value,
     did:route.query.id
   }).then((res:res)=>{
@@ -72,6 +76,9 @@ const getList = ()=>{
       total.value = res.body.total
       tableData.value = res.body.records
     }
+    loading.value = false
+  }).catch(()=>{
+    loading.value = false
   })
 }
 getList()
@@ -79,17 +86,34 @@ getList()
 const changePage =()=>{
   getList()
 }
-const multipleSelection = ref<IData[]>([])
+const multipleSelection = ref<(string|number)[]>([])
 const handleSelectionChange = (val:IData[]) => {
-  multipleSelection.value = val
+  multipleSelection.value = val.map(v => v.id)
+}
+
+const tableRef = ref()
+const clear = () => {
+  multipleSelection.value = []
+  tableRef.value.clearSelection()
+}
+
+const topBtnRef = ref()
+const syncDisabled = computed(() => !multipleSelection.value.length)
+const setSync = async () => {
+  topBtnRef.value.setLoading(true)
+  const res = await setSync_api({
+    list: multipleSelection.value
+  })
+  topBtnRef.value.close(res.message)
+  clear()
 }
 </script>
 
 <style scoped lang="scss">
 .teldata_details_c{
+  height: 100%;
   .mytable{
-    margin-top: 30px;
+    height: calc( 100% - 126px )
   }
-
 }
 </style>

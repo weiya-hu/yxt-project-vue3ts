@@ -46,16 +46,18 @@ const props = withDefaults(defineProps<{
   maxSize:10
 })
 
-//upOneSuccess：上传单个图片成功后，返回文件地址和添加图片的个数；error：上传发生错误，返回错误；look：点击预览图片，返回图片blob地址数组和点击的图片下标
+//upOneSuccess：上传单个图片成功后，返回文件地址和添加图片的个数 和图片名；error：上传发生错误，返回错误；look：点击预览图片，返回图片blob地址数组和点击的图片下标
 const emit = defineEmits(['upOneSuccess','error','look'])
 
 const imgs = ref<UploadFile[]>([])
 const upload = ref()//上传组件ref
 
+const fxname = ref('')
 const upChange = (file: UploadFile, fileList: UploadFile[])=>{
   console.log('change');
   
-  const exname=file.name.substring(file.name.lastIndexOf("."))
+  const exname=file.name.substring(file.name.lastIndexOf(".")) // 后缀名
+  fxname.value = file.name.substring(0, file.name.indexOf(".")) // 图片名
   if(props.exnameList.indexOf(exname) == -1){
     upload.value.handleRemove(file)
     errMsg('图片格式错误！')
@@ -114,7 +116,7 @@ const upOneImg = async (file:UploadFile)=>{
       const url = res.body.host + '/' + res.body.dir + '/' + res.body.uuid + exname
       filePath.push(url);
       //父组件内部去判断是否全部上传完成，因为上传成功后再走提交接口是个异步操作
-      emit('upOneSuccess',url,imgs.value.length)
+      emit('upOneSuccess', url, imgs.value.length, fxname.value)
       return Promise.resolve(url)
     }else{
       return Promise.reject(file.name+'上传失败')

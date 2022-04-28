@@ -61,7 +61,7 @@ export function get(module:string, url: string, params?: any, showmsg?: boolean)
     axios
       .get(url, { headers:{ MODULE: module }, params })
       .then((res) => {
-        if (showmsg && res.data.errno != 10200) {
+        if (showmsg && res.data && res.data.status == 1) {
           ElMessage({
             showClose: true,
             message: res.data.message,
@@ -84,7 +84,7 @@ export function post(module:string, url: string, params?: any, showmsg?: boolean
     axios
       .post(url, params, { headers:{ MODULE: module } })
       .then((res) => {
-        if (showmsg && res.data.errno != 10200) {
+        if (showmsg && res.data && res.data.status == 1) {
           ElMessage({
             showClose: true,
             message: res.data.message,
