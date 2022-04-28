@@ -44,19 +44,20 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="状态：" prop="status">
-              <el-select v-model="newsForm.status" placeholder="请选择" @change="getPass">
+            <el-form-item label="状态：" prop="reslut">
+              <el-select v-model="newsForm.reslut" placeholder="请选择" @change="getPass">
                 <el-option label="草稿" value="0" />
                 <el-option label="审核中" value="1" />
                 <el-option label="驳回" value="2" />
-                <el-option label="已通过" value="3" />
+                <el-option label="已通过" value="-1" />
               </el-select>
             </el-form-item>
-            <el-form-item label="审核结果：" prop="reslut">
+            <el-form-item label="审核结果：">
               <el-select
-                v-model="newsForm.reslut"
+                v-model="searchStatus"
                 placeholder="请选择"
-                :disabled="Number(newsForm.status) != 3"
+                :disabled="Number(newsForm.reslut) != -1"
+                @change="changeStatus"
               >
                 <el-option label="离线" value="3" />
                 <el-option label="在线" value="4" />
@@ -78,8 +79,8 @@
           <div class="fsc f1">
             <span>资讯列表</span>
             <div class="news-tips">
-              <span>线上咨讯：{{ statisticsDate.audit }}</span>
-              <span>待审核：{{ statisticsDate.online }}</span>
+              <span>线上咨讯：{{ statisticsDate.online }}</span>
+              <span>待审核：{{ statisticsDate.audit }}</span>
               <span>今日新增：{{ statisticsDate.increase }}</span>
             </div>
           </div>
@@ -282,6 +283,7 @@ import { Edit, Delete } from '@element-plus/icons-vue'
 import drag_a from '@/assets/images/drag.png'
 import tips from '@/assets/images/news-tips.png'
 import draggable from 'vuedraggable'
+
 import {
   news_api,
   statistics_api,
@@ -311,9 +313,15 @@ const newsForm = reactive({
   status: '',
   reslut: '',
 })
-const getPass = () => {
-  newsForm.reslut = ''
+const searchStatus = ref('')
+const getPass = (val: string) => {
+  val === '-1' ? (newsForm.status = '3') : (newsForm.status = '')
+  searchStatus.value = newsForm.status
 }
+const changeStatus = (val: string) => {
+  newsForm.status = val
+}
+
 const newsData = ref<SData[]>([])
 const newsList = async () => {
   const res = await news_api({
@@ -328,6 +336,9 @@ const newsList = async () => {
 }
 newsList()
 const wordSearch = () => {
+  if (newsForm.reslut !== '-1') {
+    newsForm.status = newsForm.reslut
+  }
   newsList()
 }
 const statisticsDate = ref<any>({})
