@@ -1,16 +1,14 @@
 <template>
-  <div class="article_details">
+  <div class="article_add">
     <DetailsHeader />
     <el-card>
       <div class="content">
         <div class="title">{{ body.title }}</div>
         <div v-html="body.content"></div>
         <div class="fjend btns twos">
-          <el-button size="large" @click="$router.push('/cms/resource')"
-            >&ensp;返回&ensp;</el-button
-          >
-          <el-button size="large" type="primary" @click="$router.push(`/cms/resourceedit?id=${id}`)"
-            >&ensp;编辑&ensp;</el-button
+          <el-button class="bdc_btn" @click="$router.push('/cms/resource')">返回</el-button>
+          <el-button type="primary" @click="$router.push(`/cms/resourceedit?id=${id}`)"
+            >编辑</el-button
           >
         </div>
       </div>
@@ -42,7 +40,7 @@ export default { name: '资源内容库软文详情' }
 </script>
 
 <style scoped lang="scss">
-.article_details {
+.article_add {
   .content {
     background-color: #fff;
     border-radius: 6px;

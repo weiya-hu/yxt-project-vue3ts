@@ -3,11 +3,7 @@
     <div class="fsc">
       <DetailsHeader />
     </div>
-    <div class="btns fjend">
-      <el-button class="bdc_btn" @click="$router.push('/cms/resource')">返回</el-button>
-      <el-button class="bdc_btn" @click="submit(1)">保存</el-button>
-      <el-button type="primary" :disabled="!aForm.industry_id" @click="submit(2)">发布</el-button>
-    </div>
+
     <div class="addform">
       <div class="tip fcs">
         <img :src="tip_i" alt="" />
@@ -42,7 +38,7 @@
               <el-radio :label="1">免费下载</el-radio>
               <el-radio :label="2">弹窗二维码</el-radio>
             </el-radio-group>
-            <el-form-item prop="qr_code" style="margin-left: 100px">
+            <el-form-item prop="qr_code">
               <MediaUpload
                 v-if="qrShow"
                 v-show="aForm.down_type == 2"
@@ -61,6 +57,11 @@
           </div>
         </el-form-item>
       </el-form>
+      <div class="btns fjend">
+        <el-button class="bdc_btn" @click="$router.push('/cms/resource')">返回</el-button>
+        <el-button class="bdc_btn" @click="submit(1)">保存</el-button>
+        <el-button type="primary" :disabled="!aForm.industry_id" @click="submit(2)">发布</el-button>
+      </div>
     </el-card>
   </div>
 </template>
@@ -244,6 +245,9 @@ const onChangeQr = () => {
         margin-right: 8px;
       }
     }
+  }
+  .btns {
+    margin-top: 20px;
   }
 }
 </style>
