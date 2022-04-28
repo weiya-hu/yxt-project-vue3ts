@@ -14,10 +14,10 @@
          <el-table-column fixed="right" property="operate" label="操作" min-width="100">
           <template #default="{row}">
             <div class="operate-button-pre">
-              <div v-if="row.status===3"  class="operate-button marginr" @click="toDetail(row)">查看</div>
-              <div v-if="row.status!==1"  class="operate-button marginr" @click="deleteBt(row)">删除</div>
-              <div v-if="row.status===2"  class="operate-button " @click="reject(row)">驳回原因</div>
-              <div v-if="row.status===1">---</div>
+              <div v-if="row.status===4"  class="operate-button marginr" @click="toDetail(row)">查看</div>
+              <div v-if="row.status!==2"  class="operate-button marginr" @click="deleteBt(row)">删除</div>
+              <div v-if="row.status===3"  class="operate-button " @click="reject(row)">驳回原因</div>
+              <div v-if="row.status===2">---</div>
             </div>
           </template>
         </el-table-column>
