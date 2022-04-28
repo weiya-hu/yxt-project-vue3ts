@@ -106,13 +106,28 @@ export const overseasCountry = (): Promise<res> => {
 }
 
 //找b端上传客户
-export const businessUpload = (data: {
-  attachment: string
-  batch?: number
-  days?: number
-  demand_id: number
-  show_type: number
-  upload_type: number
-}): Promise<res> => {
+export const businessUpload = (data: IUpUser): Promise<res> => {
   return post(1, '/dmp/business/upload.do', data, true)
 }
+
+//找渠道上传客户
+export const channelUpload = (data: IUpUser): Promise<res> => {
+  return post(1, '/dmp/channel/upload.do', data, true)
+}
+
+//找项目上传客户
+export const itemUpload = (data: IUpUser): Promise<res> => {
+  return post(1, '/dmp/item/upload.do', data, true)
+}
+
+//找海外采购商上传客户
+export const overseasPurchaseUpload = (data: IUpUser): Promise<res> => {
+  return post(1, '/dmp/overseas/purchase/upload.do', data, true)
+}
+
+//找海外供应商上传客户
+export const overseasSupplyUpload = (data: IUpUser): Promise<res> => {
+  return post(1, '/dmp/overseas/supply/upload.do', data, true)
+}
+
+

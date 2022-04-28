@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 // eslint-disable-next-line camelcase
-import { channelPage_api, channelPass_api, channelReject_api } from '@/api/dmp/findb'
+import { channelPage_api, channelPass_api, channelReject_api, channelUpload } from '@/api/dmp/findb'
 import Mypage from '@/components/Mypage.vue'
 import Search from '@/components/Search.vue'
 import MyDataTable from '@/components/MyDataTable.vue'
@@ -185,7 +185,8 @@ const upUser = (row: any) => {
 //上传客户点击确认，附件上传成功后
 const upUserSuccess = async (val: any) => {
   // eslint-disable-next-line no-console
-  console.log(val)
+  const { status } = await channelUpload({ ...val, demand_id: upUserId.value })
+  status && getList()
 }
 </script>
 

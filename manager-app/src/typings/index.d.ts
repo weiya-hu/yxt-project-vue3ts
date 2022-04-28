@@ -53,3 +53,16 @@ interface IArticleForm {
   thumb_url?:string,
   [propName: string]: any
 }
+
+/**
+ * @name 上传客户类型
+*/
+interface IUpUser {
+  attachment: string
+  batch?: number
+  days?: number
+  money?: number
+  demand_id: number
+  show_type: number
+  upload_type: number
+}

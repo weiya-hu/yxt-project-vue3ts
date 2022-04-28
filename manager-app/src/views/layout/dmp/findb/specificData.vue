@@ -199,8 +199,6 @@ const upUser = (row: any) => {
 
 //上传客户点击确认，附件上传成功后
 const upUserSuccess = async (val: any) => {
-  // eslint-disable-next-line no-console
-  console.log(val)
   const { status } = await businessUpload({ ...val, demand_id: upUserId.value })
   status && getList()
 }
