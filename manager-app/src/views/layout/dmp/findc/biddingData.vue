@@ -18,29 +18,13 @@
           <el-table-column property="group_desc" label="人群描述" />
           <el-table-column property="status" label="处理状态">
             <template #default="{ row }">
-              <div class="fcs ss">
+              <div class="fcs">
                 <div
-                  class="point"
-                  :style="
-                    row.status == 1
-                      ? 'background:#FFBF00'
-                      : row.status == 2
-                      ? 'background:#24BD13'
-                      : row.status == 4
-                      ? 'background:#2D68EB'
-                      : 'background:#E40000'
-                  "
+                  class="status_dot"
+                  :class="KZ_STATUS[row.status].className && KZ_STATUS[row.status].className"
                 ></div>
                 <div>
-                  {{
-                    row.status == 1
-                      ? '待处理'
-                      : row.status == 2
-                      ? '已受理'
-                      : row.status == 4
-                      ? '已完结'
-                      : '被驳回'
-                  }}
+                  {{ KZ_STATUS[row.status].text && KZ_STATUS[row.status].text }}
                 </div>
               </div>
             </template>
@@ -64,7 +48,7 @@
               <div>{{ formatDate(new Date(row.create_time), 'yyyy-MM-dd') }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="220" fixed="right">
+          <el-table-column label="操作" width="220">
             <template #default="{ row }">
               <div class="fcc">
                 <el-link
@@ -118,6 +102,7 @@ import { biddingList_api, biddingPass_api, biddingReject_api, biddingUp_api } fr
 import { ElMessageBox } from 'element-plus'
 import Refuse from '@/components/Refuse.vue'
 import UpUser from '@/components/UpUser.vue'
+import { KZ_STATUS } from '@/utils/index'
 const sourceObj = {
   1: '康州数智',
   2: '第三方数据',
@@ -226,19 +211,11 @@ const upUserSuccess = async (val: any) => {
 </script>
 
 <style scoped lang="scss">
-.ss {
-  margin: 20px 0;
-  font-size: 14px;
-  .point {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    background: #24bd13;
-    border-radius: 50%;
-    margin: 7px 15px 3px 0;
-  }
-}
 .mycard {
   margin-top: 10px;
+  .ss {
+    margin: 20px 0;
+    font-size: 14px;
+  }
 }
 </style>

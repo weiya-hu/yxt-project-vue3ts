@@ -41,7 +41,7 @@
           <el-table-column property="signature" label="个性签名" />
           <el-table-column property="create_time" label="上传日期">
             <template #default="{ row }">
-              <div>{{ formatDate(new Date(row.create_time), 'yyyy-MM-dd') }}</div>
+              <div>{{ formatDate(new Date(row.create_time), 'yyyy-MM-dd hh:mm:ss') }}</div>
             </template>
           </el-table-column>
         </el-table>
