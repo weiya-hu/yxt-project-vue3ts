@@ -1,6 +1,6 @@
 <template>
   <div class="mytable">
-    <search @search="searchword" v-model="inputSearch" @reset="resetSearch">
+    <search v-model="inputSearch" @search="searchword" @reset="resetSearch">
       <el-option label="待处理" value="1" />
       <el-option label="已受理" value="2" />
       <el-option label="被驳回" value="3" />
@@ -8,11 +8,11 @@
     </search>
     <el-card class="mycard mt20">
       <el-table
+        v-loading="loading"
         :data="tableList"
         border
         style="width: 100%"
         row-class-name="my-data-table-row"
-        v-loading="loading"
       >
         <MyDataTable
           v-for="(item, index) in tableTitle"
@@ -25,18 +25,20 @@
         <el-table-column width="150" label="操作">
           <template #default="{ row }">
             <div class="fcs">
-              <el-link type="primary" v-if="row.status == 2" @click="videoEdit(row.id)"
+              <el-link v-if="row.status == 2" type="primary" @click="videoEdit(row.id)"
                 >编辑</el-link
               >
               <el-link
+                v-if="row.status == 3"
                 type="primary"
                 @click=";(errorMsg = row.fail_reason), (errorShow = true)"
-                v-if="row.status == 3"
                 >驳回原因</el-link
               >
-              <el-link type="primary" v-if="row.status == 4" @click="look(row.id)">详情</el-link>
+              <el-link v-if="row.status == 4" type="primary" @click="look(row.id)">详情</el-link>
               <div v-if="row.status == 1">
-                <el-link type="primary" class="fcss" @click="getData(row.id)">下载附件</el-link>
+                <el-link v-if="row.attach_url" type="primary" class="fcss" @click="getData(row.id)"
+                  >下载附件</el-link
+                >
                 <el-link type="primary" class="fcss" @click="pass(row.id)">通过</el-link>
                 <el-link type="primary" @click="refuse(row.id)">驳回</el-link>
               </div>
@@ -47,18 +49,18 @@
           <MyEmpty />
         </template>
       </el-table>
-      <MyPage :total="totle" v-model:page="page" @change="getList" v-model:size="size" />
+      <MyPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
     </el-card>
     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1" />
     <el-dialog v-model="dialogVisible" title="详情视频" width="500px">
-      <div class="img-dialog" v-if="showImgs">
+      <div v-if="showImgs" class="img-dialog">
         <video
-          style="width: 125px; height: 135px"
-          cover
           v-for="url in showImgs"
           :key="url"
+          style="width: 125px; height: 135px"
+          cover
           :src="url"
-          @click="watchVideo(url)"
+          @click="lookVideo(url)"
         ></video>
       </div>
       <template #footer>
@@ -67,20 +69,11 @@
         </span>
       </template>
     </el-dialog>
-    <el-dialog
-      v-model="lookShow"
-      title="查看视频"
-      fullscreen
-      @close="videoSrc = ''"
-      custom-class="videobox"
-    >
-      <video :src="videoSrc" controls class="show_video"></video>
-    </el-dialog>
     <el-dialog v-model="addShow" title="编辑视频" width="380px" @close="close">
       <el-form :model="addForm">
         <el-form-item label="选择素材" required label-width="90px">
           <div class="sel_pool fcc" @click="showKzPool('video_custom', 2)">
-            <div class="poolbox" v-if="addPool.id">
+            <div v-if="addPool.id" class="poolbox">
               <img :src="addPool.cover_url || addPool.source_url" alt="" />
               <div
                 class="lookicon fcc lookhover"
@@ -89,14 +82,14 @@
                 <el-icon size="14px"><zoom-in /></el-icon>
               </div>
               <div
-                class="videoicon fcc lookhover"
                 v-if="addPool.source_type == 2"
+                class="videoicon fcc lookhover"
                 @click.stop="lookVideo(addPool.source_url)"
               >
                 <el-icon size="20px"><caret-right /></el-icon>
               </div>
             </div>
-            <div class="fc fcc" v-else>
+            <div v-else class="fc fcc">
               <el-icon><plus /></el-icon>
               <div class="file_name">点击添加</div>
             </div>
@@ -104,7 +97,7 @@
         </el-form-item>
         <div class="fcs btns fjend mt20">
           <el-button @click="close">取消</el-button>
-          <el-button type="primary" @click="setBanner(1)" :disabled="!addPool.id">提交</el-button>
+          <el-button type="primary" :disabled="!addPool.id" @click="setBanner(1)">提交</el-button>
         </div>
       </el-form>
     </el-dialog>
@@ -178,14 +171,14 @@ const pass = async (id: string | number) => {
   getList()
 }
 // 驳回弹出框
-let refuseShow = ref(false)
-let refuseId = ref()
+const refuseShow = ref(false)
+const refuseId = ref()
 const refuse = (id: string) => {
   refuseShow.value = true
   refuseId.value = id
 }
 const refuseSuccess = async (val: string) => {
-  let data = {
+  const data = {
     id: refuseId.value,
     fail_reason: val,
   }
@@ -215,13 +208,6 @@ const look = async (id: string) => {
   }
   dialogVisible.value = true
 }
-// 查看视频
-const lookShow = ref(false)
-const videoSrc = ref('') //视频地址
-const watchVideo = (url: string) => {
-  videoSrc.value = url
-  lookShow.value = true
-}
 // 编辑视频
 const editId = ref('')
 const addShow = ref(false)
@@ -240,7 +226,7 @@ emiter.on('video_custom', (val: KzPool) => {
   addPool.value = val
 })
 const setBanner = async (type: 0 | 1, order_id?: number | string) => {
-  let videoPool: string[] = []
+  const videoPool: string[] = []
   videoPool.push(addPool.value.source_url)
   const { status } = await articleVideosave_api({
     order_id: editId.value,

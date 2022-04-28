@@ -1,6 +1,6 @@
 <template>
   <div class="mytable">
-    <search @search="searchword" v-model="inputSearch" @reset="resetSearch">
+    <search v-model="inputSearch" @search="searchword" @reset="resetSearch">
       <el-option label="待处理" value="1" />
       <el-option label="已受理" value="2" />
       <el-option label="被驳回" value="3" />
@@ -8,11 +8,11 @@
     </search>
     <el-card class="mycard mt20">
       <el-table
+        v-loading="loading"
         :data="tableList"
         border
         style="width: 100%"
         row-class-name="my-data-table-row"
-        v-loading="loading"
       >
         <MyDataTable
           v-for="(item, index) in tableTitle"
@@ -26,20 +26,22 @@
           <template #default="{ row }">
             <div class="fcs">
               <el-link
-                type="primary"
                 v-if="row.status == 2"
+                type="primary"
                 @click="imageEit(row.id, row.attach_url)"
                 >编辑</el-link
               >
               <el-link
+                v-if="row.status == 3"
                 type="primary"
                 @click=";(errorMsg = row.fail_reason), (errorShow = true)"
-                v-if="row.status == 3"
                 >驳回原因</el-link
               >
-              <el-link type="primary" v-if="row.status == 4" @click="look(row.id)">详情</el-link>
+              <el-link v-if="row.status == 4" type="primary" @click="look(row.id)">详情</el-link>
               <div v-if="row.status == 1">
-                <el-link type="primary" class="fcss" @click="getData(row.id)">下载附件</el-link>
+                <el-link v-if="row.attach_url" type="primary" class="fcss" @click="getData(row.id)"
+                  >下载附件</el-link
+                >
                 <el-link type="primary" class="fcss" @click="pass(row.id)">通过</el-link>
                 <el-link type="primary" @click="refuse(row.id)">驳回</el-link>
               </div>
@@ -50,17 +52,18 @@
           <MyEmpty />
         </template>
       </el-table>
-      <MyPage :total="totle" v-model:page="page" @change="getList" v-model:size="size" />
+      <MyPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
     </el-card>
     <el-dialog v-model="dialogVisible" title="详情图片" width="510px">
-      <div class="img-dialog" v-if="showImgs">
+      <div v-if="showImgs" class="img-dialog">
         <el-image
+          v-for="(url, index) in showImgs"
+          :key="url"
           style="width: 120px; height: 135px; margin-top: 10px"
           fit
-          v-for="url in showImgs"
-          :key="url"
           :src="url"
           :preview-src-list="showImgs"
+          :initial-index="index"
         >
           <template #error>
             <div class="image-slot">
@@ -79,12 +82,13 @@
       v-model="addShow"
       title="编辑图片"
       width="510px"
-      @close="close"
       custom-class="upimgs"
+      @close="close"
     >
       <el-form :model="addForm">
         <el-form-item label="图片上传" label-width="90px">
           <el-upload
+            ref="upload"
             action="#"
             :auto-upload="false"
             :limit="9"
@@ -94,7 +98,6 @@
             :on-preview="lookimgs"
             :on-remove="upRemove"
             :accept="imgTypes.join(',')"
-            ref="upload"
             class="upbox"
           >
             <div class="fc fcc">
@@ -109,14 +112,14 @@
       </div>
       <div class="fcs btns fjend">
         <el-button @click="close">取消</el-button>
-        <el-button type="primary" @click="goSubmit" :disabled="!imgs.length">提交</el-button>
+        <el-button type="primary" :disabled="!imgs.length" @click="goSubmit">提交</el-button>
       </div>
     </el-dialog>
     <el-image-viewer
-      @close="imgShow = false"
       v-if="imgShow"
       :url-list="showImgs"
       :initial-index="showImgIndex"
+      @close="imgShow = false"
     />
     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1" />
     <Refuse v-model="refuseShow" @success="refuseSuccess" />
@@ -189,14 +192,14 @@ const pass = async (id: string | number) => {
   getList()
 }
 // 驳回弹出框
-let refuseShow = ref(false)
-let refuseId = ref()
+const refuseShow = ref(false)
+const refuseId = ref()
 const refuse = (id: string) => {
   refuseShow.value = true
   refuseId.value = id
 }
 const refuseSuccess = async (val: string) => {
-  let data = {
+  const data = {
     id: refuseId.value,
     fail_reason: val,
     status: 4,
@@ -221,7 +224,7 @@ const showImgs = ref<string[]>([]) //详情图片和预览列表
 const look = async (id: string) => {
   const res = await articleDetail_api({ id })
   console.log(res)
-  let arr: string[] = []
+  const arr: string[] = []
   if (res.status == 1) {
     showImgs.value = res.body.list
   }
@@ -261,7 +264,7 @@ const upRemove = (file: UploadFile, fileList: UploadFile[]) => {
   console.log(imgs.value)
 }
 const lookimgs = (file: UploadFile) => {
-  let arr: string[] = []
+  const arr: string[] = []
   imgs.value.forEach((v) => {
     arr.push(v.url!)
   })
@@ -309,12 +312,10 @@ const upOneImg = async (file: UploadFile, order_id: string, urls: any[]) => {
       filePath.push(oneUrl)
       // const oneRes:res = await articleImagsave_api({urls: oneUrl,order_id:id})
       return Promise.resolve(oneUrl)
-    } else {
-      return Promise.reject(file.name + '上传失败')
     }
-  } else {
-    return Promise.reject('获取上传配置失败')
+    return Promise.reject(file.name + '上传失败')
   }
+  return Promise.reject('获取上传配置失败')
 }
 const goSubmit = async (order_id: string, urls: any[]) => {
   loading.value = true

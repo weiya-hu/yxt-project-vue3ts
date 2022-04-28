@@ -18,7 +18,7 @@
                 :src="row.video_url"
                 alt=""
                 class="firstimg"
-                @click="look(row.video_url, row.id)"
+                @click="lookVideo(row.video_url)"
               />
             </template>
           </el-table-column>
@@ -38,7 +38,7 @@
           <el-table-column label="操作">
             <template #default="{ row }">
               <div v-if="row.status == 3" class="fcs">
-                <el-link type="primary" @click="look(row.video_url, row.id)">详情</el-link>
+                <el-link type="primary" @click="lookVideo(row.video_url)">详情</el-link>
               </div>
               <div v-if="row.status == 2" class="fcs">
                 <el-link type="primary" @click="pass(row.id)">通过</el-link>
@@ -61,15 +61,6 @@
     </el-card>
 
     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1" />
-    <el-dialog
-      v-model="lookShow"
-      title="查看视频"
-      fullscreen
-      custom-class="videobox"
-      @close="lookVideo = ''"
-    >
-      <video :src="lookVideo" controls class="show_video"></video>
-    </el-dialog>
     <Refuse v-model="refuseShow" @success="refuseSuccess" />
   </div>
 </template>
@@ -82,7 +73,7 @@ import search from '@/components/Search.vue'
 import Refuse from '@/components/Refuse.vue'
 import MyPage from '@/components/MyPage.vue'
 import MyDialog from '@/components/MyDialog.vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { lookVideo } from '@/utils/index'
 import { videoList_api, videoUpdate_api, videoDetail_api } from '@/api/cms/myWork'
 interface SData {
   id: number | string
@@ -111,14 +102,6 @@ const searchword = () => {
 const resetSearch = () => {
   ;(inputSearch.userName = ''), (inputSearch.status = ''), (inputSearch.create_time = '')
   getList()
-}
-// 查看视频视频详情
-const lookShow = ref(false)
-const lookVideo = ref('')
-const look = async (url: string, id: string) => {
-  await videoDetail_api({ id })
-  lookVideo.value = url
-  lookShow.value = true
 }
 // 获取列表
 const getList = async () => {

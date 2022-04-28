@@ -42,7 +42,7 @@
           <el-table-column label="操作">
             <template #default="{ row }">
               <div v-if="row.status == 3" class="fcs">
-                <el-link type="primary" @click="go(row.thumb_url, row.id)">详情</el-link>
+                <el-link type="primary" @click="lookImage([row.thumb_url], 0)">详情</el-link>
               </div>
               <div v-if="row.status == 2" class="fcs">
                 <el-link type="primary" @click="pass(row.id)">通过</el-link>
@@ -65,12 +65,6 @@
     </el-card>
 
     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1" />
-    <el-image-viewer
-      v-if="imgShow"
-      :url-list="showImgs"
-      :initial-index="showImgIndex"
-      @close="imgShow = false"
-    />
     <Refuse v-model="refuseShow" @success="refuseSuccess" />
   </div>
 </template>
@@ -107,19 +101,6 @@ const inputSearch = reactive({
 const searchword = () => {
   page.value = 1
   getList()
-}
-// 查看详情
-const imgShow = ref(false) //预览是否显示
-const showImgs = ref<string[]>([]) //预览图片列表
-const showImgIndex = ref(0) //首张预览图片
-const go = async (url: string, id: string) => {
-  // window.open(url)
-  const arr: string[] = []
-  const res = await imagesDetail_api({ id })
-  arr.push(res.body.thumb_url)
-  showImgs.value = arr
-  showImgIndex.value = showImgs.value.findIndex((v) => v == url)
-  imgShow.value = true
 }
 // 重置
 const resetSearch = () => {
@@ -165,7 +146,7 @@ const getList = async () => {
     startTime: inputSearch.create_time[0],
     endTime: inputSearch.create_time[1],
   })
-
+  console.log(res)
   if (res.status == 1) {
     tableData.value = res.body.records
     total.value = res.body.total

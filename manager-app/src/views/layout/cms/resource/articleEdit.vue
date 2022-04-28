@@ -3,23 +3,35 @@
     <div class="fsc">
       <DetailsHeader />
     </div>
+    <div class="btns fjend">
+      <el-button class="bdc_btn" @click="$router.push('/cms/resource')">返回</el-button>
+      <el-button class="bdc_btn" @click="submit(1)">保存</el-button>
+      <el-button type="primary" :disabled="!aForm.industry_id" @click="submit(2)">发布</el-button>
+    </div>
+    <div class="addform">
+      <div class="tip fcs">
+        <img :src="tip_i" alt="" />
+        <span
+          >请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</span
+        >
+      </div>
+      <KzAddArticle ref="addRef" needimg needdigest @success="subSuccess" />
+    </div>
 
-    <KzAddArticle ref="addRef" needimg needdigest @success="subSuccess" />
-
-    <el-card class="mycard mt20" v-loading="loading">
+    <el-card v-loading="loading" class="mycard mt20">
       <div class="form_title">内容设置</div>
       <el-form ref="aFormRef" :model="aForm" :rules="aRules" hide-required-asterisk>
         <div class="fcs">
           <el-form-item label="第三方URL链接：" prop="url" class="mr20">
-            <el-input placeholder="请输入第三方URL链接" v-model="aForm.url"></el-input>
+            <el-input v-model="aForm.url" placeholder="请输入第三方URL链接"></el-input>
           </el-form-item>
           <el-form-item label="第三方URL秘钥：" prop="url_key">
-            <el-input placeholder="请输入第三方URL秘钥" v-model="aForm.url_key"></el-input>
+            <el-input v-model="aForm.url_key" placeholder="请输入第三方URL秘钥"></el-input>
           </el-form-item>
         </div>
         <el-form-item label="行业分类：" prop="industry_id">
           <el-radio-group v-model="aForm.industry_id">
-            <el-radio :label="item.id" v-for="item in industry" :key="item.id">{{
+            <el-radio v-for="item in industry" :key="item.id" :label="item.id">{{
               item.industry_name
             }}</el-radio>
           </el-radio-group>
@@ -33,33 +45,29 @@
             <el-form-item prop="qr_code" style="margin-left: 100px">
               <MediaUpload
                 v-if="qrShow"
-                :max="1"
                 v-show="aForm.down_type == 2"
+                ref="upload"
+                :max="1"
+                :exname-list="exnameList"
+                :img-list="aForm.qr_code ? [aForm.qr_code] : []"
+                :msg="'只能上传' + exnameList.join('、') + '图片，不超过2M'"
                 @upOneSuccess="upOne"
                 @error="upError"
                 @look="upLook"
                 @del="aForm.qr_code = ''"
                 @change="onChangeQr"
-                :exname-list="exnameList"
-                :img-list="aForm.qr_code ? [aForm.qr_code] : []"
-                :msg="'只能上传' + exnameList.join('、') + '图片，不超过2M'"
-                ref="upload"
               />
             </el-form-item>
           </div>
         </el-form-item>
       </el-form>
-      <div class="btns fjend">
-        <el-button class="bdc_btn" @click="$router.push('/cms/resource')">返回</el-button>
-        <el-button class="bdc_btn" @click="submit(1)">保存</el-button>
-        <el-button type="primary" @click="submit(2)" :disabled="!aForm.industry_id">发布</el-button>
-      </div>
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import tip_i from '@/assets/images/tip.png'
 import { useRoute, useRouter } from 'vue-router'
 import MediaUpload from '@/components/MediaUpload.vue'
 import DetailsHeader from '@/components/DetailsHeader.vue'
@@ -208,6 +216,33 @@ const onChangeQr = () => {
   .is-error {
     :deep(.el-upload--picture-card) {
       border-color: var(--el-color-danger);
+    }
+  }
+  .addform {
+    span {
+      font-size: 12px;
+      font-weight: 400;
+      color: $color999;
+      margin-left: 22px;
+    }
+    .tip {
+      position: relative;
+      left: 115px;
+      top: 529px;
+      background-color: #fff8e5;
+      color: $color666;
+      border: 1px solid rgba(255, 191, 0, 1);
+      border-radius: 2px;
+      font-size: 12px;
+      height: 30px;
+      width: 1056px;
+      line-height: 14px;
+      padding-left: 12px;
+      img {
+        width: 14px;
+        height: 14px;
+        margin-right: 8px;
+      }
     }
   }
 }
