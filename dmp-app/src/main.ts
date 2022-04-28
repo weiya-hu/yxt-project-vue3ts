@@ -40,7 +40,7 @@ store.getYxtUrl().then((url:any)=>{
   }).catch((error: boolean) => {
     errMsg('请登录后在使用')
     setTimeout(() => {
-      // window.location.href = `//${url.user}/app/login?url=${encodeURIComponent('//' + url.dmp + '/index')}`
+      window.location.href = `//${url.user}/app/login?url=${encodeURIComponent('//' + url.dmp + '/index')}`
     }, 2000);
   })
 })

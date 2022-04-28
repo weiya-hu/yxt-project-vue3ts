@@ -1,0 +1,1 @@
+import{b as s}from"./index.eda3de22.js";const e=e=>s("cms","/cms/res.page",e),a=e=>s("user","/public/res.get",e),r=e=>s("cms","/cms/res/download.do",e),c=()=>s("cms","/cms/industry.list");export{e as a,r as d,c as i,a as r};

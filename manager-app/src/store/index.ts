@@ -57,16 +57,16 @@ export const mainStore = defineStore('mainStore', () => {
       getUserInfo().then((res:res)=>{
         if(res.status == 1){
           state.userInfo = res.body
-          localStorage.setItem('islogin', '1')
+          sessionStorage.setItem('islogin', '1')
           resolve(state.userInfo)
         }else{
           state.userInfo = {}
-          localStorage.removeItem('islogin')
+          sessionStorage.removeItem('islogin')
           reject(res.message)
         }
       }).catch(err=>{
         state.userInfo = {}
-        localStorage.removeItem('islogin')
+        sessionStorage.removeItem('islogin')
         reject(err)
       })
     })

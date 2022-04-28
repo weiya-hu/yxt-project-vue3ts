@@ -38,7 +38,7 @@
       <Mypage :total="total" v-model:page="page" @change="getList" v-model:size="size"/>
     </el-card>
 
-    <el-dialog v-model="addShow" :title="setId ? '创建' : '编辑' + '问题'" width="380px" @close="close">
+    <el-dialog v-model="addShow" :title="setId ? '编辑问题' : '创建问题'" width="380px" @close="close">
       <el-form :model="addForm" :rules="rules" ref="addFormRef">
         <el-form-item label="分类：" prop="problem_type">
           <el-select v-model="addForm.problem_type" placeholder="请选择问题分类" class="f1">

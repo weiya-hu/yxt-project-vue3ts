@@ -1,14 +1,14 @@
 <template>
 
   <el-dialog v-model="show" title="资源库" @close="closeLib" custom-class="pool_box">
-    <el-button type="primary" class="upbtn" @click="goUp">去上传</el-button>
+    <el-button class="upbtn bdc_btn" @click="goUp">去上传</el-button>
     <el-tabs v-model="Tabtype" @tab-click="changeTabs">
       <el-tab-pane label="图片" :name="1" :disabled="tabDisabled == 1">
 
         <div class="imageslibrary images_sel">
           <div class="imgsel fcs">
             <el-input placeholder="请输入图片名关键字" style="width:200px" v-model="imgWord" clearable></el-input>
-            <el-button type="primary" class="ml20" @click="wordSearch">搜索</el-button>
+            <el-button class="ml20 bdc_btn" @click="wordSearch">搜索</el-button>
           </div>
           <div class="imglist fcs" v-if="imgTotal">
             <div class="imgitem flex fc mt20 mr20" :class="i == imgIndex ? 'active' : ''" v-for="(v,i) in imgList" :key="v.id" @click.stop="imgIndex = i" @dblclick="handTwo(i)">

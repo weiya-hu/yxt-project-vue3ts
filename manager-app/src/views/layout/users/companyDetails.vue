@@ -32,8 +32,8 @@
             <img :src="info.license[0]" alt="" v-if="info.license && info.license[0]" class="zzimg lookhover" @click="lookImage(info.license,0)">
             <img :src="info.license[1]" alt="" v-if="info.license && info.license[1]" class="zzimg lookhover ml20" @click="lookImage(info.license,1)">
           </el-descriptions-item>
-          <el-descriptions-item label="证照有效期">
-            {{info.left_time == 4102415999 ? '永久' : formatDate(new Date(info.left_time * 1000),'yyyy-MM-dd')}}
+          <el-descriptions-item label="证照有效期" v-if="info.left_time">
+            {{info.left_time == 4102415999000 ? '永久' : formatDate(new Date(info.left_time),'yyyy-MM-dd')}}
           </el-descriptions-item>
           <el-descriptions-item label="联系人">{{info.legal_person}}</el-descriptions-item>
           <el-descriptions-item label="联系电话">{{info.contact}}</el-descriptions-item>

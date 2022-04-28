@@ -34,7 +34,7 @@
           <el-table-column property="source" label="来源">
             <template #default="{ row }">
               <div>
-                {{ sourceObj[row.source] && sourceObj[row.source] }}
+                {{ getSource(row.source) }}
               </div>
             </template>
           </el-table-column>
@@ -54,20 +54,8 @@ import MyPage from '@/components/MyPage.vue'
 import MyEmpty from '@/components/MyEmpty.vue'
 import { formatDate } from '@/utils/date'
 import { useRoute } from 'vue-router'
-import { getHash, getHashStr, strToArr } from '@/utils/index'
+import { getHash, getHashStr, strToArr, getSource } from '@/utils/index'
 
-const sourceObj = {
-  1: '康州数智',
-  2: '第三方数据',
-  3: '号码段',
-  4: '广告投放',
-  5: '微信好友',
-  6: '百度关键词',
-  7: '大数据获客',
-  8: '400获客',
-  9: '竞价获客',
-  10: '短信获客',
-}
 const store = mainStore()
 const route = useRoute()
 const id = route.query.id as string

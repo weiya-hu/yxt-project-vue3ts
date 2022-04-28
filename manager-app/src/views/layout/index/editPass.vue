@@ -93,6 +93,7 @@ const onSubmit = () => {
       if(res.status == 1){
         loginOut_api().then((res1:res)=>{
           if(res1.status == 1){
+            sessionStorage.removeItem('islogin')
             router.replace('/login')
           }
         })

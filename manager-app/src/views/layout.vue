@@ -15,7 +15,10 @@
             <div class="username">
               <el-dropdown>
                 <div class="fcs">
-                  <div style="font-size:16px">{{userInfo.name}}（{{userInfo.dept_name}}）</div>
+                  <div style="font-size:16px">
+                    {{userInfo.name}}
+                    <span v-if="userInfo.dept_name">（{{userInfo.dept_name}}）</span>
+                  </div>
                   <el-icon class="right_icon"><caret-bottom /></el-icon>
                 </div>
                 <template #dropdown>
@@ -65,7 +68,6 @@ import { useRouter, useRoute, onBeforeRouteUpdate } from 'vue-router'
 import { CaretBottom } from '@element-plus/icons-vue'
 import { mainStore } from '@/store/index'
 import { loginOut_api } from '@/api/login'
-import { routerGuard } from '@/router'
 import { errMsg } from '@/utils/index'
 import KzResourcePool from '@/components/KzResourcePool.vue'
 import emiter from '@/utils/bus'
@@ -86,9 +88,23 @@ store.getYxtUrl().then((url:any)=>{
 })
 
 const LoginError = () => {
-  routerGuard([])
+  store.setUserLv([])
+  sessionStorage.removeItem('islogin')
   router.replace('/login')
   errMsg('获取用户权限失败，请重新登录或联系管理员')
+}
+const showLvMsg = () => {
+  ElMessageBox.alert(
+    '当前账户无此权限！',
+    '温馨提示',
+    {
+      confirmButtonText: '返回首页',
+      callback: () => {
+        isGetLv.value = true
+        router.replace('/index')
+      },
+    }
+  )
 }
 
 const isGetLv = ref(false) // 是否加载路由出口layout_content
@@ -96,24 +112,12 @@ const isGetLv = ref(false) // 是否加载路由出口layout_content
 store.setUserinfo().then((res:any) => {
   if(res.login_passwd_type == 1){
     store.setUserLv().then((userLv:string[])=>{
-      routerGuard(userLv, true)
       if(route.meta.lv && userLv.indexOf(route.meta.lv as string) == -1){
-        if(route.meta.isTopNav){
-          routers.forEach(v => {
-            if(route.meta.father == v.path){
-              router.replace(v.children.find(v => userLv.indexOf(v.meta!.lv as string) > -1)!.path).then(()=>{
-                isGetLv.value = true
-              })
-            }
-          })
-        }else{
-          router.replace('/index').then(()=>{
-            isGetLv.value = true
-          })
-        }
-      }else{
-        isGetLv.value = true
+        // 这里就直接提示没权限了，没必要再根据isTopNav重定向到同父级路由下第一个有权限的路由了
+        showLvMsg()
+        return
       }
+      isGetLv.value = true
     }).catch((err)=>{
       LoginError()
     })
@@ -129,7 +133,6 @@ store.setUserinfo().then((res:any) => {
     )
     router.replace('/index/editpass')
     store.setUserLv([])
-    routerGuard([])
     isGetLv.value = true
   }
 }).catch((error: boolean) => {
@@ -160,7 +163,45 @@ const getNavs = (path?:string, first = false)=>{
 }
 getNavs(route.path, true)
 
-onBeforeRouteUpdate((to,from,next)=>{
+onBeforeRouteUpdate((to,from)=>{
+
+  const userLvs = computed(()=>store.state.userLv)
+  if(to.meta.lv && userLvs.value.indexOf(to.meta.lv as string) == -1){
+    if(to.meta.isTopNav){
+      const rlist = router.getRoutes()
+      const fatherRouter = rlist.find(v => to.meta.father == v.path)
+      if(to.path == fatherRouter?.redirect){
+        // 假设满足if表示正在重定向，问题是如果直接写redirect进入还是会进入if不会提示无权限，或许把每个redirect写为函数判断可以解决
+        // 解决重定向到三级topNav时没有权限的问题，循环路由寻找同父级路由下第一个有权限的路由
+        const afterRoute = fatherRouter.children.find(v => userLvs.value.indexOf(v.meta!.lv as string) > -1)
+        afterRoute ? router.replace(afterRoute.path) : router.back()
+      }else{
+        ElMessageBox.alert(
+          '当前账户无此权限！',
+          '温馨提示',
+          {
+            confirmButtonText: '关闭',
+            callback: () => {
+            },
+          }
+        )
+      }
+    }else{
+      ElMessageBox.alert(
+        '当前账户无此权限！',
+        '温馨提示',
+        {
+          confirmButtonText: '返回',
+          callback: () => {
+            router.replace(from.fullPath)
+          },
+        }
+      )
+    }
+    return false
+  }else{
+    window.document.title = to.meta.title ? (to.meta.title as string) : '康洲数智后台管理系统'
+  }
 
   if(from.path !== to.meta.father){
     getPath(to.meta.father ? to.meta.father as string: to.path)
@@ -179,13 +220,13 @@ onBeforeRouteUpdate((to,from,next)=>{
     // 兄弟列表切换 或者 详情进入非父级列表
     store.setKeepList([])
   }
-  next()
+  // next()
 })
 
 const loginout = ()=>{
   loginOut_api().then((res:res)=>{
     if(res.status == 1){
-      localStorage.removeItem('islogin')
+      sessionStorage.removeItem('islogin')
       router.replace('/login')
     }
   })

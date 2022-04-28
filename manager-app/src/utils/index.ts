@@ -177,41 +177,26 @@ export function strToArr(str1:string|number,str2?:string|number,str3?:string|num
 }
 
 export function getSource(source:number){
-  switch (source) {
-    case 1:
-      return '康洲数智'
-      break;
-    case 2:
-      return '第三方数据'
-      break;
-    case 3:
-      return '号码段获客'
-      break;
-    case 4:
-      return '广告投放'
-      break;
-    case 5:
-      return '微信获客'
-      break;
-    case 6:
-      return '百度关键词获客'
-      break;
-    case 7:
-      return '大数据获客'
-      break;
-    case 8:
-      return '400获客'
-      break;
-    case 9:
-      return '竞价获客'
-      break;
-    case 10:
-      return '短信获客'
-      break;
-    default:
-      return '---'
-      break;
+  const sourceObj = {
+    1: '康州数智',
+    2: '第三方数据',
+    3: '号码段',
+    4: '广告投放',
+    5: '微信好友',
+    6: '百度关键词',
+    7: '大数据获客',
+    8: '400获客',
+    9: '竞价获客',
+    10: '短信获客',
   }
+  try {
+    if(sourceObj[source as keyof typeof sourceObj]){
+      return sourceObj[source as keyof typeof sourceObj]
+    }
+  } catch (error) {
+    return '---'
+  }
+  return '---'
 }
 
 export const telReg = new RegExp(/^(((13[0-9])|(14[5-7])|(15[0-9])|(17[0-9])|(18[0-9]))+\d{8})$/) // 手机号
@@ -307,7 +292,7 @@ export const downLoadVideo = (videoSrc:string, videoName?:string) => {
 }
 
 /**
- * 获取状态
+ * 全局状态
 */
 export const KZ_STATUS = {
   0: { text: '---', className: '' },
@@ -315,4 +300,19 @@ export const KZ_STATUS = {
   2: { text: '已受理', className: 'sdot_g' },
   3: { text: '被驳回', className: 'sdot_r' },
   4: { text: '已完结', className: 'sdot_b' }
+}
+
+/**
+ * 获取状态
+*/
+export function getKzStatus(key:any) {
+  const obj = { text: '---', className: '' }
+  try {
+    if(KZ_STATUS[key as keyof typeof KZ_STATUS]){
+      return KZ_STATUS[key as keyof typeof KZ_STATUS]
+    }
+  } catch (error) {
+    return obj
+  }
+  return obj
 }

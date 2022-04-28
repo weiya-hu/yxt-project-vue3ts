@@ -208,7 +208,7 @@ export function getSource(source:number){
 }
 
 /**
- * 获取我的作品库状态
+ * 我的作品库状态
 */
 export const KZ_MY_STATUS = {
   0:{ text: '---', className: '' },
@@ -219,7 +219,22 @@ export const KZ_MY_STATUS = {
 }
 
 /**
- * 获取状态
+ * 获取我的作品库状态
+*/
+export function getKzMyStatus(key:any) {
+  const obj = { text: '---', className: '' }
+  try {
+    if(KZ_MY_STATUS[key as keyof typeof KZ_MY_STATUS]){
+      return KZ_MY_STATUS[key as keyof typeof KZ_MY_STATUS]
+    }
+  } catch (error) {
+    return obj
+  }
+  return obj
+}
+
+/**
+ * 全局工单状态
 */
 export const KZ_STATUS = {
   0:{ text: '---', className: '' },
@@ -227,4 +242,19 @@ export const KZ_STATUS = {
   2:{ text: '已受理', className: 'status_green' },
   3:{ text: '被驳回', className: 'status_red' },
   4:{ text: '已完结', className: 'status_blue' }
+}
+
+/**
+ * 获取工单状态
+*/
+export function getKzStatus(key:any) {
+  const obj = { text: '---', className: '' }
+  try {
+    if(KZ_STATUS[key as keyof typeof KZ_STATUS]){
+      return KZ_STATUS[key as keyof typeof KZ_STATUS]
+    }
+  } catch (error) {
+    return obj
+  }
+  return obj
 }

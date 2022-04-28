@@ -66,10 +66,10 @@
   <el-table-column v-if="type === 'status_do'" :property="prop" :label="lable" :min-width="width"  align="center">
     <template #default="{ row }">
       <div class="fleximg">
-        <div class="status_dot" :class="KZ_STATUS[row.status].className"
+        <div class="status_dot" :class="getKzStatus(row.status).className"
         ></div>
         <div>
-          {{KZ_STATUS[row.status].text}}
+          {{getKzStatus(row.status).text}}
         </div>
       </div>
     </template>
@@ -184,7 +184,7 @@
 <script setup lang="ts">
 import { toRefs, ref } from 'vue'
 import { Format } from '@/utils/date'
-import { getHashStr, strToArr, getSource, KZ_STATUS } from '@/utils/index'
+import { getHashStr, strToArr, getSource, getKzStatus } from '@/utils/index'
 import { mainStore } from '@/store/index'
 import { businessCompanyType, overseasCountry } from '@/api/dmp/findb'
 const store = mainStore()

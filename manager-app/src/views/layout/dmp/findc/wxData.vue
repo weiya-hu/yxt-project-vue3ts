@@ -24,10 +24,10 @@
               <div class="fcs ss">
                 <div
                   class="status_dot"
-                  :class="KZ_STATUS[row.status].className && KZ_STATUS[row.status].className"
+                  :class="getKzStatus(row.status).className"
                 ></div>
                 <div>
-                  {{ KZ_STATUS[row.status].text && KZ_STATUS[row.status].text }}
+                  {{ getKzStatus(row.status).text }}
                 </div>
               </div>
             </template>
@@ -35,7 +35,7 @@
           <el-table-column property="source" label="来源">
             <template #default="{ row }">
               <div>
-                {{ sourceObj[row.source] && sourceObj[row.source] }}
+                {{ getSource(row.source) }}
               </div>
             </template>
           </el-table-column>
@@ -91,19 +91,8 @@ import { wxList_api, wxPass_api, wxReject_api, wxUp_api } from '@/api/dmp/findc'
 import { ElMessageBox } from 'element-plus'
 import Refuse from '@/components/Refuse.vue'
 import UpUser from '@/components/UpUser.vue'
-import { KZ_STATUS } from '@/utils/index'
-const sourceObj = {
-  1: '康州数智',
-  2: '第三方数据',
-  3: '号码段',
-  4: '广告投放',
-  5: '微信好友',
-  6: '百度关键词',
-  7: '大数据获客',
-  8: '400获客',
-  9: '竞价获客',
-  10: '短信获客',
-}
+import { getKzStatus, getSource } from '@/utils/index'
+
 const page = ref(1)
 const total = ref(0)
 const size = ref(10)

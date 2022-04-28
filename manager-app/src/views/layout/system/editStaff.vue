@@ -28,7 +28,6 @@ import DetailsHeader from "@/components/DetailsHeader.vue";
 import { useRoute, useRouter } from 'vue-router'
 import { getLvList_api, getStaffInfo_api, setStaffLv_api } from '@/api/system'
 import { mainStore } from '@/store/index'
-import { routerGuard } from '@/router'
 
 const store = mainStore()
 const route = useRoute()
@@ -91,7 +90,6 @@ const setStaffLv = async () => {
   if(res.status == 1){
     if(store.state.userInfo.buid == buid){
       store.setUserLv().then((userLv:string[])=>{
-        routerGuard(userLv)
         if(userLv.indexOf('24') == -1){
           // 24 管理员设置
           router.replace('/index')

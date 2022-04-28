@@ -29,8 +29,8 @@
         <el-table-column property="status" label="状态" width="180">
           <template #default="{row}">
             <div class="fcs">
-              <div class="status_dot" :class="KZ_MY_STATUS[row.status].className"></div>
-              <div>{{KZ_MY_STATUS[row.status].text}}</div>
+              <div class="status_dot" :class="getKzMyStatus(row.status).className"></div>
+              <div>{{getKzMyStatus(row.status).text}}</div>
             </div>
           </template>
         </el-table-column>
@@ -114,7 +114,7 @@ import MyDialog from "@/components/MyDialog.vue";
 import TopBtns from "@/components/TopBtns.vue";
 import { errMsg ,okMsg } from '@/utils/index'
 import { imagesList_api, imagesAdd_api, imagesDel_api, imagesEdit_api } from '@/api/myWork'
-import { KZ_MY_STATUS } from '@/utils/index'
+import { getKzMyStatus } from '@/utils/index'
 
 interface SData {
   id: number|string,
