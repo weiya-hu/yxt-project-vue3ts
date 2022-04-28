@@ -442,6 +442,18 @@ const routes = [
                 component: () => import('@/views/layout/dmp/findc/msgDataDetail.vue'),
                 meta: { title: '短信获客详情',lv:'49', father:'/dmp/findc/msgdata' },
               },
+              {
+                path: '/dmp/findc/segmentdata',
+                name: 'SegmentData',
+                component: () => import('@/views/layout/dmp/findc/segmentData.vue'),
+                meta: { title: '号码段获客', keepAlive:true, father:'/dmp/findc',lv:'50', isTopNav:true },
+              },
+              {
+                path: '/dmp/findc/segmentdatadetail',
+                name: 'SegmentDataDetail',
+                component: () => import('@/views/layout/dmp/findc/segmentDateDetail.vue'),
+                meta: { title: '号码段获客详情',lv:'50', father:'/dmp/findc/segmentdata' },
+              },
             ]
           },
           {

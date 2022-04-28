@@ -92,7 +92,6 @@ import { reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import MyUpload from '@/components/MyUpload.vue'
 import { ElMessage } from 'element-plus'
-// eslint-disable-next-line camelcase
 import { templeteDownload_api } from '@/api/dmp/findb'
 
 //父组件传的值
@@ -170,9 +169,7 @@ const upUserRule = reactive({
   ],
 })
 const formValue = ref({
-  // eslint-disable-next-line camelcase
   upload_type: 1,
-  // eslint-disable-next-line camelcase
   show_type: 1,
   money: null,
   days: null,
@@ -182,6 +179,7 @@ const formValue = ref({
 const templateUrl = {
   '/dmp/findb/specificdata': templeteDownload_api('business'),
   '/dmp/findc/wxdata': templeteDownload_api('customer', 5),
+  '/dmp/findc/segmentdata': templeteDownload_api('customer', 3),
   '/dmp/findc/addata': templeteDownload_api('customer', 4),
   '/dmp/findc/baidudata': templeteDownload_api('customer', 6),
   '/dmp/findc/bigdata': templeteDownload_api('customer', 7),

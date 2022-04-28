@@ -140,3 +140,23 @@ export const smsReject_api = (data: { id: string; fail_reason: string }): Promis
 export const smsUp_api = (data: any): Promise<res> => {
   return post(1, '/dmp/customer/sms/upload.do', data)
 }
+//获取号码段获客分页列表
+export const segmentList_api = (data: PageParams): Promise<res> => {
+  return get(1, '/dmp/customer/number/segment/demand.page', data)
+}
+// 通过号码段获客
+export const segmentPass_api = (data: { id: string }): Promise<res> => {
+  return post(1, '/dmp/customer/number/segment/demand/pass.do', data)
+}
+//获取号码段详情
+export const segmentDetail_api = (data: PageParams): Promise<res> => {
+  return get(1, '/dmp/customer/number/segment.page', data)
+}
+// 驳回号码段
+export const segmentReject_api = (data: { id: string; fail_reason: string }): Promise<res> => {
+  return post(1, '/dmp/customer/number/segment/demand/reject.do', data)
+}
+// 上传号码段获客客户
+export const segmentUp_api = (data: any): Promise<res> => {
+  return post(1, '/dmp/customer/number/segment/upload.do', data)
+}
