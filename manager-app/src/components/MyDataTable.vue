@@ -63,34 +63,13 @@
       </div>
     </template>
   </el-table-column>
-  <el-table-column v-if="type === 'status_do'" :property="prop" :label="lable" :min-width="width">
+  <el-table-column v-if="type === 'status_do'" :property="prop" :label="lable" :min-width="width"  align="center">
     <template #default="{ row }">
-      <div class="flexl">
-        <div
-          :class="
-            row.status === 0
-              ? 'before-deal'
-              : row.status === 1
-              ? 'dealing'
-              : row.status === 2
-              ? 'deal-refuse'
-              : row.status === 3
-              ? 'dealed'
-              : ''
-          "
+      <div class="fleximg">
+        <div class="status_dot" :class="KZ_STATUS[row.status].className"
         ></div>
         <div>
-          {{
-            row.status === 0
-              ? '待处理'
-              : row.status === 1
-              ? '已受理'
-              : row.status === 2
-              ? '被驳回'
-              : row.status === 3
-              ? '已完结'
-              : ''
-          }}
+          {{KZ_STATUS[row.status].text}}
         </div>
       </div>
     </template>
@@ -205,7 +184,7 @@
 <script setup lang="ts">
 import { toRefs, ref } from 'vue'
 import { Format } from '@/utils/date'
-import { getHashStr, strToArr, getSource } from '@/utils/index'
+import { getHashStr, strToArr, getSource, KZ_STATUS } from '@/utils/index'
 import { mainStore } from '@/store/index'
 import { businessCompanyType, overseasCountry } from '@/api/dmp/findb'
 const store = mainStore()
@@ -352,5 +331,8 @@ const getCountry = (val: any) => {
 }
 .el-overlay {
   background-color: rgba(0, 0, 0, 0.1) !important;
+}
+.text-alyn{
+  text-align: center;
 }
 </style>

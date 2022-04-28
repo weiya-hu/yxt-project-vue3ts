@@ -28,25 +28,25 @@
             <template #default="{ row }">
               <div class="operate-button-pre">
                 <el-link
-                  v-if="row.status === 0"
+                  v-if="row.status === 1"
                   type="primary"
                   :href="row.attachment"
                   down-load="附件.zip"
                   >下载附件</el-link
                 >
-                <el-link v-if="row.status === 0" type="primary" @click="refuse(row)">驳回</el-link>
-                <el-link v-if="row.status === 0" type="primary" @click="pass(row)">通过</el-link>
+                <el-link v-if="row.status === 1" type="primary" @click="refuse(row)">驳回</el-link>
+                <el-link v-if="row.status === 1" type="primary" @click="pass(row)">通过</el-link>
                 <el-link
-                  v-if="row.status === 1 || row.status === 3"
+                  v-if="row.status === 2 || row.status === 4"
                   type="primary"
                   @click="upUser(row)"
                   >上传客户</el-link
                 >
-                <el-link v-if="row.status === 2" type="primary" @click="reason(row)"
+                <el-link v-if="row.status === 3" type="primary" @click="reason(row)"
                   >驳回原因</el-link
                 >
                 <el-link
-                  v-if="row.status === 3"
+                  v-if="row.status === 4"
                   type="primary"
                   @click="$router.push('/dmp/seekabroad/supplierdetail?id=' + row.id)"
                   >详情</el-link
