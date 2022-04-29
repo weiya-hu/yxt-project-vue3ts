@@ -1,11 +1,11 @@
 <template>
   <div class="specific_data">
-    <Search v-model="inputSearch" @search="getList" @reset="resetSearch">
+    <Search v-model="inputSearch" @search="searchword" @reset="resetSearch">
       <el-option label="全部" :value="null" />
-      <el-option label="待处理" :value="0" />
-      <el-option label="已受理" :value="1" />
-      <el-option label="被驳回" :value="2" />
-      <el-option label="已完成" :value="3" />
+      <el-option label="待处理" :value="1" />
+      <el-option label="已受理" :value="2" />
+      <el-option label="被驳回" :value="3" />
+      <el-option label="已完成" :value="4" />
     </Search>
     <div class="specific_data-content">
       <div class="mytable-data">
@@ -111,6 +111,11 @@ const tableTitle = ref([
 // ])
 const tableList = ref([])
 
+const searchword = () => {
+  page.value = 1
+  getList()
+}
+
 const getList = async () => {
   loading.value = true
   const data = {
@@ -119,8 +124,8 @@ const getList = async () => {
     createTime: createTime.value,
     name: inputSearch.userName,
     status: inputSearch.status,
-    startTime: inputSearch.create_time[0],
-    endTiem: inputSearch.create_time[1],
+    startTime: inputSearch.create_time ? inputSearch.create_time[0] : null,
+    endTiem: inputSearch.create_time ? inputSearch.create_time[1] : null,
   }
   const { status, body } = await businessDemand_api(data)
   loading.value = false

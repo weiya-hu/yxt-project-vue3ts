@@ -55,7 +55,7 @@ const tableTitle = ref([
   { type: 'industry_id', lable: '行业分类', prop: 'industry_id', width: 120 },
   { type: 'city_id', lable: '地区', prop: 'city', width: 130 },
   { type: 'text-tooltip', lable: '详细地址', prop: 'address', width: 130 },
-  { type: 'company_type', label: '企业类型', prop: 'company_id', width: 110 },
+  { type: 'company_type', lable: '企业类型', prop: 'company_type', width: 110 },
   { type: 'text', lable: '统一社会信用代码', prop: 'code', width: 130 },
   { type: 'link', lable: '企业官网', prop: 'url', width: 140 },
   { type: 'text-tooltip', lable: '经营范围', prop: 'business_scope', width: 130 },

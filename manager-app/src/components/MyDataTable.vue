@@ -45,7 +45,7 @@
     align="center"
   >
     <template #default="{ row }">
-      <el-link type="primary" :href="prop && row[prop]">{{ prop && row[prop] }}</el-link>
+      <el-link type="primary" :href="prop && row[prop]">{{ (prop && row[prop]) || '---'}}</el-link>
     </template>
   </el-table-column>
   <el-table-column v-if="type === 'select'" type="selection" :width="width" align="center" />
@@ -130,7 +130,7 @@
     align="center"
   >
     <template #default="scope">
-      <div>{{ getHashStr(scope.row.industry_id, store.state.typeHash, 'last') }}</div>
+      <div>{{ getHashStr(scope.row.industry_id, store.state.typeHash, 'last') || '---' }}</div>
     </template>
   </el-table-column>
   <el-table-column
@@ -159,7 +159,7 @@
       </el-tooltip>
     </template>
   </el-table-column>
-  <el-table-column v-if="type === 'source'" :property="prop" :label="lable" :min-width="width">
+  <el-table-column v-if="type === 'source'" :property="prop" :label="lable" :min-width="width" align="center">
     <template #default="{ row }">
       <div>{{ prop && getSource(row[prop]) }}</div>
     </template>
@@ -169,12 +169,13 @@
     :property="prop"
     :label="lable"
     :min-width="width"
+    align="center"
   >
-    <template #default="{ row }">
-      <div>{{ getCompanyType(row.company_id) }}</div>
+    <template #default="{ row }" >
+      <div>{{ getCompanyType(row.company_type) }}</div>
     </template>
   </el-table-column>
-  <el-table-column v-if="type === 'country'" :property="prop" :label="lable" :min-width="width">
+  <el-table-column v-if="type === 'country'" :property="prop" :label="lable" :min-width="width" align="center">
     <template #default="{ row }">
       <div>{{ getCountry(row.country_id) }}</div>
     </template>
@@ -247,17 +248,18 @@ const companyType = ref()
 const country = ref([])
 props.type === 'company_type' &&
   businessCompanyType().then((res) => {
-    companyType.value = res.body
+    companyType.value = res.body.c_type
+    console.log(companyType.value)
   })
 props.type === 'country' &&
   overseasCountry().then((res) => {
     country.value = res.body
   })
 const getCompanyType = (val: any) => {
-  if (val && companyType.value) {
-    let name
+  if (val && companyType.value.length) {
+    let name = '---'
     companyType.value.forEach((m: any) => {
-      m.value === val && (name = m.name)
+      m.id == val && (name = m.name)
     })
     return name
   }
@@ -266,9 +268,9 @@ const getCompanyType = (val: any) => {
 
 const getCountry = (val: any) => {
   if (val && country.value) {
-    let name
+    let name = '---'
     country.value.forEach((m: any) => {
-      m.code === val && (name = m.country_name)
+      m.code == val && (name = m.country_name)
     })
     return name
   }
