@@ -21,7 +21,7 @@ export const articlePass_api = (data: any): Promise<res> => {
   return post(1, '/manage/diy/pass.do', data, true)
 }
 // 个性化数据驳回
-export const articleReject_api = (data: any): Promise<res> => {
+export const articleReject_api = (data: { id: string; fail_reason: string }): Promise<res> => {
   return post(1, '/manage/diy/reject.do', data, true)
 }
 // 下载附件

@@ -1,6 +1,7 @@
 <template>
   <div class="mytable">
     <search v-model="inputSearch" @search="searchword" @reset="resetSearch">
+      <el-option label="全部" value="null" />
       <el-option label="待处理" value="1" />
       <el-option label="已受理" value="2" />
       <el-option label="被驳回" value="3" />
@@ -153,8 +154,8 @@ const getList = async () => {
     size: size.value,
     current: page.value,
     ...inputSearch,
-    startTime: inputSearch.create_time[0],
-    endTime: inputSearch.create_time[1],
+    startTime: inputSearch.create_time ? inputSearch.create_time[0] : null,
+    endTime: inputSearch.create_time ? inputSearch.create_time[1] : null,
   })
   console.log(res)
 

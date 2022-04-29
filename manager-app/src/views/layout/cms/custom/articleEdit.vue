@@ -8,7 +8,7 @@
       <el-button class="bdc_btn" @click="submit(1)">保存</el-button>
       <el-button type="primary" @click="submit(2)">完成</el-button>
     </div>
-    <div class="addform">
+    <div class="aw">
       <div class="tip fcs">
         <img :src="tip_i" alt="" />
         <span
@@ -72,7 +72,7 @@ const subSuccess = async (val: any) => {
 
 <style scoped lang="scss">
 .article_add {
-  .addform {
+  .aw {
     span {
       font-size: 12px;
       font-weight: 400;

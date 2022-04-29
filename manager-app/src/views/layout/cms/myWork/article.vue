@@ -1,6 +1,7 @@
 <template>
   <div class="tel_data">
     <search v-model="inputSearch" @search="searchword" @reset="resetSearch">
+      <el-option label="全部" value="null" />
       <el-option label="待审核" value="2" />
       <el-option label="已通过" value="3" />
       <el-option label="被驳回" value="4" />
@@ -126,8 +127,8 @@ const getList = async () => {
     size: size.value,
     current: page.value,
     ...inputSearch,
-    startTime: inputSearch.create_time[0],
-    endTime: inputSearch.create_time[1],
+    startTime: inputSearch.create_time ? inputSearch.create_time[0] : null,
+    endTime: inputSearch.create_time ? inputSearch.create_time[1] : null,
   })
   // console.log(res);
 
@@ -137,9 +138,6 @@ const getList = async () => {
   }
 }
 getList()
-const changePage = () => {
-  getList()
-}
 // 驳回弹出框
 const refuseShow = ref(false)
 const refuseId = ref()

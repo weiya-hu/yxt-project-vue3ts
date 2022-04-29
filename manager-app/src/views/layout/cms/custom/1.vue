@@ -1,7 +1,6 @@
 <template>
   <div class="mytable">
     <search v-model="inputSearch" @search="searchword" @reset="resetSearch">
-      <el-option label="全部" value="null" />
       <el-option label="待处理" value="1" />
       <el-option label="已受理" value="2" />
       <el-option label="被驳回" value="3" />
@@ -71,22 +70,34 @@
       </template>
     </el-dialog>
     <el-dialog v-model="addShow" title="编辑视频" width="380px" @close="close">
-      <el-form v-loading="upLoading" :model="addForm">
+      <el-form :model="addForm">
         <el-form-item label="选择素材" required label-width="90px">
-          <MyUpload
-            ref="upVideo"
-            v-model="addForm.url"
-            type="video"
-            :max-size="200"
-            :exname-list="exnameList1"
-            :msg="'只能上传' + exnameList1.join('、') + '视频，不超过200M，推荐尺寸1280*720'"
-            @error="upVideoError"
-            @success="upSuccess"
-          />
+          <div class="sel_pool fcc" @click="showKzPool('video_custom', 2)">
+            <div v-if="addPool.id" class="poolbox">
+              <img :src="addPool.cover_url || addPool.source_url" alt="" />
+              <div
+                class="lookicon fcc lookhover"
+                @click.stop="lookImage([addPool.cover_url || addPool.source_url], 0)"
+              >
+                <el-icon size="14px"><zoom-in /></el-icon>
+              </div>
+              <div
+                v-if="addPool.source_type == 2"
+                class="videoicon fcc lookhover"
+                @click.stop="lookVideo(addPool.source_url)"
+              >
+                <el-icon size="20px"><caret-right /></el-icon>
+              </div>
+            </div>
+            <div v-else class="fc fcc">
+              <el-icon><plus /></el-icon>
+              <div class="file_name">点击添加</div>
+            </div>
+          </div>
         </el-form-item>
         <div class="fcs btns fjend mt20">
           <el-button @click="close">取消</el-button>
-          <el-button type="primary" :disabled="!addForm.url" @click="goSubmit">提交</el-button>
+          <el-button type="primary" :disabled="!addPool.id" @click="setBanner(1)">提交</el-button>
         </div>
       </el-form>
     </el-dialog>
@@ -100,9 +111,11 @@ import MyPage from '@/components/MyPage.vue'
 import MyDataTable from '@/components/MyDataTable.vue'
 import MyDialog from '@/components/MyDialog.vue'
 import MyEmpty from '@/components/MyEmpty.vue'
-import MyUpload from '@/components/MyUpload.vue'
+import { ZoomIn, CaretRight, Plus } from '@element-plus/icons-vue'
 import Refuse from '@/components/Refuse.vue'
-import { lookVideo, errMsg } from '@/utils/index'
+import { showKzPool } from '@/utils/index'
+import { lookImage, lookVideo } from '@/utils/index'
+import emiter from '@/utils/bus'
 import {
   videoList_api,
   articlePass_api,
@@ -122,8 +135,7 @@ const tableTitle = ref([
   { type: 'status', lable: '状态', prop: 'status', width: 100 },
 ])
 const loading = ref(false)
-const upLoading = ref(false)
-const exnameList1 = ['.mp4']
+
 const totle = ref(0)
 const size = ref(10)
 const page = ref(1)
@@ -186,7 +198,7 @@ const getData = async (id: string) => {
 }
 // 图片详情
 const dialogVisible = ref(false)
-const showImgs = ref<string[]>([]) //视频列表
+const showImgs = ref<string[]>([]) //预览图片列表
 const look = async (id: string) => {
   const res = await articleDetail_api({ id })
   console.log(res)
@@ -199,35 +211,35 @@ const look = async (id: string) => {
 // 编辑视频
 const editId = ref('')
 const addShow = ref(false)
-const addForm = reactive({
-  url: '',
-})
-const upVideo = ref()
+const addForm = reactive({})
 const videoEdit = (id: string) => {
   addShow.value = true
   editId.value = id
 }
-const upVideoError = (err: string) => {
-  errMsg(err)
-  loading.value = false
-}
 const close = () => {
-  upLoading.value = false
-  upVideo.value.clear()
+  addPool.value = {} as KzPool
   addShow.value = false
 }
-const upSuccess = async (videoUrl: string) => {
-  addForm.url = videoUrl
-  const res = await articleVideosave_api({
+const addPool = ref({} as KzPool)
+
+emiter.on('video_custom', (val: KzPool) => {
+  addPool.value = val
+})
+const setBanner = async (type: 0 | 1, order_id?: number | string) => {
+  const videoPool: string[] = []
+  videoPool.push(addPool.value.source_url)
+  const { status } = await articleVideosave_api({
     order_id: editId.value,
-    url: addForm.url,
+    urls: videoPool,
   })
-  upLoading.value = false
-  close()
-}
-const goSubmit = async () => {
-  upLoading.value = true
-  upVideo.value.submit()
+  console.log(editId.value)
+
+  console.log(addPool.value)
+
+  if (status == 1) {
+    close()
+    getList()
+  }
 }
 defineExpose({
   getData,
@@ -239,8 +251,8 @@ const getList = async () => {
     size: size.value,
     current: page.value,
     ...inputSearch,
-    startTime: inputSearch.create_time ? inputSearch.create_time[0] : null,
-    endTime: inputSearch.create_time ? inputSearch.create_time[1] : null,
+    startTime: inputSearch.create_time[0],
+    endTime: inputSearch.create_time[1],
   })
   console.log(res)
 

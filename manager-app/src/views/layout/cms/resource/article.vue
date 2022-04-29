@@ -4,6 +4,7 @@
       <el-form ref="myform" inline :model="inputSearch" class="inline_myform">
         <el-form-item prop="status" label="状态 :">
           <el-select v-model="inputSearch.status" placeholder="请选择">
+            <el-option label="全部" value="null" />
             <el-option label="草稿" value="1" />
             <el-option label="上架" value="2" />
             <el-option label="下架" value="3" />
@@ -149,8 +150,8 @@ const getList = async () => {
     size: size.value,
     current: page.value,
     ...inputSearch,
-    startTime: inputSearch.time[0],
-    endTime: inputSearch.time[1],
+    startTime: inputSearch.time ? inputSearch.time[0] : null,
+    endTime: inputSearch.time ? inputSearch.time[1] : null,
   })
   console.log(res)
 
