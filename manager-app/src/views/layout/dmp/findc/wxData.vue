@@ -1,7 +1,7 @@
 <template>
   <div class="wx_data">
     <Search v-model="inputSearch" @search="searchword" @reset="resetSearch">
-      <el-option label="全部" value="" />
+      <el-option label="全部" value="-1" />
       <el-option label="待处理" value="1" />
       <el-option label="已受理" value="2" />
       <el-option label="被驳回" value="3" />
@@ -21,11 +21,8 @@
           </el-table-column>
           <el-table-column property="status" label="处理状态">
             <template #default="{ row }">
-              <div class="fcs ss">
-                <div
-                  class="status_dot"
-                  :class="getKzStatus(row.status).className"
-                ></div>
+              <div class="fcs">
+                <div class="status_dot" :class="getKzStatus(row.status).className"></div>
                 <div>
                   {{ getKzStatus(row.status).text }}
                 </div>
@@ -46,14 +43,14 @@
           </el-table-column>
           <el-table-column label="操作" width="220">
             <template #default="{ row }">
-              <div class="fcc">
+              <div class="fcs">
                 <el-link
                   v-if="row.status == 4"
                   type="primary"
                   @click="$router.push('/dmp/findc/wxdatadetail?id=' + row.id)"
                   >详情</el-link
                 >
-                <div v-if="row.status == 1 || row.status == 4" class="line"></div>
+                <div v-if="row.status == 4" class="line"></div>
                 <el-link v-if="row.status == 1" type="primary" @click="refuse(row.id)"
                   >驳回</el-link
                 >
@@ -110,6 +107,10 @@ const searchword = () => {
 const resetSearch = () => {
   ;(inputSearch.userName = ''), (inputSearch.status = ''), (inputSearch.create_time = '')
   wxList()
+}
+
+if (inputSearch.status === '-1') {
+  inputSearch.status = ''
 }
 interface SData {
   size: number

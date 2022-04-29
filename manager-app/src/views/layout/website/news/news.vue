@@ -367,6 +367,7 @@ const manageRef = ref<any>({})
 const resetForm = () => {
   manageRef.value.clearValidate()
   manageRef.value.resetFields()
+  searchStatus.value = ''
 }
 
 // 分类管理
