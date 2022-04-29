@@ -1,7 +1,7 @@
 <template>
   <div class="baidu_data">
     <Search v-model="inputSearch" @search="searchword" @reset="resetSearch">
-      <el-option label="全部" value="-1" />
+      <el-option label="全部" value="null" />
       <el-option label="待处理" value="1" />
       <el-option label="已受理" value="2" />
       <el-option label="被驳回" value="3" />
@@ -119,9 +119,7 @@ const resetSearch = () => {
   ;(inputSearch.userName = ''), (inputSearch.status = ''), (inputSearch.create_time = '')
   baiduList()
 }
-if (inputSearch.status === '-1') {
-  inputSearch.status = ''
-}
+
 interface SData {
   size: number
   current: number
