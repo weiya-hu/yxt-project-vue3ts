@@ -24,7 +24,7 @@
       </el-table-column>
       <el-table-column property="count" label="覆盖用户人数" width="140">
         <template #default="scope">
-          <div>{{ scope.row.status == 1?scope.row.count:'---' }}</div>
+          <div>{{ scope.row.count }}</div>
         </template>
       </el-table-column>
       <el-table-column property="money" label="消耗金额 (元)" width="130">

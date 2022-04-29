@@ -28,7 +28,7 @@
         </el-table-column>
         <el-table-column property="count" label="覆盖用户人数" width="140">
           <template #default="scope">
-            <div>{{ scope.row.status == 1?scope.row.count:'---' }}</div>
+            <div>{{ scope.row.count }}</div>
           </template>
         </el-table-column>
         <el-table-column property="create_time" label="创建日期" width="190">
