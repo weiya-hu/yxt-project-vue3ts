@@ -203,7 +203,6 @@ export default { name: 'SeekPath' }
     border-radius: 4px;
   }
   .mytable-data {
-    margin-bottom: 24px;
     .operate-button-pre {
       display: flex;
       justify-content: flex-start;

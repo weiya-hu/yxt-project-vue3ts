@@ -324,6 +324,7 @@ const fileUpSuccess = (val: any) => {
     :deep(.el-input__inner) {
       width: 32px;
       height: 32px;
+      padding: 0 0 0 5px;
       background: #ffffff;
       border: 1px solid rgba(221, 221, 221, 1);
       border-radius: 4px;

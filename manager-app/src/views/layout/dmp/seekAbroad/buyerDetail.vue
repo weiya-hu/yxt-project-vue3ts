@@ -91,8 +91,5 @@ getList()
   background: #ffffff;
   padding: 24px;
   border: 1px solid rgba(221, 221, 221, 1);
-  .mytable-data {
-    margin-bottom: 24px;
-  }
 }
 </style>
