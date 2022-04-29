@@ -72,7 +72,7 @@
     </el-dialog>
     <el-dialog v-model="addShow" title="编辑视频" width="380px" @close="close">
       <el-form v-loading="upLoading" :model="addForm">
-        <el-form-item label="选择素材" required label-width="90px">
+        <el-form-item label="视频上传" required label-width="90px">
           <MyUpload
             ref="upVideo"
             v-model="addForm.url"
@@ -215,6 +215,7 @@ const close = () => {
   upLoading.value = false
   upVideo.value.clear()
   addShow.value = false
+  getList()
 }
 const upSuccess = async (videoUrl: string) => {
   addForm.url = videoUrl
@@ -224,6 +225,7 @@ const upSuccess = async (videoUrl: string) => {
   })
   upLoading.value = false
   close()
+  getList()
 }
 const goSubmit = async () => {
   upLoading.value = true
