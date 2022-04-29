@@ -23,7 +23,9 @@
           <div class="imgsize">{{sizeHash[v.id]}}</div>
           <div class="fcs fjend imgicon">
             <el-tooltip effect="dark" content="下载" placement="bottom">
-              <el-icon class="chover" size="18px" @click="downLoadimage(v.source_url, v.source_name)"><download /></el-icon>
+              <a :href="v.source_url" class="fcc download_a">
+                <el-icon class="chover" size="18px" ><download /></el-icon>
+              </a>
             </el-tooltip>
             <el-tooltip effect="dark" content="修改名称" placement="bottom">
               <el-icon class="chover" size="18px" @click="editImg(v)"><edit /></el-icon>
@@ -53,6 +55,7 @@
           <MediaUpload
             :max="1"
             v-if="addShow"
+            need-download
             @upOneSuccess="upOne"
             @error="upError"
             @look="upLook"
@@ -126,7 +129,7 @@ const goSubmit = () => {
   addFormRef.value.validateField('source_name', (valid:boolean) => {
     if(valid){
       loading.value = true
-      upload.value.submit()
+      upload.value.submit(addForm.source_name)
     }
   })
 }
@@ -275,6 +278,9 @@ const beforeCloseAdd = (done:Function)=>{
         }
         .imgicon{
           margin-top: 5px;
+          .download_a{
+            color: $color333;
+          }
           .el-icon{
             margin-left: 5px;
           }

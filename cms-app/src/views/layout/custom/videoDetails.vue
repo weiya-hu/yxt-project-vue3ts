@@ -63,7 +63,7 @@ interface IData {
 const tableData = ref<IData[]>([])
 const getList = async ()=>{
   const res = await customDetails_api({id},4)
-  res.status == 1 && (tableData.value = res.body)
+  res.status == 1 && (tableData.value = [res.body])
 }
 getList()
 

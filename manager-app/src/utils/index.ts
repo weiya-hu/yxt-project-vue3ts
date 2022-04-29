@@ -177,7 +177,7 @@ export function strToArr(str1:string|number,str2?:string|number,str3?:string|num
 }
 
 export function getSource(source:number){
-  const sourceObj = {
+  const sourceObj: Record<number, string> = {
     1: '康州数智',
     2: '第三方数据',
     3: '号码段',
@@ -294,7 +294,7 @@ export const downLoadVideo = (videoSrc:string, videoName?:string) => {
 /**
  * 全局状态
 */
-export const KZ_STATUS = {
+export const KZ_STATUS: Record<number, { text:string, className: string }> = {
   0: { text: '---', className: '' },
   1: { text: '待处理', className: 'sdot_y' },
   2: { text: '已受理', className: 'sdot_g' },
@@ -305,7 +305,7 @@ export const KZ_STATUS = {
 /**
  * 获取状态
 */
-export function getKzStatus(key:any) {
+export function getKzStatus(key:number) {
   const obj = { text: '---', className: '' }
   try {
     if(KZ_STATUS[key as keyof typeof KZ_STATUS]){

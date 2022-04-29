@@ -37,7 +37,7 @@
         <div class="imageslibrary images_sel">
           <div class="imgsel fcs">
             <el-input placeholder="请输入视频名关键字" style="width:200px" v-model="videoWord" clearable></el-input>
-            <el-button type="primary" class="ml20" @click="wordSearch">搜索</el-button>
+            <el-button class="ml20" @click="wordSearch">搜索</el-button>
           </div>
           <div class="imglist fcs" v-if="videoTotal">
             <div class="imgitem flex fc mt20 mr20" :class="i == videoIndex ? 'active' : ''" v-for="(v,i) in videoList" :key="v.id" @click.stop="videoIndex = i" @dblclick="handTwo(i)">

@@ -42,11 +42,13 @@ const props = withDefaults(defineProps<{
   msg?:string,//描述文字
   maxSize?:number,//最大尺寸 单位M
   imgList?:string[],// 默认上传文件
+  needDownload?:boolean // 图片是否需要下载
 }>(),{
   exnameList:()=>['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG'],
   max:1,
   maxSize:2,
-  imgList:()=>([])
+  imgList:()=>([]),
+  needDownload:false,
 })
 
 onMounted(() => {
@@ -100,19 +102,23 @@ const lookimgs = (file: UploadFile)=>{
 }
 
 const filePath: string[] = []
-const upOneImg = async (file:UploadFile)=>{
+const upOneImg = async (file:UploadFile, downloadName?:string)=>{
   //上传单张图片
   const res:res = await getAliToken_api({site:'official_img'})
   if(res.status == 1){
     const exname=file.name.substring(file.name.lastIndexOf("."))
     const fd = new FormData();
-    const upData = {
+    const upData: { [propName: string]: string | number } = {
       key: res.body.dir + '/' + res.body.uuid + exname,
       OSSAccessKeyId: res.body.accessid,
       success_action_status: 200,
       policy: res.body.policy,
       signature: res.body.signature,
     };
+    if(props.needDownload){
+      const download_name = downloadName ? (downloadName + exname) : file.name
+      upData['Content-Disposition'] = 'attachment; filename=' + encodeURIComponent(download_name) //改变下载文件名
+    }
     for (const [key, value] of Object.entries(upData)) {
       fd.append(key, value as string);
     }
@@ -138,11 +144,12 @@ const upOneImg = async (file:UploadFile)=>{
     return Promise.reject('获取上传配置失败')
   }
 }
-const submit = async ()=>{
+const submit = async (downloadName?:string)=>{
+  // 一般一张图片才会改名，如果是多张，下载名就用文件名，不用传downloadName
   try {
     for (let i = 0; i < imgs.value.length; i++) {
       const v = imgs.value[i];
-      const url = await upOneImg(v).catch(err=>{
+      const url = await upOneImg(v, downloadName).catch(err=>{
         throw new Error(err)
       })
     }
