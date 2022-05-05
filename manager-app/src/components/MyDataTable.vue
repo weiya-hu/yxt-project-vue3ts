@@ -21,12 +21,13 @@
   >
     <template #default="{ row }">
       <div class="fleximg">
-        <el-tooltip class="box-item" effect="dark" placement="top-start">
+        <el-tooltip class="box-item" effect="dark" placement="top-start" v-if=" prop && row[prop]">
           <template #content
-            ><div class="text-tooltip-style">{{ (prop && row[prop]) || '---' }}</div></template
+            ><div class="text-tooltip-style">{{ (prop && row[prop]) }}</div></template
           >
-          <div class="text-style fleximg">{{ prop && row[prop] ? row[prop] : '---' }}</div>
+          <div class="text-style fleximg">{{ prop && row[prop] }}</div>
         </el-tooltip>
+        <div class="fleximg" v-else>---</div>
       </div>
     </template>
   </el-table-column>
@@ -141,7 +142,7 @@
     align="center"
   >
     <template #default="{ row }">
-      <el-tooltip effect="dark" placement="top">
+      <el-tooltip effect="dark" placement="top"  v-if="row.province > 0">
         <template #content>
           <div style="width: 100px">
             {{
@@ -153,10 +154,11 @@
         <div class="text-style">
           {{
             row.province > 0 &&
-            getHashStr(strToArr(row.province, row.city, row.district), store.state.addressHash)
+            getHashStr(strToArr(row.province, row.city, row.district), store.state.addressHash) 
           }}
         </div>
       </el-tooltip>
+      <div class="text-style" v-if="row.province == 0">---</div>
     </template>
   </el-table-column>
   <el-table-column v-if="type === 'source'" :property="prop" :label="lable" :min-width="width" align="center">

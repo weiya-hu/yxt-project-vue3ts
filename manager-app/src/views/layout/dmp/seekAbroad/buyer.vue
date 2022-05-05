@@ -129,7 +129,7 @@ const getList = async () => {
     name: inputSearch.userName,
     status: inputSearch.status,
     startTime: inputSearch.create_time ? inputSearch.create_time[0] : null,
-    endTiem: inputSearch.create_time ? inputSearch.create_time[1] : null,
+    endTime: inputSearch.create_time ? inputSearch.create_time[1] : null,
   }
   const { status, body } = await overseasPurchasePage_api(data)
   loading.value = false
