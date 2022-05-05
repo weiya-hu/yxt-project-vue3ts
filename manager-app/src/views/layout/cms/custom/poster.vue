@@ -40,7 +40,12 @@
               >
               <el-link v-if="row.status == 4" type="primary" @click="look(row.id)">详情</el-link>
               <div v-if="row.status == 1">
-                <el-link v-if="row.attach_url" type="primary" class="fcss" @click="getData(row.id)"
+                <el-link
+                  v-if="row.attach_url"
+                  type="primary"
+                  class="fcss"
+                  :href="row.attach_url"
+                  down-load="附件.zip"
                   >下载附件</el-link
                 >
                 <el-link type="primary" class="fcss" @click="pass(row.id)">通过</el-link>
@@ -213,15 +218,6 @@ const refuseSuccess = async (val: string) => {
   }
 }
 
-// 下载附件
-const getData = async (id: string) => {
-  const res = await articleAttach_api({ id })
-  console.log(res)
-  console.log(id)
-  if (res.status == 1) {
-    window.location.href = res.body.attach_url
-  }
-}
 // 图片详情
 const dialogVisible = ref(false)
 const showImgs = ref<string[]>([]) //预览图片列表
@@ -248,6 +244,7 @@ const imageEit = (id: string, urls: any[]) => {
 }
 const imgTypes = ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG']
 const upChange = (file: UploadFile, fileList: UploadFile[]) => {
+  if (!file.name) return
   const exname = file.name.substring(file.name.lastIndexOf('.'))
   if (imgTypes.indexOf(exname) == -1) {
     upload.value.handleRemove(file)
@@ -330,26 +327,20 @@ const goSubmit = async (order_id: string, urls: any[]) => {
         })
         .then(() => {
           if (filePath.length == imgs.value.length) {
-            articlePostersave_api({ urls: filePath, order_id: editId.value }).then((res: res) => {})
+            articlePostersave_api({ urls: filePath, order_id: editId.value }).then((res: res) => {
+              okMsg('上传成功')
+              close()
+              getList()
+            })
           }
         })
-      if (filePath.length == imgs.value.length) {
-        okMsg('上传成功')
-        close()
-        getList()
-        break
-      }
     }
-    getList()
   } catch (error: any) {
     errMsg(error, 0)
     close()
     getList()
   }
 }
-defineExpose({
-  getData,
-})
 // 列表
 const getList = async () => {
   loading.value = true

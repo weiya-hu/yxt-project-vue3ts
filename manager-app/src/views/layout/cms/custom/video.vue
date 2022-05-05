@@ -37,7 +37,12 @@
               >
               <el-link v-if="row.status == 4" type="primary" @click="look(row.id)">详情</el-link>
               <div v-if="row.status == 1">
-                <el-link v-if="row.attach_url" type="primary" class="fcss" @click="getData(row.id)"
+                <el-link
+                  v-if="row.attach_url"
+                  type="primary"
+                  class="fcss"
+                  :href="row.attach_url"
+                  down-load="附件.zip"
                   >下载附件</el-link
                 >
                 <el-link type="primary" class="fcss" @click="pass(row.id)">通过</el-link>
@@ -177,13 +182,6 @@ const refuseSuccess = async (val: string) => {
   }
 }
 
-// 下载附件
-const getData = async (id: string) => {
-  const res = await articleAttach_api({ id })
-  if (res.status == 1) {
-    window.location.href = res.body.attach_url
-  }
-}
 // 图片详情
 const dialogVisible = ref(false)
 const showImgs = ref<string[]>([]) //视频列表
@@ -231,9 +229,6 @@ const goSubmit = async () => {
   upLoading.value = true
   upVideo.value.submit()
 }
-defineExpose({
-  getData,
-})
 // 列表
 const getList = async () => {
   loading.value = true
