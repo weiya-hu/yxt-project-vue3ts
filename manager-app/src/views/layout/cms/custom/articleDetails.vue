@@ -1,20 +1,15 @@
 <template>
-  <div class="article_add">
-    <DetailsHeader />
-    <div class="addform">
-      <div class="fjend btns">
+  <div class="add_article">
+    <div class="fsc">
+      <DetailsHeader />
+      <div class="btns">
         <el-button class="bdc_btn" @click="$router.push('/cms/custom')">返回</el-button>
         <el-button type="primary" @click="submit">提交</el-button>
       </div>
-      <div class="form_content">
-        <div class="tip fcs">
-          <img :src="tip_i" alt="" />
-          <span
-            >请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</span
-          >
-        </div>
-        <KzAddArticle ref="addRef" needimg @success="subSuccess" />
-      </div>
+    </div>
+
+    <div class="aw">
+      <KzAddArticle ref="addRef" needimg @success="subSuccess" />
     </div>
   </div>
 </template>

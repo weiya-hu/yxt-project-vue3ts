@@ -1,20 +1,15 @@
 <template>
-  <div class="article_add">
+  <div class="add_article">
     <div class="fsc">
       <DetailsHeader />
-    </div>
-    <div class="fjend btns">
-      <el-button class="bdc_btn" @click="$router.push('/cms/custom')">返回</el-button>
-      <el-button class="bdc_btn" @click="submit(1)">保存</el-button>
-      <el-button type="primary" @click="submit(2)">完成</el-button>
-    </div>
-    <div class="aw">
-      <div class="tip fcs">
-        <img :src="tip_i" alt="" />
-        <span
-          >请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</span
-        >
+      <div class="btns">
+        <el-button class="bdc_btn" @click="$router.push('/cms/custom')">返回</el-button>
+        <el-button class="bdc_btn" @click="submit(1)">保存</el-button>
+        <el-button type="primary" @click="submit(2)">完成</el-button>
       </div>
+    </div>
+
+    <div class="aw">
       <KzAddArticle ref="addRef" needimg @success="subSuccess" />
     </div>
   </div>
