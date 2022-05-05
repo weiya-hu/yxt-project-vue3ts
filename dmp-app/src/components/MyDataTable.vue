@@ -6,6 +6,13 @@
       </div>
     </template>
   </el-table-column>
+  <el-table-column v-if="type==='sex'" :property="prop" :label="lable" :min-width="width">
+     <template #default="{row}">
+      <div class="flexl">
+        <div >{{prop && sexes[row[prop]] }}</div>
+      </div>
+    </template>
+  </el-table-column>
   <el-table-column v-if="type==='text-tooltip'" :property="prop" :label="lable" :min-width="width">
      <template #default="{row}">
       <div class="flexl">
@@ -115,8 +122,6 @@
   const typeHash = computed(() => store.state.typeHash)
   const addressHash = computed(() => store.state.addressHash)
 
-  
-  
   const props = withDefaults(defineProps<{
     type:string,
     lable?:string,
@@ -126,8 +131,13 @@
   }>(),{})
   const {type,lable,prop,width,operatButton} =toRefs(props)
   const companyType = ref()
-    const country=ref()
+  const country=ref()
   const errorShow = ref(false)
+  const sexes: Record<number,string> = {
+    0: '未知',
+    1: '男',
+    2: '女',
+  }
 
   props.type==='company_type' && (store.getCAndC().then(res=>{
     console.log(res)
