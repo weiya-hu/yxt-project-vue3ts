@@ -147,7 +147,7 @@
                     >查看</el-link
                   >
 
-                  <div class="line"></div>
+                  <div class="line" v-if="row.state != 0"></div>
                   <el-link v-if="row.state == 4" type="primary" @click="getNewsDown(row.id)"
                     >下线</el-link
                   >
@@ -160,7 +160,7 @@
                     @click="$router.push('/website/examine?id=' + row.id)"
                     >审核</el-link
                   >
-                  <div class="line"></div>
+                  <div class="line" v-if="row.state != 0"></div>
                   <el-link
                     v-if="row.state == 0 || row.state == 3"
                     type="primary"
