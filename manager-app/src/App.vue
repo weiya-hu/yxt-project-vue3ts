@@ -387,19 +387,19 @@ img{
   border-radius: 50%;
   margin-right: 10px;
   &.sdot_g{
-    background-color: #24BD13;
+    background-color: #2BD34E;
   }
   &.sdot_y{
-    background-color: #FFB700;
+    background-color: $coloryellow;
   }
   &.sdot_b{
-    background-color: #51A1FC;
+    background-color: $dfcolor;
   }
   &.sdot_r{
-    background-color: #E40000;
+    background-color: $colorred;
   }
   &.sdot_9{
-    background-color: #999;
+    background-color: $color999;
   }
 }
 .btn_tab{

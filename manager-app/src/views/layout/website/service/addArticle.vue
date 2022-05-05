@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <KzAddArticle ref="addRef" needtype @success="subSuccess"/>
+    <KzAddArticle ref="addRef" needtype @success="subSuccess" :types="typeList"/>
     
   </div>
 </template>
@@ -19,13 +19,25 @@ import { useRoute, useRouter } from 'vue-router'
 import { mainStore } from '@/store/index'
 import DetailsHeader from "@/components/DetailsHeader.vue";
 import KzAddArticle from "@/components/KzAddArticle.vue";
-import { getArtDetails_api, addArt_api, editArt_api } from '@/api/website/service'
+import { getArtTypeList_api, getArtDetails_api, addArt_api, editArt_api } from '@/api/website/service'
 import { warnMsg } from '@/utils'
 
 const store = mainStore()
 const route = useRoute()
 const router = useRouter()
 const id = route.query.id as string
+
+const typeList = ref<{ value: number, label: string }[]>([])
+const getTypeList = async () => {
+  const { status, body } = await getArtTypeList_api()
+  if(status == 1){
+    for (const [key, value] of Object.entries(body)) {
+      typeList.value.push({ value:Number(key), label:value as string })
+    }
+    id && getDetails()
+  }
+}
+getTypeList()
 
 const getDetails = async () => {
   const { status, body } = await getArtDetails_api({ id })
@@ -43,7 +55,6 @@ const getDetails = async () => {
     })
   }
 }
-id && getDetails()
 
 const addRef = ref()
 const aStatus = ref<1|2>(1)

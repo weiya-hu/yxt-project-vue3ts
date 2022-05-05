@@ -316,3 +316,29 @@ export function getKzStatus(key:number) {
   }
   return obj
 }
+
+/**
+ * cms我的作品库状态
+*/
+export const KZ_MY_STATUS: Record<number, { text:string, className: string }> = {
+  0:{ text: '---', className: '' },
+  1:{ text: '草稿', className: 'sdot_9' },
+  2:{ text: '待处理', className: 'sdot_y' },
+  3:{ text: '已完结', className: 'sdot_b' },
+  4:{ text: '被驳回', className: 'sdot_r' }
+}
+
+/**
+ * cms获取我的作品库状态
+*/
+export function getKzMyStatus(key:any) {
+  const obj = { text: '---', className: '' }
+  try {
+    if(KZ_MY_STATUS[key as keyof typeof KZ_MY_STATUS]){
+      return KZ_MY_STATUS[key as keyof typeof KZ_MY_STATUS]
+    }
+  } catch (error) {
+    return obj
+  }
+  return obj
+}

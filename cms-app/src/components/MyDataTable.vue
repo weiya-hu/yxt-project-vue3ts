@@ -35,9 +35,9 @@
   <el-table-column v-if="type==='select'" type="selection" :width="width" align="center" />
   <el-table-column v-if="type==='status'" :property="prop" :label="lable" :min-width="width">
     <template #default="{row}">
-      <div class="flexl">
-        <div :class="getStatus(row.status).className"></div>
-        <div >{{getStatus(row.status).text}}</div>
+      <div class="fcs">
+        <div class="status_dot" :class="getKzStatus(row.status).className"></div>
+        <div>{{getKzStatus(row.status).text}}</div>
       </div>
     </template>
   </el-table-column>
@@ -72,6 +72,7 @@
 <script setup lang="ts">
 import { toRefs,ref} from 'vue'
 import {Format} from '@/utils/date'
+import { getKzStatus } from '@/utils/index'
 const props = withDefaults(defineProps<{
   type:string,
   lable?:string,
@@ -92,37 +93,6 @@ const operate=(index:number,row:any)=>{
 
 }
 const {type,lable,prop,width,operatButton} =toRefs(props)
-
-const getStatus = (type:number|string)=>{
-  const obj = ref<{text:string,className:string}>()
-  switch (Number(type)) {
-    case 2:
-      obj.value = {
-        text:'已授理',
-        className:'calculating'
-      }
-      break;
-    case 3:
-      obj.value = {
-        text:'驳回',
-        className:'calculat-false'
-      }
-      break;
-    case 4:
-      obj.value = {
-        text:'已完成',
-        className:'calculated'
-      }
-      break;
-    default:
-      obj.value = {
-        text:'待处理',
-        className:'calcula_yellow'
-      }
-      break;
-  }
-  return obj.value
-}
 
 </script>
 

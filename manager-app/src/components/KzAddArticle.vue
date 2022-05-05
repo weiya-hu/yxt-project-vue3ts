@@ -84,7 +84,7 @@ const props = withDefaults(defineProps<{
   needdigest?:boolean // 是否显示摘要
   needtype?:boolean // 是否显示分类
   needsource?:0|1|2 // 是否显示来源 0：不显示来源，1：显示来源并且显示来源输入框，2：显示来源不显示来源输入框
-  types?:any[] // 分类列表
+  types?:{ value:number|string, label:string }[] // 分类列表
 }>(),{
   needimg:false,
   needdigest:false,

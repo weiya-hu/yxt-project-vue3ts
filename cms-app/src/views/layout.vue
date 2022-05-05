@@ -238,6 +238,7 @@ const loginout = ()=>{
       }
       >div{
         width: 96px;
+        line-height: 1;
       }
     }
     .user{

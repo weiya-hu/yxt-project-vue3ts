@@ -65,7 +65,7 @@ axios.interceptors.response.use(
 export function get(isBg:0|1, url: string, params?: any, showmsg?: boolean) {
   return new Promise<res>((resolve, reject) => {
     axios
-      .get(isBg ? 'api' + url : 'bgapi' + url, { params })
+      .get((isBg ? 'api' : 'bgapi') + url, { params })
       .then((res) => {
         if (showmsg && res.data && res.data.status == 1) {
           ElMessage({
@@ -88,7 +88,7 @@ export function get(isBg:0|1, url: string, params?: any, showmsg?: boolean) {
 export function post(isBg:0|1, url: string, params?: any, showmsg?: boolean) {
   return new Promise<res>((resolve, reject) => {
     axios
-      .post(isBg ? 'api' + url : 'bgapi' + url, params)
+      .post((isBg ? 'api' : 'bgapi') + url, params)
       .then((res) => {
         if (showmsg && res.data && res.data.status == 1) {
           ElMessage({

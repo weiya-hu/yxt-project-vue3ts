@@ -59,6 +59,7 @@ const getType = async () => {
   const { status, body } = await getFeedBackType_api()
   if(status == 1){
     statusType.value = body
+    getList()
   }
 }
 getType()
@@ -77,7 +78,6 @@ const getList = async () => {
     tableData.value = body.records
   }
 }
-getList()
 
 const setStatus = async (arr:[0|1,string|number]) => {
   const { status } = await setFeedBackStatus_api({

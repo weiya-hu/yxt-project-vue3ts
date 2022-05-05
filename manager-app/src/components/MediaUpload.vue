@@ -1,6 +1,7 @@
 <template>
   <div class="media_upload flex" :class="max==1?'one_up':''">
     <el-upload
+      drag
       action="#"
       :auto-upload="false"
       :limit="max"
@@ -17,7 +18,7 @@
     >
       <div class="fc fcc">
         <el-icon><Plus /></el-icon>
-        <div class="file_name">点击上传</div>
+        <div class="file_name">拖拽/点击上传</div>
       </div>
     </el-upload>
     <div class="tips" v-html="msg"></div>
@@ -44,10 +45,10 @@ const props = withDefaults(defineProps<{
   imgList?:string[],// 默认上传文件
   needDownload?:boolean // 图片是否需要下载
 }>(),{
-  exnameList:()=>['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG'],
+  exnameList:() => ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG'],
   max:1,
   maxSize:2,
-  imgList:()=>([]),
+  imgList:() => [],
   needDownload:false,
 })
 
@@ -108,10 +109,10 @@ const upOneImg = async (file:UploadFile, downloadName?:string)=>{
   if(res.status == 1){
     const exname=file.name.substring(file.name.lastIndexOf("."))
     const fd = new FormData();
-    const upData: { [propName: string]: string | number } = {
+    const upData: { [propName: string]: string } = {
       key: res.body.dir + '/' + res.body.uuid + exname,
       OSSAccessKeyId: res.body.accessid,
-      success_action_status: 200,
+      success_action_status: '200',
       policy: res.body.policy,
       signature: res.body.signature,
     };
@@ -120,7 +121,7 @@ const upOneImg = async (file:UploadFile, downloadName?:string)=>{
       upData['Content-Disposition'] = 'attachment; filename=' + encodeURIComponent(download_name) //改变下载文件名
     }
     for (const [key, value] of Object.entries(upData)) {
-      fd.append(key, value as string);
+      fd.append(key, value);
     }
     fd.append("file", file.raw as Blob);
     const response = await axios({
@@ -184,6 +185,16 @@ defineExpose({
 
 <style scoped lang="scss">
 .media_upload{
+  :deep(.el-upload-dragger){
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius:0;
+  }
   .upbox{
     height: 100%;
     :deep(.is-disabled){

@@ -1,1 +1,0 @@
-import{b as s}from"./index.9bfce773.js";const c=c=>s("cms","/cms/res.page",c),e=c=>s("user","/public/res.get",c),r=c=>s("cms","/cms/res/download.do",c),a=()=>s("cms","/cms/industry.list");export{c as a,r as d,a as i,e as r};

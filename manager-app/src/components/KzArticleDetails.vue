@@ -4,7 +4,7 @@
       <div class="title pt16">{{ info.title }}</div>
       <div class="fcs info mb16">
         <div>分类：</div>
-        <div class="info_content mr20">{{ info.article_type }}</div>
+        <div class="info_content mr20">{{ typeObj[Number(info.article_type)] }}</div>
         <div>查看量：</div>
         <div class="info_content mr20">{{ info.hits }}</div>
         <div>发布事件：</div>
@@ -43,13 +43,17 @@ const props = withDefaults(
       status: number
       text: string
     }
-    statusObj?: any // status 对应obj
+    statusObj?: Record<number, { className: string, text:string }> // status 对应obj
+    typeObj?: Record<number, string>
   }>(),
   {
     statusObj: () => ({
       1: { className: 'sdot_b', text: '草稿' },
       2: { className: 'sdot_r', text: '离线' },
       3: { className: 'sdot_g', text: '在线' },
+    }),
+    typeObj: () => ({
+      0: ''
     }),
   }
 )

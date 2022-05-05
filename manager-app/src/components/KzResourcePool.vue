@@ -1,6 +1,6 @@
 <template>
 
-  <el-dialog v-model="show" title="资源库" @close="closeLib" custom-class="pool_box">
+  <el-dialog v-model="show" title="资源库" @close="closeLib" custom-class="pool_box" width="900px" :append-to-body="true">
     <el-button class="upbtn bdc_btn" @click="goUp">去上传</el-button>
     <el-tabs v-model="Tabtype" @tab-click="changeTabs">
       <el-tab-pane label="图片" :name="1" :disabled="tabDisabled == 1">

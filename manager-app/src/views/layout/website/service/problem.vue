@@ -69,7 +69,19 @@ import Mypage from "@/components/Mypage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyDialog from "@/components/MyDialog.vue";
 import { Edit, Delete } from '@element-plus/icons-vue'
-import { getProblemList_api, saveProblem_api, delProblem_api } from '@/api/website/service'
+import { getProblemTypeList_api, getProblemList_api, saveProblem_api, delProblem_api } from '@/api/website/service'
+
+const typeList = ref<{ value: number, label: string }[]>([])
+const getTypeList = async () => {
+  const { status, body } = await getProblemTypeList_api()
+  if(status == 1){
+    for (const [key, value] of Object.entries(body)) {
+      typeList.value.push({ value:Number(key), label:value as string })
+    }
+    getList()
+  }
+}
+getTypeList()
 
 const page = ref(1)
 const size = ref(20)
@@ -85,7 +97,6 @@ const getList = async () => {
     list.value = body.records
   }
 }
-getList()
 
 const close = () => {
   addFormRef.value.resetFields()
@@ -96,28 +107,7 @@ const close = () => {
   addShow.value = false
 }
 const addShow = ref(false)
-const typeList = [
-  {
-    value: 1,
-    label: '分类一',
-  },
-  {
-    value: 2,
-    label: '分类二',
-  },
-  {
-    value: 3,
-    label: '分类三',
-  },
-  {
-    value: 4,
-    label: '分类四',
-  },
-  {
-    value: 5,
-    label: '分类五',
-  },
-]
+
 const rules = reactive({
   problem_type: [{ required: true, message: '请选择分类！', trigger: 'blur' }],
   problem: [{ required: true, message: '请输入问题！', trigger: 'blur' }],

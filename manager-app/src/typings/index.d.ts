@@ -33,6 +33,8 @@ interface PageParams {
 
 /**
  * @name 资源库类型
+ * @source_type 1图片，2视频
+ * @cover_url 视频封面图片
 */
 interface KzPool {
   source_url:string,

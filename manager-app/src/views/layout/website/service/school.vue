@@ -15,6 +15,7 @@
           <el-table :data="tableData" border draggable>
             <el-table-column prop="title" label="标题"/>
             <el-table-column prop="article_type" label="分类">
+              <template #default="{ row }">{{artTypeList[Number(row.article_type)]}}</template>
             </el-table-column>
             <el-table-column prop="create_time" label="发布时间">
               <template #default="{ row }">{{formatDate(new Date(row.create_time))}}</template>
@@ -136,7 +137,7 @@
     <el-dialog v-model="addShow" title="添加视频" width="380px" @close="close">
       <el-form :model="addForm" :rules="rules" ref="addFormRef">
         <el-form-item label="选择视频" required label-width="90px">
-          <div class="sel_pool fcc" @click="showKzPool('sel_tutorials', 2, true)">
+          <div class="sel_pool fcc" @click="showKzPool('sel_school', 2, true)">
             <div class="poolbox" v-if="addPool.id">
               <img :src="addPool.cover_url" alt="">
               <div class="lookicon fcc lookhover" @click.stop="lookImage([addPool.cover_url!],0)">
@@ -172,8 +173,8 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { getArtList_api, delArt_api, setArt_api } from '@/api/website/service'
-import { getSchoolVideoList_api, addSchoolsVideo_api, delSchoolVideo_api, setSchoolVideo_api, getSchoolTopList_api } from '@/api/website/service'
+import { getArtTypeList_api, getArtList_api, delArt_api, setArt_api } from '@/api/website/service'
+import { getSchoolVideoTypeList_api, getSchoolVideoList_api, addSchoolsVideo_api, delSchoolVideo_api, setSchoolVideo_api, getSchoolTopList_api } from '@/api/website/service'
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyPage from "@/components/MyPage.vue";
 import MyDialog from "@/components/MyDialog.vue";
@@ -183,6 +184,16 @@ import emiter from '@/utils/bus'
 import { showKzPool, lookImage, lookVideo } from '@/utils/index'
 
 const tab = ref(1)
+
+const artTypeList = ref<Record<number, string>>({})
+const getArtTypeList = async () => {
+  const { status, body } = await getArtTypeList_api()
+  if(status == 1){
+    artTypeList.value = body
+    getList()
+  }
+}
+getArtTypeList()
 
 const tableData = ref([])
 const page = ref(1)
@@ -198,7 +209,6 @@ const getList = async () => {
     total.value = res.body.total
   }
 }
-getList()
 
 const setStatus = async (id:string|number, status:2|3) => {
   const res = await setArt_api({ id, status })
@@ -223,6 +233,19 @@ const sureDel = async () => {
 
 // 文章结束
 
+const typeList = ref<{ value: number, label: string }[]>([])
+const getTypeList = async () => {
+  const { status, body } = await getSchoolVideoTypeList_api()
+  if(status == 1){
+    for (const [key, value] of Object.entries(body)) {
+      typeList.value.push({ value:Number(key), label:value as string })
+    }
+    getTopList()
+    getVideoList()
+  }
+}
+getTypeList()
+
 const toplist = ref<any[]>([])
 const getTopList = async () => {
   const { status, body } = await getSchoolTopList_api({ status : 1 })
@@ -230,7 +253,6 @@ const getTopList = async () => {
     toplist.value = body
   }
 }
-getTopList()
 
 const v_page = ref(1)
 const v_size = ref(20)
@@ -246,7 +268,6 @@ const getVideoList = async () => {
     list.value = body.records
   }
 }
-getVideoList()
 
 const lookBanner = (i:number,isTop = false) => {
   const blist = isTop ? toplist.value.map(v => v.cover_url) : list.value.map(v => v.cover_url)
@@ -259,28 +280,6 @@ const close = () => {
   addShow.value = false
 }
 const addShow = ref(false)
-const typeList = [
-  {
-    value: 1,
-    label: '分类一',
-  },
-  {
-    value: 2,
-    label: '分类二',
-  },
-  {
-    value: 3,
-    label: '分类三',
-  },
-  {
-    value: 4,
-    label: '分类四',
-  },
-  {
-    value: 5,
-    label: '分类五',
-  },
-]
 const rules = reactive({
   video_type: [{ required: true, message: '请选择分类！', trigger: 'change' }],
 })
@@ -290,7 +289,7 @@ const addForm = reactive({
 })
 const addFormRef = ref()
 const addPool = ref({} as KzPool)
-emiter.on('sel_tutorials', (val:KzPool) => {
+emiter.on('sel_school', (val:KzPool) => {
   addPool.value = val
 })
 

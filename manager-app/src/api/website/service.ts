@@ -1,6 +1,13 @@
 import { get, post } from '@/utils/request'
 
 /**
+ * @name 视频教程类型查询接口
+*/
+export const getTutorialsTypeList_api = (): Promise<res> => {
+  return get(1,'/manage/customer/video/type.list')
+}
+
+/**
  * @name 视频教程分页
 */
 export const getTutorialsList_api = (data:PageParams): Promise<res> => {
@@ -36,6 +43,13 @@ export const getTopTutorialsList_api = (data:{ status:0|1 }): Promise<res> => {
 }
 
 /**
+ * @name 管理端常见问题类型查询接口
+*/
+export const getProblemTypeList_api = (): Promise<res> => {
+  return get(1,'/manage/customer/common/problem.list')
+}
+
+/**
  * @name 管理端常见问题分页
 */
 export const getProblemList_api = (data:PageParams): Promise<res> => {
@@ -54,6 +68,13 @@ export const saveProblem_api = (data:{ answer:string, problem:string, problem_ty
 */
 export const delProblem_api = (data:{ id:string|number }): Promise<res> => {
   return post(1,'/manage/customer/common/problem.del', data, true)
+}
+
+/**
+ * @name 营销学堂文章类型查询接口
+*/
+export const getArtTypeList_api = (): Promise<res> => {
+  return get(1,'/manage/customer/article/type.list')
 }
 
 /**
@@ -96,6 +117,13 @@ export const delArt_api = (data:{ id:string|number }): Promise<res> => {
 */
 export const setArt_api = (data:{ id:string|number, status:2|3 }): Promise<res> => {
   return post(1,'/manage/customer/article/up.do', data, true)
+}
+
+/**
+ * @name 营销学堂视频类型查询接口
+*/
+export const getSchoolVideoTypeList_api = (): Promise<res> => {
+  return get(1,'/manage/customer/marketing/video/type.list')
 }
 
 /**

@@ -1,5 +1,6 @@
 <template>
   <el-upload 
+    drag
     :action="hostUrl"
     :auto-upload="false"
     :limit="1"
@@ -25,7 +26,7 @@
               <document v-if="modelValue"/>
               <plus v-else/>
             </el-icon>
-            <div class="file_name">{{modelValue||'点击上传'}}</div>
+            <div class="file_name">{{modelValue||'拖拽/点击上传'}}</div>
           </div>
         </div>
       </div>
@@ -64,7 +65,7 @@ const props = withDefaults(defineProps<{
   maxSize?:number,//最大尺寸 单位M
 }>(),{
   modelValue:'',
-  exnameList:()=>['.zip', '.rar', '.7z'],
+  exnameList:() => ['.zip', '.rar', '.7z'],
   maxSize:4
 })
 
@@ -170,6 +171,16 @@ defineExpose({
 <style scoped lang="scss">
 .my_upload{
   display: flex;
+  :deep(.el-upload-dragger){
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius:0;
+  }
   .upbox{
     .upvideo{
       video{

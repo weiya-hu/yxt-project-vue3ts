@@ -127,10 +127,23 @@ import { ref, reactive } from 'vue'
 import { ZoomIn, CaretRight, Plus, Pointer, CollectionTag } from '@element-plus/icons-vue'
 import emiter from '@/utils/bus'
 import { showKzPool, lookImage, lookVideo } from '@/utils/index'
-import { getTutorialsList_api, addTutorialsVideo_api, delTutorialsVideo_api, setTutorialsVideo_api, getTopTutorialsList_api } from '@/api/website/service'
+import { getTutorialsTypeList_api, getTutorialsList_api, addTutorialsVideo_api, delTutorialsVideo_api, setTutorialsVideo_api, getTopTutorialsList_api } from '@/api/website/service'
 import Mypage from "@/components/Mypage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyDialog from "@/components/MyDialog.vue";
+
+const typeList = ref<{ value: number, label: string }[]>([])
+const getTypeList = async () => {
+  const { status, body } = await getTutorialsTypeList_api()
+  if(status == 1){
+    for (const [key, value] of Object.entries(body)) {
+      typeList.value.push({ value:Number(key), label:value as string })
+    }
+    getTopList()
+    getList()
+  }
+}
+getTypeList()
 
 const toplist = ref<any[]>([])
 const getTopList = async () => {
@@ -139,7 +152,6 @@ const getTopList = async () => {
     toplist.value = body
   }
 }
-getTopList()
 
 const page = ref(1)
 const size = ref(20)
@@ -155,7 +167,6 @@ const getList = async () => {
     list.value = body.records
   }
 }
-getList()
 
 const lookBanner = (i:number,isTop = false) => {
   const blist = isTop ? toplist.value.map(v => v.cover_url) : list.value.map(v => v.cover_url)
@@ -168,28 +179,7 @@ const close = () => {
   addShow.value = false
 }
 const addShow = ref(false)
-const typeList = [
-  {
-    value: 1,
-    label: '分类一',
-  },
-  {
-    value: 2,
-    label: '分类二',
-  },
-  {
-    value: 3,
-    label: '分类三',
-  },
-  {
-    value: 4,
-    label: '分类四',
-  },
-  {
-    value: 5,
-    label: '分类五',
-  },
-]
+
 const rules = reactive({
   video_type: [{ required: true, message: '请选择分类！', trigger: 'change' }],
 })
