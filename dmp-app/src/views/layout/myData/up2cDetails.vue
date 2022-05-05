@@ -41,8 +41,8 @@ const tableTitle=ref([
   {type:'text',lable:'性别',prop:'sex',width:80},
   {type:'text',lable:'联系方式',prop:'mobiles',width:100},
   {type:'text',lable:'邮箱',prop:'email',width:150},
-  {type:'text',lable:'从事行业',prop:'industry_id',width:130},
-  {type:'city',lable:'地区',prop:'region',width:150},
+  {type:'industry_id',lable:'从事行业',prop:'industry_id',width:130},
+  {type:'city_id',lable:'地区',prop:'city',width:150},
 ])
 const tableList=ref([])
 

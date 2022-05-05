@@ -29,7 +29,8 @@
   </el-table-column>
   <el-table-column v-if="type==='link'" :property="prop" :label="lable" :min-width="width">
      <template #default="{row}">
-        <el-link type="primary" :href="row[prop]">{{ row[prop] }}</el-link>
+        <el-link v-if="prop && row[prop]" type="primary" :href="row[prop]">{{ row[prop] }}</el-link>
+        <div v-else >---</div>
       </template>
   </el-table-column>
   <el-table-column v-if="type==='select'" type="selection" :width="width" align="center" />
@@ -129,6 +130,7 @@
   const errorShow = ref(false)
 
   props.type==='company_type' && (store.getCAndC().then(res=>{
+    console.log(res)
     companyType.value=res
   }))
   props.type==='country' && (store.getCountryList().then(res=>{
@@ -145,7 +147,7 @@
   const getCompanyType=(val:any) =>{
     if(val && companyType.value){
       let name
-      companyType.value.forEach((m:any)=>{m.value == val && (name=m.name)})
+      companyType.value.forEach((m:any)=>{m.id == val && (name=m.name)})
       return name
     }else{
        return '---'
