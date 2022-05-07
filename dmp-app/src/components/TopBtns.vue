@@ -3,7 +3,7 @@
     <div class="find_number" v-if="total !== ''">
       为您找到<span>&ensp;{{total}}&ensp;</span>家符合条件的客户（<span>*根据政策与监管法规要求，联系人手机号脱敏展示</span>）
     </div>
-    <el-button size="large" type="primary" @click="emit('add')" v-else>新增需求</el-button>
+    <el-button size="large" type="primary" @click="emit('add')" v-else>{{btnText}}</el-button>
     <el-button size="large" v-if="syncbtn" @click="showSync" :disabled="syncDisabled">同步数据</el-button>
 
     <el-dialog v-model="show" title="同步数据" width="465px" @close="close" custom-class="sync_dialog">
@@ -44,10 +44,12 @@ const props = withDefaults(defineProps<{
   syncbtn?:boolean, // 是否显示同步按钮
   syncDisabled?:boolean // 同步按钮是否禁用
   syncApi?:Function // 同步条数接口
+  btnText?: string, // 按钮名称
 }>(),{
   total: '',
   syncbtn:false,
   syncDisabled:true,
+  btnText: '新增需求'
 })
 
 // add：点击新增时触发；sync：点击同步时触发

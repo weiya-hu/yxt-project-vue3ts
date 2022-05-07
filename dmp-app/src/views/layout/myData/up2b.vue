@@ -1,7 +1,7 @@
 <template>
   <div class="up2b">
 
-    <TopBtns @add="dialogVisible = true"/>
+    <TopBtns @add="dialogVisible = true" btn-text="上传数据"/>
 
     <div class="mytable">
       <el-table

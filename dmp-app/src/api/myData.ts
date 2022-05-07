@@ -20,7 +20,7 @@ export const upRecordAdd = (data:any): Promise<res> => {
  * @name 数据同步
 */
 export const setSync_api = (data:{ list:(string|number)[], type: 1 | 2 }): Promise<res> => {
-  return post('dmp', data.type == 1 ? '/dmp/source/sync/business.do' : '/dmp/source/sync/customer.do', data.list)
+  return post('dmp', data.type == 1 ? '/dmp/source/sync/business.do' : '/dmp/source/sync/customer.do', { list: data.list })
 }
 
 /**
