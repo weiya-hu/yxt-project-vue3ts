@@ -34,8 +34,8 @@
             <el-form-item label="作者：" prop="author">
               <el-input v-model="newsForm.author" placeholder="输入搜索" maxlength="36" />
             </el-form-item>
-            <el-form-item label="分类：" prop="itemize">
-              <el-select v-model="newsForm.itemize" placeholder="请选择">
+            <el-form-item label="分类：" prop="type_id">
+              <el-select v-model="newsForm.type_id" placeholder="请选择">
                 <el-option
                   v-for="item in typeDate"
                   :key="item.id"
@@ -88,7 +88,7 @@
         <div class="mytable">
           <el-table :data="newsData" border>
             <el-table-column property="title" label="文章标题" width="230" />
-            <el-table-column property="author" label="作者" width="180" />
+            <el-table-column property="creator_name" label="作者" width="180" />
             <el-table-column property="type_name" label="分类" width="160" />
             <el-table-column property="create_time" label="创建时间" width="200">
               <template #default="{ row }">
@@ -302,14 +302,14 @@ const size = ref(10)
 interface SData {
   size: number
   current: number
-  author: string
+  creator_name: string
   keyword: string
   state: number
 }
 const newsForm = reactive({
   keyword: '',
   author: '',
-  itemize: '',
+  type_id: '',
   status: '',
   reslut: '',
 })
