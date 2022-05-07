@@ -37,7 +37,7 @@
             <el-form-item label="分类：" prop="type_id">
               <el-select v-model="newsForm.type_id" placeholder="请选择">
                 <el-option
-                  v-for="item in typeDate"
+                  v-for="item in draTypeDate"
                   :key="item.id"
                   :label="item.name"
                   :value="item.id"
@@ -178,8 +178,8 @@
               </template>
             </el-table-column>
             <template #empty>
-            <MyEmpty />
-          </template>
+              <MyEmpty />
+            </template>
           </el-table>
         </div>
         <MyPage v-model:page="page" v-model:size="size" :total="total" @change="newsList" />
@@ -354,7 +354,7 @@ const statisticsList = async () => {
 }
 statisticsList()
 const typeId = ref<any>({})
-const typeName = ref<any>({})
+const typeName = ref<any>('')
 const typeDate = ref<any>({})
 const draTypeDate = ref<any>({})
 const typeList = async () => {
@@ -409,6 +409,7 @@ const typeComfirm = async () => {
   if (res && res.status === 1) {
     typeList()
     addBox.value = false
+    typeName.value = ''
   }
 }
 

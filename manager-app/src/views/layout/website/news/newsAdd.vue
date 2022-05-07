@@ -84,7 +84,7 @@ const typeDate = ref<any[]>([])
 const typeList = async () => {
   const res = await typeList_api()
   if (res.status == 1) {
-    typeDate.value = res.body.map((v: any) => {
+    typeDate.value = res.body.filter((v: any) => v.top == 2).map((v: any) => {
       return { label: v.name, value: v.id }
     })
     id && getDetails()
