@@ -5,19 +5,13 @@
     </div>
 
     <div class="addform">
-      <div class="tip fcs">
-        <img :src="tip_i" alt="" />
-        <span
-          >请注意：根据国家相关法律法规要求，切勿发布任何色情、低俗、涉政等违法违规内容。一旦出现，我们将会根据法规进行审核处理。</span
-        >
-      </div>
       <KzAddArticle ref="addRef" needimg needdigest @success="subSuccess" />
     </div>
 
     <el-card v-loading="loading" class="mycard mt20">
       <div class="form_title">内容设置</div>
       <el-form ref="aFormRef" :model="aForm" :rules="aRules" hide-required-asterisk>
-        <div class="fcs">
+        <div class="fcs" v-if="aForm.down_type == 1">
           <el-form-item label="第三方URL链接：" prop="url" class="mr20">
             <el-input v-model="aForm.url" placeholder="请输入第三方URL链接"></el-input>
           </el-form-item>
@@ -68,7 +62,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import tip_i from '@/assets/images/tip.png'
 import { useRoute, useRouter } from 'vue-router'
 import MediaUpload from '@/components/MediaUpload.vue'
 import DetailsHeader from '@/components/DetailsHeader.vue'
@@ -176,12 +169,16 @@ const qr_codePass = (rule: any, value: any, callback: Function) => {
   callback()
 }
 const aRules = {
-  url: [{ required: true, message: '请输入第三方URL链接', trigger: 'blur' }],
-  url_key: [{ required: true, message: '第三方URL秘钥：', trigger: 'blur' }],
+  url: [{ required: aForm.value.down_type == 1, message: '请输入第三方URL链接', trigger: 'blur' }],
+  url_key: [{ required: aForm.value.down_type == 1, message: '第三方URL秘钥：', trigger: 'blur' }],
   qr_code: [{ validator: qr_codePass, trigger: 'blur' }],
 }
 const onChangeDownType = (val: number) => {
   val == 1 && aFormRef.value.clearValidate('qr_code')
+  if (val == 2) {
+    aForm.value.url = ''
+    aForm.value.url_key = ''
+  }
 }
 
 const exnameList = ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG']
