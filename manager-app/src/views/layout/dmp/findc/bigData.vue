@@ -81,6 +81,9 @@
               </div>
             </template>
           </el-table-column>
+          <template #empty>
+            <MyEmpty />
+          </template>
         </el-table>
       </div>
       <MyPage v-model:page="page" v-model:size="size" :total="total" @change="bigdataList" />
@@ -95,6 +98,7 @@ import { ref, reactive } from 'vue'
 import Search from '@/components/Search.vue'
 import { formatDate } from '@/utils/date'
 import MyPage from '@/components/MyPage.vue'
+import MyEmpty from '@/components/MyEmpty.vue'
 import { bigdataList_api, bigdataPass_api, bigdataReject_api, bigdataUp_api } from '@/api/dmp/findc'
 import { ElMessageBox } from 'element-plus'
 import Refuse from '@/components/Refuse.vue'

@@ -49,14 +49,7 @@
                   @click="$router.push('/dmp/findc/segmentdatadetail?id=' + row.id)"
                   >详情</el-link
                 >
-                <el-link
-                  v-if="row.status == 1"
-                  type="primary"
-                  :href="row.attachment"
-                  down-load="附件.zip"
-                  >下载附件</el-link
-                >
-                <div v-if="row.status == 1 || row.status == 4" class="line"></div>
+                <div v-if="row.status == 4" class="line"></div>
                 <el-link v-if="row.status == 1" type="primary" @click="refuse(row.id)"
                   >驳回</el-link
                 >
@@ -76,6 +69,9 @@
               </div>
             </template>
           </el-table-column>
+          <template #empty>
+            <MyEmpty />
+          </template>
         </el-table>
       </div>
       <MyPage v-model:page="page" v-model:size="size" :total="total" @change="segmentList" />
@@ -90,6 +86,7 @@ import { ref, reactive } from 'vue'
 import Search from '@/components/Search.vue'
 import { formatDate } from '@/utils/date'
 import MyPage from '@/components/MyPage.vue'
+import MyEmpty from '@/components/MyEmpty.vue'
 import { segmentList_api, segmentPass_api, segmentReject_api, segmentUp_api } from '@/api/dmp/findc'
 import { ElMessageBox } from 'element-plus'
 import Refuse from '@/components/Refuse.vue'

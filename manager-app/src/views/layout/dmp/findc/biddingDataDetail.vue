@@ -18,6 +18,9 @@
               <div>{{ formatDate(new Date(row.create_time), 'yyyy-MM-dd hh:mm:ss') }}</div>
             </template>
           </el-table-column>
+          <template #empty>
+            <MyEmpty />
+          </template>
         </el-table>
       </div>
       <MyPage v-model:page="page" v-model:size="size" :total="total" @change="getList" />
@@ -30,7 +33,6 @@ import { ref } from 'vue'
 import DetailsHeader from '@/components/DetailsHeader.vue'
 import { getHash, getHashStr, strToArr } from '@/utils/index'
 import { mainStore } from '@/store/index'
-// eslint-disable-next-line camelcase
 import { biddingDetail_api } from '@/api/dmp/findc'
 import MyPage from '@/components/MyPage.vue'
 import MyEmpty from '@/components/MyEmpty.vue'

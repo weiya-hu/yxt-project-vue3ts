@@ -177,6 +177,9 @@
                 </div>
               </template>
             </el-table-column>
+            <template #empty>
+            <MyEmpty />
+          </template>
           </el-table>
         </div>
         <MyPage v-model:page="page" v-model:size="size" :total="total" @change="newsList" />
@@ -278,6 +281,7 @@
 import { ref, reactive } from 'vue'
 import { formatDate } from '@/utils/date'
 import MyPage from '@/components/MyPage.vue'
+import MyEmpty from '@/components/MyEmpty.vue'
 import MyDialog from '@/components/MyDialog.vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import drag_a from '@/assets/images/drag.png'

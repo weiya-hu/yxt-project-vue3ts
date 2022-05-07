@@ -72,6 +72,9 @@
               </div>
             </template>
           </el-table-column>
+          <template #empty>
+            <MyEmpty />
+          </template>
         </el-table>
       </div>
       <MyPage v-model:page="page" v-model:size="size" :total="total" @change="dynamicList" />
@@ -84,6 +87,7 @@
 import { ref } from 'vue'
 import { formatDate } from '@/utils/date'
 import MyPage from '@/components/MyPage.vue'
+import MyEmpty from '@/components/MyEmpty.vue'
 import MyDialog from '@/components/MyDialog.vue'
 import { dynamic_api, dyUp_api, dyDown_api, dyDel_api } from '@/api/website'
 

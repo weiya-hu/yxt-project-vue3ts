@@ -68,6 +68,9 @@
               </div>
             </template>
           </el-table-column>
+           <template #empty>
+            <MyEmpty />
+          </template>
         </el-table>
       </div>
       <MyPage v-model:page="page" v-model:size="size" :total="total" @change="noticeList" />
@@ -80,6 +83,7 @@
 import { ref } from 'vue'
 import { formatDate } from '@/utils/date'
 import MyPage from '@/components/MyPage.vue'
+import MyEmpty from '@/components/MyEmpty.vue'
 import MyDialog from '@/components/MyDialog.vue'
 import { notice_api, ntUp_api, ntDown_api, ntDel_api } from '@/api/website'
 
