@@ -117,7 +117,7 @@ const routes = [
           },
           {
             path: '/users/userinfo',
-            name: 'Userinfo',
+            name: 'UserInfo',
             component: () => import('@/views/layout/users/userInfo.vue'),
             meta: { title: '用户信息', father:'/users/user' },
           },
@@ -129,7 +129,7 @@ const routes = [
           },
           {
             path: '/users/companydetails',
-            name: 'Companydetails',
+            name: 'CompanyDetails',
             component: () => import('@/views/layout/users/companyDetails.vue'),
             meta: { title: '企业详情', father:'/users/company' },
           },

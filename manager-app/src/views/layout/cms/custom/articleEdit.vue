@@ -19,7 +19,6 @@
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DetailsHeader from '@/components/DetailsHeader.vue'
-import tip_i from '@/assets/images/tip.png'
 import KzAddArticle from '@/components/KzAddArticle.vue'
 import { articleEditing_api, articleSaveedit_api, articleDetail_api } from '@/api/cms/custom'
 import { mainStore } from '@/store/index'

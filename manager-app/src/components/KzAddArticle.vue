@@ -189,8 +189,8 @@ const upChange = (file: UploadFile, list: UploadFile[])=>{
     imgErrorType.value = 'size'
     aFormRef.value!.validateField('thumb_url', () => null)
   }else{
-    imgErrorType.value = ''
-    titleImg.value = file.url
+    imgErrorType.value = '';
+    file.status == 'ready' && (titleImg.value = file.url);
     aFormRef.value!.clearValidate('thumb_url')
   }
 }

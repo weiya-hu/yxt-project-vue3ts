@@ -4,9 +4,7 @@
       <DetailsHeader />
     </div>
 
-    <div class="addform">
-      <KzAddArticle ref="addRef" needimg needdigest @success="subSuccess" />
-    </div>
+    <KzAddArticle ref="addRef" needimg needdigest @success="subSuccess" />
 
     <el-card v-loading="loading" class="mycard mt20">
       <div class="form_title">内容设置</div>
@@ -33,20 +31,21 @@
               <el-radio :label="2">弹窗二维码</el-radio>
             </el-radio-group>
             <el-form-item prop="qr_code">
-              <MediaUpload
-                v-if="qrShow"
-                v-show="aForm.down_type == 2"
-                ref="upload"
-                :max="1"
-                :exname-list="exnameList"
-                :img-list="aForm.qr_code ? [aForm.qr_code] : []"
-                :msg="'只能上传' + exnameList.join('、') + '图片，不超过2M'"
-                @upOneSuccess="upOne"
-                @error="upError"
-                @look="upLook"
-                @del="aForm.qr_code = ''"
-                @change="onChangeQr"
-              />
+              <div style="height:100px" v-show="aForm.down_type == 2">
+                <MediaUpload
+                  v-if="qrShow"
+                  ref="upload"
+                  :max="1"
+                  :exname-list="exnameList"
+                  :img-list="aForm.qr_code ? [aForm.qr_code] : []"
+                  :msg="'只能上传' + exnameList.join('、') + '图片，不超过2M'"
+                  @upOneSuccess="upOne"
+                  @error="upError"
+                  @look="upLook"
+                  @del="aForm.qr_code = ''"
+                  @change="onChangeQr"
+                />
+              </div>
             </el-form-item>
           </div>
         </el-form-item>
@@ -123,7 +122,7 @@ const submit = (status: 1 | 2) => {
 }
 const subSuccess = async (val: IArticleForm) => {
   // 文章提交成功
-  loading.value = false
+  qrShow.value = false
   const rData = {
     content: val.text,
     digest: val.digest,
@@ -139,7 +138,8 @@ const subSuccess = async (val: IArticleForm) => {
     aStatus.value == 1
       ? await articleSave_api({ ...rData, id })
       : await articleRelease_api({ ...rData, id })
-
+  loading.value = false
+  qrShow.value = true
   if (status == 1) {
     store.setKeepList([])
     router.replace('/cms/resourceart')
@@ -169,16 +169,12 @@ const qr_codePass = (rule: any, value: any, callback: Function) => {
   callback()
 }
 const aRules = {
-  url: [{ required: aForm.value.down_type == 1, message: '请输入第三方URL链接', trigger: 'blur' }],
-  url_key: [{ required: aForm.value.down_type == 1, message: '第三方URL秘钥：', trigger: 'blur' }],
+  url: [{ required: true, message: '请输入第三方URL链接', trigger: 'blur' }],
+  url_key: [{ required: true, message: '第三方URL秘钥：', trigger: 'blur' }],
   qr_code: [{ validator: qr_codePass, trigger: 'blur' }],
 }
 const onChangeDownType = (val: number) => {
   val == 1 && aFormRef.value.clearValidate('qr_code')
-  if (val == 2) {
-    aForm.value.url = ''
-    aForm.value.url_key = ''
-  }
 }
 
 const exnameList = ['.jpg', '.png', '.jpeg', '.JPG', '.PNG', '.JPEG']

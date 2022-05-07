@@ -40,10 +40,8 @@ axios.interceptors.response.use(
         })
         if(response.errno == 10620){
           const isLogin = sessionStorage.getItem('islogin')
-          if(isLogin){
-            sessionStorage.removeItem('islogin')
-            router.replace('/login')
-          }
+          isLogin && sessionStorage.removeItem('islogin')
+          router.replace('/login')
         }
       }
     }
