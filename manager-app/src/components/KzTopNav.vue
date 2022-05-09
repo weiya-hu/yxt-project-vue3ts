@@ -47,7 +47,7 @@ onMounted (() => {
     try {
       line.value && (line.value.style.transition = 'transform 0.5s')
     } catch (error) {
-      return      
+      return
     }
   }, 500);
   changeLeft()
@@ -56,7 +56,7 @@ const changeLeft = ()=>{
   //改变顶部导航线条位置
   nextTick(()=>{
     activeDom = document.querySelector('.active') as HTMLElement
-    activeDom && (left.value = activeDom.offsetLeft +  activeDom.offsetWidth/2 - 10);
+    activeDom && (left.value = activeDom.offsetLeft + activeDom.offsetWidth/2 - 10);
   })
 }
 
@@ -76,8 +76,9 @@ defineExpose({
   left: 0;
   width: 100%;
   z-index: 11;
+  word-break: keep-all;
   .item{
-    padding: 0 25px;
+    padding: 0 16px;
     font-size: 16px;
     font-weight: 500;
     height: 48px;

@@ -96,6 +96,9 @@ const nameHash = {
   "BannerMember":{ type:6, url: '/member.html'},
   "BannerHelp":{ type:7, url: '/help.html'},
   "BannerNavigation":{ type:8, url: '/navigation.html'},
+  "BannerCms":{ type:9, url: '/cms_intro.html'},
+  "BannerDmp":{ type:10, url: '/dmp_intro.html'},
+  "BannerRobot":{ type:11, url: '/marketing.html'},
 }
 const route = useRoute()
 const rname = route.name as keyof typeof nameHash

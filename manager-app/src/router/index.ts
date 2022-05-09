@@ -203,6 +203,24 @@ const routes = [
                 component: () => import('@/views/layout/website/banner/bannerPage.vue'),
                 meta: { title: '行业导航', father:'/website/banner', lv:'15', isTopNav:true },
               },
+              {
+                path: '/website/banner/cms',
+                name: 'BannerCms',
+                component: () => import('@/views/layout/website/banner/bannerPage.vue'),
+                meta: { title: 'CMS内容管理', father:'/website/banner', lv:'60', isTopNav:true },
+              },
+              {
+                path: '/website/banner/dmp',
+                name: 'BannerDmp',
+                component: () => import('@/views/layout/website/banner/bannerPage.vue'),
+                meta: { title: 'DMP精准数据', father:'/website/banner', lv:'61', isTopNav:true },
+              },
+              {
+                path: '/website/banner/robot',
+                name: 'BannerRobot',
+                component: () => import('@/views/layout/website/banner/bannerPage.vue'),
+                meta: { title: '机器人矩阵', father:'/website/banner', lv:'62', isTopNav:true },
+              },
             ]
           },
           {
