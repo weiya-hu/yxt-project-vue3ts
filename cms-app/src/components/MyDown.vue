@@ -16,8 +16,11 @@
         </div>
       </template>
       <template #footer>
-        <div class="fcc">
+        <div class="fcc" v-if="urlData.down_type == 2">
           <el-button type="primary" @click="close">我知道了</el-button>
+        </div>
+        <div class="fcc" v-else>
+          <el-button type="primary" @click="copy(urlData.url)">复制链接</el-button>
         </div>
       </template>
     </el-dialog>
@@ -27,6 +30,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { downList_api } from '@/api/resource'
+import useClipboard from 'vue-clipboard3'
 import kf_code_i from '@/assets/images/kf_code.png'
 /**
  * 下载qrcode或者链接
@@ -42,6 +46,16 @@ const emit = defineEmits(['update:modelValue'])
 const close = ()=>{
   emit('update:modelValue',false)
 }
+
+const {	toClipboard } = useClipboard();
+const copy=async (val:any) => {
+  try {
+    await toClipboard(val)
+  } catch (e) {
+    alert('该浏览器不支持自动复制')
+	}
+}	
+
 
 const urlData = ref<any>({})
 const getData = async (id:string)=>{

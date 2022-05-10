@@ -12,12 +12,14 @@
   "dependencies": {
     "@tinymce/tinymce-vue": "^4.0.4",
     "axios": "^0.25.0",
+    "clipboard": "^2.0.11",
     "element-plus": "^2.0.1",
     "mitt": "^3.0.0",
     "pinia": "^2.0.11",
     "qrcode.vue": "^3.3.3",
     "tinymce": "^5.8.2",
     "vue": "^3.2.25",
+    "vue-clipboard3": "^2.0.0",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
