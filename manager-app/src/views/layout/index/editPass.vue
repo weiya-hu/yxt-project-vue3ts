@@ -4,13 +4,13 @@
     <el-card class="fcc mt20 pt20">
       <el-form :model="passForm" :rules="rules" ref="passFormRef" size="large">
         <el-form-item label="原密码：&emsp;" prop="oldPass">
-          <el-input v-model="passForm.oldPass" placeholder="请输入原密码"></el-input>
+          <el-input v-model="passForm.oldPass" placeholder="请输入原密码" show-password></el-input>
         </el-form-item>
         <el-form-item label="新密码：&emsp;" prop="pass">
-          <el-input v-model="passForm.pass" placeholder="请输入新密码"></el-input>
+          <el-input v-model="passForm.pass" placeholder="请输入新密码" show-password></el-input>
         </el-form-item>
         <el-form-item label="确认密码：" prop="checkPass">
-          <el-input v-model="passForm.checkPass" placeholder="请再次输入新密码"></el-input>
+          <el-input v-model="passForm.checkPass" placeholder="请再次输入新密码" show-password></el-input>
         </el-form-item>
         <el-form-item>
           <el-button class="f1" type="primary" @click="onSubmit">确认修改</el-button>

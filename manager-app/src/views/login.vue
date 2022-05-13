@@ -7,7 +7,7 @@
             <el-input v-model="user.acc" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item label="密&emsp;码" prop="password">
-            <el-input v-model="user.password" placeholder="请输入密码"></el-input>
+            <el-input v-model="user.password" placeholder="请输入密码" show-password></el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="imgCode">
             <div class="fcs">

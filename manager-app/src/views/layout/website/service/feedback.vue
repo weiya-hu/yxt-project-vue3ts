@@ -7,7 +7,7 @@
       <div class="mytable">
         <el-table :data="tableData" border draggable>
           <el-table-column label="类型">
-            <template #default="{ row }" v-if="statusType.length">{{statusType.find(v => v.id == row.feedback_type).feedback_type}}</template>
+            <template #default="{ row }" v-if="statusType.length">{{statusType.find(v => v.id == row.type_id).name}}</template>
           </el-table-column>
           <el-table-column prop="content" label="反馈内容"/>
           <el-table-column prop="mobile" label="联系电话"/>
