@@ -31,7 +31,7 @@
       <div class="upbox">
         <div class="up_rt">
           <div>{{msg||'可适当描述所处的行业现状，以及公司目前采取的运营、渠道、推广等多种获客方式，以便运营人员进一步了解熟悉您的所处的行业及需求，同时也为您提供更好的客户服务。'}}</div>
-          <div class="up_tip dfcolor fcs" v-if="downLink"><el-link type="primary" :href="downLink" @click="handlink" download="模板.xlsx">下载模板示例</el-link>（上传附件大小不超过4M）</div>
+          <div class="up_tip dfcolor fcs" v-if="downLink"><el-link type="primary" :href="downLink" @click="handlink" download="模板.xlsx">下载模板示例</el-link></div>
           <div class="up_tip dfcolor" v-else>附件支持 {{exnameList.join(' ')}}，大小不超过4M</div>
         </div>
       </div>

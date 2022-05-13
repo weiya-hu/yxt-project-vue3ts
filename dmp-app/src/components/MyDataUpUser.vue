@@ -44,6 +44,7 @@
               @success="upSuccess" 
               :exnameList="['.doc', '.docx', '.pdf','.xls','.xlsx']"
               ref="upload"
+              msg="数据文件大小不超过2M"
             />
           </el-form-item>
         </el-form>
