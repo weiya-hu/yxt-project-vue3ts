@@ -50,10 +50,6 @@ export const mainStore = defineStore('mainStore', () => {
   }
   const setUserinfo = ()=>{
     return new Promise<any>((resolve, reject) => {
-      if(state.userInfo.buid){
-        resolve(state.userInfo)
-        return
-      }
       getUserInfo().then((res:res)=>{
         if(res.status == 1){
           state.userInfo = res.body

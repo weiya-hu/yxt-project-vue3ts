@@ -166,8 +166,8 @@ const onSubmit = () => {
 const oldtime = Number(localStorage.getItem('smstime'))
 if(oldtime){
   const now = new Date().getTime()
-  const stime = (120 - ((now - oldtime) / 1000)).toFixed(0) 
   if(now - oldtime < 120000){
+    const stime = (120 - ((now - oldtime) / 1000)).toFixed(0)
     smsTime.value = Number(stime)
     changeTime()
   }else{

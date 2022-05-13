@@ -352,7 +352,7 @@ img{
   margin-bottom: 20px;
 }
 .lookhover{
-  cursor: url('@/assets/images/imagelook.cur'),pointer;
+  cursor: url('@/assets/images/imagelook.cur'),zoom-in;
 }
 .pool_box{
   .el-dialog__body{

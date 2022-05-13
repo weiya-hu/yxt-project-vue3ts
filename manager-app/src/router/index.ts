@@ -75,7 +75,7 @@ const routes = [
     name: 'Layout',
     component: () => import('@/views/layout.vue'),
     redirect: (to:any) => {
-      if(localStorage.getItem('islogin')){
+      if(sessionStorage.getItem('islogin')){
         return '/index'
       }
       return '/login'

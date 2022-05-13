@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="modelValue" :title="title" :width="type=='kf'?'280px':'400px'" @close="close" :show-close="type!='kf'" :custom-class="type=='kf' ? 'kf_dialog my_dialog':'my_dialog'">
+  <el-dialog v-model="show" :title="title" :width="type=='kf'?'280px':'400px'" @close="close" :show-close="type!='kf'" :custom-class="type=='kf' ? 'kf_dialog my_dialog':'my_dialog'">
     <template #title v-if="type=='kf'">
       <div class="fcc kf_title">联系客服</div>
     </template>
@@ -33,6 +33,7 @@
  * @author chn 
 */
 import kf_code_i from '@/assets/images/kf_code.png'
+import { computed } from "vue";
 const props = withDefaults(defineProps<{
   modelValue:boolean, // 是否显示
   title?:string, // 标题
@@ -44,6 +45,13 @@ const props = withDefaults(defineProps<{
   type:'',
   msg:'',
   btn:2,
+})
+
+const show = computed({
+  get: () => props.modelValue,
+  set: (val) => {
+    emit('update:modelValue', val)
+  }
 })
 
 //sure 点击确认时

@@ -3,7 +3,7 @@
     <div class="fcs breadcrumb">
       <div>当前位置：</div>
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: v.path }" v-for="v in crumbs">{{v.meta.title}}</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: v.path }" v-for="v in crumbs" :key="v.path">{{v.meta!.title}}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <el-page-header :icon="ArrowLeft" :content="$route.meta.title" @back="$router.back()" class="dh_title"/>
@@ -16,40 +16,35 @@
  * @author chn 
 */
 import { ArrowLeft } from '@element-plus/icons-vue'
-import { useRoute } from 'vue-router'
+import { useRoute, RouteRecordRaw } from 'vue-router'
 import { ref } from 'vue'
 const route = useRoute()
-const gf_path = '/' + route.path.split('/')[1]
-const crumbs = ref<any[]>([])
+const pathArr = route.path.split('/')
+const path1 = '/' + pathArr[1]
+const path2 = path1 + '/' + pathArr[2]
+const crumbs = ref<RouteRecordRaw[]>([])
 for (let i = 0; i < route.matched.length; i++) {
   const v = route.matched[i];
-  if(v.path == gf_path){
-    // crumbs.value[0] = v
+  if(v.path === path1){
     crumbs.value.push(v)
-    v.children.forEach(value => {
-      if(value.path == route.meta.father && value.path != '/index'){
-        // crumbs.value[1] = value
-        crumbs.value.push(value)
-      }
-      if(value.children){
-        // crumbs.value[1] = value
-        const f_path = gf_path + '/' + route.path.split('/')[2]
-        if(f_path == value.path){
-          crumbs.value.push(value)
-          value.children.forEach(r =>{
-            if(r.path == route.meta.father){
-              crumbs.value.push(r)
-            }
-          })
-        }
-      }
-    })
+    const r2 = v.children.find(j => j.path === route.meta.father)
+    r2 && crumbs.value.push(r2)
     continue
   }
-  if(v.path == route.path){
-    // crumbs.value[2] = v
+  if(v.path === path2){
     crumbs.value.push(v)
+    if(v.path === route.path){
+      break
+    }
+    if(v.children){
+      const r3 = v.children.find(j => j.path === route.meta.father)
+      r3 && crumbs.value.push(r3)
+    }
     continue
+  }
+  if(v.path === route.path){
+    crumbs.value.push(v)
+    break
   }
 }
 </script>

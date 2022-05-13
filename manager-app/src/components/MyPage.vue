@@ -5,8 +5,8 @@
       :layout="hideSizes ? 'total, prev, pager, next, jumper' : 'total, sizes, prev, pager, next, jumper'" 
       :total="total" 
       :pager-count="9" 
-      v-model:currentPage="page" 
-      v-model:page-size="size" 
+      v-model:currentPage="my_page" 
+      v-model:page-size="my_size" 
       @current-change="change"
       @size-change="changeSize"
       :page-sizes="[10, 20, 30]"
@@ -20,6 +20,7 @@
  * 分页组件
  * @author chn 
 */
+import { computed } from "vue";
 const props = withDefaults(defineProps<{
   page:number, // 当前页
   total:number, // 总数
@@ -31,6 +32,20 @@ const props = withDefaults(defineProps<{
   hideSizes:false
 })
 const emit = defineEmits(['update:page','change','update:size'])
+
+const my_page = computed({
+  get: () => props.page,
+  set: (val) => {
+    emit('update:page', val)
+  }
+})
+
+const my_size = computed({
+  get: () => props.size,
+  set: (val) => {
+    emit('update:size', val)
+  }
+})
 
 const change = (page:number) => {
   emit('update:page',page)
