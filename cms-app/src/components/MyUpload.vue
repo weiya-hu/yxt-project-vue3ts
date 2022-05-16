@@ -143,6 +143,7 @@ const clear = ()=>{
   //清除文件
   upload.value.clearFiles()
   emit('update:modelValue','')
+  URL.revokeObjectURL(videoBlobUrl.value);
   videoBlobUrl.value = ''
 }
 

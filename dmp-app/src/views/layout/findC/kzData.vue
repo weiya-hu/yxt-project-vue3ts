@@ -13,18 +13,28 @@
         ref="tableRef"
       >
         <el-table-column type="selection" width="50" />
-        <el-table-column property="name" label="姓名" width="150"/>
-        <el-table-column property="sex" label="性别" width="150">
+        <el-table-column property="name" label="姓名" width="120"/>
+        <el-table-column property="sex" label="性别" width="60">
           <template #default="scope">
             <div>{{ scope.row.sex == 0?'男':'女' }}</div>
           </template>
         </el-table-column>
-        <el-table-column property="mobiles" label="联系方式"  width="210">
+        <el-table-column property="mobiles" label="联系方式"  width="160">
           <template #default="scope">
             <div v-html="scope.row.mobiles"></div>
           </template>
         </el-table-column>
-        <el-table-column property="email" label="邮箱" width="210"/>
+        <el-table-column property="email" label="邮箱" width="180"/>
+        <el-table-column property="tags" label="从事行业">
+          <template #default="scope">
+            <el-tooltip effect="dark" placement="top">
+              <template #content>
+                <div style="width:100px" class="fcc">{{getHashStr(scope.row.tags,typeHash)}}</div>
+              </template>
+              <div class="els2">{{getHashStr(scope.row.tags,typeHash,'last')}}</div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column property="address" label="地区">
           <template #default="scope">
             <div>{{getHashStr(strToArr(scope.row.province,scope.row.city,scope.row.district),addressHash)}}</div>
@@ -57,6 +67,7 @@ import { errMsg } from '@/utils/index'
 
 const store = mainStore()
 const addressHash = computed(() => store.state.addressHash)
+const typeHash = computed(() => store.state.typeHash)
 
 const words = ref([])
 const getWord = ()=>{

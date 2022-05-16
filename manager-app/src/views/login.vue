@@ -4,7 +4,7 @@
       <el-tab-pane label="账号密码登录" name="acc">
         <el-form :model="user" :rules="rules" ref="userFormRef" size="large">
           <el-form-item label="手机号" prop="acc">
-            <el-input v-model="user.acc" placeholder="请输入用户名"></el-input>
+            <el-input v-model="user.acc" placeholder="请输入手机号"></el-input>
           </el-form-item>
           <el-form-item label="密&emsp;码" prop="password">
             <el-input v-model="user.password" placeholder="请输入密码" show-password></el-input>
