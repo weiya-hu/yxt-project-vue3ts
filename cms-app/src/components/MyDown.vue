@@ -31,7 +31,7 @@
 import { ref } from 'vue'
 import { downList_api } from '@/api/resource'
 import useClipboard from 'vue-clipboard3'
-import kf_code_i from '@/assets/images/kf_code.png'
+import { errMsg } from '@/utils/index'
 /**
  * 下载qrcode或者链接
  * @author pr 
@@ -52,7 +52,7 @@ const copy=async (val:any) => {
   try {
     await toClipboard(val)
   } catch (e) {
-    alert('该浏览器不支持自动复制')
+      errMsg('该浏览器不支持自动复制')
 	}
 }	
 

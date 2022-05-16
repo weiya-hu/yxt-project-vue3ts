@@ -7,18 +7,18 @@
         <span>分类：{{ body.type_name }}</span>
         <span>查看量：{{ body.readed }}</span>
         <span>{{ formatDate(new Date(Number(body.create_time)), 'yyyy-MM-dd hh:mm:ss') }}</span>
-        <div v-if="body.status != 0" class="ss">
+        <div v-if="body.status != 1" class="ss">
           <div
             class="point"
-            :style="body.status == 1 ? 'background: #E40000;' : 'background:#24BD13;'"
+            :style="body.status == 2 ? 'background: #E40000;' : 'background:#24BD13;'"
           ></div>
-          <span> {{ body.status == 2 ? '在线' : '离线' }}</span>
+          <span> {{ body.status == 3 ? '在线' : '离线' }}</span>
         </div>
         <div class="btns">
-          <el-button v-if="body.status == 1" class="bdc_btn" @click="getUp">上线</el-button>
-          <el-button v-if="body.status == 2" class="bdc_btn" @click="getDown">下线</el-button>
+          <el-button v-if="body.status == 2" class="bdc_btn" @click="getUp">上线</el-button>
+          <el-button v-if="body.status == 3" class="bdc_btn" @click="getDown">下线</el-button>
           <el-button
-            v-if="body.status == 1 || body.status == 0"
+            v-if="body.status == 2 || body.status == 1"
             class="bdc_btn"
             @click="
               path === 'dynamic'
@@ -27,7 +27,7 @@
             "
             >编辑</el-button
           >
-          <el-button v-if="body.status == 1 || body.status == 0" class="bdc_btn" @click="getDel(id)"
+          <el-button v-if="body.status == 2 || body.status == 1" class="bdc_btn" @click="getDel(id)"
             >删除</el-button
           >
         </div>

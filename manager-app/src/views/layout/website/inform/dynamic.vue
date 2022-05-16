@@ -29,14 +29,14 @@
                 <div
                   class="point"
                   :style="
-                    row.status == 0
+                    row.status == 1
                       ? 'background: #51A1FC;'
-                      : row.status == 1
+                      : row.status == 2
                       ? 'background: #E40000;'
                       : 'background:#24BD13;'
                   "
                 ></div>
-                <span> {{ row.status == 0 ? '草稿' : row.status == 1 ? '离线' : '在线' }}</span>
+                <span> {{ row.status == 1 ? '草稿' : row.status == 2 ? '离线' : '在线' }}</span>
               </div>
             </template>
           </el-table-column>
@@ -49,22 +49,22 @@
                   >查看</el-link
                 >
                 <div class="line"></div>
-                <el-link v-if="row.status == 2" type="primary" @click="getDyDown(row.id)"
+                <el-link v-if="row.status == 3" type="primary" @click="getDyDown(row.id)"
                   >下线</el-link
                 >
-                <el-link v-if="row.status == 1" type="primary" @click="getDyUp(row.id)"
+                <el-link v-if="row.status == 2" type="primary" @click="getDyUp(row.id)"
                   >上线</el-link
                 >
-                <div v-if="row.status == 1 || row.status == 2" class="line"></div>
+                <div v-if="row.status == 2 || row.status == 3" class="line"></div>
                 <el-link
-                  v-if="row.status == 1 || row.status == 0"
+                  v-if="row.status == 2 || row.status == 1"
                   type="primary"
                   @click="$router.push('/website/inform/dynamic/dynamicadd?id=' + row.id)"
                   >编辑</el-link
                 >
                 <div class="line"></div>
                 <el-link
-                  v-if="row.status == 1 || row.status == 0"
+                  v-if="row.status == 2 || row.status == 1"
                   type="primary"
                   @click="getDel(row.id)"
                   >删除</el-link
