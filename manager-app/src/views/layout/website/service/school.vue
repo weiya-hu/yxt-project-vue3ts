@@ -56,33 +56,35 @@
         <div class="mycard">
           <div class="el-card__header" style="height:32px">首页展示<span class="color999">（{{toplist.length}}）</span></div>
         </div>
-        <div class="imgs_list flex" v-if="toplist.length">
-          <div class="imgs_item" v-for="(v, i) in toplist" :key="v.id">
-            <div class="imgbox">
-              <img :src="v.cover_url" alt="">
-              <div class="lookicon fcc lookhover" @click="lookBanner(i, true)">
-                <el-icon size="20px"><zoom-in/></el-icon>
-              </div>
-              <div class="videoicon fcc lookhover" @click="lookVideo(v.video_url)">
-                <el-icon size="40px"><caret-right/></el-icon>
-              </div>
-            </div>
-            <div class="imginfo">
-              <div class="imgname els">{{v.video_name}}</div>
-              <div class="imglink fcs">
-                <span class="fcc">{{v.link_url ? '链接：' : '无链接'}}</span>
-                <el-link type="primary" v-if="v.link_url" target="_blank" :href="'//' + v.link_url">{{v.link_url}}</el-link>
-              </div>
-              <div class="fsc imgicon">
-                <div class="fcs">
-                  <el-icon size="14px"><pointer /></el-icon>
-                  <span>0</span>
+        <el-scrollbar v-if="toplist.length">
+          <div class="imgs_list imgs_list_top">
+            <div class="imgs_item imgs_item_top" v-for="(v, i) in toplist" :key="v.id">
+              <div class="imgbox">
+                <img :src="v.cover_url" alt="">
+                <div class="lookicon fcc lookhover" @click="lookBanner(i, true)">
+                  <el-icon size="20px"><zoom-in/></el-icon>
                 </div>
-                <div @click="setBanner(0, v.id)" class="chover dfcolor">下架</div>
+                <div class="videoicon fcc lookhover" @click="lookVideo(v.video_url)">
+                  <el-icon size="40px"><caret-right/></el-icon>
+                </div>
+              </div>
+              <div class="imginfo">
+                <div class="imgname els">{{v.video_name}}</div>
+                <div class="imglink fcs">
+                  <span class="fcc">{{v.link_url ? '链接：' : '无链接'}}</span>
+                  <el-link type="primary" v-if="v.link_url" target="_blank" :href="'//' + v.link_url">{{v.link_url}}</el-link>
+                </div>
+                <div class="fsc imgicon">
+                  <div class="fcs">
+                    <el-icon size="14px"><pointer /></el-icon>
+                    <span>0</span>
+                  </div>
+                  <div @click="setBanner(0, v.id)" class="chover dfcolor">下架</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </el-scrollbar>
         <MyEmpty v-else/>
       </div>
     </el-card>
@@ -94,7 +96,7 @@
           <el-button type="primary" @click="addShow = true">+ 添加</el-button>
         </div>
       </template>
-      <div class="imgs_list flex fww" v-if="list.length">
+      <div class="imgs_list imgs_list_all flex fww" v-if="list.length">
         <div class="imgs_item mb20" v-for="(v, i) in list" :key="v.id">
           <div class="imgbox">
             <img :src="v.cover_url" alt="">
@@ -430,7 +432,7 @@ export default { name:'School' }
               display: inline;
               overflow: hidden;
               text-overflow: ellipsis;
-	            white-space:nowrap
+              white-space:nowrap
             }
           }
         }
@@ -444,6 +446,20 @@ export default { name:'School' }
         }
       }
     }
+  }
+  .imgs_list_top{
+    width: 100%;
+    white-space: nowrap;
+    .imgs_item_top{
+      display: inline-block;
+      vertical-align: bottom;
+    }
+    .imgs_item_top:last-child{
+      margin-right: 0;
+    }
+  }
+  .imgs_list_all{
+    margin-top: 10px;
     .imgs_item:nth-child(5n){
       margin-right: 0;
     }

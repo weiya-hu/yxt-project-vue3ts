@@ -49,6 +49,9 @@ body {
 .p-relative {
   position: relative;
 }
+.line_height_no{
+  line-height: normal;
+}
 
 .flex{
   display: flex;

@@ -33,7 +33,7 @@
         </div>
       </div>
       <el-card>
-        <div class="txt" v-html="body.content"></div>
+        <div class="line_height_no" v-html="body.content"></div>
       </el-card>
       <MyDialog
         v-model="delShow"
@@ -160,13 +160,6 @@ const getDelDate = async () => {
         margin: 20px 0;
       }
     }
-  }
-  .txt {
-    font-size: 14px;
-    font-family: PingFangSC-Medium, PingFang SC;
-    font-weight: 500;
-    color: #999999;
-    line-height: 26px;
   }
 }
 </style>

@@ -18,7 +18,7 @@
       </el-card>
       <div class="news-container">
         <el-card class="mycard">
-          <div v-html="body.content"></div>
+          <div v-html="body.content" class="line_height_no"></div>
           <el-dialog v-model="tipShow" title="驳回原因" width="500px">
             <el-input
               v-model="failTips"

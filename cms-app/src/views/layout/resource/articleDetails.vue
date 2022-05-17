@@ -7,7 +7,7 @@
     </el-breadcrumb>
     <div class="content">
       <div class="title">{{ body.title }}</div>
-      <div class="txt" v-html="body.content"></div>
+      <div class="line_height_no" v-html="body.content"></div>
     </div>
   </div>
 </template>
@@ -47,13 +47,6 @@ getData()
       font-weight: 600;
       margin-bottom: 30px;
       color: $color333;
-    }
-    .txt {
-      font-size: 14px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
-      color: #999999;
-      line-height: 26px;
     }
   }
 }

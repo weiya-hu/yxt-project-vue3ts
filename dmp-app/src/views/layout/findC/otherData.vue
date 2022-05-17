@@ -111,6 +111,7 @@ const wordSearch = async (keyWord:string)=>{
   getWord()
 }
 const goSearch = async ()=>{
+  loading.value = true
   await wordSearchList_api({
     ...searchParams.value,
     str:word.value

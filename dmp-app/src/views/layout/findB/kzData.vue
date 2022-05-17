@@ -52,6 +52,7 @@ const wordSearch = async (params:string)=>{
   getWord()
 }
 const goSearch = async ()=>{
+  loading.value = true
   await wordSearchList_api({
     ...searchParams.value,
     keywords:word.value
@@ -78,6 +79,7 @@ const heightSearch = async (params:any)=>{
 }
 
 const goHSearch = async ()=>{
+  loading.value = true
   await searchByConditions_api({
     ...searchParams.value,
     ...heightParams.value

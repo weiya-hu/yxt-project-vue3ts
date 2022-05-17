@@ -7,7 +7,7 @@
     </el-breadcrumb>
     <div class="content">
       <div class="title">{{body.title}}</div>
-      <div v-html="body.content"></div>
+      <div v-html="body.content" class="line_height_no"></div>
     </div>
   </div>
 </template>

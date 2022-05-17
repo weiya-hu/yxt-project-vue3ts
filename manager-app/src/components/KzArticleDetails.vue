@@ -21,7 +21,7 @@
       </div>
     </el-card>
     <el-card class="mycard mt16 content">
-      <div v-html="info.text"></div>
+      <div v-html="info.text" class="line_height_no"></div>
     </el-card>
   </div>
 </template>

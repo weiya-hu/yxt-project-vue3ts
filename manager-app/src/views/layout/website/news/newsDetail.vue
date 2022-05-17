@@ -58,7 +58,7 @@
         <el-tabs type="border-card">
           <el-tab-pane label="文章正文">
             <el-card class="mycard">
-              <div class="news-txt" v-html="body.content"></div>
+              <div class="line_height_no" v-html="body.content"></div>
             </el-card>
           </el-tab-pane>
           <el-tab-pane :label="'收藏用户' + '(' + navTxt[1].num + ')'">
@@ -353,13 +353,6 @@ const getDelDate = async () => {
       }
     }
   }
-}
-.news-txt {
-  font-size: 14px;
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
-  color: #999999;
-  line-height: 26px;
 }
 .ss {
   margin: 20px 0;

@@ -4,7 +4,7 @@
     <el-card>
       <div class="content">
         <div class="title">{{ body.title }}</div>
-        <div v-html="body.content"></div>
+        <div v-html="body.content" class="line_height_no"></div>
         <div class="fjend btns twos">
           <el-button class="bdc_btn" @click="$router.push('/cms/resource')">返回</el-button>
           <el-button type="primary" @click="$router.push(`/cms/resourceedit?id=${id}`)"

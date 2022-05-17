@@ -101,7 +101,7 @@ const upChange = (file: UploadFile, list: UploadFile[])=>{
     emit('update:modelValue',file.name)
     file_exname.value = exname
     if(props.type == 'video'){
-      !videoBlobUrl.value && emit('changeName', file.name.substring(0, file.name.indexOf(".")));
+      !videoBlobUrl.value && emit('changeName', file.name.substring(0, tmpcnt));
       videoBlobUrl.value = URL.createObjectURL(file.raw as Blob)
     }
   }
