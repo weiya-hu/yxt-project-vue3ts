@@ -26,7 +26,7 @@
                 </template>
                 <div class="els company_name">{{companyInfo.name}}</div>
               </el-tooltip>
-              <div class="ssline"></div>
+              <!-- <div class="ssline"></div>
               <el-dropdown @command="changeEdition">
                 <div class="fcs">
                   <div class="now_edition els">企业标准版企业标准版企业标准版企业标准版</div>
@@ -37,7 +37,7 @@
                     <el-dropdown-item :command="v" v-for="v in editionList" :key="v.id"><div class="edition_dot" :class="editionId === v.id && 'active'"></div>{{v.name}}</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
-              </el-dropdown>
+              </el-dropdown> -->
             </div>
             <el-button color="#2D68EB" class="l_btn" plain v-if="companyInfo.status != 3 && userInfo.id" @click="goCompany">完善资料</el-button>
             <div class="sline"></div>
