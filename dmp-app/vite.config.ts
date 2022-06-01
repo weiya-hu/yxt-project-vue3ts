@@ -35,8 +35,8 @@ export default defineConfig({
     https: false,
     proxy: {
       '/api': {
-        target: 'http://47.108.157.204:9000',//dev
-        // target: 'http://10.10.0.73:9000',//杨航
+        // target: 'http://47.108.157.204:9000',//dev
+        target: 'http://10.10.0.73:9000',//杨航
         // target: 'http://10.10.0.123:9000',//杜飘
         // target: 'http://10.10.0.83:9000',//吴
         changeOrigin: true,

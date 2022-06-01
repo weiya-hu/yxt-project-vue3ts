@@ -25,7 +25,7 @@
           </el-radio-group>
         </el-form-item>
         <div>
-          <el-button type="primary" @click="search">&emsp;查询&emsp;</el-button>
+          <el-button type="primary" @click="goSearch">&emsp;查询&emsp;</el-button>
           <el-button @click="reset">&emsp;重置&emsp;</el-button>
         </div>
       </el-form>
@@ -179,6 +179,10 @@ const form = ref({
 const formRef = ref()
 const reset = () => {
   formRef.value.resetFields()
+}
+const goSearch = () => {
+  searchParams.value.current = 1
+  search()
 }
 const search = async () => {
   loading.value = true
