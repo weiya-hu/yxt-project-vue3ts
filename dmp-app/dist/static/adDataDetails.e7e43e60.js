@@ -1,0 +1,1 @@
+import{k as s}from"./findC.7c847573.js";import{K as t}from"./KzUserDataDetails.bdcd18fd.js";import{F as a,G as i,P as o,u as p}from"./vue.5acda677.js";import"./index.682ca07f.js";import"./TopBtns.cae50e13.js";import"./MyEmpty.543787f1.js";const e=a({setup:a=>(a,e)=>(i(),o(t,{"get-list-api":p(s)},null,8,["get-list-api"]))});export{e as default};

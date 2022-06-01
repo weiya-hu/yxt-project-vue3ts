@@ -181,7 +181,6 @@ const reset = () => {
   formRef.value.resetFields()
 }
 const search = async () => {
-  console.log(form.value);
   loading.value = true
   const res = await getUserPageList_api({
     ...searchParams.value,
@@ -209,7 +208,7 @@ const handleSelectionChange = (val:IData[]) => {
 }
 
 const changePage =()=>{
-  
+  search()
 }
 
 const tableRef = ref()
