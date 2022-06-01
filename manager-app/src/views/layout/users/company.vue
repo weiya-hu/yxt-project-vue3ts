@@ -4,8 +4,8 @@
     <el-card class="mycard" header="企业列表">
       <div class="mytable">
         <el-table :data="tableData" border draggable>
-          <el-table-column prop="company_name" label="企业名称"/>
-          <el-table-column prop="industry_id" label="所属行业" width="200">
+          <el-table-column prop="company_name" label="企业名称" width="200"/>
+          <el-table-column prop="industry_id" label="所属行业">
             <template #default="{row}">
               <div>{{getHashStr(row.industry_id.split(','),typeHash,'last')}}</div>
             </template>
@@ -15,16 +15,16 @@
             <div>{{getHashStr(strToArr(row.province, row.city, row.district),addressHash)}}</div>
             </template>
           </el-table-column>
-          <el-table-column prop="legal_person" label="联系人"/>
+          <el-table-column prop="legal_person" label="联系人" width="100"/>
           <el-table-column prop="contact" label="联系电话" width="120px"/>
-          <el-table-column property="user_name" label="认证用户"/>
+          <el-table-column property="user_name" label="认证用户" width="150"/>
           <el-table-column property="user_mobile" label="认证用户电话" width="120px"/>
           <el-table-column property="status" label="认证状态" width="100px">
             <template #default="{row}">
               {{row.status == 2 ? '认证中' : row.status == 3 ? '认证通过' : '认证失败'}}
             </template>
           </el-table-column>
-          <el-table-column label="操作" fixed="right">
+          <el-table-column label="操作" fixed="right" width="200">
             <template #default="{row}">
               <div class="fcs">
                 <el-link type="primary" @click="$router.push('companydetails?id=' + row.id)">详细信息</el-link>

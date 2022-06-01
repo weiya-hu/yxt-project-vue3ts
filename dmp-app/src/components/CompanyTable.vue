@@ -63,7 +63,7 @@
             <template #content>
               <div style="width:100px">{{ scope.row.url }}</div>
             </template>
-            <el-link type="primary" target="_blank" :href="scope.row.url"><span class="els2">{{ scope.row.url }}</span></el-link>
+            <el-link type="primary" target="_blank" :href="scope.row.url" :underline="false"><span class="els2">{{ scope.row.url }}</span></el-link>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -75,6 +75,11 @@
             </template>
             <div class="els2">{{ scope.row.business_scope }}</div>
           </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column property="company_type" label="企业类型" width="120" v-if="ctypeArr.length">
+        <template #default="scope">
+          <div>{{ ctypeArr.find(v => v.id == scope.row.company_type).name }}</div>
         </template>
       </el-table-column>
       <el-table-column property="source" label="来源" width="100">
@@ -101,6 +106,7 @@ import MyEmpty from "@/components/MyEmpty.vue";
 const store = mainStore()
 const typeHash = computed(() => store.state.typeHash)
 const addressHash = computed(() => store.state.addressHash)
+const ctypeArr = computed(() => store.state.companyType)
 
 const props = withDefaults(defineProps<{
   data:any[]
@@ -131,9 +137,4 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
-.company_table{
-  :deep(.el-link.is-underline:hover:after){
-    border-bottom: none;
-  }
-}
 </style>

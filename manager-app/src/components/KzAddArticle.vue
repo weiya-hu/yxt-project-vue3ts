@@ -74,7 +74,7 @@
 */
 import { ref } from 'vue'
 import Edit from "@/components/Edit.vue";
-import type { UploadFile, UploadProgressEvent} from 'element-plus'
+import type { UploadFile, UploadProgressEvent } from 'element-plus'
 import { getAliToken_api } from '@/api/login'
 import { errMsg } from '@/utils'
 import img_add_i from '@/assets/images/img-add.png'

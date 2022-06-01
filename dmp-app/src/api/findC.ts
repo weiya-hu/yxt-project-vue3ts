@@ -8,6 +8,20 @@ export const getSearchWord_api = (): Promise<res> => {
 }
 
 /**
+ * @name 获取学历列表
+*/
+export const getEducationList_api = (): Promise<res> => {
+  return get('dmp', '/dmp/customer/education.list')
+}
+
+/**
+ * @name 条件组搜索
+*/
+export const getUserPageList_api = (data:PageParams): Promise<res> => {
+  return post('dmp', '/dmp/customer/condition/user.page', data, true)
+}
+
+/**
  * @name 获取康洲数据源或第三方数据分页列表
 */
 export const wordSearchList_api = (data:PageParams): Promise<res> => {

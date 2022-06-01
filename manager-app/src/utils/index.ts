@@ -164,10 +164,10 @@ export function strToArr(str1:string|number,str2?:string|number,str3?:string|num
   //3个以内字符串转为长度3以内的数组
   try {
     let arr = [str1.toString()]
-    if(str2 && !str3){
+    if(str2){
       arr.push(str2.toString())
-    }else if(str2 && str3){
-      arr.push(str2.toString())
+    }
+    if(str3){
       arr.push(str3.toString())
     }
     return arr

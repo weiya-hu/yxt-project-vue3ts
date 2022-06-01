@@ -45,7 +45,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/bgapi/, ''),
       },
       '/api': {
-        target: 'http://47.108.185.157:9090', //dev 后台接口
+        target: 'http://47.108.157.204:9090', //dev 后台接口
         // target: 'http://10.10.0.148:9090', //dev 包季鑫
         // target: 'http://10.10.0.71:9090', //dev 杨航
         // target: 'http://10.10.0.93:9090', //dev 杜飘
@@ -77,6 +77,7 @@ export default defineConfig({
         manualChunks: {
           // 拆分代码，这个就是分包，配置完后自动按需加载，现在还比不上webpack的splitchunk，不过也能用了。
           vue: ['vue', 'vue-router'],
+          tinymce: ['tinymce'],
           // vant: ['vant'],
           // echarts: ['echarts'],
         },

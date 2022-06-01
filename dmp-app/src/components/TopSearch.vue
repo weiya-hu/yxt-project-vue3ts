@@ -133,10 +133,12 @@
 import { Search , CloseBold , ArrowDown} from '@element-plus/icons-vue'
 import { reactive, ref , computed } from 'vue'
 import type { ElForm } from 'element-plus'
-import { conditionsList_api,subConditions_api,delConditions_api,getCAndC_api, } from '@/api/findB'
+import { conditionsList_api,subConditions_api,delConditions_api } from '@/api/findB'
 import { Gajax } from '@/utils/request'
 import {errMsg} from '@/utils/index'
 import MyCascader from "@/components/MyCascader.vue";
+import { mainStore } from '@/store/index'
+
 const props = withDefaults(defineProps<{
   words:{id:number,keyword:string}[], // 历史搜索
   hasHeight:boolean, // 是否显示高级查询
@@ -146,18 +148,19 @@ const props = withDefaults(defineProps<{
 })
 const heightShow = ref(false)
 
+const store = mainStore()
+
 interface CAndC {
   value:number,
   name:string,
   id?:number,
 }
+
 const ctypeArr = ref<CAndC[]>([])
 const contactArr = ref<CAndC[]>([])
-props.hasHeight && getCAndC_api().then((res:res)=>{
-  if(res.status == 1){
-    ctypeArr.value = res.body.c_type
-    contactArr.value = res.body.contact
-  }  
+store.getCAndC().then((body)=>{
+  ctypeArr.value = body.c_type
+  contactArr.value = body.contact
 })
 
 const form = reactive<HeightSearchForm>({

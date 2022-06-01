@@ -24,8 +24,20 @@
                 <template #content>
                   <div style="width:100px">{{companyInfo.name}}</div>
                 </template>
-                <div class="els">{{companyInfo.name}}</div>
+                <div class="els company_name">{{companyInfo.name}}</div>
               </el-tooltip>
+              <div class="ssline"></div>
+              <el-dropdown @command="changeEdition">
+                <div class="fcs">
+                  <div class="now_edition els">企业标准版企业标准版企业标准版企业标准版</div>
+                  <el-icon size="14px"><arrow-down /></el-icon>
+                </div>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item :command="v" v-for="v in editionList" :key="v.id"><div class="edition_dot" :class="editionId === v.id && 'active'"></div>{{v.name}}</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </div>
             <el-button color="#2D68EB" class="l_btn" plain v-if="companyInfo.status != 3 && userInfo.id" @click="goCompany">完善资料</el-button>
             <div class="sline"></div>
@@ -70,6 +82,7 @@
     </el-row>
 
     <MyDialog v-model="kfShow" type="kf"/>
+    <MyDialog v-model="editionChangeShow" title="切换企业版本数据" :msg="'是否切换至' + editionChangeItme.name" @sure="sureChangeEdition"/>
 
   </div>
 </template>
@@ -87,7 +100,7 @@ import {reactive, ref, computed } from 'vue'
 import LeftNav from '@/components/LeftNav.vue'
 import TopNav from '@/components/TopNav.vue'
 import {useRouter, useRoute,onBeforeRouteUpdate} from 'vue-router'
-import { CaretBottom } from '@element-plus/icons-vue'
+import { CaretBottom, ArrowDown } from '@element-plus/icons-vue'
 import MyDialog from "@/components/MyDialog.vue";
 import { mainStore } from '@/store/index'
 import { loginOut_api } from '@/api/login'
@@ -184,6 +197,27 @@ const loginout = ()=>{
   })
 }
 
+const editionList = ref([
+  { id:1, name:'企业标准版1' },
+  { id:2, name:'企业标准版2' },
+  { id:3, name:'企业标准版3' },
+  { id:4, name:'企业标准版4' },
+])
+const editionId = ref(1)
+const editionChangeShow = ref(false)
+const editionChangeItme = ref<Record<string, string | number>>(editionList.value[0])
+// 切换版本
+const changeEdition = (value:any) => {
+  if(editionChangeItme.value.id === value.id){
+    return
+  }
+  editionChangeItme.value = value
+  editionChangeShow.value = true
+}
+const sureChangeEdition = () => {
+  editionId.value = editionChangeItme.value.id as number
+  editionChangeShow.value = false
+}
 </script>
 
 <style lang="scss" scoped>
@@ -249,12 +283,22 @@ const loginout = ()=>{
         height: 14px;
         margin-right: 6px;
       }
-      >div{
+      .company_name{
         width: 96px;
+      }
+      .ssline{
+        width: 1px;
+        height: 20px;
+        margin: 0 10px;
+        background-color: $coloreee;
+      }
+      .now_edition{
+        max-width: 90px;
+        color: $dfcolor;
       }
     }
     .user{
-      padding-right: 50px;
+      padding-right: 10px;
       color:$color333;
       font-size: 14px;
       font-weight: 600;
@@ -295,6 +339,30 @@ const loginout = ()=>{
       padding: 30px 50px;
       background-color: $bgcolor;
       overflow-y: scroll;
+    }
+  }
+}
+
+.edition_dot{
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 8px;
+  background: #FFFFFF;
+  border: 1px solid #ddd;
+  &.active{
+    background-color: $dfcolor;
+    border-color: $dfcolor;
+    position: relative;
+    &::after{
+      content: '';
+      background-color: #fff;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      position: absolute;
+      left: 5px;
+      top: 5px;
     }
   }
 }

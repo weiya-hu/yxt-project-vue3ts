@@ -141,7 +141,7 @@
 
   props.type==='company_type' && (store.getCAndC().then(res=>{
     console.log(res)
-    companyType.value=res
+    companyType.value=res.c_type
   }))
   props.type==='country' && (store.getCountryList().then(res=>{
     country.value=res

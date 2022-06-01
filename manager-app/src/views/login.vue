@@ -52,7 +52,7 @@ import { useRouter } from 'vue-router'
 import { sendSms_api, doLogin_api, getImgCode_api } from '@/api/login'
 import areaNum from '@/utils/areaNum'
 import { telReg } from '@/utils/index'
-import { throttle } from 'lodash'
+import throttle from 'lodash/throttle'
 
 const router = useRouter()
 
@@ -65,7 +65,7 @@ const getImgCode = async () => {
     imgCode.value = res.body
   }
 }
-const T_getImgCode = throttle(getImgCode,5000)
+const T_getImgCode = throttle(getImgCode,5000) // 节流，5000ms内只触发一次 
 T_getImgCode()
 
 const user = reactive({
@@ -77,7 +77,7 @@ const userFormRef = ref()
 const rules = reactive({
   acc: [{ required: true, message: '请输入用户名！', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码！', trigger: 'blur' }],
-  imgCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+  imgCode: [{ required: true, message: '请输入验证码', trigger: 'change' }],
 })
 
 const telForm = reactive({

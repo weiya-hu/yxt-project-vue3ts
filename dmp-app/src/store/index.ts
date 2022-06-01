@@ -83,11 +83,11 @@ export const mainStore = defineStore('mainStore', () => {
     })
   }
   const getCAndC = ()=>{
-    return new Promise<any[]>((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       getCAndC_api().then((res:res)=>{
         if(res.status == 1){
           state.companyType = res.body.c_type
-          resolve(res.body.c_type)
+          resolve(res.body)
         }else{
           reject(res.message)
         }

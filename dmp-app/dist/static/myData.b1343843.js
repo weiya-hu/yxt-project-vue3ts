@@ -1,0 +1,1 @@
+import{A as s,B as d}from"./index.a546203d.js";const p=d=>s("dmp","/dmp/source/upload.page",d),o=d=>s("dmp","/dmp/source/upload/detail.page",d),a=s=>d("dmp","/dmp/source/upload.in",s,!0),e=s=>d("dmp",1==s.type?"/dmp/source/sync/business.do":"/dmp/source/sync/customer.do",{list:s.list}),m=()=>s("dmp","/dmp/source/sync.get");export{a,o as b,m as g,e as s,p as u};

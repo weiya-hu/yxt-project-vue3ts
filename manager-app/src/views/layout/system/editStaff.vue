@@ -56,24 +56,18 @@ const getStaffLv = async () => {
   if(!buid) return
   const res = await getStaffInfo_api({ id: buid })
   uinfo.value = res.body
-  // uinfo.value.per_list = uinfo.value.per_list.filter((v:number|string) => !menuList.value.find(j => Number(v) == Number(j.permission_id))) // 剔除一级权限，setCheckedKeys方法会选中一级权限下所有子权限
   const lvList = ref<number[]>([])
-  uinfo.value.per_list.forEach((v:number|string) => {
-    menuList.value.forEach((j) => {
-      j.children.forEach((k:any) => {
-        if(k.children){
-          k.children.forEach((l:any) => {
-            if(l.permission_id == v){
-              lvList.value.push(Number(v))
-            }
-          });
-        }else{
-          if(k.permission_id == v){
-            lvList.value.push(Number(v))
-          }
-        }
-      });
-    })
+  // 获取底层权限，setCheckedKeys方法会选中一级权限下所有子权限
+  menuList.value.forEach((j) => {
+    j.children.forEach((k:any) => {
+      if(k.children){
+        k.children.forEach((l:any) => {
+          lvList.value.push(uinfo.value.per_list.find((v: string | number)=> v == l.permission_id))
+        });
+      }else{
+        lvList.value.push(uinfo.value.per_list.find((v: string | number)=> v == k.permission_id))
+      }
+    });
   })
   lvtree.value.setCheckedKeys(lvList.value)
 }
