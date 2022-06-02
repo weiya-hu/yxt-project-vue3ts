@@ -11,7 +11,7 @@
       <el-table-column property="name" label="姓名" />
       <el-table-column property="sex" label="性别" >
         <template #default="scope">
-          <div>{{ scope.row.sex == 1?'男':'女' }}</div>
+          <div>{{ scope.row.sex == 0 ? '未知': scope.row.sex == 1 ? '男' : '女' }}</div>
         </template>
       </el-table-column>
       <el-table-column property="mobiles" label="联系方式">

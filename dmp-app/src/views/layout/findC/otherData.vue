@@ -24,6 +24,11 @@
             <el-radio :label="v.value" v-for="v in educationList" :key="v.id">{{v.id ? v.name : '不限'}}</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="性别" prop="sex">
+          <el-radio-group v-model="form.sex">
+            <el-radio :label="v.id" v-for="v in sexList" :key="v.id">{{v.value}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <div>
           <el-button type="primary" @click="goSearch">&emsp;查询&emsp;</el-button>
           <el-button @click="reset">&emsp;重置&emsp;</el-button>
@@ -45,7 +50,7 @@
         <el-table-column property="name" label="姓名" width="70"/>
         <el-table-column property="sex" label="性别" width="60">
           <template #default="scope">
-            <div>{{ scope.row.sex == 0?'男':'女' }}</div>
+            <div>{{ scope.row.sex == 0 ? '未知': scope.row.sex == 1 ? '男' : '女' }}</div>
           </template>
         </el-table-column>
         <el-table-column property="age" label="年龄" width="70"/>
@@ -164,6 +169,11 @@ const ageList = [
   { id: 4, min: 41, max: 49 },
   { id: 5, min: 50 },
 ]
+const sexList = [
+  { id: 0, value: '不限' },
+  { id: 1, value: '男' },
+  { id: 2, value: '女' },
+]
 const form = ref({
   keyword: '', // 关键字
   industry_id: [], // 行业分类id
@@ -175,6 +185,7 @@ const form = ref({
   // start_age: '', // 开始年龄
   // end_age: '', // 结束年龄
   education: '', // 学历
+  sex: '', // 性别
 })
 const formRef = ref()
 const reset = () => {
@@ -195,7 +206,8 @@ const search = async () => {
     district: form.value.address[2] || null,
     start_age: ageList.find(v => v.id === Number(form.value.age))?.min || null,
     end_age: ageList.find(v => v.id === Number(form.value.age))?.max || null,
-    education: form.value.education
+    education: form.value.education,
+    sex: form.value.sex,
   })
   loading.value = false
   if(res.status === 1){
