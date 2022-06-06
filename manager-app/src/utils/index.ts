@@ -199,7 +199,9 @@ export function getSource(source:number){
   return '---'
 }
 
-export const telReg = new RegExp(/^(((13[0-9])|(14[5-7])|(15[0-9])|(17[0-9])|(18[0-9]))+\d{8})$/) // 手机号
+export const telReg = new RegExp(
+  /^(((13[0-9])|(14[0-9])|(15[0-9])|(16[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))+\d{8})$/
+) // 手机号
 export const passReg = /^[A-Za-z0-9]*$/ // 数字或者字母
 
 /**

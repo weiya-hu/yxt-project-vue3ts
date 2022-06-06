@@ -6,8 +6,6 @@ import axios from 'axios'
 
 //引入ui框架的弹窗组件
 import { ElMessage } from 'element-plus'
-
-//引入路由用于设置响应拦截器
 import router from '@/router'
 import { reactive, ref } from 'vue'
 
@@ -23,6 +21,14 @@ axios.interceptors.request.use((config) => {
       ...config.headers,
       'Content-Type': 'application/json', //'application/x-www-form-urlencoded';
       Authorization: token,
+    }
+  }
+  const insid = router.currentRoute.value.query.insid
+  if (insid) {
+    config.headers = {
+      ...config.headers,
+      'Content-Type': 'application/json',
+      'INSID': insid as string,
     }
   }
   return config

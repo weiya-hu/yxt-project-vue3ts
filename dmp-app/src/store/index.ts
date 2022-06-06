@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
-import { getIndustryList_api, getAddreList_api ,getCAndC_api} from '@/api/findB'
-import { getUserInfo, getCompanyInfo, getYxtUrl_api } from '@/api/login'
+import { getIndustryList_api, getAddreList_api ,getCAndC_api } from '@/api/findB'
+import { getUserInfo, getCompanyInfo, getYxtUrl_api, getNowInsList_api, getPowerList_api } from '@/api/login'
 import { countryList} from '@/api/seekAbroad'
 import { getHash } from '@/utils/index'
 
@@ -12,6 +12,8 @@ export const mainStore = defineStore('mainStore', () => {
     userLv:1,//用户等级
     userInfo:{} as any,//用户信息
     companyInfo:{} as any,//公司信息
+    insList: {} as any, // 当前用户当前身份下可用实例
+    powerList: [] as any[], // 用户权限列表
     typeList:[] as any[],//行业分类
     typeHash:{} as any,//行业分类哈希表
     addressList:[] as any[],//地区列表
@@ -69,10 +71,15 @@ export const mainStore = defineStore('mainStore', () => {
   }
   const setUserLv = ()=>{
     return new Promise<number>((resolve, reject) => {
-      getCompanyInfo().then((res:res)=>{
+      getCompanyInfo().then(async (res:res)=>{
         if(res.status == 1){
           state.companyInfo = res.body
           state.userLv = res.body.id ? 3 : 1
+          const res1 = await getNowInsList_api()
+          console.log(res1);
+          const res2 = await getPowerList_api()
+          console.log(res2);
+          
           resolve(state.userLv)
         }else{
           reject(res.message)
