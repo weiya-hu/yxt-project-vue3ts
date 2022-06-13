@@ -58,7 +58,7 @@
       <MyPage v-model:page="page" v-model:size="size" :total="totle" @change="getList" />
     </el-card>
     <MyDialog v-model="errorShow" :msg="errorMsg" :title="'驳回原因'" :btn="1" />
-    <el-dialog v-model="dialogVisible" title="详情视频" width="500px">
+    <!-- <el-dialog v-model="dialogVisible" title="详情视频" width="500px">
       <div v-if="showImgs" class="img-dialog">
         <video
           v-for="url in showImgs"
@@ -74,7 +74,7 @@
           <el-button type="primary" @click="dialogVisible = false">确认</el-button>
         </span>
       </template>
-    </el-dialog>
+    </el-dialog> -->
     <el-dialog v-model="addShow" title="编辑视频" width="380px" @close="close">
       <el-form v-loading="upLoading" :model="addForm">
         <el-form-item label="视频上传" required label-width="90px">
@@ -188,11 +188,11 @@ const showImgs = ref<string[]>([]) //视频列表
 const look = async (id: string) => {
   const res = await articleDetail_api({ id })
   console.log(res)
-  // let arr:string[] = []
   if (res.status == 1) {
-    showImgs.value = res.body.list
+    showImgs.value = res.body.url
   }
-  dialogVisible.value = true
+  lookVideo(res.body.url)
+  // dialogVisible.value = true
 }
 // 编辑视频
 const editId = ref('')
