@@ -87,6 +87,7 @@
             :msg="'只能上传' + exnameList1.join('、') + '视频，不超过200M，推荐尺寸1280*720'"
             @error="upVideoError"
             @success="upSuccess"
+            @changeName="upChange"
           />
         </el-form-item>
         <div class="fcs btns fjend mt20">
@@ -205,6 +206,10 @@ const videoEdit = (id: string) => {
   addShow.value = true
   editId.value = id
 }
+const videoNames = ref()
+const upChange = (videoName: string) => {
+  videoNames.value = videoName
+}
 const upVideoError = (err: string) => {
   errMsg(err)
   loading.value = false
@@ -220,6 +225,7 @@ const upSuccess = async (videoUrl: string) => {
   const res = await articleVideosave_api({
     order_id: editId.value,
     url: addForm.url,
+    name: videoNames.value,
   })
   upLoading.value = false
   close()
@@ -228,6 +234,7 @@ const upSuccess = async (videoUrl: string) => {
 const goSubmit = async () => {
   upLoading.value = true
   upVideo.value.submit()
+  console.log(upVideo.value)
 }
 // 列表
 const getList = async () => {

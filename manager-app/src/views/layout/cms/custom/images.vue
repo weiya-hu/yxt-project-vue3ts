@@ -327,7 +327,28 @@ const goSubmit = async (order_id: string, urls: any[]) => {
         })
         .then(() => {
           if (filePath.length == imgs.value.length) {
-            articleImagsave_api({ urls: filePath, order_id: editId.value }).then((res: res) => {
+            // console.log(imgs.value)
+            // const arr: any[] = []
+            // for (let index = 0; index < imgs.value.length; index++) {
+            //   arr[index] = imgs.value[index].name
+            // }
+            // console.log(arr)
+            // const newArr: any[] = []
+            // for (let index = 0; index < filePath.length; index++) {
+            //   newArr[index] = filePath[index]
+            // }
+            // let object = ref<any>({})
+            // for (let i = 0; i < newArr.length; i++) {
+            //   object.value[newArr[i]] = arr[i]
+            //   object.value = Object.assign(object.value, { [newArr[i]]: arr[i] })
+            // }
+            // console.log(object)
+            let object = ref<any>({})
+            for (let i = 0; i < filePath.length; i++) {
+              // object.value[newArr[i]] = arr[i]
+              object.value = Object.assign(object.value, { [filePath[i]]: imgs.value[i].name })
+            }
+            articleImagsave_api({ map: object.value, order_id: editId.value }).then((res: res) => {
               okMsg('上传成功')
               close()
               getList()

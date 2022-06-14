@@ -327,11 +327,19 @@ const goSubmit = async (order_id: string, urls: any[]) => {
         })
         .then(() => {
           if (filePath.length == imgs.value.length) {
-            articlePostersave_api({ urls: filePath, order_id: editId.value }).then((res: res) => {
-              okMsg('上传成功')
-              close()
-              getList()
-            })
+            let object = ref<any>({})
+            for (let i = 0; i < filePath.length; i++) {
+              // object.value[newArr[i]] = arr[i]
+              object.value = Object.assign(object.value, { [filePath[i]]: imgs.value[i].name })
+            }
+            console.log(object)
+            articlePostersave_api({ map: object.value, order_id: editId.value }).then(
+              (res: res) => {
+                okMsg('上传成功')
+                close()
+                getList()
+              }
+            )
           }
         })
     }
