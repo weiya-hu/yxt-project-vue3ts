@@ -99,6 +99,7 @@ import Search from '@/components/Search.vue'
 import { formatDate } from '@/utils/date'
 import MyPage from '@/components/MyPage.vue'
 import MyEmpty from '@/components/MyEmpty.vue'
+import { okMsg } from '@/utils/index'
 import { adList_api, adPass_api, adReject_api, adUp_api } from '@/api/dmp/findc'
 import { ElMessageBox } from 'element-plus'
 import Refuse from '@/components/Refuse.vue'
@@ -153,6 +154,7 @@ const goPass = (id: string) => {
 }
 const adPass = async () => {
   adPass_api({ id: passId.value }).then(() => {
+    okMsg('操作成功！')
     adList()
   })
 }
@@ -195,6 +197,7 @@ const upUser = (id: string) => {
 const upUserSuccess = async (val: any) => {
   const res = await adUp_api({ ...val, id: upUserId.value })
   if (res.status === 1) {
+    okMsg('操作成功！')
     adList()
   }
 }

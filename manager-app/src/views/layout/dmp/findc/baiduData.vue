@@ -99,6 +99,7 @@ import Search from '@/components/Search.vue'
 import { formatDate } from '@/utils/date'
 import MyPage from '@/components/MyPage.vue'
 import MyEmpty from '@/components/MyEmpty.vue'
+import { okMsg } from '@/utils/index'
 import { baiduList_api, baiduPass_api, baiduReject_api, baiduUp_api } from '@/api/dmp/findc'
 import { ElMessageBox } from 'element-plus'
 import Refuse from '@/components/Refuse.vue'
@@ -154,6 +155,7 @@ const goPass = (id: string) => {
 }
 const baiduPass = async () => {
   baiduPass_api({ id: passId.value }).then(() => {
+    okMsg('操作成功！')
     baiduList()
   })
 }
@@ -195,6 +197,7 @@ const upUser = (id: string) => {
 const upUserSuccess = async (val: any) => {
   const res = await baiduUp_api({ ...val, id: upUserId.value })
   if (res.status === 1) {
+    okMsg('操作成功！')
     baiduList()
   }
 }

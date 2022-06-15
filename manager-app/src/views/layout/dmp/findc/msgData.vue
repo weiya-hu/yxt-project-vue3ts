@@ -104,6 +104,7 @@ import { smsList_api, smsPass_api, smsReject_api, smsUp_api } from '@/api/dmp/fi
 import { ElMessageBox } from 'element-plus'
 import Refuse from '@/components/Refuse.vue'
 import { getKzStatus, getSource } from '@/utils/index'
+import { okMsg } from '@/utils/index'
 
 const page = ref(1)
 const total = ref(0)
@@ -154,6 +155,7 @@ const goPass = (id: string) => {
 }
 const smsPass = async () => {
   smsPass_api({ id: passId.value }).then(() => {
+    okMsg('操作成功！')
     smsList()
   })
 }
@@ -195,6 +197,7 @@ const upUser = (id: string) => {
 const upUserSuccess = async (val: any) => {
   const res = await smsUp_api({ ...val, id: upUserId.value })
   if (res.status === 1) {
+    okMsg('操作成功！')
     smsList()
   }
 }

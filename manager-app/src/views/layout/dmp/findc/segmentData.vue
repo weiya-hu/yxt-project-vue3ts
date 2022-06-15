@@ -92,7 +92,7 @@ import { ElMessageBox } from 'element-plus'
 import Refuse from '@/components/Refuse.vue'
 import UpUser from '@/components/UpUser.vue'
 import { getKzStatus, getSource } from '@/utils/index'
-
+import { okMsg } from '@/utils/index'
 const page = ref(1)
 const total = ref(0)
 const size = ref(10)
@@ -142,6 +142,7 @@ const goPass = (id: string) => {
 }
 const segmentPass = async () => {
   segmentPass_api({ id: passId.value }).then(() => {
+    okMsg('操作成功！')
     segmentList()
   })
 }
@@ -183,6 +184,7 @@ const upUser = (id: string) => {
 const upUserSuccess = async (val: any) => {
   const res = await segmentUp_api({ ...val, id: upUserId.value })
   if (res.status === 1) {
+    okMsg('操作成功！')
     segmentList()
   }
 }
