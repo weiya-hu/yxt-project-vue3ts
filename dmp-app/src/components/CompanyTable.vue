@@ -79,7 +79,7 @@
       </el-table-column>
       <el-table-column property="company_type" label="企业类型" width="120" v-if="ctypeArr.length">
         <template #default="scope">
-          <div>{{ ctypeArr.find(v => v.id == scope.row.company_type).name }}</div>
+          <div>{{ ctypeArr.find(v => v.id == scope.row.company_type)?.name }}</div>
         </template>
       </el-table-column>
       <el-table-column property="source" label="来源" width="100">

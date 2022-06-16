@@ -1,0 +1,1 @@
+import{o as e,c as a,w as r,a as t,r as o,T as s,b as n}from"./vue.73bee448.js";import{_ as f}from"./index.aefc30ce.js";import"./tinymce.5416ef76.js";var m=f({},[["render",function(f,m){const u=n("router-view");return e(),a(u,{key:f.$route.path},{default:r((({Component:n})=>[t(s,{name:"fade"},{default:r((()=>[(e(),a(o(n)))])),_:2},1024)])),_:1})}]]);export{m as default};

@@ -199,14 +199,12 @@
       </el-card>
     </div>
     <div class="type-tips">
-      <el-drawer v-model="drawer2" :direction="direction">
+      <el-drawer v-model="drawer2" :direction="direction" size="480px">
         <template #title>
-          <div class="tips-nav">
-            <span>分类管理</span>
-          </div>
+          <div class="tips-nav">分类管理</div>
         </template>
         <template #default>
-          <div class="bbtns">
+          <div class="fjend">
             <el-button type="primary" class="bdc_btn type-add" plain @click="typeAdd"
               >添加</el-button
             >
@@ -541,13 +539,11 @@ const getDelDate = async () => {
 //侧边分类弹窗
 .type-tips {
   position: relative;
-  :deep(.el-drawer) {
-    width: 25% !important;
-  }
   :deep(.el-drawer__header) {
     height: 52px;
     background: #dddddd;
-    padding: 0 !important;
+    padding: 0;
+    margin-bottom: 0;
     .tips-nav {
       margin-left: 24px;
       font-size: 16px;
@@ -566,9 +562,9 @@ const getDelDate = async () => {
 }
 .dragbox {
   padding: 10px;
-  width: 72%;
+  // width: 72%;
   .typeAdd {
-    width: 150%;
+    // width: 150%;
     height: 56px;
     background: #ffffff;
     border-radius: 8px;
@@ -587,7 +583,7 @@ const getDelDate = async () => {
   }
   .items {
     // width: 372px;
-    width: 150%;
+    // width: 150%;
     height: 56px;
     background: #ffffff;
     border-radius: 8px;

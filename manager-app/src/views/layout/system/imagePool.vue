@@ -24,14 +24,17 @@
           <div class="fcs fjend imgicon">
             <el-tooltip effect="dark" content="下载" placement="bottom">
               <a :href="v.source_url" class="fcc download_a">
-                <el-icon class="chover" size="18px" ><download /></el-icon>
+                <el-icon class="chover" size="18px" ><Download /></el-icon>
               </a>
             </el-tooltip>
+            <el-tooltip effect="dark" content="复制链接" placement="bottom">
+              <el-icon class="chover" size="18px" @click="copyFn(v.source_url)"><CopyDocument /></el-icon>
+            </el-tooltip>
             <el-tooltip effect="dark" content="修改名称" placement="bottom">
-              <el-icon class="chover" size="18px" @click="editImg(v)"><edit /></el-icon>
+              <el-icon class="chover" size="18px" @click="editImg(v)"><Edit /></el-icon>
             </el-tooltip>
             <el-tooltip effect="dark" content="删除" placement="bottom">
-              <el-icon class="chover" size="18px" @click="delImg(v)"><delete /></el-icon>
+              <el-icon class="chover" size="18px" @click="delImg(v)"><Delete /></el-icon>
             </el-tooltip>
           </div>
         </div>
@@ -81,7 +84,7 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { Download, Edit, Delete, ZoomIn } from '@element-plus/icons-vue'
+import { Download, Edit, Delete, ZoomIn, CopyDocument } from '@element-plus/icons-vue'
 import Mypage from "@/components/Mypage.vue";
 import MyEmpty from "@/components/MyEmpty.vue";
 import MyDialog from "@/components/MyDialog.vue";
@@ -222,6 +225,22 @@ const beforeCloseAdd = (done:Function)=>{
     .catch(() => {})
   }else{
     done()
+  }
+}
+
+const copyFn = (val: string) => {
+  const copyInput = document.createElement("input");
+  copyInput.setAttribute("value", val);
+  document.body.appendChild(copyInput);
+  copyInput.select();
+  try {
+    const copyed = document.execCommand("copy");
+    if (copyed) {
+      document.body.removeChild(copyInput);
+      console.log('复制成功');
+    }
+  } catch {
+    errMsg('复制失败，请检查浏览器兼容')
   }
 }
 

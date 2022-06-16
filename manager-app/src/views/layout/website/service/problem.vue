@@ -181,6 +181,7 @@ const sureDel = async () => {
         color: #fff;
         font-style: italic;
         margin-right: 12px;
+        flex-shrink: 0;
       }
       .q_icon{
         background-color: #51A1FC;

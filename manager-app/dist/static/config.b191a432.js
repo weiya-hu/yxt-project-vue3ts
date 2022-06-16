@@ -1,0 +1,1 @@
+import{n as s,i as c}from"./index.aefc30ce.js";const r={1:{name:"cms",class:"pro_cms",img:s},2:{name:"dmp",class:"pro_dmp",img:c}};function m(s){const c={class:"",img:""};try{if(r[s])return r[s]}catch(m){return c}return c}export{m as g};

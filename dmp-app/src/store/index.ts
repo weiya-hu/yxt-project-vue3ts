@@ -9,11 +9,11 @@ export const mainStore = defineStore('mainStore', () => {
   //这样写第一个参数就是$id
   const state = reactive({
     yxtUrl:{} as any,//跳转地址
-    userLv:1,//用户等级
     userInfo:{} as any,//用户信息
     companyInfo:{} as any,//公司信息
-    insList: {} as any, // 当前用户当前身份下可用实例
-    powerList: [] as any[], // 用户权限列表
+    insid: 0, // 当前实例id
+    insListInfo: {} as { [x: string]: { insid: number, name: string, product_id: number }[] }, // 当前用户当前身份下可用实例 { dmp: [...], cms: [...] }
+    powerListInfo: {} as any, // 用户权限列表 键为insid，值为对应的权限字符数组
     typeList:[] as any[],//行业分类
     typeHash:{} as any,//行业分类哈希表
     addressList:[] as any[],//地区列表
@@ -69,18 +69,16 @@ export const mainStore = defineStore('mainStore', () => {
       })
     })
   }
-  const setUserLv = ()=>{
-    return new Promise<number>((resolve, reject) => {
+  const setUserPower = ()=>{
+    return new Promise((resolve, reject) => {
       getCompanyInfo().then(async (res:res)=>{
         if(res.status == 1){
           state.companyInfo = res.body
-          state.userLv = res.body.id ? 3 : 1
           const res1 = await getNowInsList_api()
-          console.log(res1);
+          state.insListInfo = res1.body
           const res2 = await getPowerList_api()
-          console.log(res2);
-          
-          resolve(state.userLv)
+          state.powerListInfo = res2.body
+          resolve(true)
         }else{
           reject(res.message)
         }
@@ -88,6 +86,9 @@ export const mainStore = defineStore('mainStore', () => {
         reject(err)
       })
     })
+  }
+  const setInsid = (insid: number) => {
+    state.insid = insid
   }
   const getCAndC = ()=>{
     return new Promise<any>((resolve, reject) => {
@@ -137,7 +138,8 @@ export const mainStore = defineStore('mainStore', () => {
     setAddressList,
     setKeepList,
     setUserinfo,
-    setUserLv,
+    setUserPower,
+    setInsid,
     getCAndC,
     getCountryList,
     getYxtUrl

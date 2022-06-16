@@ -426,4 +426,34 @@ img{
       -webkit-appearance: none;
     }
 }
+
+.pro_list{
+  .pro_item{
+    margin-right: 16px;
+    margin-bottom: 10px;
+    padding: 16px;
+    background-color: aqua;
+    .p_name{
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .v_name{
+      margin: 10px 0;
+    }
+    img{
+      width: 14px;
+      height: 14px;
+      margin-right: 5px;
+    }
+    &.pro_dmp{
+      color: #2D68EB;
+      background-color: rgba(45, 104, 235, 0.1);
+    }
+    &.pro_cms{
+      color: #51A1FC;
+      background-color: rgba(81, 161, 252, 0.1);
+    }
+  }
+}
+
 </style>

@@ -5,11 +5,6 @@ export const getCompanyInfo = (): Promise<any> => {
   return get('user', '/company/relation/info.get')
 }
 
-//获取用户权限等级
-export const getUserLv = (): Promise<res> => {
-  return get('dmp', '/dmp/permission/get-role')
-}
-
 //获取用户信息
 export const getUserInfo = (): Promise<any> => {
   return get('user', '/public/uinfo.get')

@@ -1,18 +1,12 @@
 <template>
   <div class="layout_page">
-    <el-row class="layout_top">
+    <el-row class="layout_top" v-if="insid">
       <el-col class="logobox">
         <img :src="logo_i" alt=""/>
       </el-col>
       <el-col class="navbox fsc">
         <TopNav :nav="topNav" v-model="activePath" ref="topNavRef"/>
         <div class="top_right fcs">
-          <!-- <div class="top_rt_nav fcs">
-            <div class="top_rt_nav_item fcs" v-for="(v,i) in topRightNav" :key="i" @click="goOther(v.href)">
-              <img :src="v.img" alt="">
-              <div>{{v.name}}</div>
-            </div>
-          </div> -->
           <div class="user fcs">
             <div class="kf_btn fcs" @click="kfShow=true ">
               <img :src="znkf_i" alt="">
@@ -26,15 +20,15 @@
                 </template>
                 <div class="els company_name">{{companyInfo.name}}</div>
               </el-tooltip>
-              <div class="ssline"></div>
-              <el-dropdown @command="changeEdition">
+              <div class="ssline" v-if="insList && insList.length"></div>
+              <el-dropdown @command="changeEdition" v-if="insList && insList.length">
                 <div class="fcs">
-                  <div class="now_edition els">企业标准版企业标准版企业标准版企业标准版</div>
+                  <div class="now_edition els">{{insList.find(v => v.insid === Number($route.query.insid))?.name}}</div>
                   <el-icon size="14px"><arrow-down /></el-icon>
                 </div>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item :command="v" v-for="v in editionList" :key="v.id"><div class="edition_dot" :class="editionId === v.id && 'active'"></div>{{v.name}}</el-dropdown-item>
+                    <el-dropdown-item :command="v" v-for="v in insList" :key="v.insid"><div class="edition_dot" :class="Number($route.query.insid) === v.insid && 'active'"></div>{{v.name}}</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -68,7 +62,7 @@
         </div>
       </el-col>
     </el-row>
-    <el-row class="layout_container">
+    <el-row class="layout_container" v-if="insid">
       <el-col class="layout_nav" v-if="activePath!='/index'">
         <LeftNav v-model="nowPath" :nav="leftNav"/>
       </el-col>
@@ -82,7 +76,23 @@
     </el-row>
 
     <MyDialog v-model="kfShow" type="kf"/>
-    <MyDialog v-model="editionChangeShow" title="切换企业版本数据" :msg="'是否切换至' + editionChangeItme.name" @sure="sureChangeEdition"/>
+    <MyDialog v-model="editionChangeShow" title="切换企业版本数据" :msg="'切换后页面会重新加载，是否切换至“ ' + editionChangeItme.name + ' ”'" @sure="sureChangeEdition"/>
+
+    <el-dialog
+      v-model="switchShow"
+      title="选择版本"
+      width="30%"
+      :show-close="false"
+      :close-on-press-escape="false"
+      :close-on-click-modal="false"
+    >
+      <el-radio-group v-model="changeInsid">
+        <el-radio :label="v.insid" v-for="v in insList" :key="v.insid">{{v.name}}</el-radio>
+      </el-radio-group>
+      <template #footer>
+        <el-button type="primary" @click="selectIns">确定</el-button>
+      </template>
+    </el-dialog>
 
   </div>
 </template>
@@ -92,10 +102,6 @@ import logo_i from '@/assets/images/logo.png'
 import znkf_i from '@/assets/images/znkf.png'
 import company_i from '@/assets/images/company_tag.png'
 import df_avatar_i from '@/assets/images/dfavatar.png'
-import jqr_i from '@/assets/images/t_jqr.png'
-import scrm_i from '@/assets/images/t_scrm.png'
-import dsp_i from '@/assets/images/t_dsp.png'
-import cms_i from '@/assets/images/t_cms.png'
 import {reactive, ref, computed } from 'vue'
 import LeftNav from '@/components/LeftNav.vue'
 import TopNav from '@/components/TopNav.vue'
@@ -104,26 +110,82 @@ import { CaretBottom, ArrowDown } from '@element-plus/icons-vue'
 import MyDialog from "@/components/MyDialog.vue";
 import { mainStore } from '@/store/index'
 import { loginOut_api } from '@/api/login'
+import { ElMessageBox } from 'element-plus'
 
-const topRightNav = ref([
-  {img:jqr_i,name:'智能机器人',href:''},
-  {img:scrm_i,name:'SCRM系统',href:''},
-  {img:dsp_i,name:'DSP系统',href:''},
-  {img:cms_i,name:'CMS系统',href:''},
-])
-const goOther = (href:string)=>{
-  href && window.open(href)
+const route = useRoute()
+const router = useRouter()
+const store = mainStore()
+
+const insid = computed(() => store.state.insid)
+const changeIns = () => {
+  const setIns = () => {
+    if(insList.value.length > 1){
+      switchShow.value = true
+    }else{
+      window.location.href = window.location.origin + '/index?insid=' + insList.value[0].insid
+    }
+  }
+  const noIns = () => {
+    ElMessageBox.alert('请购买DMP系统后再使用', '温馨提示', {
+      confirmButtonText: '去购买',
+      type: 'error',
+      callback: () => {
+        window.location.href = '//sys-dev.kzszh.com/'
+      },
+    })
+  }
+  if(!route.query.insid){
+    if(!insList.value || !insList.value.length){
+      // 没有实例的情况
+      noIns()
+      return
+    }
+    setIns()
+    return
+  }else{
+    store.setInsid(Number(route.query.insid))
+    if(!insList.value || !insList.value.length){
+      // 没有实例的情况
+      noIns()
+      return
+    }
+    if(insList.value && insList.value.findIndex(v => v.insid === Number(route.query.insid)) === -1){
+      // 地址栏有insid但是insid错误的情况
+      setIns()
+      return
+    }
+  }
+}
+const switchShow = ref(false)
+const changeInsid = ref(0)
+const insList = computed(() => store.state.insListInfo.dmp)
+changeIns()
+
+const selectIns = () => {
+  if(changeInsid.value){
+    window.location.href = window.location.origin + '/index?insid=' + changeInsid.value
+  }
+}
+
+const editionChangeShow = ref(false)
+const editionChangeItme = ref<Record<string, string | number>>({})
+// 切换版本
+const changeEdition = (value:any) => {
+  if(editionChangeItme.value.insid === value.insid){
+    return
+  }
+  editionChangeItme.value = value
+  editionChangeShow.value = true
+}
+const sureChangeEdition = () => {
+  window.location.href = window.location.origin + '/index?insid=' + editionChangeItme.value.insid
 }
 
 const goCompany = ()=>{
   window.open("//" +  urlInfo.value.user + "/app/user?componentId=611")
 }
 
-const store = mainStore()
 const urlInfo = computed(()=>store.state.yxtUrl)
-
-const route = useRoute()
-const router = useRouter()
 
 const routers = router.getRoutes()
 const leftNav:any = ref([])
@@ -197,27 +259,6 @@ const loginout = ()=>{
   })
 }
 
-const editionList = ref([
-  { id:1, name:'企业标准版1' },
-  { id:2, name:'企业标准版2' },
-  { id:3, name:'企业标准版3' },
-  { id:4, name:'企业标准版4' },
-])
-const editionId = ref(1)
-const editionChangeShow = ref(false)
-const editionChangeItme = ref<Record<string, string | number>>(editionList.value[0])
-// 切换版本
-const changeEdition = (value:any) => {
-  if(editionChangeItme.value.id === value.id){
-    return
-  }
-  editionChangeItme.value = value
-  editionChangeShow.value = true
-}
-const sureChangeEdition = () => {
-  editionId.value = editionChangeItme.value.id as number
-  editionChangeShow.value = false
-}
 </script>
 
 <style lang="scss" scoped>
@@ -293,7 +334,7 @@ const sureChangeEdition = () => {
         background-color: $coloreee;
       }
       .now_edition{
-        max-width: 90px;
+        max-width: 70px;
         color: $dfcolor;
       }
     }
