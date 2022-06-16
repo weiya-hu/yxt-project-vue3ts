@@ -544,18 +544,29 @@ const getDelDate = async () => {
   :deep(.el-drawer) {
     width: 25% !important;
   }
+  :deep(.el-drawer__header) {
+    height: 52px;
+    background: #dddddd;
+    padding: 0 !important;
+    .tips-nav {
+      margin-left: 24px;
+      font-size: 16px;
+      font-weight: 500;
+      color: #333333;
+    }
+  }
 }
 .bbtns {
   position: absolute;
-  top: 55px;
-  right: 30px;
+  top: 70px;
+  right: 24px;
   .type-add {
     width: 80px;
   }
 }
 .dragbox {
   padding: 10px;
-  width: 300px;
+  width: 72%;
   .typeAdd {
     width: 150%;
     height: 56px;
